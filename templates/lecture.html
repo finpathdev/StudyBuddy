@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explain a Topic</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<h1>Explain a Topic</h1>
+
+<form method="POST">
+    <input name="topic" placeholder="Enter a topic...">
+    <button type="submit">Explain</button>
+</form>
+
+{% if lecture %}
+<h2>Explanation:</h2>
+<p>{{ lecture }}</p>
+{% endif %}
+</body>
+</html>

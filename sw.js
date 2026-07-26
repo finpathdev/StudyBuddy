@@ -1,7 +1,7 @@
 /* StudyBuddy service worker — makes the app work with no connection.
    Bump CACHE when you change index.html so students get the new version. */
-const CACHE = 'studybuddy-v2';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
+const CACHE = 'studybuddy-v3';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(

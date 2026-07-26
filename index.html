@@ -370,6 +370,38 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* ==================== MATH RENDERING ======================= */
+.math{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-style:normal;white-space:nowrap;display:inline-block;
+  line-height:1.1;vertical-align:middle;letter-spacing:0;
+}
+.mfrac{
+  display:inline-flex;flex-direction:column;text-align:center;
+  vertical-align:middle;margin:0 .2em;position:relative;top:-.08em;
+}
+.mnum{padding:0 .32em .1em;border-bottom:1.3px solid currentColor}
+.mden{padding:.1em .32em 0}
+.msqrt{display:inline-flex;align-items:stretch;margin:0 .14em}
+.mrad{font-size:1.15em;line-height:1.05}
+.mund{border-top:1.3px solid currentColor;padding:.1em .2em 0 .1em;margin-left:-.05em}
+.mop{display:inline-flex;align-items:center;margin:0 .2em;vertical-align:middle}
+.mglyph{font-size:1.5em;line-height:.85;font-family:Georgia,'Times New Roman',serif}
+.mop-sum .mglyph,.mop-prod .mglyph{font-size:1.3em;font-family:inherit}
+.mop-lim .mglyph{font-size:1em;font-family:inherit}
+.mlim{display:inline-flex;flex-direction:column;font-size:.6em;line-height:1.15;margin-left:.12em}
+.mlim .msup{min-height:1em}
+.mlim .msub{min-height:1em}
+.mtext{font-family:'Karla',ui-sans-serif,system-ui,sans-serif;padding:0 .2em;font-size:.94em}
+.mthin{display:inline-block;width:.22em}
+.math sup,.math sub{font-size:.66em;line-height:0}
+.math sup{vertical-align:super}
+.math sub{vertical-align:sub}
+/* formulas inside a study guide bullet get a touch more breathing room */
+.guide-sec li .math{font-size:1.02em;margin:0 .05em}
+.keyterm .math,.opt .math,.qstem .math{font-size:.98em}
+@media print{.math{white-space:normal}}
+
 /* ============ WORKSHEET / PRINT OUTPUT ===================== */
 .sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:36px 40px;box-shadow:var(--shadow);max-width:860px;margin:0 auto}
 .sheet-head{border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
@@ -1550,7 +1582,7 @@ guide:[
   'Other mechanisms: <b>genetic drift</b> (bottleneck and founder effects), <b>gene flow</b>, mutation, and sexual selection.'
  ]},
  {h:'Population genetics and speciation', points:[
-  '<b>Hardy-Weinberg</b>: p + q = 1 and p² + 2pq + q² = 1, valid only with no selection, no mutation, no migration, random mating, and large population.',
+  '<b>Hardy-Weinberg</b>: p + q = 1 and @@p^{2} + 2pq + q^{2} = 1@@, valid only with no selection, no mutation, no migration, random mating, and large population.',
   'Deviation from Hardy-Weinberg indicates evolution is occurring.',
   '<b>Allopatric speciation</b> follows geographic isolation; <b>sympatric</b> occurs without it, often by polyploidy.',
   'Reproductive barriers may be <b>prezygotic</b> (habitat, timing, behavior) or <b>postzygotic</b> (hybrid sterility).',
@@ -1573,7 +1605,7 @@ cards:[
  ['Genetic drift','Random change in allele frequency, strongest in small populations.'],
  ['Bottleneck effect','A sharp population reduction that randomly changes allele frequencies.'],
  ['Founder effect','A small group starts a new population carrying a nonrepresentative sample of alleles.'],
- ['Hardy-Weinberg equilibrium','p² + 2pq + q² = 1; holds only when no evolutionary forces are acting.'],
+ ['Hardy-Weinberg equilibrium','@@p^{2} + 2pq + q^{2} = 1@@; holds only when no evolutionary forces are acting.'],
  ['Allopatric speciation','New species arising after geographic separation of populations.'],
  ['Carrying capacity (K)','The maximum population an environment can sustain over time.'],
  ['Competitive exclusion principle','Two species cannot occupy the exact same niche indefinitely.'],
@@ -1933,7 +1965,7 @@ guide:[
   'Grid-in answers cannot be negative on some question types; check whether the answer must be positive.'
  ]},
  {h:'Algebra and functions', points:[
-  'Linear equations: slope = (y₂−y₁)/(x₂−x₁); parallel lines share slope, perpendicular slopes are negative reciprocals.',
+  'Linear equations: slope @@= \\frac{y_{2}-y_{1}}{x_{2}-x_{1}}@@; parallel lines share slope, perpendicular slopes are negative reciprocals.',
   'Systems: one solution when slopes differ, none when slopes match with different intercepts, infinite when identical.',
   'Quadratics: standard form gives the y-intercept, <b>vertex form</b> gives the vertex, factored form gives the roots.',
   'The discriminant b²−4ac tells you how many real solutions exist.',
@@ -1949,7 +1981,7 @@ guide:[
  ]}
 ],
 cards:[
- ['Slope formula','m = (y₂ − y₁)/(x₂ − x₁).'],
+ ['Slope formula','@@m = \\frac{y_{2} - y_{1}}{x_{2} - x_{1}}@@'],
  ['Perpendicular slopes','Negative reciprocals: their product is −1.'],
  ['Vertex form','y = a(x − h)² + k, where (h, k) is the vertex.'],
  ['Discriminant','b² − 4ac: positive gives 2 real roots, zero gives 1, negative gives none.'],
@@ -2059,8 +2091,8 @@ guide:[
 cards:[
  ['ACT Math pacing','60 questions in 60 minutes, ordered roughly from easiest to hardest.'],
  ['No formula sheet','ACT provides no formulas; area, volume, slope, and trig must be memorized.'],
- ['Distance formula','d = √[(x₂ − x₁)² + (y₂ − y₁)²].'],
- ['Midpoint formula','((x₁ + x₂)/2, (y₁ + y₂)/2).'],
+ ['Distance formula','@@d = \\sqrt{(x_{2}-x_{1})^{2} + (y_{2}-y_{1})^{2}}@@'],
+ ['Midpoint formula','@@\\left(\\frac{x_{1}+x_{2}}{2}, \\frac{y_{1}+y_{2}}{2}\\right)@@'],
  ['Data Representation','ACT Science passage type built around graphs and tables with minimal text.'],
  ['Research Summaries','Passage describing related experiments; questions test design and comparison.'],
  ['Conflicting Viewpoints','Passage with competing scientist hypotheses; the only heavy-reading Science passage.'],
@@ -2275,7 +2307,7 @@ guide:[
 cards:[
  ['Aggregate demand','Total spending on domestic output: C + I + G + (X − M).'],
  ['Wealth effect','Lower price levels raise real wealth, increasing consumption — one reason AD slopes down.'],
- ['Spending multiplier','1 ÷ MPS; the total change in GDP from an initial change in spending.'],
+ ['Spending multiplier','@@\\frac{1}{MPS}@@; the total change in GDP from an initial change in spending.'],
  ['Marginal propensity to consume','Share of an additional dollar of income that is spent rather than saved.'],
  ['Short-run aggregate supply','Upward sloping because wages and input prices are sticky in the short run.'],
  ['Long-run aggregate supply','Vertical line at full-employment output; shifts only with resources or technology.'],
@@ -2590,7 +2622,7 @@ guide:[
   'The 1.5 × IQR rule flags outliers below Q1 − 1.5·IQR or above Q3 + 1.5·IQR.'
  ]},
  {h:'Normal distributions and z-scores', points:[
-  '<b>z</b> = (x − μ)/σ tells how many standard deviations a value sits from the mean.',
+  '@@z = \\frac{x - \\mu}{\\sigma}@@ tells how many standard deviations a value sits from the mean.',
   'The empirical rule: about 68%, 95%, and 99.7% within 1, 2, and 3 standard deviations.',
   'Adding a constant shifts center but not spread; multiplying scales both center and spread.',
   '<b>Percentiles</b> give the share of data at or below a value.',
@@ -2603,7 +2635,7 @@ cards:[
  ['Resistant measure','A statistic not strongly affected by outliers, such as the median or IQR.'],
  ['Interquartile range','Q3 − Q1; the spread of the middle 50% of the data.'],
  ['1.5 × IQR rule','Outliers fall below Q1 − 1.5·IQR or above Q3 + 1.5·IQR.'],
- ['z-score','(x − μ) ÷ σ; the number of standard deviations a value is from the mean.'],
+ ['z-score','@@z = \\frac{x-\\mu}{\\sigma}@@; the number of standard deviations a value is from the mean.'],
  ['Empirical rule','About 68%, 95%, and 99.7% of normal data lie within 1, 2, and 3 SDs.'],
  ['Effect of adding a constant','Shifts the center; leaves standard deviation unchanged.'],
  ['Standard deviation','Typical distance of values from the mean; not resistant to outliers.']
@@ -2733,15 +2765,15 @@ quiz:[
 id:'u2', title:'Unit 2 · Differentiation',
 guide:[
  {h:'Definition and rules', points:[
-  'The derivative is the limit of the difference quotient: f\u2032(x) = lim(h→0) [f(x+h) − f(x)]/h.',
+  'The derivative is the limit of the difference quotient: @@f\u2032(x) = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}@@.',
   'It represents instantaneous rate of change and the slope of the tangent line.',
-  '<b>Power rule</b>: d/dx[xⁿ] = nxⁿ⁻¹.',
+  '<b>Power rule</b>: @@\\frac{d}{dx}x^{n} = nx^{n-1}@@.',
   '<b>Product rule</b>: (fg)\u2032 = f\u2032g + fg\u2032. <b>Quotient rule</b>: (f/g)\u2032 = (f\u2032g − fg\u2032)/g².',
   '<b>Chain rule</b>: d/dx[f(g(x))] = f\u2032(g(x)) · g\u2032(x) — the most commonly missed rule on the exam.'
  ]},
  {h:'Key derivatives and differentiability', points:[
   'd/dx[sin x] = cos x, d/dx[cos x] = −sin x, d/dx[tan x] = sec²x.',
-  'd/dx[eˣ] = eˣ, d/dx[ln x] = 1/x, d/dx[aˣ] = aˣ ln a.',
+  'd/dx[eˣ] = eˣ, @@\\frac{d}{dx}\\ln x = \\frac{1}{x}@@, d/dx[aˣ] = aˣ ln a.',
   'Differentiability implies continuity, but continuity does not imply differentiability.',
   'A function is not differentiable at corners, cusps, vertical tangents, or discontinuities.',
   'Tangent line at a: y = f(a) + f\u2032(a)(x − a). This is also the linear approximation.'
@@ -2754,7 +2786,7 @@ cards:[
  ['Quotient rule','(f/g)\u2032 = (f\u2032g − fg\u2032) ÷ g².'],
  ['Chain rule','d/dx[f(g(x))] = f\u2032(g(x)) · g\u2032(x).'],
  ['Derivative of sin and cos','sin → cos; cos → −sin.'],
- ['Derivative of ln x','1 ÷ x.'],
+ ['Derivative of ln x','@@\\frac{1}{x}@@'],
  ['Differentiability implies continuity','True in that direction only; continuous functions can still have corners.'],
  ['Where differentiability fails','Corners, cusps, vertical tangents, and any discontinuity.'],
  ['Tangent line equation','y = f(a) + f\u2032(a)(x − a).']
@@ -2795,7 +2827,7 @@ guide:[
   'Constant velocity gives a straight position graph; constant acceleration gives a parabola.'
  ]},
  {h:'Equations and projectiles', points:[
-  'v = v₀ + at, x = x₀ + v₀t + ½at², and v² = v₀² + 2aΔx apply only when acceleration is constant.',
+  'v = v₀ + at, @@x = x_{0} + v_{0}t + \\frac{1}{2}at^{2}@@, and @@v^{2} = v_{0}^{2} + 2a\\Delta x@@ apply only when acceleration is constant.',
   'Free fall near Earth uses a = −9.8 m/s² regardless of mass, ignoring air resistance.',
   'At the peak of a vertical throw, velocity is zero but acceleration is still g downward.',
   '<b>Projectile motion</b> separates into independent horizontal (constant velocity) and vertical (constant acceleration) components.',
@@ -2845,7 +2877,7 @@ guide:[
   '<b>Friction</b>: fₛ ≤ μₛN and f_k = μ_k N, always opposing relative sliding.',
   'On an incline, gravity splits into mg·sinθ along the surface and mg·cosθ perpendicular to it.',
   'Tension is uniform through an ideal massless rope.',
-  'For circular motion, net force points toward the center: F_c = mv²/r. Centrifugal force is not a real force.'
+  'For circular motion, net force points toward the center: @@F_c = \\frac{mv^{2}}{r}@@. Centrifugal force is not a real force.'
  ]}
 ],
 cards:[
@@ -2856,7 +2888,7 @@ cards:[
  ['Static vs. kinetic friction','Static resists starting motion up to a maximum; kinetic acts during sliding and is usually smaller.'],
  ['Forces on an incline','Gravity splits into mg·sinθ along the slope and mg·cosθ into the surface.'],
  ['Equilibrium','Net force is zero; the object is at rest or moving at constant velocity.'],
- ['Centripetal force','Net inward force for circular motion: F = mv²/r; it is a role, not a new force.']
+ ['Centripetal force','Net inward force for circular motion: @@F = \\frac{mv^{2}}{r}@@; it is a role, not a new force.']
 ],
 quiz:[
  {q:'A book rests on a table. The reaction force to the book\u2019s weight is:',
@@ -3904,7 +3936,7 @@ guide:[
   '<b>GDP</b> = C + I + G + (X − M), the market value of final goods produced within a country.',
   'Excluded: intermediate goods, used goods, transfer payments, financial transactions, and unreported activity.',
   '<b>Nominal GDP</b> uses current prices; <b>real GDP</b> adjusts for inflation and is the valid comparison over time.',
-  '<b>GDP deflator</b> = (nominal ÷ real) × 100.',
+  '<b>GDP deflator</b> = @@\\frac{\\text{nominal}}{\\text{real}} \\times 100@@.',
   'GDP ignores distribution, leisure, environmental cost, and household production.'
  ]},
  {h:'Unemployment', points:[
@@ -3982,7 +4014,7 @@ cards:[
  ['Three functions of money','Medium of exchange, unit of account, and store of value.'],
  ['M1 vs. M2','M1 is currency and checkable deposits; M2 adds savings and near-money.'],
  ['Fractional reserve banking','Banks hold only a fraction of deposits and lend out the rest.'],
- ['Money multiplier','1 ÷ the required reserve ratio; the maximum expansion from a new deposit.'],
+ ['Money multiplier','@@\\frac{1}{\\text{reserve ratio}}@@; the maximum expansion from a new deposit.'],
  ['Money market','Determines the nominal interest rate; supply is vertical, demand slopes down.'],
  ['Loanable funds market','Determines the real interest rate through saving and investment.'],
  ['Open market operations','Fed buying or selling government bonds to change the money supply.'],
@@ -4243,7 +4275,7 @@ guide:[
   'Unions and minimum wages can raise both employment and wages in a monopsony, unlike in a competitive market.'
  ]},
  {h:'Choosing input combinations', points:[
-  '<b>Least-cost rule</b>: MP_L / P_L = MP_K / P_K — equal marginal product per dollar across inputs.',
+  '<b>Least-cost rule</b>: @@\\frac{MP_L}{P_L} = \\frac{MP_K}{P_K}@@ — equal marginal product per dollar across inputs.',
   '<b>Profit-maximizing rule</b>: MRP_L / P_L = MRP_K / P_K = 1.',
   'If an input\u2019s marginal product per dollar is higher, shift spending toward it.',
   'Changes in output price shift MRP and therefore labor demand.',
@@ -4258,7 +4290,7 @@ cards:[
  ['Monopsony','A single buyer of a resource, facing the upward-sloping market supply curve.'],
  ['Why MRC exceeds supply in monopsony','Hiring one more worker requires raising the wage for all workers.'],
  ['Monopsony outcome','Fewer workers hired at a lower wage than under perfect competition.'],
- ['Least-cost rule','MP_L ÷ P_L = MP_K ÷ P_K.'],
+ ['Least-cost rule','@@\\frac{MP_L}{P_L} = \\frac{MP_K}{P_K}@@.'],
  ['Profit-maximizing input rule','MRP ÷ price equals 1 for every input.']
 ],
 quiz:[
@@ -4900,7 +4932,7 @@ guide:[
  {h:'Heat and enthalpy', points:[
   '<b>Exothermic</b> reactions release heat and have negative ΔH; <b>endothermic</b> absorb heat with positive ΔH.',
   'Heat flows from hotter to colder until thermal equilibrium.',
-  '<b>Calorimetry</b>: q = mcΔT, where c is specific heat capacity.',
+  '<b>Calorimetry</b>: @@q = mc\\Delta T@@, where c is specific heat capacity.',
   'A high specific heat means a substance resists temperature change, which is why water moderates climate.',
   'Heat lost by one substance equals heat gained by the other in an insulated system.'
  ]},
@@ -4915,7 +4947,7 @@ guide:[
 cards:[
  ['Exothermic reaction','Releases heat to the surroundings; ΔH is negative.'],
  ['Endothermic reaction','Absorbs heat from the surroundings; ΔH is positive.'],
- ['q = mcΔT','Heat equals mass × specific heat capacity × temperature change.'],
+ ['@@q = mc\\Delta T@@','Heat equals mass × specific heat capacity × temperature change.'],
  ['Specific heat capacity','Energy needed to raise one gram of a substance by one degree.'],
  ['Hess\u2019s law','Enthalpy is a state function, so step enthalpies add to the overall value.'],
  ['Reversing a reaction','Flips the sign of ΔH.'],
@@ -4988,14 +5020,14 @@ id:'u8', title:'Unit 8 · Acids and Bases',
 guide:[
  {h:'pH and strength', points:[
   '<b>Brønsted-Lowry</b>: acids donate protons, bases accept them, forming conjugate pairs.',
-  'pH = −log[H⁺]; pH + pOH = 14 at 25 °C.',
+  '@@pH = -\\log[H^{+}]@@; pH + pOH = 14 at 25 °C.',
   '<b>Strong acids and bases</b> dissociate completely; <b>weak</b> ones reach equilibrium described by Ka or Kb.',
   'A larger Ka means a stronger acid. Ka × Kb = Kw for a conjugate pair.',
   'The stronger the acid, the weaker its conjugate base.'
  ]},
  {h:'Buffers and titrations', points:[
   'A <b>buffer</b> is a weak acid with its conjugate base and resists pH change.',
-  '<b>Henderson-Hasselbalch</b>: pH = pKa + log([A⁻]/[HA]). Buffer capacity is greatest when pH = pKa.',
+  '<b>Henderson-Hasselbalch</b>: @@pH = pK_a + \\log\\frac{[A^{-}]}{[HA]}@@. Buffer capacity is greatest when pH = pKa.',
   'Strong acid with strong base gives an equivalence point at pH 7.',
   'Weak acid with strong base gives an equivalence point above 7 because the conjugate base is present.',
   'The <b>half-equivalence point</b> is where pH = pKa.',
@@ -5004,11 +5036,11 @@ guide:[
 ],
 cards:[
  ['Brønsted-Lowry acid','A proton donor; its conjugate base is what remains after donating.'],
- ['pH formula','pH = −log[H⁺]; pH + pOH = 14 at 25 °C.'],
+ ['pH formula','@@pH = -\\log[H^{+}]@@; pH + pOH = 14 at 25 °C.'],
  ['Strong vs. weak acid','Strong dissociates completely; weak reaches an equilibrium described by Ka.'],
  ['Ka and acid strength','A larger Ka means a stronger acid and a weaker conjugate base.'],
  ['Buffer','A weak acid and its conjugate base together, resisting pH change.'],
- ['Henderson-Hasselbalch','pH = pKa + log([A⁻]/[HA]).'],
+ ['Henderson-Hasselbalch','@@pH = pK_a + \\log\\frac{[A^{-}]}{[HA]}@@.'],
  ['Half-equivalence point','Where half the acid is neutralized and pH equals pKa.'],
  ['Weak acid–strong base equivalence point','Above pH 7, because the conjugate base remains in solution.'],
  ['Polyprotic acid','An acid with more than one ionizable proton, giving multiple equivalence points.']
@@ -5034,7 +5066,7 @@ guide:[
  {h:'Entropy and free energy', points:[
   '<b>Entropy (S)</b> measures dispersal of energy and matter. Gases have more entropy than liquids, which have more than solids.',
   'Entropy increases when moles of gas increase, solids dissolve, or temperature rises.',
-  '<b>Gibbs free energy</b>: ΔG = ΔH − TΔS.',
+  '<b>Gibbs free energy</b>: @@\\Delta G = \\Delta H - T\\Delta S@@.',
   'A reaction is <b>thermodynamically favorable</b> when ΔG < 0.',
   'Negative ΔH and positive ΔS is always favorable; positive ΔH and negative ΔS never is. The mixed cases depend on temperature.',
   'Favorable does not mean fast — kinetics and thermodynamics are separate questions.'
@@ -5043,7 +5075,7 @@ guide:[
   '<b>Galvanic (voltaic) cells</b> use a spontaneous redox reaction to produce electricity; ΔG < 0 and E°cell > 0.',
   '<b>Electrolytic cells</b> use electricity to drive a nonspontaneous reaction; E°cell < 0.',
   '<b>Oxidation at the anode, reduction at the cathode</b> in both cell types.',
-  'E°cell = E°cathode − E°anode; ΔG° = −nFE°.',
+  'E°cell = E°cathode − E°anode; @@\\Delta G^{\\circ} = -nFE^{\\circ}@@.',
   'A <b>salt bridge</b> maintains charge balance so current keeps flowing.',
   'Coupling an unfavorable reaction to a favorable one can drive it, as with ATP in biology.'
  ]}
@@ -5051,14 +5083,14 @@ guide:[
 cards:[
  ['Entropy','A measure of the dispersal of energy and matter; higher for gases than liquids or solids.'],
  ['What raises entropy','More moles of gas, dissolving a solid, or raising temperature.'],
- ['Gibbs free energy','ΔG = ΔH − TΔS.'],
+ ['Gibbs free energy','@@\\Delta G = \\Delta H - T\\Delta S@@.'],
  ['Thermodynamically favorable','ΔG is negative.'],
  ['Always favorable case','Negative ΔH combined with positive ΔS, at any temperature.'],
  ['Favorable vs. fast','Thermodynamics predicts direction; kinetics determines rate. They are independent.'],
  ['Galvanic cell','Spontaneous redox reaction producing electricity; E°cell is positive.'],
  ['Electrolytic cell','Uses external electricity to drive a nonspontaneous reaction; E°cell is negative.'],
  ['Anode and cathode','Oxidation happens at the anode, reduction at the cathode.'],
- ['ΔG° = −nFE°','Links cell potential to free energy; positive E° means negative ΔG.']
+ ['@@\\Delta G^{\\circ} = -nFE^{\\circ}@@','Links cell potential to free energy; positive E° means negative ΔG.']
 ],
 quiz:[
  {q:'A reaction has positive ΔH and positive ΔS. It is favorable:',
@@ -5072,7 +5104,7 @@ quiz:[
   a:1, why:'This holds for both galvanic and electrolytic cells, though the electrode signs differ.'},
  {q:'A galvanic cell has E°cell = +1.10 V. Its ΔG° is:',
   c:['Positive, and the reaction is unfavorable','Negative, and the reaction is favorable','Zero','Cannot be determined'],
-  a:1, why:'ΔG° = −nFE°, so a positive cell potential gives a negative free energy change.'}
+  a:1, why:'@@\\Delta G^{\\circ} = -nFE^{\\circ}@@, so a positive cell potential gives a negative free energy change.'}
 ]
 }
 ]);
@@ -5180,8 +5212,8 @@ guide:[
   'Population size barely matters as long as the population is at least 10 times the sample.'
  ]},
  {h:'The key results', points:[
-  'For proportions: μ(p̂) = p and σ(p̂) = √(p(1−p)/n), approximately normal when np ≥ 10 and n(1−p) ≥ 10.',
-  'For means: μ(x̄) = μ and σ(x̄) = σ/√n.',
+  'For proportions: μ(p̂) = p and @@\\sigma_{p} = \\sqrt{\\frac{p(1-p)}{n}}@@, approximately normal when np ≥ 10 and n(1−p) ≥ 10.',
+  'For means: μ(x̄) = μ and @@\\sigma_{\\bar{x}} = \\frac{\\sigma}{\\sqrt{n}}@@.',
   'The <b>Central Limit Theorem</b>: for large n (usually n ≥ 30), x̄ is approximately normal regardless of population shape.',
   'If the population is already normal, x̄ is normal for any n.',
   'Larger n shrinks the standard error by a factor of √n, so quadrupling n halves it.'
@@ -5190,8 +5222,8 @@ guide:[
 cards:[
  ['Sampling distribution','The distribution of a statistic across all possible samples of a given size.'],
  ['Unbiased statistic','One whose sampling distribution centers on the true parameter.'],
- ['Standard error of a mean','σ ÷ √n.'],
- ['Standard error of a proportion','√(p(1−p)/n).'],
+ ['Standard error of a mean','@@\\frac{\\sigma}{\\sqrt{n}}@@'],
+ ['Standard error of a proportion','@@\\sqrt{\\frac{p(1-p)}{n}}@@'],
  ['Central Limit Theorem','For large n, the sampling distribution of x̄ is approximately normal whatever the population shape.'],
  ['Large counts condition','np ≥ 10 and n(1−p) ≥ 10 for proportions.'],
  ['10% condition','The sample must be no more than 10% of the population for independence.'],
@@ -5217,7 +5249,7 @@ id:'u6', title:'Unit 6 · Inference for Proportions',
 guide:[
  {h:'Confidence intervals', points:[
   'Form: statistic ± (critical value)(standard error).',
-  'One-proportion z-interval: p̂ ± z*√(p̂(1−p̂)/n).',
+  'One-proportion z-interval: @@\\hat{p} \\pm z^{*}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}@@.',
   'Conditions: <b>random</b> sample, <b>10%</b> condition, and <b>large counts</b> (at least 10 successes and 10 failures).',
   'Interpretation: "We are 95% confident the true proportion lies between __ and __."',
   'Confidence <i>level</i> interpretation: in repeated sampling, 95% of such intervals capture the true parameter.',
@@ -5265,13 +5297,13 @@ guide:[
   'When σ is unknown — nearly always — use <b>t</b> instead of z, with s in place of σ.',
   'The t distribution is bell-shaped but has heavier tails, giving wider intervals.',
   '<b>Degrees of freedom</b> = n − 1 for one sample. As df grows, t approaches z.',
-  'One-sample t-interval: x̄ ± t*(s/√n).',
+  'One-sample t-interval: @@\\bar{x} \\pm t^{*}\\frac{s}{\\sqrt{n}}@@.',
   'Conditions: random sample, 10% condition, and normal/large sample (n ≥ 30 or roughly symmetric data with no strong outliers).'
  ]},
  {h:'Comparing means', points:[
   '<b>Paired t</b> applies when observations come in natural pairs — analyze the differences as one sample.',
   'Before-and-after measurements on the same subjects are always paired, never two-sample.',
-  '<b>Two-sample t</b> compares independent groups: (x̄₁ − x̄₂) ± t*√(s₁²/n₁ + s₂²/n₂).',
+  '<b>Two-sample t</b> compares independent groups: @@(\\bar{x}_{1} - \\bar{x}_{2}) \\pm t^{*}\\sqrt{\\frac{s_{1}^{2}}{n_{1}} + \\frac{s_{2}^{2}}{n_{2}}}@@.',
   'Check conditions for each group separately in a two-sample procedure.',
   'A confidence interval for a difference that contains 0 means no significant difference at that level.'
  ]}
@@ -5280,7 +5312,7 @@ cards:[
  ['When to use t instead of z','Whenever the population standard deviation σ is unknown.'],
  ['Shape of the t distribution','Bell-shaped with heavier tails than the normal, producing wider intervals.'],
  ['Degrees of freedom','n − 1 for a one-sample t procedure.'],
- ['One-sample t-interval','x̄ ± t*(s/√n).'],
+ ['One-sample t-interval','@@\\bar{x} \\pm t^{*}\\frac{s}{\\sqrt{n}}@@.'],
  ['Conditions for t procedures','Random sample, 10% condition, and normality or a large sample.'],
  ['Paired t-test','Used for naturally paired data; analyze the differences as a single sample.'],
  ['Two-sample t-test','Compares two independent groups\u2019 means.'],
@@ -5312,7 +5344,7 @@ guide:[
   'For a two-way table, df = (rows − 1)(columns − 1).'
  ]},
  {h:'Computing and concluding', points:[
-  'χ² = Σ (observed − expected)² ÷ expected.',
+  '@@\\chi^{2} = \\sum \\frac{(O - E)^{2}}{E}@@, where O is observed and E is expected.',
   'Expected count for a cell = (row total × column total) ÷ grand total.',
   'Condition: all <b>expected</b> counts must be at least 5 — observed counts may be smaller.',
   'The chi-square distribution is right-skewed, and larger χ² means stronger evidence against H₀.',
@@ -5324,7 +5356,7 @@ cards:[
  ['Chi-square goodness of fit','Tests one categorical variable against a claimed distribution; df = categories − 1.'],
  ['Chi-square test for homogeneity','Compares the distribution of one categorical variable across several populations.'],
  ['Chi-square test for independence','Tests whether two categorical variables are associated within one sample.'],
- ['Chi-square statistic','χ² = Σ (observed − expected)² ÷ expected.'],
+ ['Chi-square statistic','@@\\chi^{2} = \\sum \\frac{(O - E)^{2}}{E}@@, where O is observed and E is expected.'],
  ['Expected count','(row total × column total) ÷ grand total.'],
  ['Chi-square condition','All expected counts at least 5; observed counts may be smaller.'],
  ['Degrees of freedom for a two-way table','(rows − 1)(columns − 1).'],
@@ -5351,8 +5383,8 @@ guide:[
  {h:'Regression inference', points:[
   'The population model is y = α + βx + ε; the sample line b₀ + b₁x estimates it.',
   'H₀: β = 0 means there is no linear relationship between x and y.',
-  'Test statistic t = b₁ ÷ SE(b₁), with <b>df = n − 2</b>.',
-  'Confidence interval for slope: b₁ ± t*·SE(b₁).',
+  'Test statistic @@t = \\frac{b_{1}}{SE(b_{1})}@@, with <b>df = n − 2</b>.',
+  'Confidence interval for slope: @@b_{1} \\pm t^{*} \\cdot SE(b_{1})@@.',
   'Computer output gives the slope, its standard error, t, and a two-sided p-value in a standard layout.'
  ]},
  {h:'Conditions', points:[
@@ -5366,9 +5398,9 @@ guide:[
 cards:[
  ['Population regression model','y = α + βx + ε, estimated by the sample least-squares line.'],
  ['Null hypothesis for slope','H₀: β = 0, meaning no linear relationship between x and y.'],
- ['Test statistic for slope','t = b₁ ÷ SE(b₁).'],
+ ['Test statistic for slope','@@t = \\frac{b_{1}}{SE(b_{1})}@@.'],
  ['Degrees of freedom for slope inference','n − 2.'],
- ['Confidence interval for slope','b₁ ± t* × SE(b₁).'],
+ ['Confidence interval for slope','@@b_{1} \\pm t^{*} \\cdot SE(b_{1})@@'],
  ['LINER conditions','Linear, Independent, Normal residuals, Equal variance, Random.'],
  ['Interval excluding zero','Convincing evidence of a linear relationship.'],
  ['Significant slope and causation','Still requires an experiment; a significant slope alone proves only association.']
@@ -5406,7 +5438,7 @@ guide:[
  {h:'Inverse functions and higher derivatives', points:[
   'If g is the inverse of f, then g\u2032(x) = 1 ÷ f\u2032(g(x)).',
   'To evaluate an inverse derivative at a point, first find the input that maps to it.',
-  'd/dx[arcsin x] = 1/√(1−x²); d/dx[arctan x] = 1/(1+x²).',
+  '@@\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1-x^{2}}}@@; @@\\frac{d}{dx}\\arctan x = \\frac{1}{1+x^{2}}@@.',
   'Higher-order derivatives: f\u2033 measures concavity and describes acceleration in motion problems.',
   'Chain rule applies repeatedly for nested compositions, working from the outside in.'
  ]}
@@ -5417,8 +5449,8 @@ cards:[
  ['Horizontal tangent in implicit form','Where the numerator of dy/dx equals zero.'],
  ['Vertical tangent in implicit form','Where the denominator of dy/dx equals zero.'],
  ['Inverse function derivative','g\u2032(x) = 1 ÷ f\u2032(g(x)).'],
- ['Derivative of arcsin x','1 ÷ √(1 − x²).'],
- ['Derivative of arctan x','1 ÷ (1 + x²).'],
+ ['Derivative of arcsin x','@@\\frac{1}{\\sqrt{1-x^{2}}}@@'],
+ ['Derivative of arctan x','@@\\frac{1}{1+x^{2}}@@'],
  ['Second derivative','Rate of change of the derivative; gives concavity and acceleration.']
 ],
 quiz:[
@@ -5536,9 +5568,9 @@ guide:[
   'The integral of a rate gives the total change in the quantity.'
  ]},
  {h:'The Fundamental Theorem', points:[
-  '<b>FTC Part 1</b>: d/dx ∫ₐˣ f(t)dt = f(x). Differentiating an accumulation function returns the integrand.',
+  '<b>FTC Part 1</b>: @@\\frac{d}{dx}\\int_{a}^{x} f(t)\\,dt = f(x)@@. Differentiating an accumulation function returns the integrand.',
   'With a variable upper limit g(x), the chain rule gives f(g(x))·g\u2032(x).',
-  '<b>FTC Part 2</b>: ∫ₐᵇ f(x)dx = F(b) − F(a) where F is any antiderivative.',
+  '<b>FTC Part 2</b>: @@\\int_{a}^{b} f(x)\\,dx = F(b) - F(a)@@ where F is any antiderivative.',
   '<b>u-substitution</b> reverses the chain rule; change the limits when working with a definite integral.',
   'Always include + C for indefinite integrals.',
   'Common antiderivatives: ∫1/x dx = ln|x| + C, ∫eˣ dx = eˣ + C, ∫cos x dx = sin x + C.'
@@ -5549,9 +5581,9 @@ cards:[
  ['Left Riemann sum','Underestimates an increasing function, overestimates a decreasing one.'],
  ['Trapezoidal sum','Overestimates a concave-up function and underestimates a concave-down one.'],
  ['Integral of a rate','Gives the total change in the underlying quantity.'],
- ['Fundamental Theorem Part 1','d/dx ∫ₐˣ f(t)dt = f(x).'],
+ ['Fundamental Theorem Part 1','@@\\frac{d}{dx}\\int_{a}^{x} f(t)\\,dt = f(x)@@.'],
  ['Variable upper limit','d/dx ∫ₐ^g(x) f(t)dt = f(g(x))·g\u2032(x).'],
- ['Fundamental Theorem Part 2','∫ₐᵇ f(x)dx = F(b) − F(a).'],
+ ['Fundamental Theorem Part 2','@@\\int_{a}^{b} f(x)\\,dx = F(b) - F(a)@@.'],
  ['u-substitution','Reverses the chain rule; change the limits for a definite integral.'],
  ['Antiderivative of 1/x','ln|x| + C.']
 ],
@@ -5616,26 +5648,26 @@ quiz:[
 id:'u8', title:'Unit 8 · Applications of Integration',
 guide:[
  {h:'Accumulation and area', points:[
-  '<b>Average value</b> of f on [a,b] = (1/(b−a))∫ₐᵇ f(x)dx.',
+  '<b>Average value</b> of f on [a,b] = @@\\frac{1}{b-a}\\int_{a}^{b} f(x)\\,dx@@.',
   'Do not confuse average value of a function with average rate of change.',
   '<b>Area between curves</b> = ∫(top − bottom)dx, or ∫(right − left)dy.',
   'Find intersection points first to set the limits, and split the integral if the curves cross.',
   'Integrating with respect to y is often simpler when the region is bounded left and right.'
  ]},
  {h:'Volume and motion', points:[
-  '<b>Disc method</b>: V = π∫R² dx when the region touches the axis of rotation.',
-  '<b>Washer method</b>: V = π∫(R² − r²)dx when there is a gap between the region and the axis.',
-  '<b>Known cross sections</b>: V = ∫A(x)dx, where A is the area formula for the given shape.',
+  '<b>Disc method</b>: @@V = \\pi\\int R^{2}\\,dx@@ when the region touches the axis of rotation.',
+  '<b>Washer method</b>: @@V = \\pi\\int (R^{2} - r^{2})\\,dx@@ when there is a gap between the region and the axis.',
+  '<b>Known cross sections</b>: @@V = \\int A(x)\\,dx@@, where A is the area formula for the given shape.',
   'Displacement = ∫v(t)dt; <b>total distance</b> = ∫|v(t)|dt.',
   'Final position = initial position + ∫v(t)dt over the interval.'
  ]}
 ],
 cards:[
- ['Average value of a function','(1 ÷ (b − a)) × ∫ₐᵇ f(x)dx.'],
+ ['Average value of a function','@@\\frac{1}{b-a}\\int_{a}^{b} f(x)\\,dx@@'],
  ['Area between curves','∫(top − bottom)dx, splitting the integral where the curves cross.'],
  ['Disc method','V = π∫R²dx, used when the region touches the axis of rotation.'],
- ['Washer method','V = π∫(R² − r²)dx, used when a gap separates the region from the axis.'],
- ['Known cross sections','V = ∫A(x)dx, using the area formula for the given cross-sectional shape.'],
+ ['Washer method','@@V = \\pi\\int (R^{2} - r^{2})\\,dx@@, used when a gap separates the region from the axis.'],
+ ['Known cross sections','@@V = \\int A(x)\\,dx@@, using the area formula for the given cross-sectional shape.'],
  ['Displacement','∫v(t)dt over the interval.'],
  ['Total distance travelled','∫|v(t)|dt over the interval.'],
  ['Final position','Initial position plus the integral of velocity.']
@@ -6254,8 +6286,8 @@ id:'u3', title:'Unit 3 · Work, Energy, and Power',
 guide:[
  {h:'Work and energy', points:[
   '<b>Work</b> = Fd cos θ. A force perpendicular to motion does no work.',
-  '<b>Kinetic energy</b> = ½mv². Doubling speed quadruples kinetic energy.',
-  'Gravitational potential energy = mgh; spring potential energy = ½kx².',
+  '<b>Kinetic energy</b> @@= \\frac{1}{2}mv^{2}@@. Doubling speed quadruples kinetic energy.',
+  'Gravitational potential energy = mgh; spring potential energy = @@\\frac{1}{2}kx^{2}@@.',
   'The <b>work-energy theorem</b>: net work equals the change in kinetic energy.',
   '<b>Conservation of energy</b>: total mechanical energy stays constant when only conservative forces act.'
  ]},
@@ -6269,9 +6301,9 @@ guide:[
 ],
 cards:[
  ['Work formula','W = Fd cos θ; perpendicular forces do no work.'],
- ['Kinetic energy','KE = ½mv²; doubling speed quadruples it.'],
+ ['Kinetic energy','@@KE = \\frac{1}{2}mv^{2}@@; doubling speed quadruples it.'],
  ['Gravitational potential energy','PE = mgh, relative to a chosen reference height.'],
- ['Spring potential energy','PE = ½kx².'],
+ ['Spring potential energy','PE = @@\\frac{1}{2}kx^{2}@@.'],
  ['Work-energy theorem','Net work on an object equals its change in kinetic energy.'],
  ['Conservation of mechanical energy','Total mechanical energy is constant when only conservative forces act.'],
  ['Power','Work per unit time, also equal to Fv, measured in watts.'],
@@ -6383,7 +6415,7 @@ quiz:[
 id:'u6', title:'Unit 6 · Energy and Momentum of Rotating Systems',
 guide:[
  {h:'Rotational energy and angular momentum', points:[
-  '<b>Rotational kinetic energy</b> = ½Iω².',
+  '<b>Rotational kinetic energy</b> @@= \\frac{1}{2}I\\omega^{2}@@.',
   'A rolling object has both translational and rotational kinetic energy, so it accelerates more slowly than a sliding one.',
   '<b>Angular momentum</b> L = Iω for a rigid body.',
   '<b>Conservation of angular momentum</b>: with no net external torque, L stays constant.',
@@ -6398,7 +6430,7 @@ guide:[
  ]}
 ],
 cards:[
- ['Rotational kinetic energy','KE = ½Iω².'],
+ ['Rotational kinetic energy','@@KE = \\frac{1}{2}I\\omega^{2}@@.'],
  ['Rolling objects','Have both translational and rotational kinetic energy, so they accelerate more slowly.'],
  ['Angular momentum','L = Iω for a rigid rotating body.'],
  ['Conservation of angular momentum','L is constant when no net external torque acts.'],
@@ -6428,13 +6460,13 @@ guide:[
   '<b>SHM</b> occurs when the restoring force is proportional to displacement and directed toward equilibrium.',
   'For a spring, <b>Hooke\u2019s law</b> gives F = −kx.',
   '<b>Amplitude</b> is maximum displacement; <b>period</b> T is the time for one full cycle; frequency f = 1/T.',
-  'Spring period: T = 2π√(m/k) — it depends on mass and stiffness but <b>not</b> on amplitude.',
-  'Pendulum period: T = 2π√(L/g) — it depends on length and gravity but <b>not</b> on mass or amplitude for small angles.'
+  'Spring period: @@T = 2\\pi\\sqrt{\\frac{m}{k}}@@ — it depends on mass and stiffness but <b>not</b> on amplitude.',
+  'Pendulum period: @@T = 2\\pi\\sqrt{\\frac{L}{g}}@@ — it depends on length and gravity but <b>not</b> on mass or amplitude for small angles.'
  ]},
  {h:'Energy in oscillation', points:[
   'At maximum displacement, velocity is zero and potential energy is at its maximum.',
   'At equilibrium, potential energy is zero and kinetic energy is at its maximum.',
-  'Total mechanical energy stays constant in ideal SHM: E = ½kA².',
+  'Total mechanical energy stays constant in ideal SHM: @@E = \\frac{1}{2}kA^{2}@@.',
   'Acceleration is greatest at the extremes and zero at equilibrium.',
   'Damping removes energy, shrinking amplitude while leaving the period nearly unchanged.'
  ]}
@@ -6442,11 +6474,11 @@ guide:[
 cards:[
  ['Simple harmonic motion','Motion where restoring force is proportional to displacement and points toward equilibrium.'],
  ['Hooke\u2019s law','F = −kx, with the minus sign indicating a restoring force.'],
- ['Spring period','T = 2π√(m/k); independent of amplitude.'],
- ['Pendulum period','T = 2π√(L/g); independent of mass and, for small angles, of amplitude.'],
+ ['Spring period','@@T = 2\\pi\\sqrt{\\frac{m}{k}}@@; independent of amplitude.'],
+ ['Pendulum period','@@T = 2\\pi\\sqrt{\\frac{L}{g}}@@; independent of mass and, for small angles, of amplitude.'],
  ['Where velocity is maximum','At the equilibrium position.'],
  ['Where acceleration is maximum','At the points of maximum displacement.'],
- ['Total energy in SHM','E = ½kA², constant in the absence of damping.'],
+ ['Total energy in SHM','@@E = \\frac{1}{2}kA^{2}@@, constant in the absence of damping.'],
  ['Damping','Energy loss that reduces amplitude while barely changing the period.']
 ],
 quiz:[
@@ -6455,20 +6487,20 @@ quiz:[
   a:2, why:'Period depends only on mass and spring constant, which is what makes SHM useful for timekeeping.'},
  {q:'A pendulum is moved to the moon, where g is smaller. Its period will:',
   c:['Decrease','Increase','Stay the same','Become zero'],
-  a:1, why:'T = 2π√(L/g), so a smaller g gives a longer period.'},
+  a:1, why:'@@T = 2\\pi\\sqrt{\\frac{L}{g}}@@, so a smaller g gives a longer period.'},
  {q:'At maximum displacement in SHM, the mass has:',
   c:['Maximum velocity and zero acceleration','Zero velocity and maximum acceleration','Maximum velocity and maximum acceleration','Zero of both'],
   a:1, why:'The restoring force peaks at the extremes, where the mass has momentarily stopped.'},
  {q:'Increasing the mass on a spring will:',
   c:['Decrease the period','Increase the period','Leave the period unchanged','Increase the frequency'],
-  a:1, why:'T = 2π√(m/k), so more mass means slower oscillation.'}
+  a:1, why:'@@T = 2\\pi\\sqrt{\\frac{m}{k}}@@, so more mass means slower oscillation.'}
 ]
 },
 {
 id:'u8', title:'Unit 8 · Fluids',
 guide:[
  {h:'Pressure and buoyancy', points:[
-  '<b>Density</b> ρ = m/V. <b>Pressure</b> P = F/A, measured in pascals.',
+  '<b>Density</b> @@\\rho = \\frac{m}{V}@@. <b>Pressure</b> @@P = \\frac{F}{A}@@, measured in pascals.',
   'Pressure in a fluid at depth h is P = P₀ + ρgh — it depends on depth, not on container shape.',
   '<b>Pascal\u2019s principle</b>: pressure applied to an enclosed fluid transmits undiminished, which is how hydraulic lifts multiply force.',
   '<b>Archimedes\u2019 principle</b>: buoyant force equals the weight of the fluid displaced.',
@@ -6484,8 +6516,8 @@ guide:[
  ]}
 ],
 cards:[
- ['Density','ρ = mass ÷ volume.'],
- ['Pressure','P = force ÷ area, measured in pascals.'],
+ ['Density','@@\\rho = \\frac{m}{V}@@.'],
+ ['Pressure','@@P = \\frac{F}{A}@@, measured in pascals.'],
  ['Pressure with depth','P = P₀ + ρgh; depends on depth, not container shape.'],
  ['Pascal\u2019s principle','Pressure applied to an enclosed fluid transmits undiminished throughout.'],
  ['Archimedes\u2019 principle','Buoyant force equals the weight of the fluid displaced.'],
@@ -6738,40 +6770,40 @@ addUnits('ap-calc-bc', [
 id:'u9', title:'Unit 9 · Parametric, Polar, and Vector-Valued Functions',
 guide:[
  {h:'Parametric and vector functions', points:[
-  'For parametric equations, <b>dy/dx = (dy/dt) ÷ (dx/dt)</b>.',
+  'For parametric equations, <b>@@\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}@@</b>.',
   'The second derivative is d/dt(dy/dx) ÷ (dx/dt) — divide by dx/dt again, not by dt².',
-  '<b>Speed</b> = √((dx/dt)² + (dy/dt)²).',
-  '<b>Arc length</b> = ∫√((dx/dt)² + (dy/dt)²)dt.',
+  '<b>Speed</b> = @@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@.',
+  '<b>Arc length</b> = ∫@@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@dt.',
   'For a vector-valued function, position, velocity, and acceleration are found component by component.',
   'Total distance travelled is the integral of speed, not of velocity.'
  ]},
  {h:'Polar functions', points:[
   'Conversions: x = r cos θ, y = r sin θ, r² = x² + y².',
-  '<b>Area in polar</b> = ½∫r²dθ between the bounding angles.',
-  'For the area between two polar curves, use ½∫(r_outer² − r_inner²)dθ.',
+  '<b>Area in polar</b> = @@\\frac{1}{2}\\int r^{2}\\,d\\theta@@ between the bounding angles.',
+  'For the area between two polar curves, use @@\\frac{1}{2}\\int (r_{outer}^{2} - r_{inner}^{2})\\,d\\theta@@.',
   'Find the bounds by solving where the curves intersect, and sketch first to confirm.',
   'The slope of a polar curve still requires converting to parametric form in x and y.'
  ]}
 ],
 cards:[
- ['Parametric derivative','dy/dx = (dy/dt) ÷ (dx/dt).'],
+ ['Parametric derivative','@@\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}@@.'],
  ['Parametric second derivative','d/dt(dy/dx) divided by dx/dt.'],
- ['Speed of a parametric curve','√((dx/dt)² + (dy/dt)²).'],
- ['Parametric arc length','∫√((dx/dt)² + (dy/dt)²)dt.'],
+ ['Speed of a parametric curve','@@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@.'],
+ ['Parametric arc length','∫@@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@dt.'],
  ['Total distance for a moving particle','The integral of speed, not of velocity.'],
  ['Polar to rectangular','x = r cos θ, y = r sin θ, r² = x² + y².'],
- ['Polar area','½∫r²dθ over the bounding angles.'],
- ['Area between polar curves','½∫(r_outer² − r_inner²)dθ.']
+ ['Polar area','@@\\frac{1}{2}\\int r^{2}\\,d\\theta@@ over the bounding angles.'],
+ ['Area between polar curves','@@\\frac{1}{2}\\int (r_{outer}^{2} - r_{inner}^{2})\\,d\\theta@@.']
 ],
 quiz:[
  {q:'For x = t², y = t³, dy/dx equals:',
   c:['3t','3t/2','2t/3','6t'],
   a:1, why:'dy/dt = 3t² and dx/dt = 2t, so dy/dx = 3t²/2t = 3t/2.'},
  {q:'The area enclosed by one petal of a polar curve is found using:',
-  c:['∫r dθ','½∫r²dθ','∫r²dθ','2π∫r dθ'],
+  c:['∫r dθ','@@\\frac{1}{2}\\int r^{2}\\,d\\theta@@','∫r²dθ','2π∫r dθ'],
   a:1, why:'The polar area formula sums infinitesimal circular sectors of area ½r²dθ.'},
  {q:'Total distance travelled by a parametric particle is:',
-  c:['∫(dy/dt)dt','∫√((dx/dt)² + (dy/dt)²)dt','∫(dx/dt)dt','The displacement magnitude'],
+  c:['∫(dy/dt)dt','∫@@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@dt','∫(dx/dt)dt','The displacement magnitude'],
   a:1, why:'Integrating speed accumulates path length regardless of direction changes.'},
  {q:'The second derivative for a parametric curve is found by:',
   c:['Differentiating dy/dx with respect to x directly','Differentiating dy/dx with respect to t, then dividing by dx/dt','Dividing d²y/dt² by d²x/dt²','Squaring dy/dx'],
@@ -6783,16 +6815,16 @@ id:'u10', title:'Unit 10 · Infinite Sequences and Series',
 guide:[
  {h:'Convergence tests', points:[
   '<b>nth term test</b>: if the terms do not approach 0, the series diverges. It can never prove convergence.',
-  '<b>Geometric series</b> Σarⁿ converges when |r| < 1, with sum a/(1−r).',
-  '<b>p-series</b> Σ1/nᵖ converges when p > 1. The harmonic series (p = 1) diverges.',
-  '<b>Ratio test</b>: converges if lim|aₙ₊₁/aₙ| < 1; inconclusive at exactly 1.',
+  '<b>Geometric series</b> @@\\sum ar^{n}@@ converges when |r| < 1, with sum @@\\frac{a}{1-r}@@.',
+  '<b>p-series</b> @@\\sum \\frac{1}{n^{p}}@@ converges when p > 1. The harmonic series (p = 1) diverges.',
+  '<b>Ratio test</b>: converges if @@\\lim |a_{n+1}/a_{n}| < 1@@; inconclusive at exactly 1.',
   'Comparison and limit comparison tests match a series against a known one.',
   '<b>Alternating series test</b>: converges if terms decrease in magnitude to 0.'
  ]},
  {h:'Power and Taylor series', points:[
   '<b>Absolute convergence</b> implies convergence; <b>conditional convergence</b> means it converges but not absolutely.',
   '<b>Radius and interval of convergence</b> come from the ratio test; always check the endpoints separately.',
-  '<b>Taylor series</b>: Σ f⁽ⁿ⁾(a)(x−a)ⁿ ÷ n!. A <b>Maclaurin series</b> is centred at a = 0.',
+  '<b>Taylor series</b>: @@\\sum \\frac{f^{(n)}(a)(x-a)^{n}}{n!}@@. A <b>Maclaurin series</b> is centred at a = 0.',
   'Memorize the Maclaurin series for eˣ, sin x, cos x, and 1/(1−x).',
   '<b>Alternating series error bound</b>: the error is less than the first omitted term.',
   '<b>Lagrange error bound</b> bounds the remainder of a Taylor polynomial.'
@@ -6800,14 +6832,14 @@ guide:[
 ],
 cards:[
  ['nth term test','If terms do not approach 0 the series diverges; it never proves convergence.'],
- ['Geometric series','Σarⁿ converges when |r| < 1 with sum a ÷ (1 − r).'],
- ['p-series','Σ1/nᵖ converges when p > 1; the harmonic series diverges.'],
+ ['Geometric series','@@\\sum ar^{n}@@ converges when |r| < 1 with sum @@\\frac{a}{1-r}@@'],
+ ['p-series','@@\\sum \\frac{1}{n^{p}}@@ converges when p > 1; the harmonic series diverges.'],
  ['Ratio test','Converges if the limit of |aₙ₊₁/aₙ| is less than 1; inconclusive at 1.'],
  ['Alternating series test','Converges if terms decrease in magnitude to zero.'],
  ['Conditional convergence','The series converges but the series of absolute values does not.'],
  ['Interval of convergence','Found with the ratio test; endpoints must be checked separately.'],
- ['Taylor series','Σ f⁽ⁿ⁾(a)(x − a)ⁿ ÷ n!; centred at zero it is a Maclaurin series.'],
- ['Maclaurin series for eˣ','1 + x + x²/2! + x³/3! + …'],
+ ['Taylor series','@@\\sum \\frac{f^{(n)}(a)(x-a)^{n}}{n!}@@; centred at zero it is a Maclaurin series.'],
+ ['Maclaurin series for eˣ','@@1 + x + \\frac{x^{2}}{2!} + \\frac{x^{3}}{3!} + \\cdots@@'],
  ['Alternating series error bound','The error is smaller than the first omitted term.']
 ],
 quiz:[
@@ -6897,9 +6929,9 @@ quiz:[
 id:'u6', title:'Unit 6 · Gene Expression and Regulation',
 guide:[
  {h:'From DNA to protein', points:[
-  'DNA replication is <b>semiconservative</b>: helicase unwinds, polymerase builds 5′→3′, giving a leading strand and a lagging strand of Okazaki fragments joined by ligase.',
+  'DNA replication is <b>semiconservative</b>: helicase unwinds, polymerase builds 5\u2032\u21923\u2032, giving a leading strand and a lagging strand of Okazaki fragments joined by ligase.',
   '<b>Transcription</b>: RNA polymerase reads the template strand to build mRNA.',
-  'Eukaryotic <b>RNA processing</b> removes introns, splices exons, and adds a 5′ cap and poly-A tail.',
+  'Eukaryotic <b>RNA processing</b> removes introns, splices exons, and adds a 5\u2032 cap and poly-A tail.',
   '<b>Alternative splicing</b> lets one gene produce several different proteins.',
   '<b>Translation</b>: ribosomes read codons while tRNA anticodons deliver amino acids until a stop codon.',
   'The genetic code is nearly universal, which is why bacteria can express human genes.'
@@ -6916,7 +6948,7 @@ guide:[
 cards:[
  ['Semiconservative replication','Each new DNA molecule keeps one original strand and one new strand.'],
  ['Okazaki fragments','Short segments made discontinuously on the lagging strand and joined by ligase.'],
- ['RNA processing','Introns removed, exons spliced, plus a 5′ cap and poly-A tail added.'],
+ ['RNA processing','Introns removed, exons spliced, plus a 5\u2032 cap and poly-A tail added.'],
  ['Alternative splicing','Producing multiple different proteins from a single gene.'],
  ['Codon','A three-nucleotide mRNA sequence specifying one amino acid or a stop signal.'],
  ['Frameshift mutation','Insertion or deletion shifting the reading frame and altering every downstream codon.'],
@@ -6957,7 +6989,7 @@ guide:[
  ]},
  {h:'Evidence and speciation', points:[
   'Evidence: fossils, <b>homologous</b> structures (common ancestry), <b>analogous</b> structures (convergent evolution), vestigial traits, embryology, and molecular similarity.',
-  '<b>Hardy-Weinberg</b>: p + q = 1 and p² + 2pq + q² = 1, valid only with no selection, no mutation, no migration, random mating, and a large population.',
+  '<b>Hardy-Weinberg</b>: p + q = 1 and @@p^{2} + 2pq + q^{2} = 1@@, valid only with no selection, no mutation, no migration, random mating, and a large population.',
   'Deviation from Hardy-Weinberg is evidence that evolution is occurring.',
   '<b>Allopatric speciation</b> follows geographic isolation; <b>sympatric</b> occurs without it, often via polyploidy in plants.',
   'Reproductive barriers may be <b>prezygotic</b> (habitat, timing, behaviour) or <b>postzygotic</b> (hybrid sterility).',
@@ -6973,7 +7005,7 @@ cards:[
  ['Bottleneck effect','A sharp population reduction that randomly alters allele frequencies.'],
  ['Founder effect','A small group starting a new population with a nonrepresentative allele sample.'],
  ['Homologous vs. analogous structures','Homologous share ancestry; analogous share function from convergent evolution.'],
- ['Hardy-Weinberg equilibrium','p² + 2pq + q² = 1; holds only when no evolutionary forces act.'],
+ ['Hardy-Weinberg equilibrium','@@p^{2} + 2pq + q^{2} = 1@@; holds only when no evolutionary forces act.'],
  ['Allopatric speciation','New species arising after geographic separation.'],
  ['Prezygotic barrier','Prevents mating or fertilization, such as differing habitats or timing.'],
  ['Cladogram','Diagram grouping organisms by shared derived characteristics.']
@@ -7953,6 +7985,7 @@ function render() {
   else if (parts[0] === 'settings') html = vSettings();
   else html = notFound();
   view().innerHTML = html;
+  if (typeof sweepMath === 'function') sweepMath(view());
   if (typeof afterRender === 'function') afterRender();
 }
 
@@ -9366,6 +9399,140 @@ function mountInstallFab() {
         style="left:22px;right:auto;background:var(--paper);color:var(--ink);border-color:var(--line)">
        <span style="font-size:1.05rem">⤓</span><span>Install app</span></a>`);
   if (PWA.prompt) document.getElementById('installfab').classList.remove('hidden');
+}
+</script>
+<script>
+/* ============================================================
+   MATH RENDERING
+   Formulas are written between @@ markers in a small LaTeX subset and
+   rendered as real stacked fractions, radicals, and integrals. No
+   library and no network, so it still works offline.
+
+   Supported: \frac{}{}  \sqrt{}  \int \sum \lim with _{} ^{}
+              x^{} x_{}  \text{}  and the common Greek and operators.
+   ============================================================ */
+const MSYM = {
+  pi:'π', theta:'θ', Theta:'Θ', Delta:'Δ', delta:'δ', alpha:'α', beta:'β',
+  gamma:'γ', Gamma:'Γ', mu:'μ', nu:'ν', sigma:'σ', Sigma:'Σ', omega:'ω',
+  Omega:'Ω', rho:'ρ', lambda:'λ', Lambda:'Λ', phi:'φ', Phi:'Φ', epsilon:'ε',
+  tau:'τ', chi:'χ', psi:'ψ', eta:'η', kappa:'κ',
+  le:'≤', ge:'≥', ne:'≠', neq:'≠', pm:'±', mp:'∓', times:'×', cdot:'·',
+  div:'÷', to:'→', infty:'∞', approx:'≈', propto:'∝', partial:'∂',
+  cdots:'⋯', ldots:'…', in:'∈', deg:'°', prime:'′', ell:'ℓ', bar:'‾'
+};
+const BIGOP = { int: '∫', sum: 'Σ', prod: '∏', lim: 'lim' };
+
+function mathHTML(src) {
+  let i = 0, out = '';
+  function readGroup() {
+    while (src[i] === ' ') i++;
+    if (src[i] === '{') {
+      i++; let depth = 1; const start = i;
+      while (i < src.length && depth > 0) {
+        if (src[i] === '{') depth++;
+        else if (src[i] === '}') depth--;
+        i++;
+      }
+      return mathHTML(src.slice(start, i - 1));
+    }
+    if (src[i] === '\\') {
+      const s = i; i++;
+      while (i < src.length && /[A-Za-z]/.test(src[i])) i++;
+      return mathHTML(src.slice(s, i));
+    }
+    return src[i++] || '';
+  }
+  while (i < src.length) {
+    const ch = src[i];
+    if (ch === '\\') {
+      i++;
+      if (src[i] === ',' || src[i] === ' ') { i++; out += '<span class="mthin"></span>'; continue; }
+      const s = i;
+      while (i < src.length && /[A-Za-z]/.test(src[i])) i++;
+      const cmd = src.slice(s, i);
+      if (cmd === 'frac') {
+        const n = readGroup(), d = readGroup();
+        out += `<span class="mfrac"><span class="mnum">${n}</span><span class="mden">${d}</span></span>`;
+      } else if (cmd === 'sqrt') {
+        const r = readGroup();
+        out += `<span class="msqrt"><span class="mrad">√</span><span class="mund">${r}</span></span>`;
+      } else if (cmd === 'text') {
+        out += `<span class="mtext">${readGroup()}</span>`;
+      } else if (BIGOP[cmd]) {
+        let sub = '', sup = '';
+        while (src[i] === '_' || src[i] === '^') {
+          const k = src[i++]; const g = readGroup();
+          if (k === '_') sub = g; else sup = g;
+        }
+        const limits = (sub || sup)
+          ? `<span class="mlim"><span class="msup">${sup}</span><span class="msub">${sub}</span></span>` : '';
+        out += `<span class="mop mop-${cmd}"><span class="mglyph">${BIGOP[cmd]}</span>${limits}</span>`;
+      } else if (MSYM[cmd] !== undefined) {
+        out += MSYM[cmd];
+      } else {
+        out += cmd;
+      }
+    } else if (ch === '^' || ch === '_') {
+      i++;
+      const g = readGroup();
+      out += ch === '^' ? `<sup>${g}</sup>` : `<sub>${g}</sub>`;
+    } else {
+      out += src[i++];
+    }
+  }
+  return out;
+}
+
+/* replace @@...@@ spans in a string that is already HTML-safe.
+   '$' is deliberately not the delimiter: the economics content is full of
+   dollar amounts and they would be parsed as formulas. */
+function mathify(s) {
+  if (!s || s.indexOf('@@') === -1) return s;
+  return String(s).replace(/@@([^@]+)@@/g, (_, expr) =>
+    `<span class="math">${mathHTML(expr)}</span>`);
+}
+/* the two entry points used everywhere text is emitted */
+function fx(s) { return mathify(esc(s)); }      // untrusted text: escape then render
+function fxRaw(s) { return mathify(s); }         // authored guide HTML
+
+/* ---- retro-fit the existing views so formulas render everywhere ---- */
+(function applyMath() {
+  /* render() calls sweepMath directly — see the router. Wrapping it here
+     would not work, because the hashchange listener holds a reference to
+     the original function and would bypass any wrapper. */
+  const _paintCard = paintCard;
+  paintCard = function () {
+    _paintCard();
+    sweepMath(document.getElementById('deckwrap'));
+  };
+  const _paintQuiz = paintQuiz;
+  paintQuiz = function () {
+    _paintQuiz();
+    sweepMath(document.getElementById('qwrap'));
+  };
+})();
+
+/* Walk text nodes and upgrade any $...$ that survived into the DOM.
+   Text nodes are already escaped by the browser, so this is safe. */
+function sweepMath(root) {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(n) {
+      if (!n.nodeValue || n.nodeValue.indexOf('@@') === -1) return NodeFilter.FILTER_REJECT;
+      const p = n.parentElement;
+      if (!p || p.closest('.math') || p.tagName === 'TEXTAREA' ||
+          p.tagName === 'INPUT' || p.tagName === 'SCRIPT') return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const hits = [];
+  let n; while ((n = walker.nextNode())) hits.push(n);
+  hits.forEach(node => {
+    if (!/@@[^@]+@@/.test(node.nodeValue)) return;
+    const span = document.createElement('span');
+    span.innerHTML = mathify(esc(node.nodeValue));
+    node.parentNode.replaceChild(span, node);
+  });
 }
 </script>
 <script>

@@ -8943,6 +8943,8 @@ async function testSupabase() {
   const base = CONFIG.supabase.url, key = CONFIG.supabase.publishableKey;
   const out = [];
   out.push(line('Project URL: <span class="mono">' + esc(base) + '</span>'));
+  out.push(line('Confirmation emails should return to: <span class="mono">' + esc(location.origin + location.pathname) + '</span>'));
+  out.push(line('If a confirmation link sends you to <b>localhost:3000</b>, open Supabase → Authentication → URL Configuration and set the address above as the <b>Site URL</b>, then add it under <b>Redirect URLs</b>.'));
   try {
     const r = await fetch(base + '/rest/v1/progress?select=user_id&limit=1', {
       headers: { apikey: key, Authorization: 'Bearer ' + key }
@@ -8967,6 +8969,49 @@ async function testSupabase() {
     out.push(line('✕ Could not reach the project: ' + esc(e.message) + '. Check the URL and that you are online.', 'warn'));
   }
   box.innerHTML = out.join('');
+}
+
+/* ---------------- email confirmation callback ----------------
+   Supabase returns from a confirmation link with its tokens in the URL
+   hash. The app also routes on the hash, so without this the student
+   lands on a "Nothing here" page instead of being signed in. */
+function hasAuthCallback() {
+  const h = location.hash || '';
+  return /[#&](access_token|refresh_token|error_code|error_description|error)=/.test(h) ||
+    /[#&]type=(signup|recovery|magiclink|invite|email_change)/.test(h);
+}
+function authError() {
+  const h = (location.hash || '').replace(/^#/, '');
+  const q = new URLSearchParams(h.replace(/^\/?/, ''));
+  const desc = q.get('error_description') || q.get('error') || '';
+  return desc ? desc.replace(/\+/g, ' ') : '';
+}
+async function handleAuthCallback() {
+  if (!hasAuthCallback()) return false;
+  const err = authError();
+  view().innerHTML = topbar() +
+    `<div class="empty"><div class="big">◔</div><h2>Confirming your email…</h2></div>`;
+  let ok = false;
+  if (!err) {
+    try {
+      const c = await sbClient();            // consumes the tokens from the URL
+      const { data } = await c.auth.getSession();
+      SB.user = data.session ? data.session.user : null;
+      SB.ready = true;
+      ok = !!SB.user;
+      if (ok) await pullCloud();
+    } catch (e) { SB.error = e.message; }
+  }
+  /* drop the tokens out of the address bar before routing */
+  history.replaceState(null, '', location.pathname + location.search + '#/account');
+  render();
+  const box = $('#authmsg') || $('#syncmsg');
+  if (box) {
+    box.innerHTML = ok
+      ? `<p style="color:var(--green);font-size:.86rem;margin:10px 0 0">Email confirmed. You are signed in.</p>`
+      : `<p style="color:var(--margin);font-size:.86rem;margin:10px 0 0">${esc(err || 'That confirmation link did not work. It may have expired — sign up again to get a new one.')}</p>`;
+  }
+  return true;
 }
 
 /* ---------------- account ---------------- */
@@ -9052,9 +9097,12 @@ async function sbSignUp() {
   authMsg('Creating your account…', true);
   try {
     const c = await sbClient();
-    const { error } = await c.auth.signUp({ email, password });
+    /* Without emailRedirectTo, Supabase uses its dashboard "Site URL", which
+       defaults to http://localhost:3000 and produces a dead confirmation link. */
+    const back = location.origin + location.pathname;
+    const { error } = await c.auth.signUp({ email, password, options: { emailRedirectTo: back } });
     if (error) throw error;
-    authMsg('Account created. Check your email if confirmation is required, then sign in.', true);
+    authMsg('Account created. Check your email, click the link, and it will bring you back here signed in.', true);
   } catch (e) { authMsg(e.message || 'Could not create the account.'); }
 }
 async function sbSignOut() {
@@ -9956,7 +10004,12 @@ NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App' });
 /* ---------------- boot ---------------- */
 applyTheme();
 syncCustomUnits();
-render();
+if (typeof hasAuthCallback === 'function' && hasAuthCallback()) {
+  /* returning from an email confirmation link — resolve it before routing */
+  handleAuthCallback();
+} else {
+  render();
+}
 initCounter();
 if (typeof sbInit === 'function') sbInit();
 </script>

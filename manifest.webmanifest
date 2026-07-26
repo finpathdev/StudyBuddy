@@ -1,0 +1,22 @@
+{
+  "name": "StudyBuddy — AP, SAT & ACT",
+  "short_name": "StudyBuddy",
+  "description": "Free study guides, flashcards, quizzes and timed practice for AP courses, the SAT and the ACT.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E6E8E1",
+  "theme_color": "#16232B",
+  "categories": ["education"],
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Due today", "url": "./index.html#/review" },
+    { "name": "Mistake book", "url": "./index.html#/mistakes" },
+    { "name": "Practice test", "url": "./index.html#/tests" }
+  ]
+}

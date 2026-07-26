@@ -11840,6 +11840,879 @@ quiz:[
 clearOutlineFlags();
 </script>
 <script>
+/* ------------------------------------ AP ENVIRONMENTAL SCIENCE */
+setGuide('ap-es', 'u1', [
+{h:'Energy flow and productivity',
+ intro:'APES is a systems course. Almost every question asks what happens downstream when one part of a system changes, so trace the energy and the matter separately.',
+ points:[
+  'Producers convert solar energy through photosynthesis; consumers and decomposers pass it along.',
+  '<b>Gross primary productivity</b> minus respiration equals <b>net primary productivity</b> — the energy actually available to consumers.',
+  'The <b>10% rule</b>: roughly 90% of energy is lost as heat between trophic levels, which limits food chains to four or five links.',
+  'Energy <b>flows</b> one way and is lost. Matter <b>cycles</b> and is reused indefinitely.',
+  'Estuaries, wetlands, and tropical rainforests have the highest NPP; open ocean and desert the lowest.'
+ ],
+ table:{head:['Ecosystem','NPP','Why'],rows:[
+   ['Tropical rainforest','Very high','Warm, wet, abundant light year-round'],
+   ['Estuary','Very high','Nutrient-rich, shallow, sunlit'],
+   ['Temperate forest','Moderate','Seasonal growing period'],
+   ['Open ocean','Low per area','Nutrient-poor surface water'],
+   ['Desert','Very low','Water is the limiting factor']]}},
+{h:'Biogeochemical cycles',
+ table:{head:['Cycle','Atmospheric phase?','Key process','Human disruption'],rows:[
+   ['Carbon','Yes','Photosynthesis and respiration','Combustion of fossil fuels'],
+   ['Nitrogen','Yes','Bacterial fixation','Fertiliser, combustion'],
+   ['Phosphorus','<b>No</b>','Rock weathering','Mining, detergents, runoff'],
+   ['Water','Yes','Evaporation and precipitation','Damming, groundwater depletion']]},
+ points:[
+  '<b>Nitrogen fixation</b> converts atmospheric N₂ into usable ammonia. Nitrogen is abundant in air and useless to most organisms directly.',
+  'The nitrogen cycle continues through nitrification, assimilation, ammonification, and denitrification.',
+  '<b>Phosphorus has no atmospheric phase</b>, moves slowly through rock weathering, and therefore often limits growth.',
+  'Excess N and P from fertiliser runoff cause <b>eutrophication</b> and hypoxic dead zones.'
+ ],
+ trap:'Forgetting that phosphorus lacks a gaseous phase. That single fact explains why it is limiting and why runoff is so damaging.'},
+{h:'Interactions and biomes',
+ points:[
+  'Species interactions: competition, predation, mutualism, commensalism, parasitism.',
+  '<b>Competitive exclusion</b> means two species cannot occupy the identical niche indefinitely; <b>resource partitioning</b> resolves it.',
+  '<b>Keystone species</b> shape communities far beyond their abundance; <b>indicator species</b> signal ecosystem health.',
+  'Biomes are determined mainly by <b>temperature and precipitation</b>.',
+  '<b>Primary succession</b> starts on bare rock with pioneer lichens; <b>secondary succession</b> follows disturbance where soil remains.'
+ ],
+ ex:{q:'A lake receives heavy fertiliser runoff. Trace the consequences.',
+     steps:['Nitrogen and phosphorus enrich the water.',
+            'Algae bloom rapidly across the surface.',
+            'The bloom blocks light and then dies.',
+            'Decomposers consume the dead algae, using dissolved oxygen.',
+            'Oxygen falls below what fish can tolerate.'],
+     a:'Answer: eutrophication leading to hypoxia and a fish kill. Note the oxygen is consumed by decomposition, not by the algae themselves.'}}
+]);
+
+setGuide('ap-es', 'u2', [
+{h:'Why biodiversity matters',
+ intro:'Biodiversity is not just a count of species. It operates at three levels, and losing any one of them reduces an ecosystem\u2019s ability to absorb shocks.',
+ table:{head:['Level','Meaning','Why it matters'],rows:[
+   ['Genetic','Variation within a species','Resilience to disease and change'],
+   ['Species','Number and evenness of species','Functional redundancy'],
+   ['Habitat','Variety of ecosystems','Supports different communities']]},
+ points:[
+  '<b>Ecosystem services</b>: provisioning (food, timber), regulating (climate, water purification), supporting (pollination, nutrient cycling), and cultural.',
+  '<b>Island biogeography</b>: larger islands nearer the mainland support more species than small distant ones — larger area gives more niches, proximity raises immigration.',
+  'This model also applies to habitat fragments surrounded by development, which is why corridors matter.',
+  '<b>Ecological tolerance</b> is the range of conditions an organism can survive, with an optimum in the middle.'
+ ]},
+{h:'Disturbance and adaptation',
+ points:[
+  'Natural disruptions include fire, flood, drought, and volcanic activity, on periodic and episodic timescales.',
+  'Many ecosystems <i>depend</i> on disturbance — some pine cones require fire to open, and suppressing fire causes dangerous fuel buildup.',
+  '<b>Adaptations</b> arise through natural selection across generations, not within one lifetime.',
+  '<b>Ecological succession</b> rebuilds communities after disturbance.',
+  'Greater biodiversity generally increases stability and resilience.'
+ ],
+ ex:{q:'Two islands lie off a coast. Island A is 200 km² and 10 km offshore; Island B is 20 km² and 200 km offshore. Predict species richness.',
+     steps:['Larger area supports more niches and larger, less extinction-prone populations.',
+            'Closer proximity raises the immigration rate from the mainland.',
+            'Island A is favoured on both variables.'],
+     a:'Answer: Island A has substantially higher species richness. Island B is small and remote, the worst combination.'}}
+]);
+
+setGuide('ap-es', 'u3', [
+{h:'Population dynamics',
+ intro:'Population is where ecology meets policy. The same growth curves that describe deer herds describe human societies, and the limiting factors are the same kind of thing.',
+ table:{head:['','r-selected','K-selected'],rows:[
+   ['Offspring','Many','Few'],
+   ['Parental care','Little','Extensive'],
+   ['Maturity','Early','Late'],
+   ['Population pattern','Boom and bust','Stable near K'],
+   ['Survivorship curve','Type III','Type I']]},
+ points:[
+  '<b>Generalists</b> tolerate wide conditions and are extinction-resistant; <b>specialists</b> are efficient in narrow conditions and far more vulnerable.',
+  '<b>Survivorship curves</b>: Type I high late mortality (humans), Type II constant (birds), Type III high early mortality (fish).',
+  '<b>Carrying capacity (K)</b> is the population an environment can sustain. Overshoot causes dieback.',
+  '<b>Density-dependent</b> limits (disease, competition) intensify as population grows. <b>Density-independent</b> limits (weather, fire) do not.'
+ ]},
+{h:'Human populations',
+ points:[
+  'Growth rate = (births + immigration) − (deaths + emigration).',
+  '<b>Rule of 70</b>: doubling time in years ≈ 70 ÷ percent growth rate.',
+  'The <b>demographic transition</b> moves from high birth and death rates to low ones as a country develops. Death rates fall first, which is what causes the population surge in Stage 2.',
+  '<b>Age structure diagrams</b>: wide base means rapid growth, column means stability, narrow base means decline.',
+  '<b>Total fertility rate</b> of about 2.1 is replacement level. Education and family planning access lower TFR reliably.'
+ ],
+ ex:{q:'A country grows at 3.5% per year. How long until its population doubles?',
+     steps:['Apply the rule of 70.',
+            '70 ÷ 3.5 = 20.'],
+     a:'Answer: about 20 years. At 1% it would take 70 years — small rate differences compound enormously.'}}
+]);
+
+setGuide('ap-es', 'u4', [
+{h:'Geology and soil',
+ points:[
+  '<b>Plate boundaries</b>: divergent creates new crust, convergent produces subduction and mountains, transform causes earthquakes.',
+  'Soil forms from weathered rock plus organic matter over very long timescales, which is why erosion is effectively permanent.',
+  '<b>Soil horizons</b>: O organic, A topsoil, B subsoil accumulation, C parent material.',
+  '<b>Soil texture</b> — sand, silt, clay — controls porosity, permeability, and water-holding capacity.',
+  '<b>Loam</b> balances all three and is the most agriculturally productive.'
+ ],
+ table:{head:['Texture','Particle size','Drainage','Water holding'],rows:[
+   ['Sand','Largest','Fast','Poor'],
+   ['Silt','Medium','Moderate','Moderate'],
+   ['Clay','Smallest','Very slow','High but tightly bound'],
+   ['Loam','Mixed','Good','Good']]}},
+{h:'Atmosphere and water',
+ intro:'Global circulation is driven by one fact: the equator receives more direct solar energy than the poles. Everything else follows from that imbalance.',
+ points:[
+  'Atmosphere layers: <b>troposphere</b> (weather), <b>stratosphere</b> (ozone layer), mesosphere, thermosphere.',
+  'Uneven heating drives <b>Hadley</b>, Ferrel, and polar circulation cells.',
+  'Air rises at the equator, loses moisture as rain, then descends dry around 30° — which is where the world\u2019s major deserts sit.',
+  'The <b>Coriolis effect</b> deflects moving air and water because the Earth rotates.',
+  'A <b>watershed</b> is all land draining into a common body of water.',
+  '<b>El Niño</b> weakens trade winds and shifts Pacific rainfall; La Niña strengthens them.',
+  '<b>Rain shadows</b> form on the leeward side of mountains as descending air warms and dries.'
+ ],
+ ex:{q:'Explain why the Sahara and the Atacama both sit near 30° latitude.',
+     steps:['Solar heating is most intense at the equator.',
+            'Warm moist air rises there and cools, dropping rain in the tropics.',
+            'That air, now dry, travels poleward at altitude.',
+            'Around 30° it descends, warming and absorbing moisture rather than releasing it.'],
+     a:'Answer: descending dry air from the Hadley cells creates a belt of arid conditions at roughly 30° in both hemispheres.'}}
+]);
+
+setGuide('ap-es', 'u5', [
+{h:'Agriculture and land use',
+ intro:'Feeding eight billion people is the largest way humans reshape land. Every practice in this unit trades yield today against soil, water, or biodiversity tomorrow.',
+ points:[
+  'The <b>tragedy of the commons</b>: shared resources with no ownership get overused because each user gains fully while the cost is shared.',
+  '<b>Clearcutting</b> is efficient and causes erosion, habitat loss, and increased flooding.',
+  'Irrigation efficiency: <b>drip</b> > <b>spray</b> > <b>flood</b> and furrow.',
+  'Over-irrigation causes <b>waterlogging</b> and <b>salinization</b>, which sterilises soil as evaporating water leaves salts behind.',
+  '<b>CAFOs</b> raise output while concentrating waste and driving antibiotic resistance.'
+ ]},
+{h:'Impacts and sustainable practice',
+ table:{head:['Problem','Sustainable response'],rows:[
+   ['Soil erosion on slopes','Contour plowing, terracing'],
+   ['Wind erosion','Windbreaks, cover crops'],
+   ['Soil structure loss','No-till farming'],
+   ['Nutrient depletion','Crop rotation'],
+   ['Overgrazing','Rotational grazing'],
+   ['Pest resistance','Integrated pest management']]},
+ points:[
+  '<b>Pesticide resistance</b> evolves quickly, creating a <b>pesticide treadmill</b> of stronger and more frequent application.',
+  '<b>Integrated pest management</b> combines biological, mechanical, and limited chemical controls.',
+  'Fishing impacts: <b>bycatch</b>, bottom trawling, and stock collapse from overharvesting.',
+  '<b>Ecological footprint</b> measures the land and water needed to support a lifestyle.',
+  'Mining impacts include tailings, acid mine drainage, and habitat destruction.'
+ ],
+ trap:'Assuming the most efficient irrigation is always adopted. Drip is far more efficient and far more expensive, which is why flood irrigation persists.'}
+]);
+
+setGuide('ap-es', 'u6', [
+{h:'Nonrenewable energy',
+ intro:'No energy source is free of cost. The exam wants you to compare trade-offs — emissions, land, waste, reliability — rather than declare a winner.',
+ table:{head:['Source','CO₂ per unit energy','Main drawback'],rows:[
+   ['Coal','Highest','Sulfur, particulates, mining damage'],
+   ['Oil','High','Spills, transport emissions'],
+   ['Natural gas','Lowest of the three','Methane leaks, fracking water risk'],
+   ['Nuclear','None in operation','Long-lived radioactive waste']]},
+ points:[
+  'Fossil fuels formed over millions of years, which is what makes them nonrenewable on human timescales.',
+  '<b>Fracking</b> releases natural gas but raises water contamination and methane leakage concerns.',
+  '<b>Nuclear fission</b> of uranium-235 produces no CO₂ but leaves waste hazardous for millennia.',
+  'Chernobyl and Fukushima shaped public opposition despite nuclear\u2019s low emissions.'
+ ]},
+{h:'Renewables and efficiency',
+ points:[
+  '<b>Solar</b>, <b>wind</b>, and <b>hydroelectric</b> produce no operating emissions.',
+  'Hydroelectric dams flood habitat, block fish migration, and trap sediment.',
+  '<b>Geothermal</b> is reliable but geographically limited. <b>Biomass</b> is renewable but emits particulates.',
+  'Solar and wind are <b>intermittent</b>, so storage or backup generation is required.',
+  '<b>Energy conservation and efficiency</b> — insulation, LED lighting, better mileage — are the cheapest way to cut demand and emissions.',
+  '<b>Cogeneration</b> captures waste heat from electricity generation for a second use.'
+ ],
+ ex:{q:'A city can spend equally on new solar capacity or on insulating existing buildings. Which cuts more emissions per dollar?',
+     steps:['New generation must be built, connected, and paired with storage.',
+            'Insulation reduces demand directly and permanently.',
+            'Efficiency measures typically cost far less per unit of energy saved than new generation costs per unit produced.'],
+     a:'Answer: insulation, in almost all cases. Efficiency is consistently the cheapest emissions reduction available.'}}
+]);
+
+setGuide('ap-es', 'u7', [
+{h:'Outdoor air pollution',
+ intro:'The distinction that organises this unit is primary versus secondary. Primary pollutants come out of a pipe; secondary ones are manufactured in the atmosphere afterwards.',
+ table:{head:['Pollutant','Type','Source','Effect'],rows:[
+   ['CO','Primary','Incomplete combustion','Binds haemoglobin'],
+   ['SO₂','Primary','Coal burning','Acid deposition, respiratory harm'],
+   ['NOₓ','Primary','Vehicles, high-temperature combustion','Smog precursor, acid rain'],
+   ['Particulates','Primary','Combustion, dust','Lung damage'],
+   ['Tropospheric ozone','<b>Secondary</b>','NOₓ + VOCs + sunlight','Respiratory harm, crop damage']]},
+ points:[
+  '<b>Primary</b> pollutants are emitted directly; <b>secondary</b> pollutants form in the atmosphere from reactions.',
+  '<b>Photochemical smog</b> forms when NOₓ and VOCs react in sunlight, peaking on hot, sunny, windless days in traffic-heavy cities.',
+  '<b>Thermal inversion</b> traps a cool polluted layer beneath warm air, concentrating pollutants at ground level.',
+  '<b>Acid deposition</b> from SO₂ and NOₓ lowers lake pH, leaches soil nutrients, and damages forests and buildings.'
+ ],
+ trap:'Confusing tropospheric and stratospheric ozone. Same molecule, opposite roles — harmful at ground level, protective in the stratosphere.'},
+{h:'Indoor air and control technology',
+ points:[
+  'Major indoor pollutants: <b>radon</b>, asbestos, carbon monoxide, formaldehyde, lead, and mould.',
+  '<b>Radon</b> is a naturally occurring radioactive gas seeping into basements and a leading cause of lung cancer.',
+  'In developing countries, indoor smoke from burning biomass for cooking is a major health burden.',
+  'Control technologies: <b>catalytic converters</b> for vehicles, <b>scrubbers</b> for sulfur, electrostatic precipitators and baghouse filters for particulates.',
+  'The <b>Clean Air Act</b> set national standards for criteria pollutants and drove large measurable reductions.'
+ ]}
+]);
+
+setGuide('ap-es', 'u8', [
+{h:'Water pollution',
+ intro:'The most tested distinction in this unit is point versus nonpoint source, because it determines whether pollution can be regulated at all.',
+ points:[
+  '<b>Point source</b> pollution comes from an identifiable pipe or site and can be permitted and monitored.',
+  '<b>Nonpoint source</b> is diffuse runoff from farms, roads, and lawns — far harder to regulate.',
+  'Nutrient runoff causes <b>eutrophication</b>, algal blooms, and hypoxic dead zones.',
+  '<b>Biological oxygen demand</b> measures oxygen consumed by decomposition. High BOD means low oxygen for aquatic life.',
+  '<b>Thermal pollution</b> from power plant cooling water lowers dissolved oxygen, since warm water holds less.',
+  '<b>Bioaccumulation</b> builds toxins within one organism; <b>biomagnification</b> concentrates them up the food chain.'
+ ],
+ ex:{q:'Why do top predators carry the highest DDT concentrations?',
+     steps:['DDT is fat-soluble and not readily excreted, so it accumulates within each organism.',
+            'A predator eats many prey animals, each carrying its own accumulated load.',
+            'That load concentrates at each successive trophic level.'],
+     a:'Answer: bioaccumulation within individuals plus biomagnification up the chain. This is why eagle populations collapsed before DDT was banned.'}},
+{h:'Waste and human health',
+ points:[
+  '<b>Sanitary landfills</b> use liners and leachate collection. Older unlined dumps contaminated groundwater.',
+  '<b>Incineration</b> reduces volume but releases pollutants and leaves toxic ash.',
+  'Sewage treatment: <b>primary</b> physical settling, <b>secondary</b> biological breakdown, <b>tertiary</b> chemical and nutrient removal.',
+  '<b>Dose-response curves</b> show how effect changes with exposure. <b>LD50</b> is the dose lethal to half a test population.',
+  '<b>Endocrine disruptors</b> interfere with hormones at very low doses, which is why traditional dose thresholds can mislead.',
+  'Waterborne pathogens cause cholera, dysentery, and typhoid where sanitation is inadequate.'
+ ]}
+]);
+
+setGuide('ap-es', 'u9', [
+{h:'Ozone depletion and climate change',
+ intro:'These two are constantly confused and are entirely separate problems. Ozone depletion is about UV radiation; climate change is about infrared. Keep them apart.',
+ table:{head:['','Ozone depletion','Climate change'],rows:[
+   ['Cause','CFCs releasing chlorine','Greenhouse gas emissions'],
+   ['Location','Stratosphere','Troposphere'],
+   ['Radiation','Ultraviolet gets through','Infrared is trapped'],
+   ['Effect','Skin cancer, crop damage','Warming, sea level rise, weather extremes'],
+   ['Response','Montreal Protocol — largely successful','Paris Agreement — ongoing']]},
+ points:[
+  '<b>CFCs</b> released chlorine that destroyed stratospheric ozone, thinning it most over Antarctica.',
+  'The <b>Montreal Protocol</b> phased out CFCs and is the most successful international environmental agreement; the ozone layer is measurably recovering.',
+  '<b>Greenhouse gases</b> — CO₂, CH₄, N₂O, water vapour, CFCs — absorb outgoing infrared radiation.',
+  'Methane traps far more heat per molecule than CO₂ but breaks down in roughly a decade rather than centuries.',
+  'Sea level rises from <b>thermal expansion</b> of warming water as well as from ice melt.',
+  '<b>Ocean acidification</b> occurs as absorbed CO₂ forms carbonic acid, dissolving shells and coral.'
+ ]},
+{h:'Biodiversity loss and response',
+ points:[
+  '<b>HIPPCO</b> names the drivers: <b>H</b>abitat destruction, <b>I</b>nvasive species, <b>P</b>opulation growth, <b>P</b>ollution, <b>C</b>limate change, <b>O</b>verexploitation.',
+  'Habitat loss and fragmentation are the largest single cause of extinction.',
+  '<b>Invasive species</b> lack natural predators and outcompete natives.',
+  'Conservation tools: protected areas, wildlife corridors, captive breeding, and the Endangered Species Act.',
+  '<b>Sustainability</b> means meeting present needs without compromising future generations.'
+ ],
+ tip:'HIPPCO is worth memorising exactly. Free-response questions frequently ask for multiple causes of biodiversity loss, and the acronym guarantees you can name six.'}
+]);
+
+/* ------------------------------------------ AP EUROPEAN HISTORY */
+setGuide('ap-euro', 'u1', [
+{h:'The Renaissance',
+ intro:'The Renaissance was not a rejection of Christianity but a recovery of classical learning alongside it. Getting that relationship right is what separates strong essays from weak ones.',
+ points:[
+  '<b>Humanism</b> revived classical texts and emphasised human potential, civic life, and individual achievement.',
+  '<b>Civic humanism</b> held that scholars should serve public life rather than withdraw into contemplation.',
+  'Italian city-states funded art through wealthy patrons such as the Medici, whose commissions carried political meaning.',
+  'The <b>printing press</b> (c. 1450) spread ideas faster than the Church could control them — the essential precondition for the Reformation.',
+  'The <b>Northern Renaissance</b> blended humanism with piety: Erasmus, More, and Christian humanism.',
+  'Renaissance art introduced linear perspective, realistic anatomy, and classical subjects alongside religious ones.'
+ ],
+ trap:'Describing the Renaissance as secular or anti-religious. Most patrons were churchmen and most art was religious; what changed was the method and the emphasis.'},
+{h:'Exploration and the new monarchies',
+ table:{head:['Development','Cause','Consequence'],rows:[
+   ['Atlantic exploration','Caravel, astrolabe, desire for Asian trade','Colonial empires, Columbian Exchange'],
+   ['Price revolution','American silver influx','Inflation across Europe'],
+   ['Commercial revolution','Long-distance trade','Banking, joint-stock companies, merchant class'],
+   ['New monarchies','Need for revenue and order','Centralised taxation, standing armies']]},
+ points:[
+  'Portugal and Spain led exploration seeking gold, God, and glory.',
+  '<b>Mercantilism</b> treated bullion as wealth and colonies as captive markets.',
+  '<b>New monarchies</b> in France, England, and Spain centralised taxation, justice, and armies, reducing dependence on nobles.',
+  'The <b>price revolution</b> hurt those on fixed rents and benefited merchants and debtors, reshaping the social order.'
+ ]}
+]);
+
+setGuide('ap-euro', 'u2', [
+{h:'The Protestant Reformation',
+ intro:'Luther did not set out to split Christendom. He raised an academic objection to indulgences, and the printing press turned it into a movement he could not control.',
+ table:{head:['Reformer','Core doctrine','Political outcome'],rows:[
+   ['Luther','Sola fide, sola scriptura','German princes gain church lands'],
+   ['Calvin','Predestination','Theocratic Geneva; militant spread'],
+   ['Henry VIII','Royal supremacy','Church of England, dynastic in origin'],
+   ['Zwingli','Scripture alone, radical liturgy','Swiss reform']]},
+ points:[
+  'Luther\u2019s <b>Ninety-Five Theses</b> (1517) attacked indulgences and asserted salvation by faith alone.',
+  'Core Protestant claims: <i>sola fide</i>, <i>sola scriptura</i>, and the priesthood of all believers.',
+  'German princes had material reasons to convert — church lands and independence from the Emperor.',
+  'The <b>Peace of Augsburg</b> (1555) let each prince choose Lutheranism or Catholicism for his territory. The choice was territorial, not individual.'
+ ]},
+{h:'Catholic response and religious war',
+ points:[
+  'The <b>Council of Trent</b> reaffirmed doctrine, ended the worst abuses, and standardised seminary training. It refused compromise on theology.',
+  'The <b>Jesuits</b> under Loyola drove education and missionary work worldwide.',
+  'The French Wars of Religion ended with the <b>Edict of Nantes</b> (1598) granting Huguenots limited toleration.',
+  'The <b>Thirty Years\u2019 War</b> (1618–48) devastated central Europe, killing perhaps a third of the German population.',
+  'The <b>Peace of Westphalia</b> (1648) established state sovereignty and effectively ended large-scale religious warfare.',
+  'Reformation-era <b>witch hunts</b> peaked amid social, religious, and economic anxiety, targeting women overwhelmingly.'
+ ],
+ ex:{q:'Why is the Peace of Westphalia considered a turning point beyond ending one war?',
+     steps:['Before it, religious unity was the assumed basis of European order.',
+            'Westphalia recognised state sovereignty over religious affairs within borders.',
+            'States, not confessions, became the primary actors in European politics.',
+            'Later conflicts were fought over dynastic and national interest rather than doctrine.'],
+     a:'Answer: it replaced religious unity with sovereign statehood as the organising principle of Europe.'}}
+]);
+
+setGuide('ap-euro', 'u3', [
+{h:'Absolutism',
+ intro:'Absolutism and constitutionalism were two answers to the same seventeenth-century problem: how do you build a state strong enough to survive without it collapsing into civil war?',
+ points:[
+  '<b>Divine right</b> claimed monarchs answered to God alone. Louis XIV of France was the model.',
+  '<b>Versailles</b> domesticated the nobility by making court attendance the route to influence, preventing regional power bases.',
+  '<b>Colbert\u2019s mercantilism</b> built French industry and pursued a favourable trade balance.',
+  '<b>Peter the Great</b> westernised Russia by force, building St Petersburg and reorganising the nobility around state service.',
+  'Prussia rose on military discipline under the Hohenzollerns; Austria expanded as a multiethnic empire.',
+  'Absolutism required money, which required bureaucracy — the origin of the modern administrative state.'
+ ]},
+{h:'Constitutionalism',
+ table:{head:['Event','Year','Result'],rows:[
+   ['English Civil War','1642–51','Charles I executed; monarchy briefly abolished'],
+   ['Restoration','1660','Monarchy returns under Charles II'],
+   ['Glorious Revolution','1688','James II replaced without bloodshed'],
+   ['English Bill of Rights','1689','Parliamentary supremacy established']]},
+ points:[
+  'The <b>Dutch Republic</b> prospered through commerce, banking, and religious toleration without a monarch.',
+  'The <b>English Bill of Rights</b> made Parliament supreme over the crown, settling the century\u2019s central question.',
+  'The <b>balance of power</b> became the organising principle of European diplomacy, with coalitions forming against whichever state grew strongest.'
+ ],
+ trap:'Treating absolutism as unlimited power. Even Louis XIV depended on nobles, provincial institutions, and money he could not simply seize.'}
+]);
+
+setGuide('ap-euro', 'u4', [
+{h:'The Scientific Revolution',
+ intro:'The Scientific Revolution changed not just what Europeans believed but how they decided what to believe. That shift in method is what made the Enlightenment possible.',
+ points:[
+  '<b>Copernicus</b> proposed heliocentrism; <b>Galileo</b> supported it observationally and was condemned.',
+  '<b>Newton</b> unified terrestrial and celestial motion under universal gravitation, which made the mechanical universe intellectually respectable.',
+  '<b>Bacon</b> championed <b>empiricism</b> and inductive reasoning from observation. <b>Descartes</b> championed <b>rationalism</b> and deduction from first principles.',
+  'Together they produced the scientific method, shifting authority from tradition and text to observation and reason.',
+  'New institutions such as the Royal Society organised and circulated research.'
+ ]},
+{h:'The Enlightenment',
+ table:{head:['Thinker','Central argument'],rows:[
+   ['Locke','Natural rights; government by consent'],
+   ['Montesquieu','Separation of powers'],
+   ['Voltaire','Religious toleration; attacks on the Church'],
+   ['Rousseau','Popular sovereignty through the general will'],
+   ['Adam Smith','Free markets and the division of labour'],
+   ['Wollstonecraft','Women\u2019s education and equal rights'],
+   ['Beccaria','Reform of criminal punishment']]},
+ points:[
+  '<b>Salons</b>, often hosted by women, circulated ideas across social boundaries and gave the Enlightenment its social form.',
+  '<b>Enlightened absolutism</b>: Frederick the Great, Catherine the Great, and Joseph II adopted reforms without surrendering power.',
+  'Enlightenment ideas supplied the vocabulary — rights, consent, sovereignty — of the revolutions that followed.'
+ ],
+ ex:{q:'Explain how Bacon and Descartes differed and why both mattered.',
+     steps:['Bacon built knowledge upward from accumulated observation — induction.',
+            'Descartes reasoned downward from certain premises — deduction.',
+            'Neither alone is sufficient: observation without theory is aimless, theory without evidence is speculation.',
+            'The scientific method combines both.'],
+     a:'Answer: they represent the empirical and rational halves of the method, and the Scientific Revolution required their combination.'}}
+]);
+
+setGuide('ap-euro', 'u5', [
+{h:'The French Revolution',
+ intro:'The Revolution had several phases with different aims and different people in charge. Free-response questions almost always ask about that trajectory rather than a single moment.',
+ table:{head:['Phase','Years','Character'],rows:[
+   ['Liberal','1789–91','Constitutional monarchy, Declaration of Rights'],
+   ['Radical','1792–94','Republic, Terror, Committee of Public Safety'],
+   ['Reactionary','1794–99','Thermidor, Directory, instability'],
+   ['Napoleonic','1799–1815','Consolidation under one man']]},
+ points:[
+  'Causes: fiscal crisis, an unequal <b>Estates system</b>, resentment of privilege, food shortages, and Enlightenment ideas.',
+  'The Third Estate formed the National Assembly and swore the <b>Tennis Court Oath</b>.',
+  'The <b>Declaration of the Rights of Man and of the Citizen</b> asserted liberty, equality, and popular sovereignty.',
+  'The <b>Reign of Terror</b> under Robespierre justified mass execution as defence of the revolution.',
+  'Olympe de Gouges and the women\u2019s march on Versailles show women as active political participants, not spectators.'
+ ]},
+{h:'Napoleon and reaction',
+ points:[
+  'Napoleon seized power in 1799 and crowned himself emperor in 1804.',
+  'The <b>Napoleonic Code</b> guaranteed legal equality and property rights for men while restricting women\u2019s legal status.',
+  'His conquests spread revolutionary ideas and simultaneously provoked <b>nationalism</b> in occupied territories — the mechanism that would later undo French dominance.',
+  'The Russian campaign of 1812 destroyed his army; Waterloo ended him in 1815.',
+  'The <b>Congress of Vienna</b> under <b>Metternich</b> restored legitimate monarchs and rebuilt the balance of power.',
+  '<b>Conservatism</b> dominated after 1815, but liberalism and nationalism kept resurfacing.'
+ ],
+ trap:'Treating Napoleon as simply ending the Revolution. He preserved legal equality and administrative reform while destroying political liberty.'}
+]);
+
+setGuide('ap-euro', 'u6', [
+{h:'Industrialisation',
+ intro:'Industrialisation reorganised where people lived, how they worked, and who held power. Every ideology in the second half of this unit is a response to that upheaval.',
+ points:[
+  'Britain industrialised first thanks to coal, capital, colonial markets, agricultural surplus, and stable institutions.',
+  'The <b>factory system</b> replaced cottage industry, imposing clock discipline and division of labour.',
+  'Railways and steam power created national markets and transformed the experience of distance.',
+  '<b>Urbanisation</b> produced overcrowding, disease, and pollution before sanitation reform caught up.',
+  'A new class structure emerged: industrial <b>bourgeoisie</b> owning capital and urban <b>proletariat</b> selling labour.'
+ ]},
+{h:'Responses to industrial society',
+ table:{head:['Ideology','Diagnosis','Prescription'],rows:[
+   ['Liberalism','Restrictions block prosperity','Free markets, constitutions, limited suffrage'],
+   ['Socialism','Workers are exploited','Collective ownership'],
+   ['Marxism','Class conflict drives history','Workers seize the means of production'],
+   ['Conservatism','Change threatens order','Preserve traditional hierarchy']]},
+ points:[
+  '<b>Labour unions</b> and Chartism demanded wages, hours, and political rights.',
+  'Reform acts gradually widened the franchise; factory acts limited child labour and hours.',
+  'The <b>cult of domesticity</b> defined separate spheres just as industrial work pulled production out of the home.',
+  'Public health and sanitation reforms eventually cut urban mortality sharply — a genuine success of the reform impulse.'
+ ]}
+]);
+
+setGuide('ap-euro', 'u7', [
+{h:'Nationalism and unification',
+ intro:'The 1848 revolutions failed almost everywhere. That failure taught nationalists that ideals alone would not build states, and the men who succeeded afterwards were ruthless pragmatists.',
+ points:[
+  'The <b>Revolutions of 1848</b> spread across Europe demanding liberal and national reform, and were suppressed nearly everywhere.',
+  'Their failure pushed nationalists toward <b>realpolitik</b> — practical power politics over principle.',
+  '<b>Cavour</b> unified Italy through diplomacy and alliance with France; Garibaldi delivered the south.',
+  '<b>Bismarck</b> unified Germany through three engineered wars, proclaiming the empire at Versailles in 1871.',
+  'German unification upset the balance of power and reshaped European alliances for the next forty years.'
+ ]},
+{h:'Ideas, empire, and mass politics',
+ points:[
+  '<b>Romanticism</b> valued emotion, nature, and the folk past, reacting against Enlightenment confidence in abstract reason.',
+  '<b>Realism</b> depicted ordinary life and social conditions plainly.',
+  '<b>Darwin</b>\u2019s theory of natural selection was distorted into <b>Social Darwinism</b> to justify empire and inequality.',
+  '<b>Freud</b> proposed the unconscious; <b>Nietzsche</b> challenged traditional morality and religion.',
+  '<b>New imperialism</b> was driven by industrial demand, national prestige, and civilising rhetoric.',
+  'The <b>Berlin Conference</b> (1884–85) partitioned Africa among European powers without African participation.',
+  'Mass politics emerged: socialist parties, trade unions, and the early women\u2019s suffrage movement.'
+ ],
+ ex:{q:'Explain how the failure of 1848 shaped the unification of Germany.',
+     steps:['The Frankfurt Parliament tried to unify Germany by liberal agreement and failed.',
+            'It had no army and no means of compelling the princes.',
+            'Bismarck concluded that unification required "blood and iron" rather than speeches.',
+            'He achieved it through three wars, on conservative rather than liberal terms.'],
+     a:'Answer: 1848 discredited liberal nationalism and cleared the way for unification imposed from above by Prussia.'}}
+]);
+
+setGuide('ap-euro', 'u8', [
+{h:'The First World War and the Russian Revolution',
+ intro:'Two world wars in thirty years destroyed European primacy. The causes of the first are the most reliably tested list in the course, so learn them as a set.',
+ table:{head:['Cause','How it contributed'],rows:[
+   ['Militarism','Arms races and rigid mobilisation plans'],
+   ['Alliances','Turned a regional dispute into a continental war'],
+   ['Imperialism','Colonial rivalry poisoned relations'],
+   ['Nationalism','Balkan instability; the Sarajevo assassination']]},
+ points:[
+  '<b>Total war</b> mobilised entire economies and populations. Trench warfare produced casualties on an unprecedented scale.',
+  'The <b>Treaty of Versailles</b> imposed reparations and a war guilt clause on Germany, fuelling lasting resentment.',
+  'The <b>Russian Revolution</b> (1917) brought Lenin and the Bolsheviks to power amid military collapse and food shortages.',
+  '<b>Stalin</b> followed with collectivisation, five-year plans, and mass purges, industrialising at enormous human cost.',
+  'The war destroyed four empires and shattered nineteenth-century confidence in progress.'
+ ]},
+{h:'Fascism and the Second World War',
+ points:[
+  'Economic collapse and unresolved grievances enabled <b>fascism</b> under Mussolini and Nazism under Hitler.',
+  'Fascism glorified the nation and the state, rejected liberal democracy, and depended on a mythic sense of grievance and renewal.',
+  '<b>Appeasement</b> conceded to German expansion in hope of avoiding war, and failed.',
+  'The <b>Holocaust</b> systematically murdered six million Jews along with Roma, disabled people, and others.',
+  'Civilian bombing, occupation, and genocide made the Second World War far deadlier than the First.',
+  'The war ended European global dominance and left the continent divided between two outside superpowers.'
+ ],
+ trap:'Explaining Nazism solely through Versailles. Economic depression, fear of communism, and the weakness of Weimar institutions were at least as important.'}
+]);
+
+setGuide('ap-euro', 'u9', [
+{h:'The Cold War in Europe',
+ intro:'Postwar Europe faced two projects at once: managing division imposed from outside, and building integration from within. Both shaped the continent that exists today.',
+ points:[
+  'Europe split into a Soviet-dominated East and a US-aligned West behind the <b>Iron Curtain</b>.',
+  'The <b>Marshall Plan</b> rebuilt Western Europe; <b>NATO</b> and the <b>Warsaw Pact</b> formalised the division.',
+  'Berlin was the flashpoint: the 1948 airlift, then the Wall in 1961 to stop emigration.',
+  'Uprisings in Hungary (1956) and Czechoslovakia (1968) were crushed by Soviet force.',
+  '<b>Decolonisation</b> stripped Britain, France, and others of empire, sometimes negotiated and sometimes violent as in Algeria.'
+ ],
+ table:{head:['Year','Event','Significance'],rows:[
+   ['1948','Marshall Plan','Economic containment of communism'],
+   ['1949','NATO founded','Western military alliance'],
+   ['1957','Treaty of Rome','European Economic Community'],
+   ['1961','Berlin Wall','Physical division of Europe'],
+   ['1968','Prague Spring crushed','Limits of reform inside the bloc'],
+   ['1989','Berlin Wall falls','Collapse of communist control'],
+   ['1992','Maastricht Treaty','European Union created']]}},
+{h:'Integration and contemporary Europe',
+ points:[
+  'Western Europe built extensive <b>welfare states</b> funded by rapid postwar growth.',
+  'Economic integration progressed from the Coal and Steel Community to the EEC and then the <b>European Union</b> under Maastricht.',
+  'Tying French and German heavy industry together was deliberately designed to make another war impractical.',
+  '<b>1968</b> brought student and worker protests challenging authority and traditional social roles.',
+  'Gorbachev\u2019s reforms led to the fall of the Berlin Wall in 1989 and the Soviet collapse in 1991.',
+  'Post-communist transitions varied widely; Yugoslavia fragmented violently, showing that suppressed nationalism had not disappeared.',
+  'Contemporary debates centre on migration, the euro, populism, and the limits of integration — with Brexit the first reversal.'
+ ],
+ ex:{q:'Explain why European integration began with coal and steel specifically.',
+     steps:['Coal and steel were the raw materials of armaments.',
+            'Placing them under joint authority meant neither France nor Germany could rearm secretly.',
+            'It was economically valuable and politically modest enough to be accepted.',
+            'Success there created the institutions and trust for wider integration.'],
+     a:'Answer: it made another Franco-German war materially impractical while being limited enough to be politically achievable.'}}
+]);
+</script>
+<script>
+/* ------------------------------ AP COMPARATIVE GOVERNMENT */
+addUnits('ap-comp-gov', [
+{
+id:'u1', title:'Unit 1 · Political Systems, Regimes, and Governments',
+guide:[
+{h:'The six course countries',
+ intro:'This course compares exactly six countries. Every free-response question draws on them, so knowing which regime type each represents is the foundation for everything else.',
+ table:{head:['Country','Regime type','Distinctive feature'],rows:[
+   ['United Kingdom','Democratic, parliamentary','Unwritten constitution; fusion of powers'],
+   ['Russia','Illiberal democracy','Semi-presidential; managed elections'],
+   ['China','Authoritarian, one-party','Party-state: the CCP outranks the government'],
+   ['Mexico','Democratic, presidential','Recent transition from one-party PRI rule'],
+   ['Iran','Theocratic hybrid','Elected bodies subordinate to clerical authority'],
+   ['Nigeria','Democratic, presidential','Federal; deep ethnic and religious divisions']]},
+ points:[
+  '<b>Legitimacy</b> is the belief that a government has the right to rule. Weber identified three sources: <b>traditional</b>, <b>charismatic</b>, and <b>rational-legal</b>.',
+  '<b>Sovereignty</b> is supreme authority within a territory. <b>Power</b> is the ability to make others act.',
+  '<b>Democratization</b> can run forward or backward. Several course countries show <b>democratic backsliding</b>.',
+  'Regimes sit on a spectrum. Russia holds elections and remains authoritarian, which is why the term <b>illiberal democracy</b> exists.'
+ ],
+ trap:'Treating "has elections" as equivalent to "is democratic". Competitiveness, civil liberties, and rule of law matter more than whether ballots are cast.'},
+{h:'How states are organised',
+ table:{head:['Distinction','Meaning','Course examples'],rows:[
+   ['Unitary vs federal','Central power vs divided power','UK and China unitary; Nigeria, Mexico, Russia federal'],
+   ['Presidential vs parliamentary','Separate vs fused executive and legislature','Nigeria and Mexico presidential; UK parliamentary'],
+   ['Semi-presidential','President plus prime minister','Russia'],
+   ['Theocratic','Religious authority supreme','Iran']]},
+ points:[
+  'In a <b>parliamentary</b> system the executive is drawn from and accountable to the legislature, and can be removed by a vote of no confidence.',
+  'In a <b>presidential</b> system the executive is separately elected and serves a fixed term.',
+  '<b>Devolution</b> transfers power downward — Scotland and Wales — without creating federalism, because Parliament could reclaim it.',
+  'Federalism in Nigeria was designed to manage ethnic division; in Russia it has been steadily hollowed out.'
+ ],
+ ex:{q:'Why is Russia described as federal in form but centralised in practice?',
+     steps:['The constitution creates federal subjects with their own governments.',
+            'But regional governors were made presidential appointees rather than elected.',
+            'Federal revenue and enforcement powers were concentrated in Moscow.',
+            'Formal structure and actual power diverged.'],
+     a:'Answer: the federal architecture survives on paper while the substance of regional autonomy has been removed — a recurring pattern in this course.'}}
+],
+cards:[
+ ['The six course countries','UK, Russia, China, Mexico, Iran, Nigeria.'],
+ ['Legitimacy','The belief that a government has the right to rule.'],
+ ['Weber\u2019s three legitimacy types','Traditional, charismatic, rational-legal.'],
+ ['Sovereignty','Supreme authority within a defined territory.'],
+ ['Illiberal democracy','Holds elections while suppressing rights and real competition — Russia.'],
+ ['Democratic backsliding','Erosion of democratic institutions in a state that previously had them.'],
+ ['Unitary state','Central government holds power; the UK and China.'],
+ ['Federal state','Power divided between centre and regions; Nigeria, Mexico, Russia.'],
+ ['Parliamentary system','Executive drawn from and accountable to the legislature.'],
+ ['Semi-presidential system','President and prime minister share executive power; Russia.'],
+ ['Devolution','Power granted to regional bodies without a constitutional guarantee.'],
+ ['Theocracy','Religious authority holds supreme political power; Iran.']
+],
+quiz:[
+ {q:'Which pair correctly matches a country to its regime type?',
+  c:['China — parliamentary democracy','Iran — theocratic hybrid','UK — federal presidential','Mexico — one-party authoritarian'],
+  a:1, why:'Iran combines elected institutions with clerical bodies that can overrule them, which is the defining hybrid feature.'},
+ {q:'A prime minister loses a vote of no confidence and must resign. This is possible because the system is:',
+  c:['Presidential','Parliamentary','Federal','Theocratic'],
+  a:1, why:'Fusion of powers means the executive survives only while it holds the legislature\u2019s confidence.'},
+ {q:'Russia is called an illiberal democracy because it:',
+  c:['Holds no elections','Holds elections while restricting competition and civil liberties','Is formally a monarchy','Has no written constitution'],
+  a:1, why:'The machinery of democracy exists while its substance does not.'},
+ {q:'Devolution in the UK differs from federalism because devolved powers:',
+  c:['Are constitutionally guaranteed','Could in principle be reclaimed by Parliament','Apply only to England','Create fully independent states'],
+  a:1, why:'Parliamentary sovereignty means devolution is a grant, not a constitutional division of authority.'},
+ {q:'Weber would classify authority based on established custom and inherited position as:',
+  c:['Charismatic','Rational-legal','Traditional','Coercive'],
+  a:2, why:'Traditional legitimacy rests on long-standing custom, as with hereditary monarchy.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Political Institutions',
+guide:[
+{h:'Executives and legislatures',
+ intro:'Comparing institutions means comparing what they can actually do, not what the constitution says they may do. That gap is where most exam points live.',
+ table:{head:['Country','Executive','Legislature'],rows:[
+   ['UK','PM and cabinet drawn from Parliament','Commons (elected), Lords (appointed)'],
+   ['Russia','President dominant; PM subordinate','Duma and Federation Council'],
+   ['China','President and Premier, both CCP','National People\u2019s Congress — largely ratifying'],
+   ['Mexico','President, one six-year sexenio','Bicameral Congress'],
+   ['Iran','Supreme Leader above elected President','Majlis, with candidates vetted'],
+   ['Nigeria','President, two four-year terms','Bicameral National Assembly']]},
+ points:[
+  'Distinguish <b>head of state</b> (ceremonial or symbolic) from <b>head of government</b> (runs the executive). The UK separates them; Nigeria and Mexico combine them.',
+  'China\u2019s <b>National People\u2019s Congress</b> formally holds supreme power and in practice ratifies decisions made by the Party.',
+  'Iran\u2019s <b>Guardian Council</b> vets candidates and can veto legislation, which limits what any election can change.',
+  'Mexico\u2019s <b>sexenio</b> — a single six-year term with no re-election — was designed to prevent personal dictatorship.',
+  'Russia\u2019s presidency has been strengthened repeatedly through constitutional amendment.'
+ ]},
+{h:'Judiciaries, bureaucracies, and capacity',
+ points:[
+  '<b>Judicial independence</b> is the key variable. UK and Mexican courts have gained it; Chinese and Russian courts serve the ruling party.',
+  '<b>Judicial review</b> exists in Mexico and Nigeria. The UK has <b>parliamentary sovereignty</b> instead, so courts may declare incompatibility but cannot strike down statutes.',
+  'Iran\u2019s courts apply sharia under clerical oversight.',
+  '<b>Rule of law</b> means the law binds rulers too. Its absence is a defining feature of authoritarian regimes.',
+  '<b>Corruption</b> and patronage weaken state capacity, most visibly in Nigeria and Russia.',
+  '<b>State capacity</b> — the actual ability to implement policy, collect taxes, and enforce law — explains outcomes better than formal structure alone.'
+ ],
+ ex:{q:'Explain why formal constitutional powers are a poor guide to actual power in China.',
+     steps:['The constitution assigns supreme authority to the National People\u2019s Congress.',
+            'In practice the Chinese Communist Party makes every significant decision.',
+            'Party and state posts overlap, so the same people hold both.',
+            'The NPC ratifies rather than deliberates.'],
+     a:'Answer: China is a party-state, so authority follows the party hierarchy rather than the written constitution.'},
+ tip:'Whenever a question asks "who really holds power", answer by tracing appointments. Whoever controls who gets the job controls the institution.'}
+],
+cards:[
+ ['Head of state vs head of government','Ceremonial figure vs the person who actually runs the executive.'],
+ ['UK Parliament','Elected House of Commons and appointed House of Lords.'],
+ ['National People\u2019s Congress','China\u2019s legislature; formally supreme, practically a ratifying body.'],
+ ['Guardian Council','Iranian body that vets candidates and vetoes legislation.'],
+ ['Sexenio','Mexico\u2019s single six-year presidential term with no re-election.'],
+ ['Party-state','A system where party hierarchy outranks state institutions; China.'],
+ ['Judicial independence','Courts able to rule against the government without reprisal.'],
+ ['Parliamentary sovereignty','UK doctrine that no court may overturn an act of Parliament.'],
+ ['Rule of law','The principle that law binds rulers as well as citizens.'],
+ ['State capacity','A government\u2019s actual ability to implement its policies.'],
+ ['Duma','The lower house of Russia\u2019s Federal Assembly.'],
+ ['Majlis','Iran\u2019s elected legislature, with candidates vetted by the Guardian Council.']
+],
+quiz:[
+ {q:'The Guardian Council limits Iranian democracy primarily by:',
+  c:['Counting the votes','Deciding who is allowed to run','Appointing the Supreme Leader','Writing the national budget'],
+  a:1, why:'Controlling the candidate list constrains the outcome before a single vote is cast.'},
+ {q:'The UK lacks full judicial review because of:',
+  c:['A written constitution','Parliamentary sovereignty','Federalism','The monarchy'],
+  a:1, why:'Parliament is supreme, so courts may interpret and flag incompatibility but cannot strike down its statutes.'},
+ {q:'Mexico\u2019s sexenio was designed to:',
+  c:['Strengthen the legislature','Prevent any individual accumulating permanent power','Increase voter turnout','Establish federalism'],
+  a:1, why:'A single non-renewable term removes both the incentive and the opportunity to entrench personal rule.'},
+ {q:'State capacity refers to:',
+  c:['The size of a country\u2019s territory','The ability to actually implement policy','The number of political parties','Powers listed in the constitution'],
+  a:1, why:'Formal authority means little if a government cannot collect taxes, deliver services, or enforce law.'},
+ {q:'In China, the relationship between the CCP and the government is best described as:',
+  c:['The government controls the party','The party outranks and directs the government','They are fully separate','The party has no formal role'],
+  a:1, why:'Party bodies set policy and control appointments, which is what makes China a party-state.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Political Culture and Participation',
+guide:[
+{h:'Culture, socialisation, and civil society',
+ points:[
+  '<b>Political culture</b> is the set of shared attitudes and values shaping how citizens relate to government.',
+  '<b>Political socialisation</b> transmits it through family, education, religion, media, and state institutions.',
+  'Authoritarian regimes actively shape culture through <b>censorship</b> and controlled education — China\u2019s internet restrictions are the standard example.',
+  '<b>Political efficacy</b> is the belief that participation matters. Low efficacy suppresses turnout even where voting is free.',
+  '<b>Civil society</b> — independent organisations outside the state — is robust in the UK and growing in Mexico, and heavily restricted in China, Russia, and Iran.'
+ ],
+ table:{head:['Country','Civil society','Media environment'],rows:[
+   ['UK','Robust and independent','Free, strong press tradition'],
+   ['Mexico','Growing; journalists face violence','Formally free, practically dangerous'],
+   ['Nigeria','Active, often religiously organised','Relatively free with periodic pressure'],
+   ['Russia','Restricted; foreign agent laws','State-dominated'],
+   ['China','Tightly controlled','Censored; the Great Firewall'],
+   ['Iran','Restricted; periodic crackdowns','Censored, with active underground media']]}},
+{h:'Cleavages and participation',
+ intro:'A cleavage is a social division that structures politics. Whether cleavages reinforce or cut across one another largely determines how stable a country is.',
+ points:[
+  '<b>Coinciding cleavages</b> stack on top of each other — region, religion, and ethnicity aligning — which concentrates conflict along a single fault line. Nigeria is the clearest case.',
+  '<b>Cross-cutting cleavages</b> divide people differently on different issues, which moderates conflict by creating overlapping alliances.',
+  'Participation ranges from voting and party membership to protest, strikes, and civil disobedience.',
+  'In restrictive regimes, <b>protest substitutes for elections</b> as the main channel of expression, which is why protest waves in Iran and Russia matter analytically.',
+  'Nigeria\u2019s <b>federal character principle</b> requires ethnic and regional balance in appointments as an institutional response to cleavage.'
+ ],
+ ex:{q:'Explain why Nigeria\u2019s cleavages produce more instability than the United Kingdom\u2019s.',
+     steps:['Nigerian divisions of ethnicity, religion, and region largely coincide — a mainly Muslim north and mainly Christian south.',
+            'Position on one cleavage predicts position on the others.',
+            'UK cleavages of class, region, and party cut across each other.',
+            'Cross-cutting divisions create shifting alliances that restrain conflict.'],
+     a:'Answer: coinciding cleavages concentrate conflict on one axis; cross-cutting cleavages disperse it across many.'},
+ trap:'Assuming diversity itself causes instability. What matters is whether the divisions align, not how many there are.'}
+],
+cards:[
+ ['Political culture','Shared attitudes and values shaping how citizens relate to government.'],
+ ['Political socialisation','How political values are transmitted through family, school, media, and religion.'],
+ ['Political efficacy','The belief that one\u2019s participation can affect outcomes.'],
+ ['Civil society','Independent organisations operating outside state control.'],
+ ['Coinciding cleavages','Divisions that stack on one another, deepening conflict — Nigeria.'],
+ ['Cross-cutting cleavages','Divisions that split the population differently on different issues, moderating conflict.'],
+ ['Federal character principle','Nigerian requirement for ethnic and regional balance in appointments.'],
+ ['Great Firewall','China\u2019s system of internet censorship and control.'],
+ ['Foreign agent laws','Russian legislation restricting NGOs that receive outside funding.'],
+ ['Protest as substitute','Where elections are not competitive, protest becomes the main channel of expression.']
+],
+quiz:[
+ {q:'Cross-cutting cleavages tend to:',
+  c:['Increase conflict','Moderate conflict by creating overlapping alliances','Eliminate political parties','Occur only in authoritarian states'],
+  a:1, why:'When people are allies on one issue and opponents on another, no single division becomes total.'},
+ {q:'Nigeria\u2019s federal character principle exists to:',
+  c:['Centralise power in Abuja','Ensure ethnic and regional balance in appointments','Restrict who may vote','Abolish the states'],
+  a:1, why:'Guaranteed representation is an institutional response to deeply coinciding cleavages.'},
+ {q:'Low political efficacy most directly produces:',
+  c:['Higher turnout','Lower participation even where voting is free','More political parties','Stronger civil society'],
+  a:1, why:'If people believe participation changes nothing, they withdraw regardless of formal rights.'},
+ {q:'Civil society organisations in China:',
+  c:['Operate entirely freely','Are registered, monitored, and expected to align with state goals','Do not exist','Control the legislature'],
+  a:1, why:'Groups can exist but only within boundaries the party sets.'},
+ {q:'Large protests in a country with tightly controlled elections are best understood as:',
+  c:['Evidence that elections are competitive','A substitute channel for expressing demands','Proof of civil war','A sign of high political efficacy'],
+  a:1, why:'When formal channels are closed, participation moves outside them.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Party and Electoral Systems',
+guide:[
+{h:'Electoral systems shape party systems',
+ intro:'Duverger\u2019s law is the single most useful generalisation in this course: the electoral system largely determines how many parties survive.',
+ table:{head:['System','How it works','Party effect','Course example'],rows:[
+   ['First past the post','Plurality in single-member districts','Tends toward two parties','UK, Nigeria'],
+   ['Proportional representation','Seats match vote share','Many parties; coalitions likely','List portions in Mexico, Russia'],
+   ['Mixed member','Combines district and list seats','Moderate multipartism','Mexico, Russia'],
+   ['Single-party','No genuine competition','One party','China']]},
+ points:[
+  '<b>Duverger\u2019s law</b>: single-member plurality districts push toward two dominant parties, because coming second wins nothing and voters consolidate.',
+  '<b>Proportional representation</b> with a low threshold produces fragmented legislatures and coalition government.',
+  'An <b>electoral threshold</b> — a minimum vote share for any seats — limits fragmentation.',
+  'Referendums allow direct decisions, as with Brexit in the UK.',
+  'Election <b>administration</b> matters as much as the formula: who draws districts, who counts votes, and who adjudicates disputes.'
+ ]},
+{h:'Parties and interest groups',
+ points:[
+  'The <b>Chinese Communist Party</b> does not compete for power; it <i>is</i> the state, controlling appointments across government and industry.',
+  'Mexico\u2019s <b>PRI</b> dominated for 71 years before losing the presidency in 2000 — a genuine transition.',
+  'Russia\u2019s <b>United Russia</b> is a dominant party sustained by state resources rather than open competition.',
+  'The UK has a stable two-party system with significant regionally concentrated third parties.',
+  'Nigeria\u2019s parties organise around region and personality more than ideology.',
+  '<b>Corporatism</b> gives selected interest groups official access to policymaking; <b>pluralism</b> lets groups compete freely for influence.'
+ ],
+ ex:{q:'Contrast one-party dominance in China and Russia.',
+     steps:['In China, competing parties are prohibited outright and the CCP has a constitutional leading role.',
+            'In Russia, opposition parties legally exist and contest elections.',
+            'But United Russia benefits from state media, administrative resources, and candidate exclusion.',
+            'The outcome is similar; the mechanism is not.'],
+     a:'Answer: China forbids competition; Russia permits competition it has ensured cannot succeed.'},
+ trap:'Treating all dominant-party systems as identical. The distinction between prohibited and merely futile competition is regularly tested.'}
+],
+cards:[
+ ['Duverger\u2019s law','Single-member plurality systems tend to produce two dominant parties.'],
+ ['First past the post','Plurality winner in single-member districts; UK and Nigeria.'],
+ ['Proportional representation','Seats allocated in proportion to votes; produces multiparty coalitions.'],
+ ['Mixed member system','Combines district and party-list seats; Mexico and Russia.'],
+ ['Electoral threshold','A minimum vote share required to win any seats.'],
+ ['Chinese Communist Party','Not a competing party but the ruling structure of the state.'],
+ ['PRI','Mexican party that governed for 71 years before losing power in 2000.'],
+ ['United Russia','Dominant party sustained by state resources rather than open competition.'],
+ ['Corporatism','Selected interest groups given official access to policymaking.'],
+ ['Pluralism','Interest groups competing freely for influence.']
+],
+quiz:[
+ {q:'Duverger\u2019s law predicts that first-past-the-post systems produce:',
+  c:['Many small parties','Two dominant parties','No parties at all','Permanent coalitions'],
+  a:1, why:'Coming second wins nothing, so voters and elites consolidate behind two viable options.'},
+ {q:'Mexico\u2019s 2000 presidential election mattered because it:',
+  c:['Introduced proportional representation','Ended 71 years of PRI rule','Abolished the presidency','Created federalism'],
+  a:1, why:'The first opposition victory marked a genuine democratic transition.'},
+ {q:'The clearest difference between the CCP and United Russia is that:',
+  c:['United Russia has no members','The CCP prohibits competing parties outright','United Russia is not in government','The CCP holds competitive elections'],
+  a:1, why:'Russia permits opposition parties that cannot realistically win; China does not permit them at all.'},
+ {q:'A country adopting proportional representation with a very low threshold is most likely to get:',
+  c:['A stable two-party system','A fragmented legislature requiring coalitions','Single-party rule','No legislature'],
+  a:1, why:'Low thresholds let many small parties win seats, so majorities become unlikely.'},
+ {q:'Corporatism differs from pluralism because under corporatism interest groups:',
+  c:['Compete freely for influence','Are given official, privileged access by the state','Are banned','Only operate locally'],
+  a:1, why:'The state selects which groups it will deal with, which limits genuine competition for influence.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Political and Economic Change',
+guide:[
+{h:'Economic systems and reform',
+ intro:'Economic change and political change do not move together reliably. Comparing these six paths is the clearest way to see why that assumption fails.',
+ table:{head:['Country','Economic path'],rows:[
+   ['China','Market reforms from 1978 under continued party control'],
+   ['Russia','Shock therapy privatisation in the 1990s; later state recapture of energy'],
+   ['Mexico','NAFTA and USMCA integration; liberalisation'],
+   ['UK','Thatcher-era privatisation and deregulation'],
+   ['Nigeria','Oil dependence and structural adjustment'],
+   ['Iran','State-dominated economy operating under sanctions']]},
+ points:[
+  '<b>Command economy</b>: the state allocates resources. <b>Market economy</b>: prices and private actors do. All six countries are mixed to varying degrees.',
+  '<b>Privatisation</b> transfers state assets to private owners. Russia\u2019s rapid version created oligarchs; the UK\u2019s was gradual and legally structured.',
+  '<b>Structural adjustment programmes</b> imposed austerity and liberalisation as loan conditions, with contested results in Nigeria.',
+  'The <b>resource curse</b>: resource wealth can weaken democracy by funding the state without taxing citizens, which removes the accountability that taxation creates.',
+  'China shows market reform need not produce political liberalisation — the standing challenge to modernisation theory.'
+ ]},
+{h:'Globalisation and political change',
+ points:[
+  '<b>Globalisation</b> increases interdependence and constrains what any single government can do alone.',
+  '<b>Supranational organisations</b> — the EU, WTO, UN — pool sovereignty. <b>Brexit</b> deliberately reversed that pooling.',
+  'Course countries face different external pressures: Mexico from trade integration, Iran and Russia from sanctions, China from export dependence.',
+  '<b>Democratization</b> can be driven by economic development, civil society pressure, or elite bargains — and can reverse.',
+  '<b>Modernisation theory</b> predicted that wealth produces democracy. China is the standing counterexample.',
+  'Environmental and demographic pressures increasingly shape policy in every course country.'
+ ],
+ ex:{q:'Explain the resource curse using a course country.',
+     steps:['Nigeria derives most government revenue from oil exports.',
+            'Because the state does not depend on taxing citizens, it needs less of their consent to function.',
+            'Oil revenue creates enormous incentives for corruption and capture of the state.',
+            'Other economic sectors are neglected, leaving the country exposed to price swings.'],
+     a:'Answer: resource wealth severs the link between taxation and representation, weakening accountability while concentrating incentives for corruption.'},
+ tip:'The resource curse connects Units 1, 3, and 5 — legitimacy, participation, and economic outcomes at once. It is one of the most useful concepts for comparative free-response questions.'}
+],
+cards:[
+ ['Command economy','The state allocates resources and sets production.'],
+ ['Market economy','Prices and private actors allocate resources.'],
+ ['Privatisation','Transfer of state-owned assets into private ownership.'],
+ ['Russian shock therapy','Rapid 1990s privatisation that produced oligarchs and instability.'],
+ ['Structural adjustment','Austerity and liberalisation imposed as conditions for loans.'],
+ ['Resource curse','Resource wealth weakening accountability and fuelling corruption.'],
+ ['Modernisation theory','The claim that development produces democracy; China challenges it.'],
+ ['Supranational organisation','A body to which states cede some sovereignty, such as the EU.'],
+ ['Brexit','The UK\u2019s withdrawal from the EU, reversing pooled sovereignty.'],
+ ['Chinese reform path','Market liberalisation from 1978 without political liberalisation.']
+],
+quiz:[
+ {q:'The resource curse weakens democracy mainly because:',
+  c:['Resources run out quickly','Governments funded by resources need not tax citizens, reducing accountability','Resource states cannot trade','It makes elections illegal'],
+  a:1, why:'Where revenue does not come from citizens, the bargain of taxation for representation never forms.'},
+ {q:'China challenges modernisation theory because it:',
+  c:['Has not developed economically','Grew wealthy without democratising','Abandoned market reform','Lacks state capacity'],
+  a:1, why:'Modernisation theory predicted prosperity would bring democracy, which has not occurred there.'},
+ {q:'Russian privatisation in the 1990s is best described as:',
+  c:['Gradual and carefully regulated','Rapid, producing a small class of oligarchs','A return to central planning','Blocked by the Duma'],
+  a:1, why:'Assets transferred quickly and opaquely, concentrating wealth and shaping politics since.'},
+ {q:'Brexit is significant for this course because it represents:',
+  c:['Deeper supranational integration','A reversal of pooled sovereignty','A change of regime type','The end of parliamentary sovereignty'],
+  a:1, why:'It reclaimed powers previously exercised at EU level, running against the general trend.'},
+ {q:'Structural adjustment programmes typically required countries to:',
+  c:['Expand state ownership','Cut spending and liberalise markets','Raise tariffs','Nationalise banks'],
+  a:1, why:'Austerity and liberalisation were standard conditions attached to international loans.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
 /* ============================================================
    StudyBuddy app
    ============================================================ */

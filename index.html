@@ -10156,6 +10156,2010 @@ setGuide('ap-calc-ab', 'u8', [
 ]);
 </script>
 <script>
+/* ---------------------------------------- AP CALCULUS BC
+   Units 1-8 are identical to Calculus AB, so copy the expanded
+   guides across rather than rewriting them. */
+(function syncBC() {
+  const ab = COURSES.find(c => c.id === 'ap-calc-ab');
+  const bc = COURSES.find(c => c.id === 'ap-calc-bc');
+  if (!ab || !bc) return;
+  ab.units.forEach(au => {
+    const bu = bc.units.find(u => u.id === au.id);
+    if (bu) bu.guide = JSON.parse(JSON.stringify(au.guide));
+  });
+})();
+
+setGuide('ap-calc-bc', 'u9', [
+{h:'Parametric and vector-valued functions',
+ intro:'A parametric curve is traced by a moving point, so every question becomes a motion question. That reframing makes the formulas easier to remember than to memorise.',
+ points:[
+  'Slope: @@\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}@@ — divide the two rates, never differentiate y with respect to x directly.',
+  'Second derivative: differentiate dy/dx with respect to <b>t</b>, then divide by dx/dt again.',
+  '<b>Speed</b> = @@\\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}@@ — the magnitude of the velocity vector.',
+  '<b>Arc length</b> = @@\\int \\sqrt{(dx/dt)^{2} + (dy/dt)^{2}}\\,dt@@, which is just the integral of speed.',
+  'For vector-valued functions, position, velocity, and acceleration are handled component by component.',
+  'Total distance is the integral of speed; displacement is the integral of the velocity vector.'
+ ],
+ trap:'Computing the second derivative as @@\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}@@. That is wrong. You must differentiate the first derivative with respect to t and then divide by dx/dt.',
+ ex:{q:'For @@x = t^{2}, y = t^{3}@@, find dy/dx and the second derivative.',
+     steps:['dy/dt = 3t², dx/dt = 2t.',
+            'So @@\\frac{dy}{dx} = \\frac{3t^{2}}{2t} = \\frac{3t}{2}@@',
+            'Differentiate that with respect to t: 3/2.',
+            'Divide by dx/dt = 2t.'],
+     a:'Answer: @@\\frac{dy}{dx} = \\frac{3t}{2}@@ and @@\\frac{d^{2}y}{dx^{2}} = \\frac{3}{4t}@@'}},
+
+{h:'Polar functions',
+ points:[
+  'Conversions: x = r cos θ, y = r sin θ, and @@r^{2} = x^{2} + y^{2}@@.',
+  '<b>Area in polar</b>: @@\\frac{1}{2}\\int r^{2}\\,d\\theta@@ between the bounding angles. The area element is a thin circular sector, not a rectangle.',
+  'Area between two polar curves: @@\\frac{1}{2}\\int (r_{outer}^{2} - r_{inner}^{2})\\,d\\theta@@.',
+  'Find the bounds by solving where the curves intersect, and sketch first — polar curves often trace the same point at different angles.',
+  'For the slope of a polar curve, convert to parametric form in x and y with θ as the parameter.',
+  'A rose curve @@r = a\\cos(n\\theta)@@ has n petals when n is odd and 2n when n is even.'
+ ],
+ tip:'For "area of one petal" questions, find the two consecutive angles where r = 0. Those are your limits.'}
+]);
+
+setGuide('ap-calc-bc', 'u10', [
+{h:'Convergence tests',
+ intro:'There is no single test that works everywhere. The skill is recognising the form of the series and reaching for the right tool, so learn the tests by what triggers them.',
+ table:{head:['Test','Use when','Conclusion'],rows:[
+   ['nth term','Always check first','If terms do not → 0, it diverges'],
+   ['Geometric','Terms have form arⁿ','Converges if |r| < 1'],
+   ['p-series','Terms are 1/nᵖ','Converges if p > 1'],
+   ['Ratio','Factorials or powers of n','Converges if the limit < 1'],
+   ['Comparison / limit comparison','Resembles a known series','Inherits that series\u2019 behaviour'],
+   ['Alternating series','Terms alternate sign','Converges if terms decrease to 0'],
+   ['Integral','Terms match a decreasing function','Series and integral agree']]},
+ points:[
+  'The <b>nth term test</b> can only prove divergence. Terms shrinking to zero proves nothing — the harmonic series is the counterexample.',
+  '<b>Geometric series</b> @@\\sum ar^{n}@@ converges to @@\\frac{a}{1-r}@@ when |r| < 1.',
+  'The harmonic series (p = 1) diverges. This is the fact students most often get wrong.',
+  'The <b>ratio test</b> is inconclusive when the limit equals exactly 1.',
+  '<b>Absolute convergence</b> implies convergence. <b>Conditional convergence</b> means the series converges but the absolute values do not.'
+ ],
+ trap:'Concluding convergence from the nth term test. If terms approach zero, you have learned nothing and must apply another test.'},
+
+{h:'Power series and Taylor polynomials',
+ points:[
+  '<b>Radius and interval of convergence</b> come from the ratio test. Always test the endpoints separately — the ratio test is inconclusive there.',
+  '<b>Taylor series</b>: @@\\sum \\frac{f^{(n)}(a)(x-a)^{n}}{n!}@@. Centred at a = 0 it is a <b>Maclaurin series</b>.',
+  'Memorise four Maclaurin series and derive the rest by substitution, differentiation, or integration.',
+  '<b>Alternating series error bound</b>: the error is smaller than the first omitted term. Simple and frequently tested.',
+  '<b>Lagrange error bound</b> bounds the remainder of a Taylor polynomial using the maximum of the next derivative.'
+ ],
+ table:{head:['Function','Maclaurin series'],rows:[
+   ['@@e^{x}@@','@@1 + x + \\frac{x^{2}}{2!} + \\frac{x^{3}}{3!} + \\cdots@@'],
+   ['@@\\sin x@@','@@x - \\frac{x^{3}}{3!} + \\frac{x^{5}}{5!} - \\cdots@@'],
+   ['@@\\cos x@@','@@1 - \\frac{x^{2}}{2!} + \\frac{x^{4}}{4!} - \\cdots@@'],
+   ['@@\\frac{1}{1-x}@@','@@1 + x + x^{2} + x^{3} + \\cdots@@ for |x| < 1']]},
+ ex:{q:'Find the Maclaurin series for @@e^{-x^{2}}@@.',
+     steps:['Start from the known series for @@e^{x}@@.',
+            'Substitute @@-x^{2}@@ everywhere x appears.',
+            'That gives @@1 - x^{2} + \\frac{x^{4}}{2!} - \\frac{x^{6}}{3!} + \\cdots@@'],
+     a:'Answer: substitution into a known series is almost always faster than computing derivatives. The exam expects this move.'}}
+]);
+
+/* ---------------------------------------------- AP CHEMISTRY */
+setGuide('ap-chem', 'u1', [
+{h:'Moles and composition',
+ intro:'The mole is a counting unit, nothing more. Every stoichiometry problem in the course is a conversion into moles, a ratio, and a conversion back out.',
+ points:[
+  'One mole is 6.022 × 10²³ particles. Molar mass converts grams to moles.',
+  '<b>Percent composition</b> gives the empirical formula; the molar mass then gives the molecular formula.',
+  'Empirical formula method: assume 100 g, convert each percent to moles, divide all by the smallest, multiply to clear fractions.',
+  'Mass spectrometry shows isotope abundance. Average atomic mass is a weighted average, which is why it is rarely a whole number.',
+  'Pure substances have constant composition; mixtures can be separated by physical means.'
+ ],
+ ex:{q:'A compound is 40.0% C, 6.7% H, 53.3% O. Find its empirical formula.',
+     steps:['Assume 100 g: 40.0 g C, 6.7 g H, 53.3 g O.',
+            'Convert to moles: 40.0/12.01 = 3.33, 6.7/1.008 = 6.65, 53.3/16.00 = 3.33.',
+            'Divide by the smallest (3.33): 1, 2, 1.'],
+     a:'Answer: CH₂O. Multiplying by 6 gives glucose, C₆H₁₂O₆, if the molar mass matched.'}},
+
+{h:'Electron configuration and periodic trends',
+ intro:'Every periodic trend reduces to Coulomb\u2019s law: attraction grows with charge and shrinks with distance. If you can state which of those two is changing, you can derive the trend rather than memorising it.',
+ table:{head:['Trend','Across a period →','Down a group ↓','Why'],rows:[
+   ['Atomic radius','Decreases','Increases','More protons pull same shell in; new shells added'],
+   ['Ionization energy','Increases','Decreases','Tighter hold; outer electrons further away'],
+   ['Electronegativity','Increases','Decreases','Same reasoning'],
+   ['Metallic character','Decreases','Increases','Opposite of ionization energy']]},
+ points:[
+  'Fill orbitals by increasing energy following the <b>Aufbau principle</b>, <b>Hund\u2019s rule</b>, and the <b>Pauli exclusion principle</b>.',
+  '<b>Effective nuclear charge</b> increases across a period because protons are added while shielding stays roughly constant.',
+  '<b>Photoelectron spectroscopy</b>: peak <i>position</i> shows binding energy, peak <i>height</i> shows how many electrons occupy that level.',
+  'Higher binding energy means electrons closer to the nucleus and more tightly held.',
+  'A large jump in <b>successive ionization energies</b> reveals that you have broken into a new inner shell — which tells you the valence count.'
+ ],
+ ex:{q:'An element has ionization energies of 738, 1451, and 7733 kJ/mol. How many valence electrons?',
+     steps:['The first two removals are moderate and comparable.',
+            'The third jumps by a factor of five.',
+            'That jump means the third electron came from a lower, tightly held shell.'],
+     a:'Answer: two valence electrons. This is magnesium.'}}
+]);
+
+setGuide('ap-chem', 'u2', [
+{h:'Bonding',
+ table:{head:['Bond type','Between','Key property'],rows:[
+   ['Ionic','Metal and nonmetal','High melting point, conducts when molten or dissolved'],
+   ['Covalent','Nonmetal and nonmetal','Discrete molecules, low melting point'],
+   ['Metallic','Metal atoms','Sea of delocalised electrons; conducts, malleable'],
+   ['Network covalent','Continuous covalent lattice','Extremely high melting point — diamond, SiO₂']]},
+ points:[
+  '<b>Lattice energy</b> rises with greater ionic charge and smaller ionic radius. Coulomb\u2019s law again.',
+  'MgO has a far higher lattice energy than NaCl because 2+ and 2− beat 1+ and 1−.',
+  'A bond is <b>polar covalent</b> when the electronegativity difference is moderate, creating partial charges.',
+  '<b>Bond order</b> tracks strength and inverse length: triple is shorter and stronger than double, which beats single.',
+  '<b>Resonance</b> spreads electron density; the real molecule is the average of the structures, not a rapid switch between them.'
+ ]},
+
+{h:'Geometry and molecular polarity',
+ intro:'Shape determines polarity, and polarity determines nearly every physical property in Unit 3. This is the hinge of the whole course.',
+ table:{head:['Domains','Lone pairs','Shape','Angle'],rows:[
+   ['2','0','Linear','180°'],
+   ['3','0','Trigonal planar','120°'],
+   ['3','1','Bent','<120°'],
+   ['4','0','Tetrahedral','109.5°'],
+   ['4','1','Trigonal pyramidal','<109.5°'],
+   ['4','2','Bent','<109.5°']]},
+ points:[
+  '<b>VSEPR</b>: electron domains repel and arrange as far apart as possible. Lone pairs repel more strongly, compressing bond angles.',
+  '<b>Molecular polarity requires polar bonds AND asymmetric geometry.</b> CO₂ has polar bonds and is nonpolar because its linear symmetry cancels them.',
+  'Hybridisation: sp for 2 domains, sp² for 3, sp³ for 4.',
+  '<b>Sigma</b> bonds form by head-on overlap; <b>pi</b> bonds by side-on overlap and prevent rotation about the bond.',
+  'A single bond is one sigma; a double is one sigma and one pi; a triple is one sigma and two pi.',
+  'Alloys are <b>interstitial</b> (small atoms in gaps) or <b>substitutional</b> (similar-size replacement).'
+ ],
+ trap:'Concluding a molecule is polar because it contains polar bonds. Always check whether the geometry cancels them.'}
+]);
+
+setGuide('ap-chem', 'u3', [
+{h:'Intermolecular forces',
+ intro:'IMFs are not bonds. They are attractions between molecules, and they determine every physical property that does not involve breaking a molecule apart.',
+ table:{head:['Force','Requires','Relative strength'],rows:[
+   ['Ion-dipole','An ion and a polar molecule','Strongest'],
+   ['Hydrogen bonding','H bonded to N, O, or F','Very strong'],
+   ['Dipole-dipole','Two polar molecules','Moderate'],
+   ['London dispersion','Any molecules at all','Weakest, but grows with size']]},
+ points:[
+  '<b>London dispersion forces</b> exist in every molecule and increase with more electrons and larger, more polarisable surfaces. In large molecules they can outweigh hydrogen bonding.',
+  '<b>Hydrogen bonding</b> requires hydrogen bonded directly to N, O, or F — not merely present in the molecule.',
+  'Stronger IMFs mean <b>higher boiling point, higher viscosity, higher surface tension, and lower vapour pressure</b>.',
+  '"Like dissolves like": polar solvents dissolve polar solutes; nonpolar dissolves nonpolar.'
+ ],
+ ex:{q:'Explain why water boils at 100 °C but H₂S boils at −60 °C, despite sulfur being heavier than oxygen.',
+     steps:['Both are bent molecules with polar bonds.',
+            'Oxygen is small and highly electronegative, so water forms hydrogen bonds.',
+            'Sulfur is not electronegative enough, so H₂S has only dipole-dipole forces.',
+            'Hydrogen bonds require far more energy to break.'],
+     a:'Answer: hydrogen bonding in water outweighs the larger dispersion forces in H₂S.'}},
+
+{h:'Gases and solutions',
+ points:[
+  '<b>Ideal gas law</b>: PV = nRT. <b>Kinetic molecular theory</b> assumes negligible molecular volume and no attractions.',
+  'Real gases deviate at <b>high pressure</b> and <b>low temperature</b>, exactly where those two assumptions fail.',
+  '<b>Dalton\u2019s law</b>: partial pressures add to the total, each proportional to mole fraction.',
+  'At the same temperature, all gases have the same average kinetic energy — lighter molecules therefore move faster.',
+  '<b>Molarity</b> = moles of solute ÷ litres of solution. Dilution follows M₁V₁ = M₂V₂.',
+  '<b>Beer\u2019s law</b>: A = εbc, so absorbance is directly proportional to concentration.',
+  'Chromatography and distillation separate mixtures using differences in IMFs and boiling points.'
+ ]}
+]);
+
+setGuide('ap-chem', 'u4', [
+{h:'Reactions and equations',
+ intro:'Unit 4 is where symbols become quantities. Everything here depends on a correctly balanced equation, so a small error at the start propagates through every calculation that follows.',
+ points:[
+  '<b>Physical changes</b> alter form only. <b>Chemical changes</b> break and form bonds, producing new substances.',
+  'Evidence of chemical change: gas, precipitate, unexpected colour change, temperature change, or light.',
+  '<b>Net ionic equations</b> show only the species that actually change. Spectator ions appear identically on both sides and are cancelled.',
+  'Reaction types: synthesis, decomposition, single replacement, double replacement, combustion, acid-base.',
+  '<b>Oxidation-reduction</b> involves electron transfer. OIL RIG: Oxidation Is Loss, Reduction Is Gain.',
+  'A species that loses electrons is oxidised and acts as the <b>reducing agent</b> — it reduces something else.'
+ ],
+ trap:'Writing full ionic equations when the question asks for net ionic. Cancelling the spectators is the point of the exercise.'},
+
+{h:'Stoichiometry and titration',
+ points:[
+  'Balanced coefficients give <b>mole ratios</b>, the bridge between any two substances in a reaction.',
+  'The universal route: grams → moles → mole ratio → moles → grams.',
+  'The <b>limiting reactant</b> is consumed first and determines theoretical yield. Find it by converting each reactant to product and taking the smaller answer.',
+  '<b>Percent yield</b> = (actual ÷ theoretical) × 100.',
+  '<b>Titration</b>: at the equivalence point, moles of acid equal moles of base for a 1:1 reaction.',
+  '<b>Gravimetric analysis</b> uses a precipitate\u2019s mass to determine an unknown quantity.'
+ ],
+ ex:{q:'25.0 mL of 0.100 M NaOH neutralises 50.0 mL of HCl. Find the HCl concentration.',
+     steps:['Moles NaOH = 0.0250 L × 0.100 M = 0.00250 mol.',
+            'The reaction is 1:1, so moles HCl = 0.00250 mol.',
+            'Concentration = 0.00250 mol ÷ 0.0500 L.'],
+     a:'Answer: 0.0500 M.'}}
+]);
+
+setGuide('ap-chem', 'u5', [
+{h:'Rate laws',
+ intro:'Kinetics is about speed, and speed is determined experimentally. The balanced equation tells you nothing about the rate law — that is the central point of this unit.',
+ table:{head:['Order','Rate depends on','Linear plot','Half-life'],rows:[
+   ['Zero','Nothing','[A] vs t','Decreases over time'],
+   ['First','[A]','ln[A] vs t','Constant'],
+   ['Second','[A]²','1/[A] vs t','Increases over time']]},
+ points:[
+  'The <b>rate law</b> rate = k[A]ˣ[B]ʸ must be found from experiment, never from coefficients.',
+  'To find an order from data, compare two trials where only one concentration changes and see how the rate responds.',
+  'Doubling a concentration and doubling the rate means first order; quadrupling means second order; no change means zero order.',
+  'Only <b>first-order</b> reactions have a constant half-life, which is why radioactive decay is first order.'
+ ],
+ ex:{q:'Doubling [A] quadruples the rate. Doubling [B] leaves it unchanged. Write the rate law.',
+     steps:['For A: 2ˣ = 4, so x = 2.',
+            'For B: 2ʸ = 1, so y = 0.',
+            'B does not appear in the rate law at all.'],
+     a:'Answer: rate = k[A]². B is likely involved after the rate-determining step.'}},
+
+{h:'Mechanisms and catalysts',
+ points:[
+  '<b>Collision model</b>: a reaction needs sufficient energy and correct molecular orientation.',
+  '<b>Activation energy</b> is the barrier. Raising temperature increases the fraction of molecules that can clear it, which is why rate rises steeply with heat.',
+  'A <b>mechanism</b> is a sequence of elementary steps whose sum is the overall reaction.',
+  'The <b>rate-determining step</b> is the slowest, and it controls the observed rate law.',
+  '<b>Intermediates</b> are produced then consumed. <b>Catalysts</b> are consumed then regenerated. Neither appears in the overall equation.',
+  'A catalyst lowers activation energy by offering an alternative pathway. It <b>never</b> changes ΔH or the position of equilibrium.'
+ ],
+ trap:'Saying a catalyst shifts equilibrium toward products. It speeds both directions equally and only changes how fast equilibrium is reached.'}
+]);
+
+setGuide('ap-chem', 'u6', [
+{h:'Heat and enthalpy',
+ intro:'Thermodynamics asks where energy goes. Unit 6 handles the enthalpy half of that question; Unit 9 adds entropy and decides whether a reaction happens at all.',
+ points:[
+  '<b>Exothermic</b> reactions release heat and have negative ΔH; the surroundings warm.',
+  '<b>Endothermic</b> reactions absorb heat with positive ΔH; the surroundings cool.',
+  'Heat flows from hotter to colder until thermal equilibrium.',
+  '<b>Calorimetry</b>: @@q = mc\\Delta T@@ where c is specific heat capacity.',
+  'A high specific heat means a substance resists temperature change — which is why water moderates climate and cools engines.',
+  'In an insulated system, heat lost by one substance equals heat gained by the other.'
+ ],
+ ex:{q:'How much heat raises 50.0 g of water (c = 4.18 J/g°C) by 10.0 °C?',
+     steps:['Use @@q = mc\\Delta T@@',
+            'q = (50.0)(4.18)(10.0)'],
+     a:'Answer: 2090 J, or about 2.09 kJ.'}},
+
+{h:'Calculating enthalpy change',
+ table:{head:['Method','Formula','Use when'],rows:[
+   ['Hess\u2019s law','Add step enthalpies','Given a set of related reactions'],
+   ['Bond enthalpy','Bonds broken − bonds formed','Given bond energies'],
+   ['Formation enthalpy','Σ products − Σ reactants','Given ΔH°f values']]},
+ points:[
+  '<b>Hess\u2019s law</b> works because enthalpy is a <b>state function</b> — only the initial and final states matter, not the route.',
+  'Reversing a reaction flips the sign of ΔH. Multiplying it scales ΔH by the same factor.',
+  'Bond enthalpy: breaking bonds costs energy, forming them releases it. Hence broken minus formed.',
+  '<b>ΔH°f of any element in its standard state is zero</b> by definition.',
+  'Bond enthalpy gives an approximation; formation enthalpies give exact values.'
+ ]}
+]);
+
+setGuide('ap-chem', 'u7', [
+{h:'The equilibrium state',
+ intro:'Equilibrium is dynamic, not static. Both reactions continue at equal rates, which is why adding a reactant still changes anything at all.',
+ points:[
+  '<b>K</b> = products over reactants, each raised to its coefficient. Pure solids and liquids are omitted because their concentrations do not change.',
+  'A large K favours products; a small K favours reactants.',
+  '<b>Reaction quotient Q</b> uses current concentrations. Compare it with K to predict direction.',
+  'Q < K shifts forward toward products. Q > K shifts reverse. Q = K means equilibrium.',
+  '<b>ICE tables</b> track Initial, Change, and Equilibrium amounts and organise nearly every calculation in this unit.'
+ ]},
+
+{h:'Le Chatelier and solubility',
+ table:{head:['Disturbance','Shift','Does K change?'],rows:[
+   ['Add reactant','Toward products','No'],
+   ['Remove product','Toward products','No'],
+   ['Increase pressure','Toward fewer moles of gas','No'],
+   ['Add a catalyst','No shift','No'],
+   ['Increase temperature (exothermic)','Toward reactants','<b>Yes</b>'],
+   ['Increase temperature (endothermic)','Toward products','<b>Yes</b>']]},
+ points:[
+  '<b>Temperature is the only change that alters K.</b> Everything else shifts the position while leaving the constant intact.',
+  'Treat heat as a product in an exothermic reaction and as a reactant in an endothermic one; then Le Chatelier handles temperature like anything else.',
+  '<b>Ksp</b> governs how much of a sparingly soluble salt dissolves.',
+  'The <b>common ion effect</b> reduces solubility: adding an ion already in the equilibrium shifts it back toward the solid.',
+  'Adding an inert gas at constant volume changes nothing, because partial pressures of the reacting species are unchanged.'
+ ],
+ trap:'Saying a catalyst increases yield. It reaches the same equilibrium faster; the yield is identical.'}
+]);
+
+setGuide('ap-chem', 'u8', [
+{h:'pH and acid strength',
+ points:[
+  '<b>Brønsted-Lowry</b>: acids donate protons, bases accept them, forming <b>conjugate pairs</b>.',
+  '@@pH = -\\log[H^{+}]@@ and pH + pOH = 14 at 25 °C.',
+  'Each pH unit is a <b>tenfold</b> change in hydrogen ion concentration.',
+  '<b>Strong</b> acids and bases dissociate completely. <b>Weak</b> ones reach an equilibrium described by Ka or Kb.',
+  'A larger Ka means a stronger acid. Ka × Kb = Kw for any conjugate pair.',
+  '<b>The stronger the acid, the weaker its conjugate base.</b> A strong acid gives up protons readily, so its conjugate has almost no tendency to take them back.'
+ ]},
+
+{h:'Buffers and titration curves',
+ intro:'A buffer resists pH change because it contains a reservoir of both an acid and a base, each ready to neutralise whatever is added.',
+ table:{head:['Titration','Equivalence point pH','Why'],rows:[
+   ['Strong acid + strong base','7','Neither ion hydrolyses'],
+   ['Weak acid + strong base','Above 7','Conjugate base remains'],
+   ['Weak base + strong acid','Below 7','Conjugate acid remains']]},
+ points:[
+  'A <b>buffer</b> is a weak acid together with its conjugate base.',
+  '<b>Henderson-Hasselbalch</b>: @@pH = pK_a + \\log\\frac{[A^{-}]}{[HA]}@@',
+  'Buffer capacity is greatest when pH = pKa, meaning equal concentrations of acid and conjugate base.',
+  'The <b>half-equivalence point</b> is where exactly half the acid has been neutralised, so pH = pKa. Reading pKa off a titration curve is a standard exam task.',
+  '<b>Polyprotic</b> acids show one equivalence point per ionisable proton.'
+ ],
+ ex:{q:'A weak acid is titrated with NaOH. At 15 mL added the pH is 4.8, and the equivalence point is at 30 mL. What is the pKa?',
+     steps:['15 mL is exactly half of 30 mL.',
+            'That is the half-equivalence point.',
+            'At half-equivalence, [A⁻] = [HA], so the log term is zero.'],
+     a:'Answer: pKa = 4.8. Ka is therefore about 1.6 × 10⁻⁵.'}}
+]);
+
+setGuide('ap-chem', 'u9', [
+{h:'Entropy and free energy',
+ intro:'Enthalpy asks whether a reaction releases energy. Entropy asks whether it spreads energy out. Gibbs free energy combines both into a single verdict.',
+ table:{head:['ΔH','ΔS','Favourable?'],rows:[
+   ['Negative','Positive','Always'],
+   ['Positive','Negative','Never'],
+   ['Negative','Negative','Only at low temperature'],
+   ['Positive','Positive','Only at high temperature']]},
+ points:[
+  '<b>Entropy</b> measures the dispersal of energy and matter. Gases have more than liquids, which have more than solids.',
+  'Entropy increases when moles of gas increase, when solids dissolve, and when temperature rises.',
+  '<b>Gibbs free energy</b>: @@\\Delta G = \\Delta H - T\\Delta S@@.',
+  'A reaction is <b>thermodynamically favourable</b> when ΔG is negative.',
+  '<b>Favourable does not mean fast.</b> Diamond converting to graphite is favourable and takes geological time. Thermodynamics gives direction; kinetics gives rate.',
+  'Coupling an unfavourable reaction to a strongly favourable one can drive it — this is how ATP works in biology.'
+ ],
+ trap:'Assuming a favourable reaction will visibly proceed. Activation energy can make a thermodynamically favourable reaction effectively frozen.'},
+
+{h:'Electrochemistry',
+ table:{head:['','Galvanic (voltaic)','Electrolytic'],rows:[
+   ['Reaction','Spontaneous','Driven by external power'],
+   ['E°cell','Positive','Negative'],
+   ['ΔG','Negative','Positive'],
+   ['Purpose','Produces electricity','Forces a reaction']]},
+ points:[
+  '<b>Oxidation at the anode, reduction at the cathode</b> — true in both cell types. Only the electrode signs differ.',
+  'E°cell = E°cathode − E°anode.',
+  '@@\\Delta G^{\\circ} = -nFE^{\\circ}@@, so a positive cell potential gives a negative free energy change.',
+  'A <b>salt bridge</b> maintains charge balance so current continues to flow.',
+  'Electroplating and electrolysis of water are the standard electrolytic examples.'
+ ],
+ ex:{q:'A cell has E°cell = +1.10 V with n = 2. Is it favourable, and what type of cell?',
+     steps:['Positive E° means the reaction proceeds on its own.',
+            '@@\\Delta G^{\\circ} = -nFE^{\\circ}@@ gives a negative value.',
+            'Spontaneous redox producing current defines a galvanic cell.'],
+     a:'Answer: favourable, and it is a galvanic cell. ΔG° = −(2)(96500)(1.10) ≈ −212 kJ.'}}
+]);
+</script>
+<script>
+/* ---------------------------------------------- AP STATISTICS */
+setGuide('ap-stats', 'u1', [
+{h:'Describing a distribution',
+ intro:'Every description question wants the same four things in context. Say them in the same order every time and you will not lose points to omission.',
+ table:{head:['Element','What to say'],rows:[
+   ['Shape','Symmetric, skewed left, skewed right, uniform, bimodal'],
+   ['Center','Mean if symmetric, median if skewed'],
+   ['Spread','Standard deviation if symmetric, IQR if skewed'],
+   ['Outliers','Identify them by the 1.5 × IQR rule']]},
+ points:[
+  'Skewed <b>right</b> means the tail points right and the mean exceeds the median. Skewed <b>left</b> is the reverse.',
+  '<b>Resistant</b> measures — median, IQR — are unaffected by outliers. The mean and standard deviation are not.',
+  'The <b>1.5 × IQR rule</b>: outliers fall below Q1 − 1.5·IQR or above Q3 + 1.5·IQR.',
+  'Always describe in context. "The distribution is skewed right" earns nothing; "house prices are skewed right, with a few very expensive homes" earns the point.'
+ ],
+ trap:'Reporting the mean for skewed data. If the shape is skewed, the median is the honest measure of a typical value.'},
+
+{h:'Normal distributions and z-scores',
+ points:[
+  '@@z = \\frac{x - \\mu}{\\sigma}@@ tells you how many standard deviations a value sits from the mean.',
+  'z-scores allow comparison across different distributions — a 90 on one test versus a 75 on another.',
+  'The <b>empirical rule</b>: about 68% within one SD, 95% within two, 99.7% within three.',
+  'Adding a constant to every value shifts the centre and leaves the spread unchanged.',
+  'Multiplying every value by a constant scales both centre and spread.',
+  '<b>Percentiles</b> give the share of data at or below a value.'
+ ],
+ ex:{q:'Ana scored 88 on a test with mean 80 and SD 4. Ben scored 92 on a test with mean 85 and SD 7. Who did better relative to peers?',
+     steps:['Ana: z = (88 − 80)/4 = 2.0.',
+            'Ben: z = (92 − 85)/7 = 1.0.',
+            'Ana is two SDs above her mean; Ben is one.'],
+     a:'Answer: Ana, despite the lower raw score. This is exactly why z-scores exist.'}}
+]);
+
+setGuide('ap-stats', 'u2', [
+{h:'Describing a relationship',
+ intro:'Two-variable questions follow the same discipline as one-variable ones: describe what you see before computing anything, and always in context.',
+ points:[
+  'Describe a scatterplot by <b>direction, form, strength, and unusual points</b>.',
+  '<b>Correlation r</b> runs from −1 to 1, measures only <i>linear</i> strength, has no units, and is not resistant to outliers.',
+  'r is unchanged if you swap x and y, or change units. That is a common multiple-choice trap.',
+  'The <b>least-squares regression line</b> minimises the sum of squared residuals and always passes through (x̄, ȳ).',
+  'Slope interpretation: "for each additional hour studied, predicted score increases by 4.2 points." The word <b>predicted</b> is required.',
+  'Correlation never establishes causation. Name a plausible lurking variable if asked.'
+ ]},
+
+{h:'Residuals and model fit',
+ points:[
+  '<b>Residual</b> = observed − predicted. Positive means the model underpredicted.',
+  'A <b>residual plot</b> with no pattern supports a linear model. Curvature means linear is the wrong model, however high r looks.',
+  '<b>r²</b> is the proportion of variation in y explained by the linear model with x.',
+  'An <b>influential point</b> substantially changes the slope when removed. High-<b>leverage</b> points have extreme x values.',
+  '<b>Extrapolation</b> beyond the observed range of x is unreliable — the pattern may not continue.',
+  'Transformations such as logs can linearise a nonlinear relationship so regression applies.'
+ ],
+ ex:{q:'A regression gives r = 0.95 but the residual plot is strongly curved. What do you conclude?',
+     steps:['A high r shows strong linear association.',
+            'But the residual plot reveals a systematic pattern the line is missing.',
+            'r measures linear strength, not whether linear is appropriate.'],
+     a:'Answer: a linear model is not appropriate despite the high r. Try a transformation.'},
+ trap:'Judging model fit by r alone. The residual plot is the decisive evidence.'}
+]);
+
+setGuide('ap-stats', 'u3', [
+{h:'Sampling',
+ table:{head:['Method','How','Weakness'],rows:[
+   ['Simple random','Every group of size n equally likely','May miss small subgroups'],
+   ['Stratified','Random within homogeneous strata','Requires knowing the strata'],
+   ['Cluster','Randomly pick whole groups, measure all','More variability'],
+   ['Systematic','Every kth unit','Fails if the list has a pattern'],
+   ['Convenience','Whoever is available','Badly biased'],
+   ['Voluntary response','Whoever chooses to reply','Badly biased']]},
+ points:[
+  'Bias types: <b>undercoverage</b>, <b>nonresponse</b>, and <b>response bias</b> from wording or interviewer effects.',
+  '<b>A larger sample reduces variability but never reduces bias.</b> This is the single most tested idea in the unit.',
+  'Stratified sampling reduces variability when strata differ from each other but are similar within.',
+  'Cluster sampling is cheaper but generally more variable than stratified.'
+ ]},
+
+{h:'Experiments',
+ intro:'The distinction between an observational study and an experiment decides what conclusion you are allowed to draw, which is why the exam asks about it constantly.',
+ points:[
+  'Only a well-designed <b>experiment</b> that imposes treatments can establish causation.',
+  'Four principles: <b>comparison</b>, <b>random assignment</b>, <b>replication</b>, and <b>control</b>.',
+  '<b>Blocking</b> groups similar subjects to reduce a known source of variability, then randomises within blocks. <b>Matched pairs</b> is a special case.',
+  'Blocking is to experiments what stratifying is to sampling.',
+  '<b>Blinding</b> keeps subjects unaware; <b>double-blind</b> also keeps the evaluators unaware.',
+  '<b>Confounding</b> means another variable moves with the explanatory variable so their effects cannot be separated.'
+ ],
+ table:{head:['Design feature','What it permits'],rows:[
+   ['Random selection from a population','Generalising to that population'],
+   ['Random assignment to treatments','Concluding cause and effect'],
+   ['Both','Both conclusions'],
+   ['Neither','Describing the sample only']]},
+ ex:{q:'Researchers advertise for volunteers, then randomly assign them to a drug or placebo. The drug group improves. What is justified?',
+     steps:['Volunteers are not a random sample, so the population is unknown.',
+            'But treatments were randomly assigned within the group.',
+            'Random assignment supports causation among these subjects.'],
+     a:'Answer: you may conclude the drug caused improvement in these volunteers, but not that it will work for the general population.'}}
+]);
+
+setGuide('ap-stats', 'u4', [
+{h:'Probability rules',
+ intro:'Probability is the bridge between describing data and drawing conclusions from it. Every inference procedure later in the course rests on the rules in this unit.',
+ points:[
+  'Addition rule: P(A or B) = P(A) + P(B) − P(A and B).',
+  '<b>Mutually exclusive</b> events cannot both happen, so P(A and B) = 0.',
+  '<b>Independent</b> events satisfy P(A and B) = P(A)P(B) and P(A|B) = P(A).',
+  'Mutually exclusive and independent are <b>different and nearly opposite</b>. If A and B are mutually exclusive, knowing A occurred tells you B did not — maximal dependence.',
+  'Conditional probability: @@P(A|B) = \\frac{P(A \\text{ and } B)}{P(B)}@@',
+  '<b>Complement rule</b>: P(not A) = 1 − P(A). For "at least one" problems, compute the probability of none and subtract.'
+ ],
+ trap:'Treating mutually exclusive as independent. They are essentially incompatible except in trivial cases.'},
+
+{h:'Random variables and distributions',
+ points:[
+  'Mean of a discrete random variable: @@\\mu = \\sum x \\cdot P(x)@@. It is a long-run average, not a guaranteed outcome.',
+  'Combining: means add or subtract as expected.',
+  '<b>Variances always add for independent variables, even when you subtract the variables.</b> Standard deviations never add directly.',
+  'To find the SD of a difference, add the variances and take the square root.',
+  '<b>Binomial setting</b>: fixed n, two outcomes, independent trials, constant p. @@\\mu = np@@ and @@\\sigma = \\sqrt{np(1-p)}@@.',
+  '<b>Geometric setting</b>: same conditions but counting trials until the first success, with @@\\mu = \\frac{1}{p}@@.'
+ ],
+ ex:{q:'X and Y are independent with σX = 3 and σY = 4. Find the SD of X − Y.',
+     steps:['Variances: 9 and 16.',
+            'Add them even though we are subtracting: 9 + 16 = 25.',
+            'Take the square root.'],
+     a:'Answer: 5. Answering 1 or 7 means you subtracted or added the standard deviations directly.'}}
+]);
+
+setGuide('ap-stats', 'u5', [
+{h:'What a sampling distribution is',
+ intro:'Three distributions get confused constantly: the population, one sample, and the distribution of a statistic across all possible samples. Inference is entirely about the third.',
+ points:[
+  'A <b>sampling distribution</b> is the distribution of a statistic across all possible samples of size n.',
+  'A statistic is <b>unbiased</b> when the mean of its sampling distribution equals the parameter. That is about centring, not precision.',
+  '<b>Variability</b> decreases as sample size increases — larger samples give more precise estimates.',
+  'Population size barely matters provided the population is at least ten times the sample.'
+ ]},
+
+{h:'The key results',
+ table:{head:['Statistic','Mean','Standard error','Normal when'],rows:[
+   ['Sample proportion p̂','p','@@\\sqrt{\\frac{p(1-p)}{n}}@@','np ≥ 10 and n(1−p) ≥ 10'],
+   ['Sample mean x̄','μ','@@\\frac{\\sigma}{\\sqrt{n}}@@','Population normal, or n ≥ 30']]},
+ points:[
+  'The <b>Central Limit Theorem</b>: for large n, x̄ is approximately normal <i>regardless of the population shape</i>. This is why inference about means works on badly skewed data.',
+  'If the population is already normal, x̄ is normal for any n.',
+  'Standard error scales with @@\\frac{1}{\\sqrt{n}}@@, so quadrupling the sample halves the standard error.',
+  'That square root is why huge samples give diminishing returns.'
+ ],
+ ex:{q:'Increasing a sample from 100 to 400 changes the standard error how?',
+     steps:['SE depends on 1 over the square root of n.',
+            '√400 = 20, √100 = 10.',
+            'The denominator doubled.'],
+     a:'Answer: the standard error is halved. Four times the data for twice the precision.'}}
+]);
+
+setGuide('ap-stats', 'u6', [
+{h:'Confidence intervals',
+ intro:'Every confidence interval has the same shape. Learn the shape once and only the standard error changes between procedures.',
+ points:[
+  'Form: <b>statistic ± (critical value)(standard error)</b>.',
+  'One-proportion z-interval: @@\\hat{p} \\pm z^{*}\\sqrt{\\frac{\\hat{p}(1-\\hat{p})}{n}}@@',
+  'Conditions: <b>random</b> sample, <b>10%</b> condition, and <b>large counts</b> — at least 10 successes and 10 failures.',
+  'Interpretation of an <i>interval</i>: "We are 95% confident the true proportion of all voters who support the measure lies between 0.48 and 0.56."',
+  'Interpretation of the <i>level</i>: "In repeated sampling, about 95% of intervals constructed this way would capture the true parameter."',
+  'Higher confidence widens the interval. Larger n narrows it.'
+ ],
+ trap:'Saying "there is a 95% chance the parameter is in this interval." The parameter is fixed; the interval is what varies. The confidence lives in the procedure.'},
+
+{h:'Significance tests',
+ table:{head:['','H₀ is true','H₀ is false'],rows:[
+   ['Reject H₀','<b>Type I error</b> (probability α)','Correct — this is power'],
+   ['Fail to reject','Correct','<b>Type II error</b> (probability β)']]},
+ points:[
+  'State hypotheses, check conditions, compute the test statistic, find the p-value, then conclude <b>in context</b>.',
+  'The <b>p-value</b> is the probability of a result at least this extreme <i>assuming H₀ is true</i>.',
+  'If p < α, reject H₀. Otherwise fail to reject. You never "accept" H₀.',
+  '<b>Power</b> = 1 − β. It increases with larger n, larger effect size, or larger α.',
+  'Increasing α raises power and raises Type I error together — there is no free improvement.',
+  'For a test of one proportion, use <b>p₀</b> in the standard error, not p̂. Intervals use p̂; tests use p₀.'
+ ],
+ ex:{q:'A test gives p = 0.03 at α = 0.05. Write a proper conclusion.',
+     steps:['Compare: 0.03 < 0.05.',
+            'So reject the null hypothesis.',
+            'State it in context, not as bare notation.'],
+     a:'Answer: "Because the p-value of 0.03 is less than α = 0.05, we reject H₀. There is convincing evidence that the true proportion differs from 0.50."'}}
+]);
+
+setGuide('ap-stats', 'u7', [
+{h:'The t distribution',
+ intro:'You almost never know the population standard deviation, so you almost always use t rather than z. The exam expects you to notice which one applies.',
+ points:[
+  'Use <b>t</b> whenever σ is unknown, substituting the sample s.',
+  'The t distribution is bell-shaped with <b>heavier tails</b>, which produces wider intervals — the price of estimating σ.',
+  '<b>Degrees of freedom</b> = n − 1 for one sample. As df grows, t approaches z.',
+  'One-sample t-interval: @@\\bar{x} \\pm t^{*}\\frac{s}{\\sqrt{n}}@@',
+  'Conditions: random sample, 10% condition, and normality — either a normal population, n ≥ 30, or a roughly symmetric sample with no strong outliers.'
+ ]},
+
+{h:'Comparing means',
+ points:[
+  '<b>Paired t</b> applies when observations come in natural pairs. Analyse the <b>differences</b> as a single sample.',
+  'Before-and-after measurements on the same subjects are <b>always paired</b>, never two-sample. This is the most common design error on the exam.',
+  'Twins, matched subjects, and left-versus-right measurements are also paired.',
+  '<b>Two-sample t</b> compares independent groups: @@(\\bar{x}_{1} - \\bar{x}_{2}) \\pm t^{*}\\sqrt{\\frac{s_{1}^{2}}{n_{1}} + \\frac{s_{2}^{2}}{n_{2}}}@@',
+  'Check conditions for each group separately in a two-sample procedure.',
+  'A confidence interval for a difference that contains 0 means no significant difference at that level.'
+ ],
+ ex:{q:'Twenty students take a reading test before and after a course. Which procedure applies?',
+     steps:['The same twenty students appear in both measurements.',
+            'The two sets of scores are not independent.',
+            'Compute each student\u2019s change, then treat those differences as one sample.'],
+     a:'Answer: a paired t-procedure on the differences, with df = 19.'}}
+]);
+
+setGuide('ap-stats', 'u8', [
+{h:'Three chi-square tests',
+ intro:'All three use the same statistic. What distinguishes them is how the data were collected, and the exam tests exactly that distinction.',
+ table:{head:['Test','Data','Degrees of freedom'],rows:[
+   ['Goodness of fit','One categorical variable vs a claimed distribution','categories − 1'],
+   ['Homogeneity','One variable across several populations','(rows − 1)(columns − 1)'],
+   ['Independence','Two variables from one sample','(rows − 1)(columns − 1)']]},
+ points:[
+  'Homogeneity and independence use identical computations. Homogeneity samples <b>separate populations</b>; independence samples <b>one population</b> and measures two variables.',
+  '@@\\chi^{2} = \\sum \\frac{(O - E)^{2}}{E}@@ where O is observed and E is expected.',
+  'Expected count for a cell = (row total × column total) ÷ grand total.',
+  'Condition: <b>all expected counts at least 5</b>. Observed counts may be smaller — this catches many students.',
+  'The chi-square distribution is right-skewed and tested only in the right tail.',
+  'The largest contributing cells identify where the data most departed from expectation, which is what "describe the nature of the association" wants.'
+ ],
+ ex:{q:'A 3 × 4 table has how many degrees of freedom, and what does a large χ² mean?',
+     steps:['df = (3 − 1)(4 − 1) = 6.',
+            'χ² sums squared deviations from expected.',
+            'Larger values mean observed and expected differ more.'],
+     a:'Answer: df = 6, and a large χ² gives evidence against the null hypothesis of no association.'}}
+]);
+
+setGuide('ap-stats', 'u9', [
+{h:'Inference for regression slope',
+ intro:'This unit applies everything from Unit 6 and 7 to the slope of a regression line. The null hypothesis is always the same: there is no linear relationship.',
+ points:[
+  'Population model: @@y = \\alpha + \\beta x + \\epsilon@@. The sample line estimates it.',
+  'H₀: β = 0 means x provides no linear information about y.',
+  'Test statistic @@t = \\frac{b_{1}}{SE(b_{1})}@@ with <b>df = n − 2</b>, because both a slope and an intercept were estimated.',
+  'Confidence interval: @@b_{1} \\pm t^{*} \\cdot SE(b_{1})@@',
+  'Computer output gives the slope, its standard error, t, and a <b>two-sided</b> p-value in a standard layout. Halve it for a one-sided alternative.',
+  'An interval excluding 0 gives convincing evidence of a linear relationship.'
+ ]},
+
+{h:'Conditions and interpretation',
+ table:{head:['Condition','How to check'],rows:[
+   ['<b>L</b>inear','Residual plot shows no pattern'],
+   ['<b>I</b>ndependent','Random sampling and the 10% condition'],
+   ['<b>N</b>ormal residuals','Dotplot or histogram of residuals is roughly symmetric'],
+   ['<b>E</b>qual variance','Residual spread is constant across x'],
+   ['<b>R</b>andom','Data came from a random sample or randomised experiment']]},
+ points:[
+  'Remember <b>LINER</b>: <b>L</b>inear, <b>I</b>ndependent, <b>N</b>ormal residuals, <b>E</b>qual variance, <b>R</b>andom.',
+  'Check linearity and equal variance from a residual plot: no pattern, constant spread.',
+  'Check normality of residuals with a dotplot or histogram.',
+  'A significant slope still does not establish causation unless the data came from a randomised experiment.',
+  'Interpret the interval in context: "we are 95% confident that each additional hour of study is associated with an increase of between 2.1 and 5.4 points in predicted score."'
+ ],
+ trap:'Using df = n − 1. Regression estimates two parameters, so df = n − 2.'}
+]);
+
+/* ---------------------------------------------- AP PHYSICS 1 */
+setGuide('ap-phys1', 'u1', [
+{h:'Describing motion',
+ intro:'Physics 1 is heavily graphical. Being fluent at reading slope and area off a graph is worth more than any formula in this unit.',
+ table:{head:['Graph','Slope gives','Area gives'],rows:[
+   ['Position vs time','Velocity','Nothing useful'],
+   ['Velocity vs time','Acceleration','Displacement'],
+   ['Acceleration vs time','Jerk (rare)','Change in velocity']]},
+ points:[
+  '<b>Distance</b> is a scalar path length; <b>displacement</b> is a vector from start to finish.',
+  'A runner completing a lap has travelled 400 m with zero displacement.',
+  'Acceleration is the rate of change of <b>velocity</b>, so an object slowing down is still accelerating.',
+  'Constant velocity gives a straight position graph; constant acceleration gives a parabola.',
+  'A curved position graph means the velocity is changing.'
+ ]},
+
+{h:'Kinematic equations and projectiles',
+ points:[
+  'The three equations apply <b>only when acceleration is constant</b>: v = v₀ + at, @@x = x_{0} + v_{0}t + \\frac{1}{2}at^{2}@@, and @@v^{2} = v_{0}^{2} + 2a\\Delta x@@.',
+  'Free fall near Earth uses a = −9.8 m/s² regardless of mass, ignoring air resistance.',
+  'At the peak of a vertical throw, velocity is zero but <b>acceleration is still g downward</b>.',
+  '<b>Projectile motion separates into independent components</b>: horizontal is constant velocity, vertical is constant acceleration.',
+  'Time in the air is determined entirely by the vertical motion. Horizontal range then follows from x = vₓt.',
+  'A ball dropped and a ball thrown horizontally from the same height land simultaneously.'
+ ],
+ ex:{q:'A ball is thrown horizontally at 15 m/s from a 20 m cliff. How far does it land from the base?',
+     steps:['Vertical: 20 = ½(9.8)t², so t² = 4.08 and t = 2.02 s.',
+            'Horizontal velocity is constant at 15 m/s.',
+            'Range = 15 × 2.02.'],
+     a:'Answer: about 30 m. Note the horizontal speed played no part in finding the time.'},
+ trap:'Assuming zero velocity means zero acceleration. At the top of a throw the ball is momentarily at rest and still accelerating at 9.8 m/s².'}
+]);
+
+setGuide('ap-phys1', 'u2', [
+{h:'Newton\u2019s laws',
+ intro:'Three laws explain every force problem in the course. The difficulty is almost never the algebra — it is correctly identifying which forces act on which object.',
+ points:[
+  '<b>First law</b>: an object keeps its velocity unless a net external force acts. Inertia scales with mass.',
+  '<b>Second law</b>: ΣF = ma. Net force and acceleration always point in the same direction.',
+  '<b>Third law</b>: forces come in equal and opposite pairs acting on <b>different objects</b>. They never cancel on one object.',
+  'The reaction to a book\u2019s weight is the book pulling Earth upward, not the table\u2019s normal force.',
+  '<b>Free-body diagrams</b> show only forces acting <i>on</i> the object, drawn from its centre.',
+  'Equilibrium means ΣF = 0, which permits constant velocity, not only rest.'
+ ],
+ trap:'Naming the normal force as the third-law reaction to weight. They act on the same object and are not a third-law pair.'},
+
+{h:'Common forces and circular motion',
+ table:{head:['Force','Formula','Direction'],rows:[
+   ['Weight','mg','Always straight down'],
+   ['Normal','Varies','Perpendicular to the surface'],
+   ['Static friction','fₛ ≤ μₛN','Opposes impending motion'],
+   ['Kinetic friction','f_k = μ_k N','Opposes sliding'],
+   ['Tension','Varies','Along the rope, away from the object'],
+   ['Centripetal','@@F = \\frac{mv^{2}}{r}@@','Toward the centre']]},
+ points:[
+  'The <b>normal force is not always mg</b>. In an accelerating lift, on an incline, or with an applied force at an angle, it changes.',
+  'On an incline, gravity splits into <b>mg sin θ</b> along the surface and <b>mg cos θ</b> into it.',
+  'A frictionless incline gives acceleration g sin θ, independent of mass.',
+  '<b>Centripetal force is a role, not a new force.</b> Something real — tension, friction, gravity, normal force — plays that role.',
+  'Centrifugal force does not exist in an inertial frame. Do not put it on a free-body diagram.'
+ ],
+ ex:{q:'A passenger stands in a lift accelerating upward at 2 m/s². How does the normal force compare with their weight?',
+     steps:['Net force must be upward to produce upward acceleration.',
+            'ΣF = N − mg = ma.',
+            'So N = m(g + a), which exceeds mg.'],
+     a:'Answer: the normal force is greater than weight, which is why you feel heavier. In free fall N = 0 and you feel weightless.'}}
+]);
+
+setGuide('ap-phys1', 'u3', [
+{h:'Work and energy',
+ intro:'Energy methods solve in one line what kinematics takes four to do — especially when time is not mentioned in the question.',
+ points:[
+  '<b>Work</b> = Fd cos θ. A force perpendicular to motion does <b>no work</b>, which is why carrying a tray horizontally requires none.',
+  '<b>Kinetic energy</b> = @@\\frac{1}{2}mv^{2}@@. Doubling speed <b>quadruples</b> it — the reason stopping distance grows so fast.',
+  'Gravitational potential energy = mgh; spring potential energy = @@\\frac{1}{2}kx^{2}@@.',
+  '<b>Work-energy theorem</b>: net work equals the change in kinetic energy.',
+  '<b>Conservation of energy</b>: total mechanical energy is constant when only conservative forces act.',
+  'Friction converts mechanical energy into thermal energy, so mechanical energy is not conserved when it acts.'
+ ],
+ ex:{q:'A 2 kg block slides from rest down a frictionless 5 m high ramp. Find its speed at the bottom.',
+     steps:['Only gravity acts, so mechanical energy is conserved.',
+            'mgh = ½mv², and mass cancels.',
+            'v² = 2gh = 2(9.8)(5) = 98.',
+            'v = √98.'],
+     a:'Answer: about 9.9 m/s. Note the mass cancelled and the ramp angle never mattered.'},
+ tip:'If a question gives heights and speeds but no time, reach for energy conservation before kinematics.'},
+
+{h:'Power and systems',
+ points:[
+  '<b>Power</b> = work ÷ time = Fv, measured in watts.',
+  'Two engines doing equal work in half the time means double the power.',
+  'Energy bar charts track transfers between kinetic, potential, and thermal forms.',
+  'How you define the <b>system</b> determines which forces are internal and which do external work.',
+  'If you include Earth in the system, gravity becomes internal and you use potential energy. If not, gravity does external work.'
+ ]}
+]);
+
+setGuide('ap-phys1', 'u4', [
+{h:'Momentum and impulse',
+ intro:'Impulse explains every safety device you have ever used. The change in momentum is fixed by the collision; all you can control is how long it takes.',
+ points:[
+  '<b>Momentum</b> p = mv is a vector pointing along the velocity.',
+  '<b>Impulse</b> J = FΔt = Δp.',
+  'Extending the collision time reduces the force for the same change in momentum — airbags, crumple zones, bending your knees on landing.',
+  'On a force-time graph, the <b>area under the curve is the impulse</b>.',
+  'By Newton\u2019s third law, two colliding objects exert equal and opposite impulses on each other.'
+ ]},
+
+{h:'Collisions',
+ table:{head:['Type','Momentum','Kinetic energy','Signature'],rows:[
+   ['Elastic','Conserved','Conserved','Objects bounce apart'],
+   ['Inelastic','Conserved','Lost','Some deformation or heat'],
+   ['Perfectly inelastic','Conserved','Most lost','Objects stick together']]},
+ points:[
+  '<b>Momentum is conserved in every collision</b> with no net external force. Kinetic energy is conserved only in elastic ones.',
+  'Explosions run the process backward: if total momentum started at zero, it stays zero.',
+  'Always set a positive direction before applying conservation of momentum, and keep signs consistent.',
+  'In a perfectly inelastic collision, the objects share a common final velocity.'
+ ],
+ ex:{q:'A 3 kg cart at 4 m/s strikes a stationary 1 kg cart and they stick together. Find the final velocity.',
+     steps:['Momentum before: (3)(4) + (1)(0) = 12 kg·m/s.',
+            'They stick, so they share one velocity v.',
+            'Momentum after: (3 + 1)v = 4v.',
+            'Set equal: 4v = 12.'],
+     a:'Answer: 3 m/s. Kinetic energy fell from 24 J to 18 J — the missing 6 J became heat and deformation.'}}
+]);
+
+setGuide('ap-phys1', 'u5', [
+{h:'Torque and rotational inertia',
+ intro:'Rotation mirrors translation term for term. Learn the analogies and half this unit is already familiar.',
+ table:{head:['Translation','Rotation'],rows:[
+   ['Force F','Torque τ'],
+   ['Mass m','Rotational inertia I'],
+   ['Acceleration a','Angular acceleration α'],
+   ['ΣF = ma','Στ = Iα'],
+   ['Velocity v','Angular velocity ω'],
+   ['Momentum mv','Angular momentum Iω']]},
+ points:[
+  '<b>Torque</b> τ = rF sin θ. Force applied further from the pivot produces more torque, which is why a long wrench works better.',
+  'Force perpendicular to the lever arm maximises torque; force along the lever arm produces none.',
+  '<b>Rotational inertia</b> depends on mass <i>and</i> how far that mass sits from the axis. Two objects of equal mass can have very different I.',
+  'Mass concentrated at the rim resists angular acceleration far more than mass near the axis.',
+  'Angular kinematics mirrors linear kinematics with θ, ω, and α replacing x, v, and a.',
+  'Tangential quantities relate by v = rω and a = rα.'
+ ]},
+
+{h:'Equilibrium',
+ points:[
+  '<b>Rotational equilibrium</b> requires net torque zero.',
+  'Full <b>static equilibrium</b> requires both net force and net torque to be zero.',
+  'For balance problems, <b>choose the pivot at an unknown force</b> to eliminate it from the torque equation. This is the single most useful trick in the unit.',
+  'Weight acts at the centre of mass when computing torque on an extended object.'
+ ],
+ ex:{q:'A 4 m uniform plank of mass 20 kg rests on two supports, one at each end. A 60 kg person stands 1 m from the left end. Find the force on the left support.',
+     steps:['Take torques about the right support to eliminate its unknown force.',
+            'Plank weight acts at the centre, 2 m from the right support.',
+            'The person is 3 m from the right support.',
+            'Στ = 0: F_left(4) = (20)(9.8)(2) + (60)(9.8)(3) = 392 + 1764.'],
+     a:'Answer: F_left = 2156/4 = 539 N. Choosing the pivot wisely removed one unknown entirely.'}}
+]);
+
+setGuide('ap-phys1', 'u6', [
+{h:'Rotational energy and angular momentum',
+ intro:'Unit 6 combines the energy and momentum ideas from Units 3 and 4 with the rotational quantities from Unit 5. The conservation laws work identically; only the variables change.',
+ points:[
+  '<b>Rotational kinetic energy</b> = @@\\frac{1}{2}I\\omega^{2}@@.',
+  'A rolling object has <b>both</b> translational and rotational kinetic energy, so it accelerates more slowly down a ramp than a sliding one.',
+  '<b>Angular momentum</b> L = Iω for a rigid body.',
+  '<b>Conservation of angular momentum</b>: with no net external <b>torque</b>, L stays constant.',
+  'Reducing I increases ω proportionally — the spinning skater pulling in their arms.',
+  'Angular momentum, linear momentum, and energy are conserved <b>separately</b>. A collision can conserve angular momentum while losing kinetic energy.'
+ ],
+ ex:{q:'A solid sphere, a hollow sphere, and a hoop roll down the same ramp. Predict the order and explain.',
+     steps:['All start with the same gravitational potential energy per unit mass.',
+            'That energy splits between translation and rotation.',
+            'Objects with more rotational inertia per unit mass divert more into rotation.',
+            'Less energy left for translation means slower arrival.'],
+     a:'Answer: solid sphere first, hollow sphere second, hoop last — regardless of their masses or radii.'},
+ tip:'Rolling races are decided by the shape of the object, never by its mass or size. That surprises students every year.'}
+]);
+
+setGuide('ap-phys1', 'u7', [
+{h:'Simple harmonic motion',
+ intro:'SHM appears whenever a restoring force is proportional to displacement. Because the period does not depend on amplitude, oscillators make good clocks.',
+ table:{head:['System','Period','Depends on','Does NOT depend on'],rows:[
+   ['Mass on a spring','@@T = 2\\pi\\sqrt{\\frac{m}{k}}@@','Mass and spring constant','Amplitude or gravity'],
+   ['Simple pendulum','@@T = 2\\pi\\sqrt{\\frac{L}{g}}@@','Length and gravity','Mass or amplitude (small angles)']]},
+ points:[
+  '<b>Hooke\u2019s law</b>: F = −kx. The minus sign indicates a restoring force directed back toward equilibrium.',
+  '<b>Amplitude</b> is maximum displacement; <b>period</b> T is the time for one full cycle; frequency f = 1/T.',
+  'Neither period depends on amplitude, which is the defining and most tested feature of SHM.',
+  'A pendulum on the Moon has a longer period because g is smaller.'
+ ]},
+
+{h:'Energy in oscillation',
+ points:[
+  'At <b>maximum displacement</b>: velocity zero, acceleration maximum, potential energy maximum.',
+  'At <b>equilibrium</b>: velocity maximum, acceleration zero, potential energy zero.',
+  'Total mechanical energy stays constant in ideal SHM: @@E = \\frac{1}{2}kA^{2}@@.',
+  'The restoring force and acceleration are largest at the extremes, exactly where the object is momentarily still.',
+  '<b>Damping</b> removes energy, shrinking amplitude while leaving the period almost unchanged.'
+ ],
+ trap:'Assuming maximum speed occurs at maximum displacement. It occurs at equilibrium, where all the energy is kinetic.'}
+]);
+
+setGuide('ap-phys1', 'u8', [
+{h:'Pressure and buoyancy',
+ intro:'Fluids were added to Physics 1 in the redesign. Most questions come down to two principles and knowing which applies.',
+ points:[
+  '<b>Density</b> @@\\rho = \\frac{m}{V}@@ and <b>pressure</b> @@P = \\frac{F}{A}@@, measured in pascals.',
+  'Pressure at depth: @@P = P_{0} + \\rho gh@@. It depends on <b>depth, not container shape</b> — the hydrostatic paradox.',
+  '<b>Pascal\u2019s principle</b>: pressure applied to an enclosed fluid transmits undiminished. Equal pressure on a larger piston gives a larger force, which is how hydraulic lifts multiply force.',
+  '<b>Archimedes\u2019 principle</b>: buoyant force equals the <b>weight of the fluid displaced</b>.',
+  'An object floats when its average density is less than the fluid\u2019s and sinks when greater.',
+  'A floating object displaces fluid weighing exactly as much as the object itself.'
+ ],
+ ex:{q:'A block floats with 60% of its volume submerged. Find its density relative to water.',
+     steps:['Floating means buoyant force equals weight.',
+            'Buoyant force = weight of displaced fluid = ρ_fluid × V_submerged × g.',
+            'Weight = ρ_block × V_total × g.',
+            'Setting equal: ρ_block/ρ_fluid = V_submerged/V_total = 0.60.'],
+     a:'Answer: 0.60 times the density of water, about 600 kg/m³. The submerged fraction equals the density ratio.'}},
+
+{h:'Fluid flow',
+ points:[
+  '<b>Continuity equation</b>: A₁v₁ = A₂v₂. Fluid speeds up through a narrower pipe because the same volume must pass every second.',
+  '<b>Bernoulli\u2019s principle</b>: where fluid speed increases, pressure decreases.',
+  'Together these explain lift on a wing, why shower curtains pull inward, and why a narrow hose sprays further.',
+  'Ideal fluid assumptions: incompressible, non-viscous, steady flow.',
+  'Volume flow rate stays constant along a pipe with no leaks.'
+ ],
+ trap:'Expecting pressure to rise where the pipe narrows. Speed rises and pressure falls — the opposite of intuition.'}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP EUROPEAN HISTORY */
+setGuide('ap-euro', 'u1', [
+{h:'The Renaissance',
+ intro:'The Renaissance was not a rejection of Christianity but a change in what educated people read and why. Recovering classical texts gave them a new vocabulary for describing human capability.',
+ points:[
+  '<b>Humanism</b> revived classical texts and emphasised human potential, eloquence, and civic life.',
+  '<b>Civic humanism</b> argued scholars should serve public life rather than withdraw into contemplation.',
+  '<b>Individualism</b> and secularism grew <i>alongside</i> Christian belief, not in place of it.',
+  'Italian city-states funded art through wealthy patrons — the Medici above all. Patronage shaped what got made.',
+  'The <b>printing press</b> (c. 1450) made texts cheap and spread ideas faster than any authority could suppress them.',
+  'The <b>Northern Renaissance</b> blended humanist scholarship with piety: Erasmus, More, and Christian humanism.'
+ ],
+ trap:'Calling the Renaissance secular or anti-religious. Most patrons were churchmen and most art was religious. What changed was the emphasis on human dignity within a Christian framework.'},
+
+{h:'Exploration and the new monarchies',
+ table:{head:['Development','Consequence'],rows:[
+   ['Caravel, astrolabe, better cartography','Atlantic voyaging became survivable'],
+   ['Columbian Exchange','Crops, animals, disease moved both ways'],
+   ['American silver','Price revolution and inflation across Europe'],
+   ['Mercantilism','Colonies treated as captive markets and bullion sources'],
+   ['Commercial revolution','Joint-stock companies, banking, a merchant class']]},
+ points:[
+  'Portugal and Spain led exploration seeking gold, God, and glory — in roughly that order for most participants.',
+  '<b>New monarchies</b> in France, England, and Spain centralised taxation, justice, and standing armies, reducing dependence on nobles.',
+  'The <b>price revolution</b> hurt those on fixed incomes, including much of the nobility, and helped merchants and debtors.',
+  'Wealth shifted from the Mediterranean toward the Atlantic seaboard.'
+ ]}
+]);
+
+setGuide('ap-euro', 'u2', [
+{h:'The Protestant Reformation',
+ intro:'Luther intended a theological argument among scholars. The printing press and the political interests of German princes turned it into the permanent fracture of Western Christendom.',
+ table:{head:['Reformer','Core doctrine','Political outcome'],rows:[
+   ['Luther','Salvation by faith alone, scripture alone','German princes gained church lands and autonomy'],
+   ['Calvin','Predestination, elect and reprobate','Theocratic Geneva; spread to France, Scotland, Netherlands'],
+   ['Henry VIII','Royal supremacy over the church','Church of England; dissolution of the monasteries'],
+   ['Anabaptists','Adult baptism, separation from the state','Persecuted by Catholics and Protestants alike']]},
+ points:[
+  'The <b>Ninety-Five Theses</b> (1517) attacked indulgences, but the deeper claim was that salvation could not be purchased or mediated.',
+  'Core Protestant claims: <i>sola fide</i>, <i>sola scriptura</i>, and the priesthood of all believers.',
+  'German princes supported Luther partly from conviction and partly because it freed them from imperial and papal authority.',
+  'The <b>Peace of Augsburg</b> (1555) let each prince choose Lutheranism or Catholicism for his territory — <i>cuius regio, eius religio</i>. Individuals had no such choice.'
+ ]},
+
+{h:'Catholic response and religious war',
+ points:[
+  'The <b>Council of Trent</b> reaffirmed Catholic doctrine while correcting the worst abuses and standardising seminary training. It refused doctrinal compromise.',
+  'The <b>Jesuits</b> under Loyola drove education and missionary work worldwide, becoming the Church\u2019s intellectual shock troops.',
+  'The French Wars of Religion ended when Henry IV converted and issued the <b>Edict of Nantes</b> (1598) granting Huguenots limited toleration.',
+  'The <b>Thirty Years\u2019 War</b> (1618–48) began as religious conflict and ended as a struggle over the balance of power — Catholic France funded Protestant armies against Catholic Habsburgs.',
+  'The <b>Peace of Westphalia</b> (1648) established state sovereignty as the organising principle of Europe and effectively ended large-scale religious warfare.',
+  'Witch hunts peaked during this period of religious and social anxiety, with women the overwhelming majority of victims.'
+ ],
+ ex:{q:'Explain why the Thirty Years\u2019 War is considered a turning point.',
+     steps:['It began over religion but ended over power politics.',
+            'Catholic France backed Protestant states against Catholic Habsburgs.',
+            'Westphalia settled it by recognising sovereign states rather than religious unity.'],
+     a:'Answer: it marked the shift from religion to raison d\u2019état as the organising principle of European diplomacy.'}}
+]);
+
+setGuide('ap-euro', 'u3', [
+{h:'Absolutism',
+ intro:'Absolutism was a solution to a problem: how does a monarch govern without depending on nobles who might rebel? Each ruler answered differently.',
+ points:[
+  '<b>Divine right</b> claimed monarchs answered to God alone. Louis XIV was the model and Bossuet its theorist.',
+  '<b>Versailles</b> domesticated the French nobility by making court attendance the only route to influence.',
+  '<b>Colbert\u2019s mercantilism</b> built French industry, infrastructure, and a favourable trade balance.',
+  'Louis XIV revoked the Edict of Nantes in 1685, driving skilled Huguenots into Protestant states — a costly error.',
+  '<b>Peter the Great</b> westernised Russia by compulsion: new army, new capital at St Petersburg, nobles forced to shave beards and serve the state.',
+  'Prussia rose on military discipline under the Hohenzollerns; Austria expanded as a multiethnic Habsburg empire.'
+ ]},
+
+{h:'Constitutionalism',
+ table:{head:['Event','Year','Result'],rows:[
+   ['English Civil War','1642–49','Charles I executed; Parliament ascendant'],
+   ['Cromwell\u2019s Protectorate','1653–58','Military rule; monarchy restored after his death'],
+   ['Glorious Revolution','1688','James II replaced without bloodshed'],
+   ['English Bill of Rights','1689','Parliamentary supremacy established']]},
+ points:[
+  'The English Civil War was fought over taxation, religion, and whether the king was above the law.',
+  'The <b>Glorious Revolution</b> settled it: William and Mary accepted limits as the price of the throne.',
+  'The <b>Dutch Republic</b> prospered through commerce, banking, and religious toleration without a strong monarch — a live counterexample to absolutism.',
+  'The <b>balance of power</b> became the organising principle of diplomacy, with coalitions forming against whichever state grew strongest.'
+ ],
+ trap:'Treating absolutism and constitutionalism as opposites everywhere. Both were responses to the same crisis of authority, and both produced stronger, more capable states.'}
+]);
+
+setGuide('ap-euro', 'u4', [
+{h:'The Scientific Revolution',
+ intro:'The revolution was less about individual discoveries than about a change in where knowledge came from: observation and reason rather than classical authority and scripture.',
+ points:[
+  '<b>Copernicus</b> proposed heliocentrism; <b>Kepler</b> gave it elliptical orbits; <b>Galileo</b> supplied observational support and was condemned for it.',
+  '<b>Newton</b> unified terrestrial and celestial motion under universal gravitation, which seemed to prove the universe was rationally ordered.',
+  '<b>Bacon</b> championed <b>empiricism</b> and inductive reasoning from observation.',
+  '<b>Descartes</b> championed <b>rationalism</b> and deduction from indubitable first principles.',
+  'Together they produced the scientific method, and new institutions such as the Royal Society organised the work.',
+  'The implication mattered most: if nature followed discoverable laws, perhaps society did too.'
+ ]},
+
+{h:'The Enlightenment',
+ table:{head:['Thinker','Argument'],rows:[
+   ['Locke','Natural rights; government by consent; tabula rasa'],
+   ['Montesquieu','Separation of powers prevents tyranny'],
+   ['Voltaire','Religious toleration and freedom of expression'],
+   ['Rousseau','Popular sovereignty through the general will'],
+   ['Adam Smith','Free markets and the invisible hand'],
+   ['Wollstonecraft','Women\u2019s education and equal rights'],
+   ['Beccaria','Rational, proportionate criminal punishment']]},
+ points:[
+  '<b>Salons</b>, often hosted by women, circulated ideas across social boundaries that formal institutions did not cross.',
+  '<b>Enlightened absolutism</b>: Frederick the Great, Catherine the Great, and Joseph II adopted legal and administrative reforms without surrendering power.',
+  'Joseph II went furthest — abolishing serfdom and granting toleration — and most of it was reversed after his death.',
+  'Enlightenment ideas supplied the vocabulary for every revolution that followed.'
+ ],
+ ex:{q:'Why did enlightened absolutists reform without democratising?',
+     steps:['Enlightenment ideas offered tools for efficient, rational administration.',
+            'Legal codification and religious toleration strengthened the state.',
+            'Popular sovereignty would have destroyed the monarch\u2019s own position.'],
+     a:'Answer: they adopted the parts that increased state capacity and rejected the parts that threatened their authority.'}}
+]);
+
+setGuide('ap-euro', 'u5', [
+{h:'The French Revolution',
+ intro:'The Revolution had several distinct phases with different aims, and treating it as one continuous event is the most common analytical error.',
+ table:{head:['Phase','Years','Character'],rows:[
+   ['Liberal phase','1789–91','Constitutional monarchy, Declaration of Rights'],
+   ['Radical phase','1792–94','Republic, war, Terror under Robespierre'],
+   ['Thermidorian reaction','1794–99','Conservative retreat, Directory'],
+   ['Napoleonic','1799–1815','Consulate then Empire']]},
+ points:[
+  'Causes: fiscal crisis from war debt, an unequal <b>Estates system</b>, resentment of privilege, food shortages, and Enlightenment ideas.',
+  'The Third Estate formed the National Assembly and swore the <b>Tennis Court Oath</b>.',
+  'The <b>Declaration of the Rights of Man</b> asserted liberty, equality, and popular sovereignty — for men.',
+  'The <b>Reign of Terror</b> was justified as wartime necessity by the Committee of Public Safety.',
+  'Women were central: the march on Versailles forced the king to Paris, and Olympe de Gouges wrote the Declaration of the Rights of Woman before being guillotined.'
+ ]},
+
+{h:'Napoleon and the conservative order',
+ points:[
+  'Napoleon seized power in 1799 and crowned himself emperor in 1804.',
+  'The <b>Napoleonic Code</b> guaranteed legal equality and property rights for men while sharply reducing women\u2019s legal status.',
+  'His conquests spread revolutionary institutions and provoked <b>nationalism</b> in the territories he occupied — the force that eventually destroyed him.',
+  'The Russian campaign of 1812 destroyed his army; Waterloo in 1815 ended his career.',
+  'The <b>Congress of Vienna</b> under <b>Metternich</b> restored legitimate monarchs, rebuilt the balance of power, and aimed to prevent both revolution and French dominance.',
+  '<b>Conservatism</b> dominated after 1815, but liberalism and nationalism resurfaced repeatedly.'
+ ],
+ ex:{q:'How did Napoleon both spread and betray the Revolution?',
+     steps:['Spread: legal equality, careers open to talent, abolition of feudal privilege across Europe.',
+            'Betrayed: crowned himself emperor, censored the press, restored slavery in the colonies.',
+            'Both are defensible and a strong essay argues both.'],
+     a:'Answer: he exported the Revolution\u2019s legal and administrative achievements while abandoning its political liberty.'}}
+]);
+
+setGuide('ap-euro', 'u6', [
+{h:'Industrialisation',
+ intro:'Industrialisation changed not only what Europeans made but where they lived, how they measured time, and which class held power. The political movements of the next century are all responses to it.',
+ points:[
+  'Britain industrialised first thanks to coal, capital, colonial markets, agricultural surplus, stable institutions, and available labour.',
+  'The <b>factory system</b> replaced cottage industry, imposing clock discipline and division of labour on people accustomed to seasonal rhythms.',
+  'Railways and steam power created national markets and moved goods and people at unprecedented speed.',
+  '<b>Urbanisation</b> produced overcrowding, disease, and pollution before sanitation reform caught up.',
+  'A new class structure emerged: an industrial <b>bourgeoisie</b> owning capital and an urban <b>proletariat</b> selling labour.',
+  'Industrialisation spread unevenly — Belgium and Germany followed, southern and eastern Europe lagged.'
+ ]},
+
+{h:'Responses to industrial society',
+ table:{head:['Response','Argument'],rows:[
+   ['Liberalism','Free markets, constitutions, limited suffrage'],
+   ['Socialism (utopian)','Cooperative communities can replace competition'],
+   ['Marxism','Class conflict ends when workers seize the means of production'],
+   ['Trade unionism','Organise to bargain for wages and hours'],
+   ['Conservatism','Traditional hierarchies protect against disorder'],
+   ['Reform legislation','Factory acts, public health, expanded franchise']]},
+ points:[
+  '<b>Marx</b> argued that economic relations determine political and social structures, and that capitalism produces the class that will overthrow it.',
+  'Britain avoided revolution partly by conceding: reform acts widened the franchise and factory acts limited child labour.',
+  'The <b>cult of domesticity</b> defined middle-class womanhood around the home precisely as production left it.',
+  'Working-class women continued to work in factories and mines, so the ideal described one class only.',
+  'Public health reforms eventually cut urban mortality dramatically.'
+ ],
+ trap:'Assuming industrialisation immediately improved living standards. Real wages stagnated or fell for decades before rising, which is why the period produced so much radical politics.'}
+]);
+
+setGuide('ap-euro', 'u7', [
+{h:'Nationalism and unification',
+ intro:'The revolutions of 1848 failed, and that failure taught nationalists that ideals without armies achieve nothing. Everything that follows is the application of that lesson.',
+ points:[
+  'The <b>Revolutions of 1848</b> spread across Europe demanding liberal constitutions and national self-determination. Nearly all were crushed within a year.',
+  'They failed from divisions among liberals, nationalists, and workers, and from the loyalty of armies to their monarchs.',
+  'Their failure pushed nationalists toward <b>realpolitik</b> — practical power politics over principle.',
+  '<b>Cavour</b> unified Italy through diplomacy, provoking war with Austria and allying with France; Garibaldi delivered the south.',
+  '<b>Bismarck</b> unified Germany through three engineered wars against Denmark, Austria, and France, proclaiming the empire at Versailles in 1871.',
+  'German unification upset the balance of power and drove the alliance system that produced 1914.'
+ ]},
+
+{h:'Ideas, empire, and mass politics',
+ points:[
+  '<b>Romanticism</b> valued emotion, nature, and the folk past, reacting against Enlightenment rationalism.',
+  '<b>Realism</b> depicted ordinary life and social conditions plainly, matching the industrial age.',
+  '<b>Darwin</b>\u2019s theory was distorted into <b>Social Darwinism</b> to justify empire, inequality, and racial hierarchy.',
+  '<b>Freud</b> proposed the unconscious; <b>Nietzsche</b> challenged traditional morality and religion. Both undermined confidence in reason.',
+  '<b>New imperialism</b> was driven by industrial demand for materials and markets, national prestige, and civilising rhetoric.',
+  'The <b>Berlin Conference</b> (1884–85) partitioned Africa among European powers without African participation.',
+  'Mass politics emerged: socialist parties, trade unions, and the early women\u2019s suffrage movement.'
+ ],
+ ex:{q:'Why did the 1848 revolutions fail almost everywhere?',
+     steps:['Liberals wanted constitutions; nationalists wanted independence; workers wanted economic change.',
+            'These aims conflicted once the initial monarchy fell.',
+            'Middle-class liberals feared worker radicalism more than they feared restoration.',
+            'Armies remained loyal to monarchs and were used decisively.'],
+     a:'Answer: the revolutionary coalitions fractured, and the old regimes retained control of the armies.'}}
+]);
+
+setGuide('ap-euro', 'u8', [
+{h:'World War I',
+ intro:'Four long-term causes made a European war likely; one assassination made it immediate. Examiners want both halves of that explanation.',
+ table:{head:['Cause','How it contributed'],rows:[
+   ['Militarism','Arms races and detailed mobilisation plans'],
+   ['Alliances','Turned a local dispute into a continental war'],
+   ['Imperialism','Colonial rivalry poisoned relations'],
+   ['Nationalism','Balkan nationalism plus great-power prestige']]},
+ points:[
+  'The assassination at Sarajevo triggered a crisis that the alliance system converted into general war within weeks.',
+  '<b>Total war</b> mobilised entire economies and populations. Women entered industry in large numbers.',
+  'Trench warfare produced enormous casualties for negligible gains and shattered pre-war confidence in progress.',
+  'The <b>Treaty of Versailles</b> imposed reparations and a war guilt clause on Germany, creating a grievance later movements exploited.',
+  'The war destroyed four empires: German, Austro-Hungarian, Russian, and Ottoman.'
+ ]},
+
+{h:'Revolution, dictatorship, and the second war',
+ points:[
+  'The <b>Russian Revolution</b> (1917) brought Lenin and the Bolsheviks to power amid war and famine.',
+  '<b>Stalin</b> followed with collectivisation, five-year plans, and purges that killed millions.',
+  'Economic collapse and unresolved grievances enabled <b>fascism</b> under Mussolini and Nazism under Hitler.',
+  'Fascism promised national revival, order, and an enemy to blame, and it appealed most where liberal institutions were newest.',
+  'Appeasement failed to contain German expansion, and war began in 1939.',
+  'The <b>Holocaust</b> systematically murdered six million Jews along with Roma, disabled people, Soviet prisoners, and others.',
+  'The war ended European global dominance and left the continent divided between two superpowers.'
+ ],
+ trap:'Explaining fascism solely through the Treaty of Versailles. Economic collapse, fear of communism, and weak new democracies mattered at least as much.'}
+]);
+
+setGuide('ap-euro', 'u9', [
+{h:'A divided continent',
+ intro:'Europe ended the war exhausted and ended up divided between two powers that were not European. The story of 1945 onward is the continent regaining agency, first economically and then politically.',
+ points:[
+  'Europe split into a Soviet-dominated East and a US-aligned West behind the <b>Iron Curtain</b>.',
+  'The <b>Marshall Plan</b> rebuilt Western Europe and blunted communist appeal; <b>NATO</b> and the <b>Warsaw Pact</b> formalised the divide.',
+  'Berlin was the flashpoint: the airlift of 1948–49, then the Wall in 1961 to stop emigration draining East Germany.',
+  'Uprisings in Hungary (1956) and Czechoslovakia (1968) were crushed by Soviet force.',
+  '<b>Decolonisation</b> stripped Britain, France, and others of empire, sometimes negotiated and sometimes violently as in Algeria.',
+  'Western Europe built extensive <b>welfare states</b> funded by three decades of postwar growth.'
+ ]},
+
+{h:'Integration and after',
+ table:{head:['Step','Year','What it did'],rows:[
+   ['Coal and Steel Community','1951','Tied French and German industry together'],
+   ['Treaty of Rome / EEC','1957','Common market'],
+   ['Maastricht Treaty','1992','Created the European Union'],
+   ['Euro','1999–2002','Shared currency for most members'],
+   ['Eastward enlargement','2004 onward','Former communist states joined']]},
+ points:[
+  'Integration began as a strategy to make another Franco-German war practically impossible.',
+  '<b>1968</b> brought student and worker protests across Europe challenging authority, traditional gender roles, and the Vietnam War.',
+  'Gorbachev\u2019s reforms led to the fall of the Berlin Wall in 1989 and the Soviet collapse in 1991.',
+  'Post-communist transitions varied widely; Yugoslavia fragmented violently through the 1990s.',
+  'Contemporary debates centre on migration, the euro, populism, Brexit, and the limits of integration.'
+ ],
+ ex:{q:'Why did European integration begin with coal and steel specifically?',
+     steps:['Coal and steel are the raw materials of armaments.',
+            'Pooling them under joint authority meant neither France nor Germany could rearm secretly.',
+            'It was economic cooperation chosen for a security purpose.'],
+     a:'Answer: it made another Franco-German war materially impractical, which was the founders\u2019 actual aim.'}}
+]);
+
+/* ------------------------------- AP ENVIRONMENTAL SCIENCE */
+setGuide('ap-es', 'u1', [
+{h:'Energy flow through ecosystems',
+ intro:'Energy enters an ecosystem once and leaves as heat. That one-way flow, and the 90% lost at each step, explains why food chains are short and why eating lower on the chain feeds more people.',
+ points:[
+  'Producers convert solar energy through photosynthesis; consumers and decomposers pass it along.',
+  'The <b>10% rule</b>: roughly 90% of energy is lost as heat and metabolic work between trophic levels.',
+  '<b>Gross primary productivity</b> minus respiration equals <b>net primary productivity</b>, the energy actually available to consumers.',
+  'Highest NPP: estuaries, wetlands, tropical rainforests. Lowest: deserts, open ocean, tundra.',
+  'Food webs describe feeding relationships more realistically than linear chains.'
+ ],
+ ex:{q:'Producers capture 20,000 kcal. How much reaches tertiary consumers, and why does this limit food chain length?',
+     steps:['Primary consumers: 2,000 kcal.',
+            'Secondary: 200 kcal. Tertiary: 20 kcal.',
+            'A fourth level would receive about 2 kcal.'],
+     a:'Answer: about 20 kcal. There is simply not enough energy left to support many more levels.'}},
+
+{h:'Biogeochemical cycles',
+ table:{head:['Cycle','Reservoir','Key process','Human disruption'],rows:[
+   ['Carbon','Ocean, rock, atmosphere','Photosynthesis and respiration','Combustion of fossil fuels'],
+   ['Nitrogen','Atmosphere (N₂)','Bacterial fixation','Synthetic fertiliser'],
+   ['Phosphorus','Rock — no atmospheric phase','Weathering','Mining and fertiliser'],
+   ['Water','Ocean','Evaporation and precipitation','Aquifer depletion, damming']]},
+ points:[
+  '<b>Nitrogen fixation</b> requires bacteria because atmospheric N₂ has a triple bond most organisms cannot break.',
+  'The nitrogen cycle runs fixation → nitrification → assimilation → ammonification → denitrification.',
+  'Phosphorus moves slowly, has no gas phase, and therefore often <b>limits</b> growth in freshwater systems.',
+  'Excess nitrogen and phosphorus cause <b>eutrophication</b> and hypoxic dead zones.'
+ ]},
+
+{h:'Interactions and biomes',
+ points:[
+  'Species interactions: competition, predation, mutualism, commensalism, parasitism.',
+  '<b>Competitive exclusion</b> means two species cannot occupy the identical niche indefinitely; <b>resource partitioning</b> resolves it.',
+  '<b>Keystone species</b> shape communities far beyond their abundance; <b>indicator species</b> signal ecosystem health.',
+  'Biomes are determined mainly by <b>temperature and precipitation</b>.',
+  '<b>Primary succession</b> starts on bare rock with pioneer lichens creating soil. <b>Secondary succession</b> follows disturbance where soil remains, and is much faster.'
+ ]}
+]);
+
+setGuide('ap-es', 'u2', [
+{h:'Why biodiversity matters',
+ intro:'Biodiversity is not one thing. Species, genetic, and habitat diversity each buffer an ecosystem against a different kind of shock.',
+ table:{head:['Type of diversity','What it protects against'],rows:[
+   ['Genetic diversity','Disease and environmental change within a species'],
+   ['Species diversity','Loss of a single species collapsing a food web'],
+   ['Habitat diversity','Localised disturbance wiping out a whole population']]},
+ points:[
+  'Higher <b>genetic diversity</b> makes a population resilient to disease, because some individuals will carry resistance.',
+  '<b>Ecosystem services</b>: provisioning (food, timber), regulating (climate, water purification), supporting (pollination, soil formation), cultural (recreation, spiritual).',
+  '<b>Island biogeography</b>: larger islands nearer the mainland support more species than small, distant ones — large area gives more niches, proximity gives higher immigration.',
+  'That theory now guides reserve design: bigger and better-connected reserves protect more species.',
+  '<b>Ecological tolerance</b> is the range of conditions an organism can survive, with an optimum in the middle.'
+ ]},
+
+{h:'Disruption and adaptation',
+ points:[
+  'Natural disruptions include fires, floods, drought, and volcanic activity, on <b>periodic</b> and <b>episodic</b> timescales.',
+  'Many ecosystems <i>depend</i> on disturbance — some pine cones require fire to open.',
+  'Fire suppression in fire-dependent systems allows fuel to accumulate, producing far more destructive fires later.',
+  '<b>Adaptations</b> arise through natural selection across generations, not within an individual lifetime.',
+  'Ecological succession rebuilds communities after disturbance.'
+ ],
+ trap:'Treating all disturbance as damage. In fire-adapted or flood-adapted systems, removing the disturbance is the damage.'}
+]);
+
+setGuide('ap-es', 'u3', [
+{h:'Population dynamics',
+ intro:'Two reproductive strategies exist because two environments exist. Unstable environments reward producing many offspring quickly; stable ones reward investing heavily in a few.',
+ table:{head:['','r-selected','K-selected'],rows:[
+   ['Offspring','Many','Few'],
+   ['Parental care','None','Extensive'],
+   ['Maturity','Early','Late'],
+   ['Lifespan','Short','Long'],
+   ['Survivorship curve','Type III','Type I'],
+   ['Example','Insects, weeds, bacteria','Elephants, whales, humans']]},
+ points:[
+  '<b>Generalists</b> tolerate wide conditions and eat varied food; <b>specialists</b> thrive narrowly and are far more extinction-prone.',
+  '<b>Survivorship curves</b>: Type I high late mortality, Type II constant, Type III high early mortality.',
+  '<b>Carrying capacity (K)</b> is the population an environment can sustain; overshoot causes dieback.',
+  '<b>Density-dependent</b> limits — disease, competition, predation — intensify as population grows.',
+  '<b>Density-independent</b> limits — weather, fire, volcanic eruption — act regardless of population size.'
+ ]},
+
+{h:'Human populations',
+ points:[
+  'Growth rate = (births + immigration) − (deaths + emigration).',
+  '<b>Rule of 70</b>: doubling time in years ≈ 70 ÷ percent growth rate.',
+  'The <b>demographic transition</b> moves from high birth and death rates to low ones as a country develops. Death rates fall first, which is what causes rapid growth in Stage 2.',
+  '<b>Age structure diagrams</b>: wide base means rapid growth, column means stability, narrow base means decline and an ageing population.',
+  '<b>Total fertility rate</b> of about 2.1 is replacement level. Education and access to family planning lower TFR more reliably than anything else.',
+  '<b>Population momentum</b> means growth continues after fertility falls, because a large young cohort is still entering reproductive age.'
+ ],
+ ex:{q:'A country cuts fertility to replacement level. Why does its population keep growing for decades?',
+     steps:['Its age structure has a very wide base from previous high fertility.',
+            'Those cohorts are still entering their reproductive years.',
+            'Even at 2.1 children each, the sheer number of parents produces more births than deaths.'],
+     a:'Answer: population momentum. Age structure, not current fertility, determines short-term growth.'}}
+]);
+
+setGuide('ap-es', 'u4', [
+{h:'Geology and soil',
+ intro:'Earth systems set the stage for everything else in the course. Plate tectonics determines where mountains and volcanoes sit; soil determines what can grow there.',
+ table:{head:['Plate boundary','Motion','Features'],rows:[
+   ['Divergent','Plates separate','Mid-ocean ridges, rift valleys'],
+   ['Convergent','Plates collide','Subduction, volcanoes, mountains, deep trenches'],
+   ['Transform','Plates slide past','Earthquakes — San Andreas']]},
+ points:[
+  'Soil forms from weathered rock plus organic matter over very long timescales — centimetres per century.',
+  '<b>Soil horizons</b>: O organic, A topsoil, B subsoil where material accumulates, C parent material.',
+  '<b>Soil texture</b> — sand, silt, clay — controls porosity, permeability, and water-holding capacity.',
+  '<b>Loam</b> balances all three and is the most productive agricultural soil.',
+  'Clay holds water tightly but drains poorly; sand drains fast but holds little.'
+ ]},
+
+{h:'Atmosphere and water',
+ points:[
+  'Atmospheric layers: <b>troposphere</b> (weather), <b>stratosphere</b> (ozone layer), mesosphere, thermosphere.',
+  'Uneven solar heating drives global circulation. <b>Hadley cells</b> lift moist air at the equator and drop dry air near 30° latitude, which is why the great deserts sit there.',
+  'The <b>Coriolis effect</b> deflects moving air and water because the Earth rotates — right in the Northern Hemisphere, left in the Southern.',
+  'A <b>watershed</b> is all the land draining into a common body of water.',
+  '<b>El Niño</b> weakens trade winds and warms the eastern Pacific, shifting rainfall globally. La Niña strengthens them.',
+  '<b>Rain shadows</b> form on the leeward side of mountains as descending air warms and dries.'
+ ],
+ ex:{q:'Explain why deserts cluster near 30° north and south.',
+     steps:['Intense equatorial heating makes air rise and cool.',
+            'Cooling air loses moisture as rain — hence tropical rainforests at the equator.',
+            'That dry air travels poleward and descends around 30°.',
+            'Descending air warms and absorbs moisture rather than releasing it.'],
+     a:'Answer: the descending limb of the Hadley cell delivers persistently dry air to those latitudes.'}}
+]);
+
+setGuide('ap-es', 'u5', [
+{h:'Agriculture and land use',
+ intro:'Feeding eight billion people requires transforming land, and every method of doing so trades yield against long-term soil, water, and biodiversity. This unit is about that trade.',
+ points:[
+  'The <b>tragedy of the commons</b>: shared resources with no ownership get overused, because each user gains fully while the cost is shared.',
+  '<b>Clearcutting</b> is efficient but causes erosion, habitat loss, and downstream flooding.',
+  'Irrigation efficiency ranks <b>drip > spray > flood and furrow</b>.',
+  'Over-irrigation causes <b>waterlogging</b> and <b>salinization</b>, which can sterilise soil permanently.',
+  '<b>CAFOs</b> raise output while concentrating waste, antibiotic use, and disease risk.',
+  '<b>Pesticide resistance</b> evolves quickly, creating a treadmill of stronger and more frequent application.',
+  '<b>Integrated pest management</b> combines biological, mechanical, and limited chemical control.'
+ ],
+ table:{head:['Sustainable practice','Problem it addresses'],rows:[
+   ['Contour plowing','Erosion on slopes'],
+   ['Terracing','Erosion on steep land'],
+   ['Windbreaks','Wind erosion'],
+   ['No-till agriculture','Soil structure and carbon loss'],
+   ['Crop rotation','Nutrient depletion and pest cycles'],
+   ['Rotational grazing','Overgrazing and desertification']]}},
+
+{h:'Water, fishing, and footprints',
+ points:[
+  'Fishing impacts include <b>bycatch</b>, bottom trawling that destroys habitat, and stock collapse from overharvesting.',
+  '<b>Ecological footprint</b> measures the land and water needed to support a lifestyle, and differs enormously between countries.',
+  'Mining impacts: tailings, acid mine drainage, and habitat destruction.',
+  'Urbanisation increases impervious surface, which raises runoff and flooding while reducing groundwater recharge.',
+  'Aquifer depletion is effectively permanent on human timescales, since recharge takes centuries.'
+ ],
+ trap:'Assuming any irrigation is beneficial. In arid regions, repeated irrigation without drainage concentrates salt until the land cannot support crops.'}
+]);
+
+setGuide('ap-es', 'u6', [
+{h:'Nonrenewable energy',
+ intro:'No energy source is free of consequence. Comparing them honestly means naming what each one costs, not just what it produces.',
+ table:{head:['Source','Advantages','Drawbacks'],rows:[
+   ['Coal','Abundant, cheap, established','Highest CO₂ and sulfur; mining damage'],
+   ['Oil','Energy dense, portable','CO₂, spills, geopolitical dependence'],
+   ['Natural gas','Cleanest fossil fuel','Methane leaks, fracking water risks'],
+   ['Nuclear','No CO₂, high output, reliable','Radioactive waste, accident fear, high capital cost']]},
+ points:[
+  'Fossil fuels formed over millions of years, which is what makes them nonrenewable on human timescales.',
+  '<b>Coal</b> has the highest carbon-to-energy ratio, so coal plants dominate power sector emissions.',
+  '<b>Fracking</b> released large gas reserves and raised concerns about groundwater contamination and methane leakage.',
+  '<b>Nuclear fission</b> of uranium-235 produces no CO₂ but leaves waste hazardous for thousands of years.',
+  'Chernobyl and Fukushima shaped public opposition despite nuclear\u2019s low emissions and strong safety record per unit energy.'
+ ]},
+
+{h:'Renewables and efficiency',
+ points:[
+  '<b>Solar</b>, <b>wind</b>, and <b>hydroelectric</b> produce no operating emissions.',
+  'Hydroelectric dams flood habitat, block fish migration, trap sediment, and displace communities.',
+  '<b>Geothermal</b> is reliable but geographically limited; <b>biomass</b> is renewable but emits particulates.',
+  'Solar and wind are <b>intermittent</b>, so storage, backup generation, or long-distance transmission is required.',
+  '<b>Energy conservation and efficiency</b> — insulation, LED lighting, better vehicle mileage — is the cheapest way to cut emissions per unit.',
+  '<b>Cogeneration</b> captures waste heat from electricity generation for a second use.'
+ ],
+ ex:{q:'A city can spend the same money on a new solar farm or on insulating every home. Which cuts more emissions?',
+     steps:['Efficiency measures typically cost far less per unit of energy saved than generation costs per unit produced.',
+            'Saved energy also avoids transmission losses.',
+            'And it works regardless of weather.'],
+     a:'Answer: insulation usually wins on cost per tonne avoided. This is why efficiency is called the cheapest energy source.'}}
+]);
+
+setGuide('ap-es', 'u7', [
+{h:'Outdoor air pollution',
+ intro:'The distinction between primary and secondary pollutants determines how you control them, which is why the exam keeps returning to it.',
+ table:{head:['Pollutant','Type','Source','Effect'],rows:[
+   ['CO','Primary','Incomplete combustion','Binds haemoglobin'],
+   ['SO₂','Primary','Coal burning','Acid deposition, respiratory harm'],
+   ['NOₓ','Primary','Vehicle engines','Smog precursor, acid deposition'],
+   ['Particulates','Primary','Combustion, dust','Lung damage'],
+   ['Tropospheric ozone','Secondary','NOₓ + VOCs + sunlight','Respiratory harm, crop damage'],
+   ['Acid deposition','Secondary','SO₂ and NOₓ in water','Lake acidification, forest damage']]},
+ points:[
+  '<b>Photochemical smog</b> forms when NOₓ and VOCs react in sunlight. It peaks on hot, sunny, windless days in traffic-heavy cities.',
+  '<b>Thermal inversion</b> traps a cool polluted layer beneath warm air, concentrating pollutants at ground level.',
+  'Normally warm surface air rises and disperses pollution; an inversion reverses that and caps it in place.',
+  '<b>Acid deposition</b> lowers lake pH, leaches soil nutrients, and damages forests and buildings — often far downwind of the source.'
+ ]},
+
+{h:'Indoor air and control',
+ points:[
+  'Major indoor pollutants: <b>radon</b>, asbestos, carbon monoxide, formaldehyde, lead, and mould.',
+  '<b>Radon</b> is a naturally occurring radioactive gas that seeps from bedrock into basements and is a leading cause of lung cancer.',
+  'In developing countries, indoor smoke from burning biomass for cooking is a major cause of respiratory illness, especially among women and children.',
+  'Control technologies: <b>catalytic converters</b> on vehicles, <b>scrubbers</b> for sulfur, electrostatic precipitators and baghouse filters for particulates.',
+  'The <b>Clean Air Act</b> set national standards for criteria pollutants and drove very large emission reductions.'
+ ],
+ trap:'Confusing stratospheric and tropospheric ozone. Same molecule, opposite roles: protective high up, a harmful pollutant at ground level.'}
+]);
+
+setGuide('ap-es', 'u8', [
+{h:'Water pollution',
+ intro:'The hardest pollution to regulate is the kind with no single source. That distinction between point and nonpoint sources shapes every policy in this unit.',
+ points:[
+  '<b>Point source</b> pollution comes from an identifiable pipe or site and is comparatively easy to regulate.',
+  '<b>Nonpoint source</b> is diffuse runoff from farms, roads, and lawns — far harder to control and now the larger problem.',
+  'Nutrient runoff causes <b>eutrophication</b>: algal blooms whose decomposition strips dissolved oxygen, creating hypoxic dead zones.',
+  '<b>Biological oxygen demand (BOD)</b> measures oxygen consumed by decomposition. High BOD means low oxygen for fish.',
+  '<b>Thermal pollution</b> from power plant cooling water lowers dissolved oxygen, since warm water holds less.',
+  '<b>Bioaccumulation</b> builds toxins within one organism over its lifetime; <b>biomagnification</b> concentrates them up the food chain.'
+ ],
+ ex:{q:'Explain how fertiliser on Midwestern farms produces a dead zone in the Gulf of Mexico.',
+     steps:['Nitrogen and phosphorus run off fields into streams.',
+            'Streams feed the Mississippi, which discharges into the Gulf.',
+            'Nutrients trigger enormous algal blooms.',
+            'Algae die and decompose, and decomposers consume the dissolved oxygen.'],
+     a:'Answer: nonpoint nutrient runoff causes eutrophication hundreds of miles downstream, which is why regulating it is so difficult.'}},
+
+{h:'Waste and human health',
+ points:[
+  '<b>Sanitary landfills</b> use liners and leachate collection; older unlined dumps contaminated groundwater.',
+  '<b>Incineration</b> reduces volume by about 90% but releases pollutants and leaves toxic ash requiring disposal.',
+  'Sewage treatment: <b>primary</b> physical settling, <b>secondary</b> biological breakdown, <b>tertiary</b> chemical and nutrient removal.',
+  '<b>Dose-response curves</b> show how effect changes with exposure; <b>LD50</b> is the dose lethal to half a test population.',
+  '<b>Endocrine disruptors</b> interfere with hormones at extremely low doses, which is why the usual "the dose makes the poison" logic can fail.',
+  'Waterborne pathogens cause cholera, dysentery, and typhoid wherever sanitation is inadequate.'
+ ]}
+]);
+
+setGuide('ap-es', 'u9', [
+{h:'Ozone depletion and climate change',
+ intro:'These are two different problems that students constantly merge. Ozone depletion is caused by CFCs and lets in UV; climate change is caused by greenhouse gases and traps heat.',
+ table:{head:['','Ozone depletion','Climate change'],rows:[
+   ['Cause','CFCs releasing chlorine','CO₂, CH₄, N₂O and others'],
+   ['Location','Stratosphere','Troposphere'],
+   ['Effect','More UV reaching the surface','Heat trapped near the surface'],
+   ['Response','Montreal Protocol — successful','Paris Agreement — ongoing']]},
+ points:[
+  'The <b>Montreal Protocol</b> phased out CFCs and is the most successful international environmental agreement; the ozone layer is measurably recovering.',
+  '<b>Greenhouse gases</b> absorb outgoing infrared radiation. Methane traps far more heat per molecule than CO₂ but breaks down in about a decade rather than centuries.',
+  'Effects: rising sea level from <b>thermal expansion</b> and ice melt, shifting species ranges, more extreme weather.',
+  '<b>Ocean acidification</b> occurs as absorbed CO₂ forms carbonic acid, lowering pH and making shell and coral formation harder.',
+  'Ocean acidification is a separate consequence of CO₂ from warming, and would occur even without temperature change.'
+ ]},
+
+{h:'Biodiversity loss and sustainability',
+ points:[
+  '<b>HIPPCO</b> names the drivers: <b>H</b>abitat destruction, <b>I</b>nvasive species, <b>P</b>opulation growth, <b>P</b>ollution, <b>C</b>limate change, <b>O</b>verexploitation.',
+  '<b>Habitat loss and fragmentation is the largest single cause of extinction</b>, outweighing all others in current data.',
+  '<b>Invasive species</b> spread unchecked because they lack natural predators in the new range.',
+  'Conservation tools: protected areas, wildlife corridors connecting fragments, captive breeding, and the Endangered Species Act.',
+  '<b>Sustainability</b> means meeting present needs without compromising the ability of future generations to meet theirs.'
+ ],
+ ex:{q:'Why do wildlife corridors matter more than total protected area alone?',
+     steps:['Fragmented populations are small and genetically isolated.',
+            'Small isolated populations suffer inbreeding and drift.',
+            'They also cannot recolonise after a local extinction.',
+            'Corridors restore gene flow and movement between fragments.'],
+     a:'Answer: connectivity preserves genetic diversity and allows recolonisation, which area alone cannot do.'}}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP MACROECONOMICS */
+setGuide('ap-macro', 'u1', [
+{h:'Scarcity, choice, and the PPC',
+ intro:'Economics begins with a single premise: wants exceed resources. Everything else is a consequence of what you give up to get something.',
+ points:[
+  '<b>Opportunity cost</b> is the value of the next best alternative given up — never the money spent, always the forgone option.',
+  'The <b>production possibilities curve</b> shows maximum output combinations. Points inside are inefficient, points outside are unattainable.',
+  'The PPC bows outward because resources are <b>not equally suited</b> to all uses, so opportunity cost increases as you specialise further.',
+  'A straight-line PPC would mean constant opportunity cost and perfectly interchangeable resources.',
+  'The curve shifts outward with more resources, better technology, or higher productivity — not with more demand.',
+  'Producing capital goods today rather than consumer goods buys a larger PPC tomorrow.'
+ ],
+ trap:'Confusing movement along the PPC with a shift of it. Choosing a different mix moves you along; growth shifts the whole curve.'},
+
+{h:'Comparative advantage and trade',
+ points:[
+  '<b>Absolute advantage</b> means producing more with the same resources. <b>Comparative advantage</b> means a lower opportunity cost.',
+  'Specialisation should follow <b>comparative advantage</b>, which is why a country can gain from trade even if it is worse at making everything.',
+  'For output problems, compute opportunity cost as "other over self".',
+  '<b>Terms of trade</b> must fall between the two producers\u2019 opportunity costs for both to benefit.',
+  'Gains from trade let both countries consume beyond their own PPC.'
+ ],
+ ex:{q:'Country A gives up 3 wheat per car; Country B gives up 5. Who should make cars, and what terms of trade work?',
+     steps:['A\u2019s opportunity cost per car is 3 wheat; B\u2019s is 5.',
+            'A has the lower cost, so A makes cars.',
+            'Inverting: A gives up 1/3 car per wheat, B gives up 1/5. B has the lower cost in wheat.',
+            'Any exchange rate between 3 and 5 wheat per car benefits both.'],
+     a:'Answer: A specialises in cars, B in wheat, and terms between 3 and 5 wheat per car make both better off.'}}
+]);
+
+setGuide('ap-macro', 'u2', [
+{h:'Measuring output',
+ intro:'Before you can fix an economy you have to measure it. Each indicator in this unit answers a different question, and each has a well-known blind spot the exam likes to probe.',
+ points:[
+  '<b>GDP</b> = C + I + G + (X − M): the market value of <b>final</b> goods produced within a country.',
+  'Excluded: intermediate goods, used goods, transfer payments, purely financial transactions, and unreported activity.',
+  'Transfer payments such as Social Security are excluded because nothing was produced in exchange.',
+  '<b>Nominal GDP</b> uses current prices; <b>real GDP</b> adjusts for inflation and is the only valid comparison over time.',
+  '<b>GDP deflator</b> = (nominal ÷ real) × 100.',
+  'GDP ignores distribution, leisure, environmental cost, and household production — a limitation the free-response section likes to ask about.'
+ ]},
+
+{h:'Unemployment and inflation',
+ table:{head:['Type','Cause','Exists at full employment?'],rows:[
+   ['Frictional','Between jobs, searching','Yes'],
+   ['Structural','Skills mismatch, technology','Yes'],
+   ['Cyclical','Recession, weak demand','No']]},
+ points:[
+  'Unemployment rate = unemployed ÷ <b>labour force</b>. The labour force excludes anyone not actively seeking work.',
+  'The <b>natural rate</b> equals frictional plus structural. Full employment means zero <i>cyclical</i> unemployment, not zero unemployment.',
+  '<b>Discouraged workers</b> leave the labour force, which makes the measured rate look better as conditions worsen.',
+  '<b>CPI</b> tracks a fixed basket; inflation rate = (new − old) ÷ old × 100.',
+  '<b>Demand-pull</b> inflation comes from excess spending; <b>cost-push</b> from rising input costs.',
+  '<b>Real interest rate</b> = nominal − inflation. Unexpected inflation helps borrowers and hurts lenders.'
+ ],
+ ex:{q:'Many discouraged workers stop searching. What happens to the measured unemployment rate?',
+     steps:['They are removed from the "unemployed" count.',
+            'They are also removed from the labour force denominator.',
+            'Removing from both shrinks the ratio.'],
+     a:'Answer: the rate falls, even though conditions worsened. This is why the rate alone can mislead.'}}
+]);
+
+setGuide('ap-macro', 'u3', [
+{h:'Aggregate demand',
+ intro:'AD-AS is the central model of the course. Nearly every free-response question asks you to shift a curve and trace the consequences, so know precisely what moves each one.',
+ points:[
+  '<b>AD</b> = C + I + G + (X − M). It slopes down because of the <b>wealth effect</b>, the <b>interest rate effect</b>, and the <b>exchange rate effect</b>.',
+  'AD shifts right with more consumer confidence, investment, government spending, or net exports.',
+  '<b>Spending multiplier</b> = @@\\frac{1}{MPS} = \\frac{1}{1-MPC}@@',
+  'The <b>tax multiplier</b> is smaller and negative, because part of a tax cut is saved rather than spent.',
+  'MPC + MPS = 1. A higher MPC means a larger multiplier.'
+ ],
+ ex:{q:'MPC = 0.8 and the government increases spending by $50 billion. Find the total change in GDP.',
+     steps:['MPS = 1 − 0.8 = 0.2.',
+            'Multiplier = 1 ÷ 0.2 = 5.',
+            'Total change = 50 × 5.'],
+     a:'Answer: $250 billion. A tax cut of the same size would produce less, because the first round is partly saved.'}},
+
+{h:'Aggregate supply and fiscal policy',
+ table:{head:['Curve','Shape','Shifted by'],rows:[
+   ['SRAS','Upward sloping','Input prices, supply shocks, productivity'],
+   ['LRAS','Vertical at full employment','Resources, technology, productivity only']]},
+ points:[
+  '<b>SRAS</b> slopes up because input prices, especially wages, are sticky in the short run.',
+  '<b>LRAS</b> is vertical because in the long run output depends on real capacity, not the price level.',
+  'A <b>recessionary gap</b> means output below full employment; an <b>inflationary gap</b> means above.',
+  '<b>Stagflation</b> is a leftward SRAS shift: prices rise while output falls, and no demand-side policy fixes both.',
+  '<b>Expansionary</b> fiscal policy raises spending or cuts taxes to shift AD right; <b>contractionary</b> does the reverse.',
+  '<b>Automatic stabilisers</b> — progressive taxes, unemployment benefits — act without new legislation and so avoid policy lags.',
+  '<b>Crowding out</b>: government borrowing raises interest rates and reduces private investment.'
+ ],
+ trap:'Using demand-side policy to fix stagflation. Expanding AD worsens the inflation; contracting it worsens the unemployment.'}
+]);
+
+setGuide('ap-macro', 'u4', [
+{h:'Money and banking',
+ intro:'Banks do not simply store money — they create it. Understanding fractional reserve lending is what makes the rest of monetary policy make sense.',
+ points:[
+  'Money has three functions: <b>medium of exchange</b>, <b>unit of account</b>, and <b>store of value</b>.',
+  '<b>M1</b> is currency and checkable deposits. <b>M2</b> adds savings deposits and near-money.',
+  '<b>Fractional reserve banking</b> lets banks lend out deposits above the required reserve, which is how banks create money.',
+  '<b>Money multiplier</b> = @@\\frac{1}{\\text{reserve ratio}}@@. A $1,000 deposit at 10% reserves can support up to $10,000.',
+  'Actual expansion is smaller when banks hold excess reserves or people hold cash rather than depositing.'
+ ],
+ ex:{q:'Reserve requirement is 20% and a customer deposits $500. Find the maximum money creation.',
+     steps:['Multiplier = 1 ÷ 0.20 = 5.',
+            'The bank keeps $100 and lends $400.',
+            'Maximum total expansion = 500 × 5 = 2,500.',
+            'New money created = 2,500 − 500 = 2,000.'],
+     a:'Answer: the money supply can expand by up to $2,500 in total, of which $2,000 is newly created.'}},
+
+{h:'Two markets, two interest rates',
+ table:{head:['','Money market','Loanable funds market'],rows:[
+   ['Determines','Nominal interest rate','Real interest rate'],
+   ['Supply','Vertical, set by the Fed','Upward sloping — saving'],
+   ['Demand','Downward sloping','Downward sloping — investment'],
+   ['Shifted by','Fed policy, price level, real GDP','Deficits, saving behaviour']]},
+ points:[
+  'Higher interest rates raise the opportunity cost of holding money, reducing quantity demanded.',
+  'Government deficits shift loanable funds demand right, raising real rates and <b>crowding out</b> private investment.',
+  '<b>Bond prices and interest rates move inversely.</b> When rates rise, existing lower-yield bonds are worth less.',
+  'Fed tools: <b>open market operations</b>, the <b>discount rate</b>, reserve requirements, and interest on reserves.',
+  'Open market operations are the primary tool because they are precise and reversible.',
+  'The causal chain: money supply → interest rate → investment → aggregate demand → output and price level.'
+ ]}
+]);
+
+setGuide('ap-macro', 'u5', [
+{h:'The Phillips curve',
+ intro:'The Phillips curve is the AD-AS model redrawn with unemployment on the axis. Knowing which model movement corresponds to which curve shift is what the exam tests.',
+ table:{head:['What happens','Phillips curve effect'],rows:[
+   ['AD shifts right','Move along SRPC — lower unemployment, higher inflation'],
+   ['AD shifts left','Move along SRPC — higher unemployment, lower inflation'],
+   ['SRAS shifts left (supply shock)','SRPC shifts right — both get worse'],
+   ['Inflation expectations rise','SRPC shifts up'],
+   ['LRAS shifts right','LRPC shifts left — lower natural rate']]},
+ points:[
+  'The <b>short-run Phillips curve</b> shows an inverse relationship between inflation and unemployment.',
+  'The <b>long-run Phillips curve</b> is vertical at the natural rate, meaning no permanent tradeoff exists.',
+  '<b>Stagflation</b> appears as a rightward SRPC shift — higher inflation at every unemployment rate.',
+  'Rising inflation <b>expectations</b> shift the SRPC upward, which is why central bank credibility matters so much.'
+ ]},
+
+{h:'Growth, debt, and policy limits',
+ points:[
+  'In the long run, sustained money growth beyond output growth produces inflation. The quantity theory MV = PQ captures this.',
+  '<b>Economic growth</b> means shifting <b>LRAS</b> right through more resources, better technology, or higher productivity.',
+  'Investment in <b>physical capital</b>, <b>human capital</b>, and R&D raises long-run capacity. Demand-side policy does not.',
+  'A <b>deficit</b> is one year\u2019s shortfall; <b>debt</b> is the accumulation of past deficits.',
+  'Fiscal policy faces <b>recognition</b>, <b>decision</b>, and <b>implementation</b> lags, which can make it arrive after the problem has passed.',
+  'Under <b>rational expectations</b>, anticipated policy is partly offset by behaviour, weakening its real effect.'
+ ],
+ trap:'Treating a demand-side stimulus as long-run growth. It moves output along the LRAS in the short run only; permanent growth requires shifting LRAS itself.'}
+]);
+
+setGuide('ap-macro', 'u6', [
+{h:'Balance of payments',
+ points:[
+  'The <b>current account</b> records trade in goods and services, investment income, and transfers.',
+  'The <b>capital and financial account</b> records cross-border purchases of assets.',
+  '<b>The two accounts offset.</b> A current account deficit is matched by a financial account surplus.',
+  'That means a trade deficit is accompanied by foreigners acquiring domestic assets — money that left returns as investment.',
+  'Exports are recorded as credits; imports as debits.'
+ ]},
+
+{h:'Exchange rates and the open-economy chain',
+ intro:'One causal chain accounts for most open-economy questions. Learn it in order and you can answer nearly all of them.',
+ table:{head:['Step','Effect'],rows:[
+   ['Domestic interest rate rises','Foreign capital flows in'],
+   ['Capital inflow','Demand for the currency rises'],
+   ['Currency appreciates','Exports pricier abroad, imports cheaper'],
+   ['Net exports fall','AD shifts partly back']]},
+ points:[
+  '<b>Appreciation</b> means a currency buys more foreign currency; <b>depreciation</b> means less.',
+  'Determinants: relative interest rates, relative price levels, relative income, tastes, and speculation.',
+  'A <b>stronger</b> currency hurts exporters and helps importers.',
+  'Expansionary monetary policy lowers rates → capital outflow → depreciation → net exports rise, partly reinforcing the policy.',
+  'Deficit-financed fiscal expansion can raise rates, appreciate the currency, and shrink net exports, partly offsetting itself.',
+  '<b>Floating</b> rates are set by markets; <b>fixed</b> rates are maintained by central bank intervention.'
+ ],
+ ex:{q:'The Fed raises interest rates. Trace the effect on net exports.',
+     steps:['Higher US rates attract foreign investors seeking returns.',
+            'They buy dollars, increasing demand for the dollar.',
+            'The dollar appreciates.',
+            'US goods cost more abroad; foreign goods cost less here.'],
+     a:'Answer: net exports fall. This partly offsets the contractionary policy through the trade channel.'}}
+]);
+
+/* ------------------------------------------ AP MICROECONOMICS */
+setGuide('ap-micro', 'u1', [
+{h:'Scarcity and marginal thinking',
+ intro:'Microeconomics is the economics of one more. Nearly every decision rule in the course compares the benefit of one additional unit against its cost.',
+ points:[
+  '<b>Opportunity cost</b> is the value of the next best alternative given up.',
+  'The <b>PPC</b> bows outward because resources are not equally suited to all uses.',
+  '<b>Comparative advantage</b> — lower opportunity cost — determines who should specialise, not absolute advantage.',
+  'Rational decisions compare <b>marginal benefit</b> to <b>marginal cost</b>, never totals or averages.',
+  'The optimum is where MB = MC. Beyond that, extra units cost more than they are worth.',
+  '<b>Sunk costs</b> are already spent and unrecoverable, so they must not influence a forward-looking decision.'
+ ],
+ trap:'Continuing a project "because we have already invested so much". That is the sunk cost fallacy, and it is tested directly.'},
+
+{h:'Utility maximisation',
+ points:[
+  '<b>Diminishing marginal utility</b>: each additional unit consumed adds less satisfaction than the last.',
+  'This is why demand curves slope down — you will only buy the fourth slice of pizza at a lower price.',
+  '<b>Utility-maximising rule</b>: allocate spending so that @@\\frac{MU_{x}}{P_{x}} = \\frac{MU_{y}}{P_{y}}@@ across all goods.',
+  'If one good delivers more utility per dollar, shifting spending toward it raises total satisfaction.',
+  '<b>Allocative efficiency</b> means producing the combination society values most, where P = MC.',
+  '<b>Productive efficiency</b> means producing at the lowest possible average total cost.'
+ ],
+ ex:{q:'Good X gives 20 utils at $2; good Y gives 24 utils at $4. What should the consumer do?',
+     steps:['X: 20 ÷ 2 = 10 utils per dollar.',
+            'Y: 24 ÷ 4 = 6 utils per dollar.',
+            'X delivers more satisfaction per dollar spent.'],
+     a:'Answer: buy more X and less Y until the ratios equalise. Total utility rises even though Y has higher total utility per unit.'}}
+]);
+
+setGuide('ap-micro', 'u2', [
+{h:'Supply, demand, and what shifts them',
+ intro:'Almost every mark lost in this unit comes from one confusion: whether something moves you along a curve or shifts the whole curve. Settle that and the rest follows.',
+ table:{head:['Shifts demand','Shifts supply'],rows:[
+   ['Tastes and preferences','Input prices'],
+   ['Income (normal vs inferior good)','Technology'],
+   ['Prices of substitutes and complements','Taxes and subsidies'],
+   ['Expectations','Expectations'],
+   ['Number of buyers','Number of sellers']]},
+ points:[
+  'A change in the good\u2019s own <b>price</b> moves you <i>along</i> the curve. Anything else <b>shifts</b> it.',
+  '<b>Normal goods</b>: demand rises with income. <b>Inferior goods</b>: demand falls with income.',
+  '<b>Substitutes</b> replace each other; <b>complements</b> are consumed together.',
+  'A price above equilibrium creates a <b>surplus</b>; below it creates a <b>shortage</b>.',
+  'When both curves shift, one of price or quantity is determinate and the other is ambiguous — say which.'
+ ],
+ trap:'Saying "demand increased because price fell". That is an increase in quantity demanded, a movement along the curve, and the exam penalises the confusion.'},
+
+{h:'Elasticity, surplus, and government intervention',
+ points:[
+  '<b>Price elasticity of demand</b> = %ΔQd ÷ %ΔP. Elastic if greater than 1, inelastic if less.',
+  'Demand is more elastic with more substitutes, a longer time horizon, and when the good takes a larger share of income.',
+  '<b>Elastic</b> demand: raising price <i>lowers</i> total revenue. <b>Inelastic</b>: raising price <i>raises</i> revenue.',
+  '<b>Consumer surplus</b> is the area between the demand curve and the price paid; <b>producer surplus</b> lies between price and supply.',
+  '<b>Price ceilings</b> below equilibrium cause shortages; <b>price floors</b> above it cause surpluses. Both create <b>deadweight loss</b>.',
+  '<b>Tax incidence</b> falls more heavily on whichever side of the market is more <b>inelastic</b>, because that side cannot escape by changing quantity.'
+ ],
+ ex:{q:'A per-unit tax is placed on cigarettes, which have highly inelastic demand. Who bears the burden?',
+     steps:['Producers try to pass the tax on through a higher price.',
+            'Buyers with inelastic demand barely reduce quantity.',
+            'So the higher price sticks.'],
+     a:'Answer: consumers bear most of the burden. This is also why such taxes raise revenue reliably but change behaviour little.'}}
+]);
+
+setGuide('ap-micro', 'u3', [
+{h:'Production and cost',
+ intro:'Cost curves have the shapes they do for one reason: diminishing marginal returns. Once you see that, the geometry stops needing memorisation.',
+ points:[
+  '<b>Law of diminishing marginal returns</b>: adding a variable input to a fixed input eventually lowers marginal product.',
+  'Falling marginal product means rising marginal cost, which is why MC eventually slopes up.',
+  '<b>Fixed costs</b> do not vary with output; <b>variable costs</b> do. Total cost is their sum.',
+  'ATC = TC/Q, AVC = VC/Q, and <b>MC</b> = ΔTC/ΔQ.',
+  '<b>MC cuts through both ATC and AVC at their minimum points</b>, because whenever marginal is below average it pulls the average down.',
+  'In the long run all costs are variable. <b>Economies of scale</b> lower long-run ATC as output grows; diseconomies raise it.'
+ ]},
+
+{h:'Perfect competition',
+ table:{head:['Condition','Decision'],rows:[
+   ['P > ATC','Economic profit — stay and produce'],
+   ['P = ATC','Break even — normal profit'],
+   ['AVC < P < ATC','Loss, but keep producing short run'],
+   ['P < AVC','Shut down immediately']]},
+ points:[
+  'Perfectly competitive firms are <b>price takers</b> facing perfectly elastic demand, so P = MR = AR.',
+  'Profit maximises where <b>MR = MC</b>. Then compare P to ATC to judge profit or loss.',
+  'The shutdown rule exists because fixed costs are paid whether or not you operate. If price covers variable costs with something left over, operating loses less than closing.',
+  'Economic profit attracts <b>entry</b>, which increases supply and drives price down until profit reaches zero.',
+  'Long-run equilibrium: P = MR = MC = minimum ATC, which is both allocatively and productively efficient.'
+ ],
+ ex:{q:'A firm has P = $8, ATC = $10, AVC = $6. Should it produce?',
+     steps:['Price is below ATC, so the firm is losing money.',
+            'But price exceeds AVC by $2 per unit.',
+            'That $2 contributes toward fixed costs already committed.',
+            'Shutting down means losing all fixed costs with no contribution.'],
+     a:'Answer: keep producing in the short run. Exit only if the loss persists into the long run.'}}
+]);
+
+setGuide('ap-micro', 'u4', [
+{h:'Monopoly',
+ intro:'A monopolist faces the whole market demand curve, and that single fact generates every difference from perfect competition.',
+ points:[
+  'Because demand slopes down, selling one more unit requires lowering price on <b>all</b> units — so <b>MR lies below demand</b>.',
+  'The monopolist produces where MR = MC, then charges the price on the demand curve above that quantity.',
+  'Because <b>P > MC</b>, output is below the socially optimal level and there is <b>deadweight loss</b>.',
+  'A <b>natural monopoly</b> has continuously falling ATC, so one firm serves the market most cheaply — utilities are the standard example.',
+  '<b>Price discrimination</b> charges different buyers different prices. Perfect discrimination eliminates deadweight loss while transferring all surplus to the firm.',
+  'Barriers to entry: economies of scale, patents, control of a resource, and legal restrictions.'
+ ]},
+
+{h:'Monopolistic competition and oligopoly',
+ table:{head:['','Perfect competition','Monopolistic competition','Oligopoly','Monopoly'],rows:[
+   ['Firms','Very many','Many','Few','One'],
+   ['Product','Identical','Differentiated','Either','Unique'],
+   ['Entry','Free','Fairly free','Restricted','Blocked'],
+   ['Long-run profit','Zero','Zero','Can persist','Can persist'],
+   ['Efficiency','Both','Neither','Neither','Neither']]},
+ points:[
+  '<b>Monopolistic competition</b> earns zero economic profit in the long run but produces with <b>excess capacity</b> — not at minimum ATC — and P > MC.',
+  'That inefficiency is the price of product variety.',
+  '<b>Oligopoly</b> firms are interdependent, so <b>game theory</b> applies. A <b>dominant strategy</b> is best regardless of the rival\u2019s choice.',
+  'The <b>prisoner\u2019s dilemma</b> shows why firms defect from collusion even though cooperating would pay both more.',
+  '<b>Cartels are unstable</b> because each member profits by secretly cheating.',
+  'Regulation: <b>socially optimal</b> sets P = MC (efficient but may force losses on a natural monopoly); <b>fair return</b> sets P = ATC (break even).'
+ ],
+ ex:{q:'Why does regulating a natural monopoly at P = MC create a loss?',
+     steps:['A natural monopoly has continuously falling ATC.',
+            'Whenever average cost is falling, marginal cost lies below it.',
+            'Setting price at MC therefore sets price below ATC.'],
+     a:'Answer: price below average cost means a loss on every unit, which is why such firms need subsidies or fair-return pricing instead.'}}
+]);
+
+setGuide('ap-micro', 'u5', [
+{h:'Demand for labour',
+ intro:'Firms do not want workers. They want what workers produce, which is why labour demand is called derived demand.',
+ points:[
+  '<b>Marginal revenue product</b> (MRP) = marginal product × price of output. This is the firm\u2019s labour demand curve.',
+  'MRP falls because of <b>diminishing marginal returns</b>, not because later workers are worse.',
+  'Hire until <b>MRP = MRC</b> (marginal resource cost).',
+  'In a competitive labour market the firm is a wage taker, so MRC equals the market wage.',
+  'A worker\u2019s MRP rises when productivity rises or when the output price rises — which is why the same work pays differently in different industries.'
+ ]},
+
+{h:'Monopsony and input choice',
+ points:[
+  'A <b>monopsony</b> is a single buyer of labour and faces the upward-sloping market supply curve.',
+  'To hire one more worker it must raise the wage for <b>everyone</b>, so <b>MRC lies above supply</b>.',
+  'A monopsonist therefore hires <b>fewer</b> workers at a <b>lower</b> wage than a competitive market would.',
+  'A minimum wage set between the monopsony wage and the competitive wage can raise <b>both</b> wages and employment — the opposite of the competitive-market result.',
+  '<b>Least-cost rule</b>: @@\\frac{MP_{L}}{P_{L}} = \\frac{MP_{K}}{P_{K}}@@ — equal marginal product per dollar across inputs.',
+  '<b>Profit-maximising rule</b>: MRP ÷ price equals 1 for every input.'
+ ],
+ ex:{q:'Explain why a minimum wage can increase employment under monopsony but decrease it under competition.',
+     steps:['Under competition, a wage above equilibrium creates a surplus of labour — unemployment.',
+            'Under monopsony, the firm restricts hiring to keep the wage down.',
+            'A fixed minimum removes that incentive, since paying more no longer costs extra on inframarginal workers.',
+            'The firm then hires up to where MRP meets the fixed wage.'],
+     a:'Answer: the minimum wage neutralises the monopsonist\u2019s power to suppress hiring, which competition does not have to begin with.'}}
+]);
+
+setGuide('ap-micro', 'u6', [
+{h:'Externalities',
+ intro:'A market fails when the price does not reflect the full cost or benefit to society. Externalities are the most common way that happens.',
+ table:{head:['','Negative externality','Positive externality'],rows:[
+   ['Relationship','MSC > MPC','MSB > MPB'],
+   ['Market outcome','Overproduction','Underproduction'],
+   ['Example','Factory pollution','Vaccination, education'],
+   ['Correction','Pigouvian tax','Subsidy']]},
+ points:[
+  'Deadweight loss occurs in both cases because the market quantity differs from the socially optimal quantity.',
+  'A <b>Pigouvian tax</b> equal to the external cost internalises it, shifting production to the efficient level.',
+  '<b>Tradable permits</b> cap total pollution and let firms trade, so reductions happen wherever they are cheapest.',
+  'The <b>Coase theorem</b>: with clear property rights and low bargaining costs, private parties can resolve externalities without government.',
+  'Coase fails in practice when many parties are involved or rights are unclear — which is most real pollution.'
+ ]},
+
+{h:'Public goods, information, and distribution',
+ table:{head:['','Excludable','Non-excludable'],rows:[
+   ['<b>Rival</b>','Private good — a sandwich','Common resource — ocean fish'],
+   ['<b>Non-rival</b>','Club good — streaming service','Public good — national defence']]},
+ points:[
+  '<b>Public goods</b> are non-rival and non-excludable, so private markets undersupply them.',
+  'The <b>free rider problem</b> is why: you benefit whether or not you pay, so voluntary funding falls short.',
+  '<b>Common resources</b> are rival but non-excludable, producing the <b>tragedy of the commons</b>.',
+  '<b>Asymmetric information</b> causes <b>adverse selection</b> before a transaction and <b>moral hazard</b> after it.',
+  'The <b>Lorenz curve</b> plots cumulative income share; the <b>Gini coefficient</b> runs 0 (perfect equality) to 1.',
+  '<b>Progressive</b> taxes take a larger share from higher incomes; <b>regressive</b> taxes take more from lower incomes — sales taxes are regressive because poorer households spend a larger share of income.'
+ ],
+ ex:{q:'Classify a public park that becomes crowded on weekends.',
+     steps:['Anyone can enter, so it is non-excludable.',
+            'On a quiet weekday one visitor does not reduce another\u2019s enjoyment — non-rival.',
+            'When crowded, each additional visitor does reduce enjoyment — rival.'],
+     a:'Answer: it behaves as a public good when uncrowded and as a common resource when congested, which is why congestion pricing exists.'}}
+]);
+
+/* ------------------------- AP COMPUTER SCIENCE PRINCIPLES */
+setGuide('ap-csp', 'u1', [
+{h:'Building programs',
+ intro:'CSP tests the process of development as much as the code. Knowing why you iterate matters as much as knowing how to loop.',
+ points:[
+  'Programs develop through an <b>iterative</b> cycle: investigate, design, prototype, test, refine.',
+  'Each cycle exposes problems while they are still cheap to fix.',
+  '<b>Collaboration</b> produces better programs — more perspectives catch more errors and cover more use cases.',
+  'A program\u2019s <b>purpose</b> is what it accomplishes for the user; its <b>function</b> is how it behaves.',
+  '<b>Input</b> can come from users, devices, files, or other programs. <b>Output</b> can be visual, audible, tactile, or textual.',
+  'Comments and documentation explain intent to other developers and to your future self.'
+ ]},
+
+{h:'Errors and debugging',
+ table:{head:['Error type','When it appears','Example'],rows:[
+   ['Syntax','Before running','Missing bracket or quote'],
+   ['Logic','Runs, wrong output','Using + instead of −'],
+   ['Runtime','During execution','Division by zero, index out of range'],
+   ['Overflow','During execution','Value exceeds allocated space']]},
+ points:[
+  '<b>Logic errors</b> are hardest to find because nothing announces them — the program runs happily and produces the wrong answer.',
+  'Debugging techniques: test with varied inputs including edge cases, add display statements, hand-trace the code, and isolate one section at a time.',
+  'Hand-tracing means stepping through line by line writing down each variable\u2019s value.',
+  'Test with the empty case, the single-item case, and the very large case — errors hide at the boundaries.'
+ ],
+ tip:'When a program produces wrong output, add display statements to find the first line where a variable is not what you expected. That line, or the one before it, contains the bug.'}
+]);
+
+setGuide('ap-csp', 'u2', [
+{h:'Representing data',
+ intro:'Everything a computer holds — text, images, sound, video — is ultimately a number in binary. Big Idea 2 is about how that translation happens and what gets lost along the way.',
+ points:[
+  'Computers store everything in <b>binary</b>. A <b>bit</b> is one binary digit; 8 bits make a <b>byte</b>.',
+  '<b>n bits represent 2ⁿ distinct values</b> — the single most tested calculation in this big idea.',
+  '<b>Analog</b> data is continuous and must be <b>sampled</b> to become digital. Higher sampling rates give better fidelity and larger files.',
+  '<b>Lossless</b> compression restores the original exactly; <b>lossy</b> discards data permanently for smaller files.',
+  'Use lossless for text, code, and data. Use lossy for photos, audio, and video where small losses are imperceptible.',
+  'Choosing lossy for source code would be catastrophic — every character matters.'
+ ],
+ ex:{q:'How many bits are needed to represent 100 distinct values?',
+     steps:['6 bits give 2⁶ = 64 values, which is too few.',
+            '7 bits give 2⁷ = 128 values, which is enough.'],
+     a:'Answer: 7 bits. Always round up to the next power of two that covers the requirement.'}},
+
+{h:'Using and misusing data',
+ points:[
+  '<b>Metadata</b> is data about data — file size, creation date, location, author.',
+  'Metadata can reveal more than the data itself, which is why photo location tags are a privacy concern.',
+  '<b>Filtering</b> and <b>cleaning</b> remove errors, duplicates, and irrelevant records before analysis.',
+  'Correlation found in data does not establish causation.',
+  '<b>Bias in data</b> arises from how it was collected and propagates into any conclusion or model built on it.',
+  'Large datasets reveal patterns invisible in small ones, but scale magnifies bias rather than diluting it.',
+  'Privacy risk grows as separate datasets are combined, since the combination can identify individuals neither could alone.'
+ ],
+ trap:'Assuming more data means less bias. A larger unrepresentative sample is more confidently wrong, not less wrong.'}
+]);
+
+setGuide('ap-csp', 'u3', [
+{h:'Program structure',
+ intro:'Three control structures build every program ever written. The Create task requires all three, so recognising them matters practically as well as conceptually.',
+ points:[
+  'Programs use <b>sequencing</b> (in order), <b>selection</b> (if/else), and <b>iteration</b> (loops).',
+  '<b>Variables</b> store values; <b>lists</b> store ordered collections accessed by index.',
+  '<b>Procedures</b> with <b>parameters</b> enable <b>abstraction</b> — using something without knowing its internals.',
+  'Abstraction manages complexity, which is the reason it is worth points on the Create task.',
+  'Boolean expressions combine with AND, OR, and NOT.',
+  '<b>De Morgan\u2019s law</b>: NOT(A AND B) is equivalent to (NOT A) OR (NOT B).'
+ ]},
+
+{h:'Algorithms and efficiency',
+ table:{head:['Concept','Meaning'],rows:[
+   ['Linear search','Check each element in turn'],
+   ['Binary search','Halve a <b>sorted</b> list each step — far faster'],
+   ['Reasonable time','Run time grows polynomially with input size'],
+   ['Unreasonable time','Grows exponentially or factorially'],
+   ['Heuristic','Good-enough answer when exact is impractical'],
+   ['Undecidable','No algorithm can answer correctly for all inputs']]},
+ points:[
+  '<b>Binary search requires a sorted list.</b> Halving only works if order tells you which side the target must be on.',
+  'The travelling salesman problem is the standard example where a <b>heuristic</b> is used because exact solution is impractical.',
+  '<b>Undecidable</b> problems are impossible in principle, not merely slow — a distinction the exam tests directly.',
+  '<b>Parallel computing</b> splits work across processors. <b>Speedup</b> = sequential time ÷ parallel time.',
+  'Speedup is always less than the number of processors, because the sequential portion of a task cannot be divided.'
+ ],
+ ex:{q:'A task takes 80 seconds sequentially. 20 seconds of it cannot be parallelised. What is the best possible time with unlimited processors?',
+     steps:['60 seconds is parallelisable and could approach zero.',
+            '20 seconds is strictly sequential and cannot shrink.',
+            'The floor is set by the sequential portion.'],
+     a:'Answer: 20 seconds, giving a maximum speedup of 4. Adding processors beyond that point buys nothing.'}}
+]);
+
+setGuide('ap-csp', 'u4', [
+{h:'How the internet works',
+ intro:'The internet is not owned by anyone. It works because everyone agreed on the same open protocols, and that design choice explains its resilience.',
+ table:{head:['Protocol','Job'],rows:[
+   ['IP','Addresses devices'],
+   ['DNS','Translates domain names to IP addresses'],
+   ['TCP','Reliable ordered delivery, resends lost packets'],
+   ['UDP','Faster, no delivery guarantee'],
+   ['HTTP / HTTPS','Web page transfer, encrypted in HTTPS']]},
+ points:[
+  'Data travel as <b>packets</b> that may take different routes and are reassembled at the destination.',
+  '<b>Redundancy</b> in routing gives <b>fault tolerance</b>: if one path fails, traffic reroutes automatically.',
+  'That redundancy is why no single failure takes down the internet.',
+  '<b>Bandwidth</b> is data per second; <b>latency</b> is the delay before transfer begins. They are independent.',
+  'A satellite link can have high bandwidth and high latency simultaneously.',
+  'Scalability comes from open standards that no single company controls.'
+ ]},
+
+{h:'Parallel and distributed computing',
+ points:[
+  '<b>Sequential</b> computing runs one operation at a time in order.',
+  '<b>Parallel</b> computing splits a task across processors running simultaneously.',
+  '<b>Distributed</b> computing spreads a task across multiple networked machines.',
+  'Distributed computing makes problems solvable that no single machine could handle — protein folding, climate modelling, search indexing.',
+  'Only the parallelisable portion benefits, so returns diminish as processors are added.'
+ ],
+ trap:'Assuming doubling processors halves run time. Any sequential portion takes the same time no matter how many processors you add.'}
+]);
+
+setGuide('ap-csp', 'u5', [
+{h:'Benefits and harms',
+ intro:'Big Idea 5 asks you to hold two things at once: computing innovations usually have beneficial and harmful effects, and the harmful ones are often unintended.',
+ points:[
+  'Every innovation should be evaluated for <b>both</b> beneficial and harmful effects, on people and on society.',
+  'Harmful effects are frequently <b>unintended</b> — the designers did not plan them.',
+  '<b>Crowdsourcing</b> and <b>citizen science</b> show computing\u2019s collaborative benefits, letting many people contribute to a single project.',
+  'The <b>digital divide</b> is unequal access to computing across income, geography, and demographics, and it compounds existing inequality.',
+  '<b>Algorithmic bias</b> is systematic unfairness in output, usually reflecting bias present in the training data rather than the programmer\u2019s intent.',
+  'A hiring or facial recognition model trained on unrepresentative data will perform unequally, and it will do so confidently.'
+ ]},
+
+{h:'Data, privacy, and security',
+ table:{head:['Threat','What it does','Defence'],rows:[
+   ['Phishing','Tricks users into revealing credentials','Verify sender, never click unknown links'],
+   ['Malware','Damages or takes control of a system','Updates, antivirus, careful downloads'],
+   ['Keylogging','Records keystrokes to steal passwords','Antivirus, avoid untrusted machines'],
+   ['Rogue access point','Intercepts traffic on fake wifi','Avoid open networks, use HTTPS']]},
+ points:[
+  '<b>Symmetric</b> encryption uses one shared key. <b>Public key</b> encryption uses a public key to encrypt and a private key to decrypt.',
+  'Publishing the encryption key is safe because it cannot reverse its own encryption.',
+  '<b>Multifactor authentication</b> requires two or more kinds of evidence and is among the strongest practical defences.',
+  '<b>PII</b> is personally identifiable information that can locate or identify an individual.',
+  'Combining datasets can identify people even when each dataset alone is anonymous.',
+  '<b>Creative Commons</b> licensing lets creators specify how their work may be reused, unlike default full copyright.'
+ ],
+ ex:{q:'A facial recognition system misidentifies some groups far more often. Name the cause and the fix.',
+     steps:['The model learned from its training images.',
+            'If those images underrepresented some groups, the model had less to learn from.',
+            'It then performs worse on them while reporting the same confidence.'],
+     a:'Answer: algorithmic bias from unrepresentative training data. The fix is more representative data and testing performance separately across groups.'}}
+]);
+
+setGuide('ap-csp', 'u6', [
+{h:'What the program must contain',
+ intro:'The Create task is scored against a checklist. Every required element is worth a point, and most lost points come from omitting one rather than from bad code.',
+ table:{head:['Requirement','Detail'],rows:[
+   ['A list','Storing data the program actually uses'],
+   ['A student-developed procedure','With at least one parameter affecting the result'],
+   ['An algorithm inside it','Using sequencing, selection, and iteration'],
+   ['A call to that procedure','Somewhere in the program'],
+   ['Input and output','Clearly demonstrated in the video']]},
+ points:[
+  'The list must be <b>genuinely necessary</b>. Storing data you never use earns no credit, because it manages no complexity.',
+  'The parameter must <b>change the result</b>. A parameter that is accepted and ignored does not count.',
+  'All three control structures must appear <b>within your selected procedure</b>, not scattered around the program.',
+  'Write the code yourself. Borrowed code cannot be your student-developed procedure.'
+ ]},
+
+{h:'Video and written responses',
+ points:[
+  'The video must be <b>under one minute</b> and show the running program\u2019s input and output. Narration is optional.',
+  'Describe the program\u2019s <b>purpose</b> and its <b>functionality</b> separately — they are different questions.',
+  'Explain how your selected code segment <b>manages complexity</b>: what would be harder or longer without the list or procedure?',
+  'Identify <b>two calls</b> to your procedure with different arguments, and trace the condition each triggers and the result each produces.',
+  'Write about <b>your own specific code</b>. Generic descriptions of what lists or procedures do in general earn nothing.',
+  'Quote the relevant variable and procedure names from your own program in every answer.'
+ ],
+ trap:'Answering the complexity question by explaining what a list is. The question asks why <i>your</i> list makes <i>your</i> program simpler than writing it without one.'}
+]);
+</script>
+<script>
 /* ============================================================
    StudyBuddy app
    ============================================================ */
@@ -11147,10 +13151,35 @@ function localAnswer(ctx, question) {
     const s = scoreAgainst(q, card[0]) * 2.2 + scoreAgainst(q, card[1]) * 0.7;
     if (s > 0) hits.push({ s, text: `${card[0]} — ${card[1]}`, src: 'flashcard' });
   });
-  (ctx.u.guide || []).forEach(sec => sec.points.forEach(pt => {
-    const s = scoreAgainst(q, pt) + scoreAgainst(q, sec.h) * 0.5;
-    if (s > 0) hits.push({ s, text: plain(pt), src: 'study guide · ' + sec.h });
-  }));
+  (ctx.u.guide || []).forEach(sec => {
+    const label = 'study guide · ' + sec.h;
+    /* a section may carry any combination of these, so guard every one */
+    (sec.points || []).forEach(pt => {
+      const s = scoreAgainst(q, pt) + scoreAgainst(q, sec.h) * 0.5;
+      if (s > 0) hits.push({ s, text: plain(pt), src: label });
+    });
+    if (sec.intro) {
+      const s = scoreAgainst(q, sec.intro) * 0.8 + scoreAgainst(q, sec.h) * 0.5;
+      if (s > 0) hits.push({ s, text: plain(sec.intro), src: label });
+    }
+    if (sec.table) {
+      (sec.table.rows || []).forEach(row => {
+        const line = row.map(plain).join(' — ');
+        const s = scoreAgainst(q, line) * 1.4;
+        if (s > 0) hits.push({ s, text: line, src: label });
+      });
+    }
+    [].concat(sec.ex || []).forEach(e => {
+      const line = plain(e.q) + ' ' + (e.steps || []).map(plain).join(' ') + ' ' + plain(e.a || '');
+      const s = scoreAgainst(q, line) * 0.9;
+      if (s > 0) hits.push({ s, text: plain(e.q) + '\n\n' + plain(e.a || ''), src: label + ' (worked example)' });
+    });
+    [sec.trap, sec.tip].forEach(cal => {
+      if (!cal) return;
+      const s = scoreAgainst(q, cal) + scoreAgainst(q, sec.h) * 0.4;
+      if (s > 0) hits.push({ s, text: plain(cal), src: label });
+    });
+  });
   hits.sort((a, b) => b.s - a.s);
   if (!hits.length || hits[0].s < 0.5) {
     return {

@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StudyBuddy — free AP, SAT & ACT studying</title>
+<meta name="description" content="Free study platform for AP classes, SAT and ACT. Study guides, flashcards, quizzes, timed practice tests, and an AI that quizzes you on your own notes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   StudyBuddy — design tokens
+   Direction: index card + highlighter. Cool oat canvas, ruled
+   paper cards, red margin rule, highlighter-stroke progress.
+   ============================================================ */
+:root{
+  --canvas:#E6E8E1;
+  --canvas-2:#DDE0D7;
+  --paper:#FCFCF9;
+  --ink:#16232B;
+  --ink-soft:#5C6B72;
+  --ink-faint:#93A0A6;
+  --rule:#A9C3D2;
+  --margin:#CF5945;
+  --highlight:#F2E14C;
+  --green:#2E7D5B;
+  --line:rgba(22,35,43,.14);
+  --shadow:0 1px 0 rgba(22,35,43,.06), 0 10px 24px -18px rgba(22,35,43,.5);
+  --radius:14px;
+  --blend:multiply;
+}
+[data-theme="night"]{
+  --canvas:#12181C;
+  --canvas-2:#0D1216;
+  --paper:#1B2429;
+  --ink:#E8EDEC;
+  --ink-soft:#9AABB2;
+  --ink-faint:#6B7C84;
+  --rule:#33505F;
+  --margin:#E2705C;
+  --highlight:#C8B92E;
+  --green:#4FBA8B;
+  --line:rgba(232,237,236,.14);
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -20px #000;
+  --blend:screen;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--canvas);
+  color:var(--ink);
+  font-family:'Karla',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.12;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.9rem,4.2vw,2.9rem)}
+h2{font-size:clamp(1.35rem,2.6vw,1.85rem)}
+h3{font-size:1.12rem}
+p{margin:0 0 .8em}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--margin);outline-offset:2px;border-radius:4px}
+::selection{background:var(--highlight);color:#16232B}
+
+/* eyebrow / utility type ------------------------------------ */
+.eyebrow{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 .5rem;display:block;
+}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* highlighter stroke ---------------------------------------- */
+.hl{position:relative;display:inline;z-index:0}
+.hl::after{
+  content:'';position:absolute;left:-.12em;right:-.12em;top:.12em;bottom:.02em;
+  background:var(--highlight);mix-blend-mode:var(--blend);
+  border-radius:.4em .7em .35em .6em;transform:rotate(-.7deg);z-index:-1;
+}
+
+/* ============================ shell ======================== */
+.app{display:flex;min-height:100vh}
+.rail{
+  width:236px;flex:0 0 236px;padding:22px 14px 24px;
+  border-right:1px solid var(--line);
+  background:var(--canvas-2);
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 20px;text-decoration:none}
+.brand-mark{
+  width:34px;height:34px;flex:0 0 34px;border-radius:8px;background:var(--paper);
+  border:1px solid var(--line);position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.brand-mark::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:1.5px;background:var(--margin);opacity:.8}
+.brand-mark::after{content:'';position:absolute;left:0;right:0;top:12px;height:1px;background:var(--rule);box-shadow:0 6px 0 var(--rule),0 12px 0 var(--rule)}
+.brand-name{font-family:'Fraunces',serif;font-weight:700;font-size:1.16rem;letter-spacing:-.02em}
+.brand-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:-2px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);padding:16px 10px 6px}
+.nav a{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;
+  text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:.93rem;
+  border:1px solid transparent;
+}
+.nav a:hover{background:var(--paper);color:var(--ink)}
+.nav a.on{background:var(--paper);color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
+.nav a .ico{width:18px;text-align:center;opacity:.85;font-size:1rem}
+.rail-foot{margin-top:auto;padding:18px 10px 0;font-size:.76rem;color:var(--ink-faint);line-height:1.4}
+
+.main{flex:1;min-width:0;padding:34px clamp(16px,3.4vw,44px) 96px;max-width:1180px}
+.page-head{margin-bottom:26px;position:relative;padding-left:18px}
+.page-head::before{content:'';position:absolute;left:0;top:.15em;bottom:.15em;width:2px;background:var(--margin);opacity:.85;border-radius:2px}
+.page-head p{color:var(--ink-soft);max-width:62ch;margin:.5rem 0 0}
+
+/* mobile tabs ------------------------------------------------ */
+.tabbar{display:none}
+@media (max-width:860px){
+  .rail{display:none}
+  .main{padding:20px 16px 100px;max-width:100%}
+  .tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:var(--paper);border-top:1px solid var(--line);
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+  }
+  .tabbar a{
+    flex:1;text-align:center;text-decoration:none;color:var(--ink-faint);
+    font-size:.62rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;
+    text-transform:uppercase;display:flex;flex-direction:column;gap:3px;padding:4px 2px;border-radius:8px;
+  }
+  .tabbar a .ico{font-size:1.15rem}
+  .tabbar a.on{color:var(--ink);background:var(--canvas-2)}
+  .mobile-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+}
+@media (min-width:861px){.mobile-top{display:none}}
+
+/* ============================ cards ======================== */
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:20px;
+}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(248px,1fr))}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spread{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+
+/* buttons ---------------------------------------------------- */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  padding:10px 16px;border-radius:10px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--paper);font-weight:700;font-size:.9rem;
+  text-decoration:none;transition:transform .12s ease, box-shadow .12s ease;
+  box-shadow:0 2px 0 rgba(22,35,43,.25);
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line);box-shadow:none;font-weight:600}
+.btn.ghost:hover{border-color:var(--ink);background:var(--paper)}
+.btn.mark{background:var(--highlight);color:#16232B;border-color:transparent;box-shadow:0 2px 0 rgba(22,35,43,.2)}
+.btn.red{background:var(--margin);color:#fff;border-color:transparent}
+.btn.sm{padding:7px 12px;font-size:.82rem;border-radius:8px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;
+  border:1px solid var(--line);background:var(--paper);font-size:.78rem;font-weight:600;
+  color:var(--ink-soft);cursor:pointer;text-decoration:none;
+}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tag{
+  font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 8px;border-radius:5px;background:var(--canvas-2);color:var(--ink-soft);border:1px solid var(--line);
+}
+
+/* inputs ----------------------------------------------------- */
+input[type=text],input[type=password],input[type=number],select,textarea{
+  width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
+  background:var(--paper);font-size:.94rem;
+}
+textarea{min-height:150px;resize:vertical;line-height:1.6}
+label.fld{display:block;margin-bottom:14px}
+label.fld span{display:block;font-weight:700;font-size:.84rem;margin-bottom:5px}
+label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:5px;font-size:.78rem}
+
+/* highlighter progress -------------------------------------- */
+.meter{height:12px;background:var(--canvas-2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.meter i{
+  display:block;height:100%;background:var(--highlight);
+  border-radius:2px 8px 4px 7px;transform:rotate(-.35deg) scaleY(1.25);transform-origin:left center;
+  mix-blend-mode:var(--blend);transition:width .5s cubic-bezier(.2,.7,.3,1);
+}
+.meter.good i{background:var(--green);mix-blend-mode:normal;opacity:.85}
+
+/* stat block ------------------------------------------------- */
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:'IBM Plex Mono',monospace;font-size:1.6rem;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint)}
+
+/* course tile ------------------------------------------------ */
+.tile{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 16px 14px 22px;box-shadow:var(--shadow);text-decoration:none;display:block;
+  position:relative;overflow:hidden;transition:transform .14s ease,box-shadow .14s ease;
+}
+.tile::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:var(--tcolor,var(--margin));opacity:.75}
+.tile:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(22,35,43,.06),0 18px 30px -20px rgba(22,35,43,.6)}
+.tile h3{margin-bottom:4px}
+.tile .blurb{color:var(--ink-soft);font-size:.85rem;margin:0 0 12px}
+.tile .foot{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace}
+
+/* study guide ------------------------------------------------ */
+.guide h3{margin:26px 0 8px;padding-left:14px;position:relative}
+.guide h3::before{content:'';position:absolute;left:0;top:.25em;bottom:.25em;width:2px;background:var(--rule)}
+.guide ul{margin:0 0 4px;padding-left:20px}
+.guide li{margin-bottom:7px}
+.guide li b{background:linear-gradient(transparent 62%,var(--highlight) 62%)}
+[data-theme="night"] .guide li b{background:none;color:var(--highlight)}
+/* in night mode a solid highlighter block kills contrast — use a stroke instead */
+[data-theme="night"] .hl::after{
+  top:auto;bottom:.02em;height:.28em;background:var(--highlight);
+  mix-blend-mode:normal;opacity:.85;border-radius:2px;
+}
+[data-theme="night"] .meter i{mix-blend-mode:normal;opacity:.9}
+
+/* ====================== FLASHCARD (signature) =============== */
+.deck-wrap{max-width:640px;margin:0 auto}
+.fcard{
+  perspective:1600px;height:min(56vh,380px);margin-bottom:18px;cursor:pointer;
+}
+.fcard-inner{
+  position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.3,.9,.3,1);
+  transform-style:preserve-3d;
+}
+.fcard.flipped .fcard-inner{transform:rotateX(180deg)}
+.fface{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--paper);border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 2px 0 var(--canvas-2),0 3px 0 var(--line),0 20px 34px -24px rgba(22,35,43,.7);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:34px 30px 30px 52px;overflow:auto;
+  background-image:repeating-linear-gradient(transparent,transparent 31px,var(--rule) 31px,var(--rule) 32px);
+  background-position:0 46px;
+}
+.fface::before{content:'';position:absolute;left:34px;top:0;bottom:0;width:1.5px;background:var(--margin);opacity:.55}
+.fface .ftag{position:absolute;top:12px;left:52px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.fface .ftext{font-family:'Fraunces',serif;font-size:clamp(1.15rem,2.6vw,1.6rem);line-height:1.6;font-weight:400}
+.fback{transform:rotateX(180deg)}
+.fback .ftext{font-family:'Karla',sans-serif;font-size:clamp(1rem,2.2vw,1.15rem);line-height:1.75}
+.deck-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--ink-faint)}
+
+/* quiz ------------------------------------------------------- */
+.qbox{max-width:760px}
+.qstem{font-size:1.08rem;font-weight:600;margin:6px 0 18px;line-height:1.5}
+.opt{
+  display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;cursor:pointer;
+  padding:13px 15px;margin-bottom:9px;border-radius:11px;border:1px solid var(--line);
+  background:var(--paper);transition:border-color .12s ease,background .12s ease;
+}
+.opt:hover:not([disabled]){border-color:var(--ink-soft)}
+.opt .k{
+  flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--line);
+  display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:.78rem;font-weight:600;
+}
+.opt.right{border-color:var(--green);background:color-mix(in srgb,var(--green) 10%,var(--paper))}
+.opt.right .k{background:var(--green);color:#fff;border-color:var(--green)}
+.opt.wrong{border-color:var(--margin);background:color-mix(in srgb,var(--margin) 9%,var(--paper))}
+.opt.wrong .k{background:var(--margin);color:#fff;border-color:var(--margin)}
+.opt.picked{border-color:var(--ink)}
+.why{
+  border-left:2px solid var(--rule);padding:2px 0 2px 14px;margin:14px 0 18px;
+  color:var(--ink-soft);font-size:.93rem;
+}
+.why b{color:var(--ink)}
+.qprog{display:flex;gap:4px;margin-bottom:18px;flex-wrap:wrap}
+.qprog i{width:22px;height:5px;border-radius:3px;background:var(--canvas-2);border:1px solid var(--line)}
+.qprog i.done{background:var(--ink);border-color:var(--ink)}
+.qprog i.miss{background:var(--margin);border-color:var(--margin)}
+.qprog i.now{background:var(--highlight);border-color:var(--highlight)}
+
+/* timer ------------------------------------------------------ */
+.timer{
+  font-family:'IBM Plex Mono',monospace;font-size:1.05rem;font-weight:600;
+  padding:6px 12px;border-radius:8px;background:var(--canvas-2);border:1px solid var(--line);
+}
+.timer.low{background:var(--margin);color:#fff;border-color:var(--margin)}
+
+/* chat ------------------------------------------------------- */
+.chat{display:flex;flex-direction:column;gap:12px;max-height:min(52vh,460px);overflow-y:auto;padding:4px 2px 8px}
+.msg{max-width:86%;padding:12px 15px;border-radius:14px;font-size:.94rem;line-height:1.6;white-space:pre-wrap}
+.msg.me{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.sys{align-self:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-faint);background:none;text-align:center}
+
+/* misc ------------------------------------------------------- */
+.empty{text-align:center;padding:44px 20px;color:var(--ink-soft)}
+.empty .big{font-size:2.2rem;margin-bottom:8px;opacity:.5}
+.note{background:var(--canvas-2);border:1px dashed var(--line);border-radius:11px;padding:13px 15px;font-size:.86rem;color:var(--ink-soft)}
+.note b{color:var(--ink)}
+.divide{height:1px;background:var(--line);margin:26px 0;border:0}
+.crumb{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;display:block;text-decoration:none}
+.crumb:hover{color:var(--ink)}
+.hidden{display:none !important}
+.center{text-align:center}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.fade{animation:fd .3s ease both}
+@keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  .fcard-inner{transition:none}
+}
+.score-ring{
+  width:132px;height:132px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;
+  background:conic-gradient(var(--highlight) calc(var(--p)*1%), var(--canvas-2) 0);
+}
+.score-ring div{
+  width:104px;height:104px;border-radius:50%;background:var(--paper);display:grid;place-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:600;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <a class="brand" href="#/">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>
+        <span class="brand-name">StudyBuddy</span>
+        <span class="brand-sub">free forever</span>
+      </span>
+    </a>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">
+      Open source · no account · nothing to pay.<br>
+      Your progress stays in this browser.
+    </div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+<script>
+/* ============================================================
+   CONTENT PACKS
+   Shape of a course:
+   { id, name, short, color, exam, blurb, units:[
+       { id, title, guide:[{h, points:[...]}], cards:[[front,back],...],
+         quiz:[{q, c:[...], a:index, why}] } ] }
+   Add your own course by pushing an object with this shape, or
+   import one as JSON from the AI Tutor page.
+   ============================================================ */
+const COURSES = [];
+
+/* ------------------------------------------------ AP PSYCHOLOGY */
+COURSES.push({
+id:'ap-psych', name:'AP Psychology', short:'AP Psych', color:'#7C5BA6', exam:'AP',
+blurb:'Research methods, the brain, learning, memory, and social behavior.',
+units:[
+{
+id:'u1', title:'Unit 1 · Scientific Foundations',
+guide:[
+ {h:'The major perspectives', points:[
+  '<b>Biological</b> explains behavior through genes, neurotransmitters, and brain structures.',
+  '<b>Cognitive</b> focuses on how we encode, store, and interpret information.',
+  '<b>Behavioral</b> studies only observable responses shaped by conditioning.',
+  '<b>Humanistic</b> emphasizes free will, self-concept, and growth toward potential.',
+  '<b>Psychodynamic</b> traces behavior to unconscious conflict and early experience.',
+  '<b>Sociocultural</b> looks at how culture, norms, and groups shape behavior; the <b>biopsychosocial</b> model combines all three levels.'
+ ]},
+ {h:'Research methods', points:[
+  'A <b>case study</b> gives depth on one person but cannot be generalized.',
+  '<b>Naturalistic observation</b> records behavior without intervening — high realism, no causal claims.',
+  '<b>Surveys</b> are cheap and broad but suffer from social desirability bias and bad wording.',
+  '<b>Correlational studies</b> measure relationships; the coefficient runs from −1.00 to +1.00, where sign is direction and absolute value is strength.',
+  'Correlation never proves causation — a <b>third variable</b> may cause both.'
+ ]},
+ {h:'Experimental design', points:[
+  'The <b>independent variable</b> is manipulated; the <b>dependent variable</b> is measured.',
+  '<b>Operational definitions</b> state exactly how a variable is measured so the study can be replicated.',
+  '<b>Random sampling</b> makes a sample representative; <b>random assignment</b> makes groups equivalent. Only assignment allows causal claims.',
+  '<b>Confounding variables</b> differ between groups along with the IV and ruin the conclusion.',
+  '<b>Single-blind</b> hides condition from participants; <b>double-blind</b> also hides it from researchers, controlling experimenter bias and placebo effects.'
+ ]},
+ {h:'Statistics', points:[
+  'Mean is pulled toward outliers; in a <b>skewed</b> distribution the median describes the center better.',
+  '<b>Standard deviation</b> measures spread; a small SD means scores cluster tightly around the mean.',
+  'In a normal curve, about 68% of scores fall within one SD of the mean and about 95% within two.',
+  'A result is <b>statistically significant</b> when p &lt; .05 — unlikely to be due to chance. It does not mean the effect is large or important.',
+  '<b>Effect size</b> tells you how big the difference actually is.'
+ ]},
+ {h:'Ethics', points:[
+  'An <b>IRB</b> reviews proposed studies for risk before they run.',
+  '<b>Informed consent</b> must be given before participation; <b>debriefing</b> reveals any deception afterward.',
+  'Deception is permitted only when necessary and never about physical risk.',
+  'Participants may withdraw at any time, and data must be kept confidential.',
+  'Animal research requires justified purpose and humane care.'
+ ]}
+],
+cards:[
+ ['Independent variable','The factor the experimenter manipulates to test its effect.'],
+ ['Dependent variable','The outcome measured; it depends on the IV.'],
+ ['Operational definition','A precise statement of how a variable is measured, allowing replication.'],
+ ['Random sampling vs. random assignment','Sampling picks who is in the study (generalizability); assignment sorts them into groups (causal inference).'],
+ ['Confounding variable','An uncontrolled factor that varies with the IV and offers an alternative explanation.'],
+ ['Double-blind procedure','Neither participants nor the researchers interacting with them know who is in which condition.'],
+ ['Placebo effect','Improvement caused by expectations alone rather than the actual treatment.'],
+ ['Correlation coefficient','A number from −1.00 to +1.00 showing direction and strength of a relationship.'],
+ ['Illusory correlation','Perceiving a relationship where none exists, usually because we notice confirming cases.'],
+ ['Hindsight bias','The tendency, after learning an outcome, to believe you would have predicted it.'],
+ ['Statistical significance (p < .05)','The result is unlikely to have occurred by chance; it says nothing about effect size.'],
+ ['Standard deviation','The average distance of scores from the mean; a measure of spread.'],
+ ['Biopsychosocial model','An approach explaining behavior through biological, psychological, and sociocultural influences together.'],
+ ['Informed consent','Agreement to participate after being told about risks and the general nature of the study.']
+],
+quiz:[
+ {q:'A researcher finds that hours of sleep and exam scores have a correlation of −.62. What does this mean?',
+  c:['More sleep causes lower scores','As sleep increases, scores tend to decrease, moderately strongly','The relationship is weak because the number is negative','Sleep and scores are unrelated'],
+  a:1, why:'The sign gives direction (negative = inverse) and the absolute value gives strength (.62 is moderately strong). Correlation cannot establish causation.'},
+ {q:'Which procedure allows a researcher to claim that a treatment CAUSED a change?',
+  c:['Random sampling','Operational definition','Random assignment to conditions','A large sample size'],
+  a:2, why:'Random assignment equalizes groups on everything except the IV, so a difference afterward can be attributed to the IV. Random sampling only supports generalizing.'},
+ {q:'Students in a study are told a pill boosts focus, but it is sugar. Their focus improves anyway. This illustrates:',
+  c:['The placebo effect','Experimenter bias','A confounding variable','Sampling bias'],
+  a:0, why:'The improvement comes from the participants\u2019 expectations, not the substance. Double-blind designs control for this.'},
+ {q:'A distribution of incomes has a few extremely high values. Which measure best describes the typical income?',
+  c:['Mean','Median','Range','Standard deviation'],
+  a:1, why:'The mean is dragged upward by outliers in a positively skewed distribution, so the median is the more representative measure of center.'},
+ {q:'A psychologist explains depression as resulting from negative automatic thought patterns. This is the ___ perspective.',
+  c:['Behavioral','Cognitive','Humanistic','Evolutionary'],
+  a:1, why:'Cognitive psychologists focus on how thinking and interpretation shape behavior and emotion.'},
+ {q:'Which is required after a study that used deception?',
+  c:['Informed consent','Debriefing','Random assignment','Replication'],
+  a:1, why:'Debriefing explains the true purpose and any deception once participation is over, so participants leave fully informed.'},
+ {q:'Naturalistic observation is best described as:',
+  c:['Manipulating a variable in a real-world setting','Watching behavior in its normal environment without intervening','Interviewing one person in depth','Measuring two variables to see how they relate'],
+  a:1, why:'Its strength is realism; its limits are lack of control and inability to establish cause.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Biological Bases of Behavior',
+guide:[
+ {h:'The neuron and the signal', points:[
+  '<b>Dendrites</b> receive, the <b>soma</b> integrates, the <b>axon</b> transmits, and <b>terminal buttons</b> release neurotransmitters.',
+  'The <b>myelin sheath</b> insulates the axon and speeds transmission; its breakdown causes multiple sclerosis.',
+  'The <b>action potential</b> is all-or-none: once threshold is reached the neuron fires at full strength. A stronger stimulus increases firing <i>rate</i>, not intensity.',
+  'During the <b>refractory period</b> the neuron restores its resting charge and cannot fire.',
+  '<b>Reuptake</b> reabsorbs leftover neurotransmitter into the sending neuron; SSRIs block reuptake of serotonin.'
+ ]},
+ {h:'Key neurotransmitters', points:[
+  '<b>Acetylcholine</b> — muscle movement and memory; depleted in Alzheimer\u2019s.',
+  '<b>Dopamine</b> — reward, movement; excess is linked to schizophrenia, deficiency to Parkinson\u2019s.',
+  '<b>Serotonin</b> — mood, sleep, appetite; low levels are associated with depression.',
+  '<b>GABA</b> is the main inhibitory transmitter; <b>glutamate</b> is the main excitatory one.',
+  '<b>Endorphins</b> reduce pain; <b>norepinephrine</b> drives alertness and arousal.',
+  '<b>Agonists</b> mimic or boost a neurotransmitter; <b>antagonists</b> block it.'
+ ]},
+ {h:'Nervous and endocrine systems', points:[
+  'The <b>central</b> nervous system is brain and spinal cord; the <b>peripheral</b> is everything else.',
+  'The peripheral splits into <b>somatic</b> (voluntary muscles) and <b>autonomic</b> (organs and glands).',
+  'The <b>sympathetic</b> branch arouses for fight-or-flight; the <b>parasympathetic</b> calms and conserves.',
+  '<b>Reflex arcs</b> route through the spinal cord without waiting for the brain.',
+  'The <b>pituitary</b> is the master gland, directed by the hypothalamus; <b>adrenal</b> glands release epinephrine.'
+ ]},
+ {h:'Brain structures', points:[
+  '<b>Medulla</b> controls heartbeat and breathing; the <b>cerebellum</b> handles balance and procedural memory.',
+  'The <b>thalamus</b> is the sensory relay station for everything except smell.',
+  'The <b>hypothalamus</b> regulates hunger, thirst, temperature, and the endocrine system.',
+  'The <b>amygdala</b> processes fear and aggression; the <b>hippocampus</b> forms new explicit memories.',
+  'Lobes: <b>frontal</b> (judgment, planning, motor cortex, Broca\u2019s area), <b>parietal</b> (touch, somatosensory cortex), <b>temporal</b> (hearing, Wernicke\u2019s area), <b>occipital</b> (vision).',
+  '<b>Broca\u2019s aphasia</b> impairs producing speech; <b>Wernicke\u2019s aphasia</b> impairs understanding it.'
+ ]},
+ {h:'Plasticity, sleep, and drugs', points:[
+  '<b>Plasticity</b> is the brain\u2019s ability to reorganize, strongest in childhood.',
+  'Cutting the <b>corpus callosum</b> produces split-brain patients who can name objects shown to the right visual field but not the left.',
+  'Sleep cycles through NREM stages into <b>REM</b>, where the brain is active, dreams are vivid, and muscles are paralyzed.',
+  '<b>Depressants</b> (alcohol) slow neural activity; <b>stimulants</b> (cocaine, caffeine) speed it; <b>hallucinogens</b> (LSD) distort perception; <b>opiates</b> mimic endorphins.',
+  '<b>Tolerance</b> means needing more for the same effect; <b>withdrawal</b> is the discomfort of stopping.'
+ ]}
+],
+cards:[
+ ['Action potential','A brief electrical charge traveling down the axon; fires all-or-none once threshold is reached.'],
+ ['All-or-none principle','A neuron either fires at full strength or not at all; stimulus intensity changes firing rate, not size.'],
+ ['Myelin sheath','Fatty insulation around the axon that speeds neural transmission.'],
+ ['Reuptake','Reabsorption of excess neurotransmitter by the sending neuron.'],
+ ['Agonist vs. antagonist','An agonist mimics or increases a neurotransmitter\u2019s effect; an antagonist blocks it.'],
+ ['Dopamine','Involved in reward and movement; excess linked to schizophrenia, deficiency to Parkinson\u2019s.'],
+ ['GABA','The brain\u2019s primary inhibitory neurotransmitter.'],
+ ['Sympathetic nervous system','Arouses the body for fight-or-flight: raises heart rate, dilates pupils, slows digestion.'],
+ ['Hippocampus','Forms new explicit (conscious) memories; damage causes anterograde amnesia.'],
+ ['Amygdala','Processes fear, aggression, and emotional salience.'],
+ ['Hypothalamus','Regulates hunger, thirst, body temperature, and controls the pituitary gland.'],
+ ['Thalamus','Sensory relay station routing all senses except smell to the cortex.'],
+ ['Broca\u2019s area','Frontal lobe region for speech production; damage causes halting, effortful speech.'],
+ ['Wernicke\u2019s area','Temporal lobe region for language comprehension; damage causes fluent but meaningless speech.'],
+ ['Plasticity','The brain\u2019s ability to reorganize and form new connections after damage or experience.'],
+ ['REM sleep','Stage with vivid dreaming, rapid eye movement, active brain waves, and paralyzed muscles.']
+],
+quiz:[
+ {q:'A person can no longer form new memories of daily events after brain damage, but old memories are intact. Which structure was most likely damaged?',
+  c:['Amygdala','Hippocampus','Cerebellum','Thalamus'],
+  a:1, why:'The hippocampus consolidates new explicit memories. Damage produces anterograde amnesia while previously stored memories remain.'},
+ {q:'A stronger stimulus applied to a neuron will:',
+  c:['Produce a larger action potential','Cause the neuron to fire more frequently','Lower the threshold permanently','Reverse the direction of the impulse'],
+  a:1, why:'Action potentials are all-or-none, so intensity is encoded by firing rate and by how many neurons fire.'},
+ {q:'A drug blocks receptor sites so a neurotransmitter cannot bind. This drug is a(n):',
+  c:['Agonist','Antagonist','Reuptake inhibitor','Endorphin'],
+  a:1, why:'Antagonists block or reduce a neurotransmitter\u2019s action; agonists mimic or amplify it.'},
+ {q:'Which best describes the parasympathetic nervous system?',
+  c:['Prepares the body for emergency action','Returns the body to a calm, resting state','Controls voluntary skeletal muscles','Carries sensory input to the brain'],
+  a:1, why:'The parasympathetic branch conserves energy: it slows heart rate, constricts pupils, and resumes digestion.'},
+ {q:'A split-brain patient sees the word "ring" flashed to the left visual field. She will most likely:',
+  c:['Say "ring" aloud immediately','Be unable to say the word but select a ring with her left hand','Report seeing nothing at all and choose nothing','Write the word with her right hand'],
+  a:1, why:'The left visual field projects to the right hemisphere, which controls the left hand but usually lacks speech. She can act on the word without naming it.'},
+ {q:'Low levels of which neurotransmitter are most associated with depression?',
+  c:['Acetylcholine','Serotonin','Glutamate','Dopamine'],
+  a:1, why:'Serotonin regulates mood, sleep, and appetite; SSRIs treat depression by blocking its reuptake.'},
+ {q:'During REM sleep:',
+  c:['Brain waves slow and muscles are active','Brain waves resemble waking while voluntary muscles are paralyzed','The body produces the most growth hormone','Sleepwalking is most likely to occur'],
+  a:1, why:'REM is called paradoxical sleep: an active brain in an immobilized body. Sleepwalking occurs in deep NREM sleep instead.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Sensation and Perception',
+guide:[
+ {h:'Thresholds and adaptation', points:[
+  '<b>Sensation</b> is detecting raw stimuli; <b>perception</b> is organizing and interpreting them.',
+  '<b>Transduction</b> converts physical energy into neural signals.',
+  '<b>Absolute threshold</b> is the minimum stimulation detected 50% of the time.',
+  '<b>Difference threshold</b> (JND) is the smallest detectable change; <b>Weber\u2019s law</b> says it is a constant proportion, not a fixed amount.',
+  '<b>Sensory adaptation</b> is diminished sensitivity to an unchanging stimulus — you stop noticing your socks.',
+  '<b>Signal detection theory</b> says detection depends on expectations, motivation, and fatigue, not just stimulus strength.'
+ ]},
+ {h:'Vision', points:[
+  'Light passes the cornea and lens, which <b>accommodates</b> by changing shape, and lands on the retina.',
+  '<b>Rods</b> handle black-and-white and peripheral vision in dim light; <b>cones</b> cluster in the fovea for color and detail.',
+  '<b>Trichromatic theory</b> explains the retina: three cone types for red, green, and blue.',
+  '<b>Opponent-process theory</b> explains afterimages: cells fire in opposing pairs (red-green, blue-yellow, black-white).',
+  '<b>Feature detectors</b> in the visual cortex respond to edges, angles, and movement.',
+  '<b>Parallel processing</b> handles color, motion, form, and depth simultaneously.'
+ ]},
+ {h:'Hearing and other senses', points:[
+  'Sound waves move the eardrum, then the hammer-anvil-stirrup, then the cochlea, where hair cells transduce.',
+  '<b>Place theory</b> explains high pitches by where on the basilar membrane hair cells vibrate; <b>frequency theory</b> explains low pitches by how fast the whole membrane fires.',
+  '<b>Conduction deafness</b> is mechanical damage; <b>sensorineural deafness</b> is hair cell or nerve damage, treatable by cochlear implant.',
+  '<b>Kinesthesis</b> senses body part position; the <b>vestibular sense</b> in the inner ear tracks balance.',
+  '<b>Gate-control theory</b> holds that the spinal cord contains a gate that can block or allow pain signals.'
+ ]},
+ {h:'Perceptual organization', points:[
+  '<b>Bottom-up</b> processing builds from sensory data; <b>top-down</b> uses expectations and schemas.',
+  '<b>Gestalt principles</b>: figure-ground, proximity, similarity, closure, continuity.',
+  'Binocular depth cues: <b>retinal disparity</b> and <b>convergence</b>. Monocular cues: relative size, interposition, linear perspective, texture gradient, relative height.',
+  '<b>Perceptual constancy</b> keeps size, shape, and color stable despite changing images on the retina.',
+  '<b>Perceptual set</b> is a mental predisposition to perceive one thing and not another.',
+  '<b>Inattentional blindness</b> means failing to see a visible object when attention is elsewhere.'
+ ]}
+],
+cards:[
+ ['Transduction','Converting physical stimulus energy into neural impulses the brain can read.'],
+ ['Absolute threshold','The minimum stimulation needed to detect a stimulus 50% of the time.'],
+ ['Weber\u2019s law','Two stimuli must differ by a constant proportion, not a constant amount, to be perceived as different.'],
+ ['Sensory adaptation','Reduced sensitivity to a constant, unchanging stimulus.'],
+ ['Signal detection theory','Detection depends on the stimulus plus the observer\u2019s experience, expectations, and alertness.'],
+ ['Rods vs. cones','Rods: dim light, peripheral, black-and-white. Cones: bright light, fovea, color and detail.'],
+ ['Trichromatic theory','The retina has three color receptors — red, green, blue — that combine to make all colors.'],
+ ['Opponent-process theory','Color is processed in opposing pairs, explaining afterimages.'],
+ ['Feature detectors','Visual cortex neurons that respond to specific edges, lines, angles, or movements.'],
+ ['Place theory','Pitch is determined by which part of the basilar membrane is stimulated; explains high tones.'],
+ ['Gate-control theory','The spinal cord has a neural gate that can block or allow pain signals to reach the brain.'],
+ ['Retinal disparity','A binocular cue: the greater the difference between the two eyes\u2019 images, the closer the object.'],
+ ['Perceptual constancy','Perceiving objects as unchanging in size, shape, and color despite changing retinal images.'],
+ ['Perceptual set','A mental predisposition that shapes what you perceive.'],
+ ['Inattentional blindness','Failing to notice a fully visible object because attention is directed elsewhere.']
+],
+quiz:[
+ {q:'You stop noticing the hum of an air conditioner after a few minutes. This illustrates:',
+  c:['Sensory adaptation','Inattentional blindness','Weber\u2019s law','Sensory interaction'],
+  a:0, why:'Sensory adaptation is reduced responsiveness to a constant stimulus, which frees attention for changes in the environment.'},
+ {q:'Staring at a green square then looking at white paper produces a red afterimage. This supports:',
+  c:['Trichromatic theory','Opponent-process theory','Place theory','Gate-control theory'],
+  a:1, why:'Opposing pairs fatigue and rebound: tiring the green response leaves the red response dominant.'},
+ {q:'Which is a monocular depth cue?',
+  c:['Convergence','Retinal disparity','Linear perspective','Binaural timing'],
+  a:2, why:'Linear perspective works with one eye. Convergence and retinal disparity both require two eyes.'},
+ {q:'Reading a smudged word correctly because of the surrounding sentence is an example of:',
+  c:['Bottom-up processing','Top-down processing','Transduction','Sensory adaptation'],
+  a:1, why:'Top-down processing uses context and expectations to interpret incomplete sensory data.'},
+ {q:'Weber\u2019s law predicts that if you can just detect a 2-oz difference in a 20-oz weight, then for a 40-oz weight you would need a difference of about:',
+  c:['2 oz','3 oz','4 oz','8 oz'],
+  a:2, why:'The JND is a constant proportion — here 10% — so 40 oz requires roughly a 4-oz difference.'},
+ {q:'Damage to hair cells in the cochlea produces:',
+  c:['Conduction deafness','Sensorineural deafness','Perceptual set','Accommodation failure'],
+  a:1, why:'Sensorineural (nerve) deafness comes from hair cell or auditory nerve damage and can sometimes be helped by a cochlear implant.'},
+ {q:'The Gestalt principle of closure explains why we:',
+  c:['Group nearby items together','Fill in gaps to perceive a complete figure','See objects as unchanging in size','Perceive a figure against a background'],
+  a:1, why:'Closure is the tendency to complete incomplete figures into whole, meaningful forms.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Learning',
+guide:[
+ {h:'Classical conditioning', points:[
+  'Pavlov paired a neutral stimulus with an <b>unconditioned stimulus</b> (food) that produced an <b>unconditioned response</b> (salivation).',
+  'After pairing, the neutral stimulus becomes a <b>conditioned stimulus</b> producing a <b>conditioned response</b>.',
+  '<b>Acquisition</b> works best when the CS comes just before the UCS.',
+  '<b>Extinction</b> occurs when the CS appears without the UCS; <b>spontaneous recovery</b> is the reappearance after a pause.',
+  '<b>Generalization</b> is responding to similar stimuli; <b>discrimination</b> is learning to respond only to the CS.',
+  'Watson\u2019s Little Albert study conditioned fear of a white rat that generalized to furry objects.'
+ ]},
+ {h:'Operant conditioning', points:[
+  'Thorndike\u2019s <b>law of effect</b>: behaviors followed by good outcomes are repeated.',
+  '<b>Positive</b> means adding a stimulus, <b>negative</b> means removing one. <b>Reinforcement</b> increases behavior, <b>punishment</b> decreases it.',
+  'Negative reinforcement is not punishment — taking away something unpleasant strengthens the behavior.',
+  '<b>Primary reinforcers</b> satisfy biological needs; <b>secondary reinforcers</b> like money gain value by association.',
+  '<b>Shaping</b> reinforces successive approximations toward a target behavior.'
+ ]},
+ {h:'Reinforcement schedules', points:[
+  '<b>Fixed-ratio</b>: reward after a set number of responses — high rate with a brief post-reward pause.',
+  '<b>Variable-ratio</b>: reward after an unpredictable number — highest, steadiest rate and hardest to extinguish (slot machines).',
+  '<b>Fixed-interval</b>: reward for the first response after a set time — a scalloped pattern of activity near the deadline.',
+  '<b>Variable-interval</b>: reward after unpredictable time — slow, steady responding.',
+  '<b>Continuous</b> reinforcement produces fastest acquisition; <b>partial</b> reinforcement produces greatest resistance to extinction.'
+ ]},
+ {h:'Cognitive and observational learning', points:[
+  'Tolman showed <b>latent learning</b>: rats formed <b>cognitive maps</b> without reinforcement, revealed only when rewarded.',
+  '<b>Overjustification effect</b>: rewarding an already enjoyable activity can reduce intrinsic motivation.',
+  'Bandura\u2019s Bobo doll study demonstrated <b>observational learning</b> through modeling.',
+  '<b>Mirror neurons</b> are proposed to fire both when acting and when watching another act.',
+  'Seligman\u2019s <b>learned helplessness</b>: after inescapable aversive events, organisms stop trying even when escape is possible.',
+  '<b>Taste aversion</b> forms after a single pairing with long delay, showing <b>biological preparedness</b> limits conditioning.'
+ ]}
+],
+cards:[
+ ['Unconditioned stimulus (UCS)','A stimulus that naturally triggers a response without learning.'],
+ ['Conditioned stimulus (CS)','A previously neutral stimulus that triggers a response after pairing with the UCS.'],
+ ['Spontaneous recovery','Reappearance of an extinguished conditioned response after a rest period.'],
+ ['Stimulus generalization','Responding to stimuli similar to the conditioned stimulus.'],
+ ['Law of effect','Behaviors followed by favorable consequences become more likely to recur.'],
+ ['Negative reinforcement','Removing an unpleasant stimulus to increase a behavior — not punishment.'],
+ ['Positive punishment','Adding an unpleasant consequence to decrease a behavior.'],
+ ['Shaping','Reinforcing successive approximations toward a desired behavior.'],
+ ['Variable-ratio schedule','Reinforcement after an unpredictable number of responses; produces high, steady, extinction-resistant responding.'],
+ ['Fixed-interval schedule','Reinforcement for the first response after a set time; produces a scalloped response pattern.'],
+ ['Partial reinforcement effect','Behavior reinforced intermittently resists extinction longer than continuously reinforced behavior.'],
+ ['Latent learning','Learning that occurs without reinforcement and is not shown until there is a reason to demonstrate it.'],
+ ['Observational learning','Learning by watching and imitating a model, demonstrated by Bandura\u2019s Bobo doll study.'],
+ ['Learned helplessness','Passive resignation after repeated inescapable aversive events.'],
+ ['Taste aversion','A conditioned avoidance of a food learned in one trial even with a long delay; evidence of biological preparedness.'],
+ ['Overjustification effect','External rewards for an intrinsically enjoyable task can undermine intrinsic motivation.']
+],
+quiz:[
+ {q:'A child takes out the trash to stop his parents\u2019 nagging. The nagging stopping is:',
+  c:['Positive reinforcement','Negative reinforcement','Positive punishment','Negative punishment'],
+  a:1, why:'Something unpleasant is removed and the behavior increases — that is negative reinforcement, not punishment.'},
+ {q:'Which schedule produces the highest and most extinction-resistant rate of responding?',
+  c:['Fixed-ratio','Variable-ratio','Fixed-interval','Variable-interval'],
+  a:1, why:'Unpredictable reward after an unpredictable number of responses keeps responding constant — the slot machine effect.'},
+ {q:'A dog salivates at the sound of a can opener. The can opener sound is the:',
+  c:['Unconditioned stimulus','Conditioned stimulus','Unconditioned response','Neutral stimulus'],
+  a:1, why:'The sound was neutral until paired with food; after pairing it triggers salivation, making it the CS.'},
+ {q:'A student who was paid to read for pleasure now reads less when the payments stop. This best illustrates:',
+  c:['Extinction','The overjustification effect','Learned helplessness','Spontaneous recovery'],
+  a:1, why:'External rewards replaced intrinsic interest, so removing the reward removes the motivation.'},
+ {q:'Getting sick after eating shrimp once and avoiding it for years illustrates:',
+  c:['Operant conditioning','Taste aversion and biological preparedness','Observational learning','Latent learning'],
+  a:1, why:'One-trial learning across a long delay shows some associations are biologically prepared because they aided survival.'},
+ {q:'Rats that explored a maze without reward later ran it quickly once food appeared. Tolman called this:',
+  c:['Shaping','Latent learning','Generalization','Partial reinforcement'],
+  a:1, why:'The learning was already there as a cognitive map; reinforcement only gave a reason to display it.'},
+ {q:'Bandura\u2019s Bobo doll experiment demonstrated that:',
+  c:['Punishment is more effective than reinforcement','Children imitate aggressive behavior they observe in models','Aggression is entirely genetic','Conditioning requires biological preparedness'],
+  a:1, why:'Children who watched an adult act aggressively toward the doll reproduced those specific behaviors.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Cognition and Memory',
+guide:[
+ {h:'Memory models and encoding', points:[
+  'The three-stage model: <b>sensory memory</b> → <b>short-term/working memory</b> → <b>long-term memory</b>.',
+  'Sensory memory holds iconic images about 0.3 seconds and echoic sounds 3–4 seconds.',
+  'Working memory holds roughly 7±2 items for about 20 seconds without rehearsal.',
+  '<b>Chunking</b> groups items into meaningful units; <b>mnemonics</b> add structure and imagery.',
+  '<b>Automatic processing</b> handles space, time, and frequency; <b>effortful processing</b> requires attention.',
+  'The <b>spacing effect</b>: distributed practice beats cramming for long-term retention.'
+ ]},
+ {h:'Storage and retrieval', points:[
+  '<b>Explicit (declarative)</b> memory covers facts and events, handled by the hippocampus.',
+  '<b>Implicit (procedural)</b> memory covers skills and conditioned responses, handled by the cerebellum and basal ganglia.',
+  '<b>Recall</b> retrieves without cues; <b>recognition</b> only requires identifying — which is why multiple choice feels easier.',
+  '<b>Priming</b>, <b>context-dependent</b>, and <b>state-dependent</b> memory all show that retrieval cues matter.',
+  'The <b>serial position effect</b> produces better memory for the first (primacy) and last (recency) items in a list.',
+  '<b>Levels of processing</b>: semantic encoding beats shallow visual or acoustic encoding.'
+ ]},
+ {h:'Forgetting and memory errors', points:[
+  'Ebbinghaus\u2019s <b>forgetting curve</b> drops sharply at first and then levels off.',
+  '<b>Proactive interference</b>: old learning disrupts new. <b>Retroactive interference</b>: new learning disrupts old.',
+  '<b>Anterograde amnesia</b> blocks new memories; <b>retrograde amnesia</b> erases old ones.',
+  'Loftus\u2019s <b>misinformation effect</b> shows that post-event information reshapes eyewitness memory.',
+  '<b>Source amnesia</b> is remembering information but misattributing where it came from.'
+ ]},
+ {h:'Thinking and problem solving', points:[
+  '<b>Algorithms</b> guarantee a solution but are slow; <b>heuristics</b> are fast mental shortcuts that can misfire.',
+  '<b>Availability heuristic</b>: judging likelihood by how easily examples come to mind — why people fear plane crashes more than car crashes.',
+  '<b>Representativeness heuristic</b>: judging by how well something matches a prototype, ignoring base rates.',
+  '<b>Confirmation bias</b> seeks evidence that supports existing beliefs; <b>belief perseverance</b> clings to them after they are discredited.',
+  '<b>Functional fixedness</b> limits objects to their usual uses; <b>mental set</b> repeats strategies that worked before.',
+  '<b>Framing</b> changes decisions by changing wording: "90% survival" reads better than "10% mortality."'
+ ]}
+],
+cards:[
+ ['Working memory','Short-term store that actively manipulates about 7±2 items for roughly 20 seconds.'],
+ ['Chunking','Organizing information into familiar, meaningful units to expand short-term capacity.'],
+ ['Spacing effect','Distributed practice over time produces better long-term retention than massed cramming.'],
+ ['Explicit vs. implicit memory','Explicit = conscious facts and events (hippocampus); implicit = skills and conditioning (cerebellum).'],
+ ['Serial position effect','Better recall for items at the beginning (primacy) and end (recency) of a list.'],
+ ['Context-dependent memory','Retrieval improves when the environment matches the one where encoding occurred.'],
+ ['State-dependent memory','Retrieval improves when your internal state matches the one at encoding.'],
+ ['Proactive interference','Older learning disrupts recall of newer information.'],
+ ['Retroactive interference','Newer learning disrupts recall of older information.'],
+ ['Misinformation effect','Exposure to misleading information after an event alters the memory of that event.'],
+ ['Anterograde amnesia','Inability to form new long-term memories after brain injury.'],
+ ['Availability heuristic','Estimating likelihood by how easily examples come to mind.'],
+ ['Representativeness heuristic','Judging likelihood by resemblance to a prototype, often ignoring base rates.'],
+ ['Functional fixedness','Inability to see an object as having a use beyond its typical one.'],
+ ['Framing','How an issue is worded changes the judgment or decision people make.'],
+ ['Belief perseverance','Holding onto a belief even after the evidence for it has been discredited.']
+],
+quiz:[
+ {q:'A student remembers the first and last vocabulary words on a list best. This is:',
+  c:['The spacing effect','The serial position effect','Proactive interference','Chunking'],
+  a:1, why:'Primacy reflects extra rehearsal into long-term memory; recency reflects items still in short-term memory.'},
+ {q:'After learning Spanish, a student struggles to recall French learned earlier. This is:',
+  c:['Proactive interference','Retroactive interference','Source amnesia','Encoding failure'],
+  a:1, why:'New learning (Spanish) works backward to disrupt older learning (French) — retroactive.'},
+ {q:'People overestimate deaths from shark attacks because such stories are memorable. This is:',
+  c:['Representativeness heuristic','Availability heuristic','Belief perseverance','Framing'],
+  a:1, why:'Vivid, easily recalled examples inflate perceived frequency regardless of actual base rates.'},
+ {q:'Riding a bike after years without practice relies on:',
+  c:['Explicit memory','Implicit procedural memory','Echoic memory','Working memory'],
+  a:1, why:'Skill memory is implicit and stored largely in the cerebellum and basal ganglia, so it survives hippocampal damage.'},
+ {q:'Being unable to use a pair of pliers as a paperweight best illustrates:',
+  c:['Mental set','Functional fixedness','Confirmation bias','Framing'],
+  a:1, why:'Functional fixedness is the specific inability to see alternative uses for a familiar object.'},
+ {q:'An eyewitness who is asked how fast cars were going when they "smashed" reports higher speeds than one asked when they "hit." This demonstrates:',
+  c:['Source amnesia','The misinformation effect','Retroactive interference','State-dependent memory'],
+  a:1, why:'Loftus showed that wording introduced after the event alters the reconstructed memory itself.'},
+ {q:'A method that guarantees a correct answer but may be slow is a(n):',
+  c:['Heuristic','Algorithm','Prototype','Mental set'],
+  a:1, why:'Algorithms exhaust all possibilities and are guaranteed but inefficient; heuristics trade accuracy for speed.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Social Psychology',
+guide:[
+ {h:'Attribution and attitudes', points:[
+  '<b>Fundamental attribution error</b>: overestimating personality and underestimating the situation when explaining others\u2019 behavior.',
+  '<b>Actor-observer bias</b>: we explain our own behavior situationally but others\u2019 dispositionally.',
+  '<b>Self-serving bias</b>: crediting success to ourselves and blaming failure on circumstances.',
+  '<b>Cognitive dissonance</b> (Festinger): discomfort from conflicting attitudes and actions pushes us to change attitudes to match behavior.',
+  '<b>Foot-in-the-door</b> starts with a small request; <b>door-in-the-face</b> starts with an extreme one.'
+ ]},
+ {h:'Conformity and obedience', points:[
+  'Asch\u2019s line study: about a third of responses conformed to an obviously wrong majority.',
+  '<b>Normative</b> social influence is conforming to be liked; <b>informational</b> is conforming because others seem right.',
+  'Milgram\u2019s obedience study: 65% delivered the maximum shock when an authority insisted.',
+  'Obedience rose with a legitimate, close authority and fell when the victim was near or others rebelled.',
+  'Zimbardo\u2019s prison study suggested assigned roles shape behavior powerfully — though its methods are now heavily criticized.'
+ ]},
+ {h:'Group behavior', points:[
+  '<b>Social facilitation</b>: presence of others improves performance on easy or well-learned tasks and hurts on hard ones.',
+  '<b>Social loafing</b>: individuals exert less effort in a group when contributions are pooled.',
+  '<b>Deindividuation</b>: anonymity in a group loosens self-restraint.',
+  '<b>Group polarization</b>: discussion among like-minded people strengthens their shared position.',
+  '<b>Groupthink</b>: the desire for harmony overrides realistic appraisal of alternatives.',
+  '<b>Bystander effect</b>: the more witnesses present, the less likely any one person helps, due to diffusion of responsibility.'
+ ]},
+ {h:'Prejudice, aggression, and attraction', points:[
+  '<b>Ingroup bias</b> favors one\u2019s own group; <b>outgroup homogeneity</b> sees others as all alike.',
+  '<b>Scapegoat theory</b>: frustration finds a target for blame.',
+  '<b>Just-world hypothesis</b>: believing people get what they deserve.',
+  '<b>Stereotype threat</b>: anxiety about confirming a negative stereotype depresses performance.',
+  'Attraction rises with <b>proximity</b>, the <b>mere exposure effect</b>, physical attractiveness, and similarity.',
+  'Sherif\u2019s Robbers Cave study reduced conflict through <b>superordinate goals</b> requiring cooperation.'
+ ]}
+],
+cards:[
+ ['Fundamental attribution error','Overweighting disposition and underweighting situation when explaining others\u2019 behavior.'],
+ ['Self-serving bias','Attributing successes to ourselves and failures to external circumstances.'],
+ ['Cognitive dissonance','Tension from mismatched attitudes and actions, usually resolved by changing the attitude.'],
+ ['Normative social influence','Conforming to gain approval or avoid rejection.'],
+ ['Informational social influence','Conforming because others are believed to have accurate information.'],
+ ['Foot-in-the-door phenomenon','Agreeing to a small request increases later compliance with a larger one.'],
+ ['Social facilitation','Improved performance on simple or well-practiced tasks in the presence of others.'],
+ ['Social loafing','Reduced individual effort when working in a group toward a pooled result.'],
+ ['Deindividuation','Loss of self-awareness and restraint in group situations that provide anonymity.'],
+ ['Group polarization','Discussion among like-minded people intensifies their shared attitudes.'],
+ ['Groupthink','Poor decision making caused by prioritizing group harmony over critical evaluation.'],
+ ['Bystander effect','The presence of other witnesses reduces any individual\u2019s likelihood of helping.'],
+ ['Diffusion of responsibility','Each person feels less personally accountable when others are present.'],
+ ['Mere exposure effect','Repeated exposure to a stimulus increases liking for it.'],
+ ['Superordinate goals','Shared goals requiring cooperation, which reduce intergroup conflict.'],
+ ['Stereotype threat','Underperformance caused by anxiety about confirming a negative stereotype about one\u2019s group.']
+],
+quiz:[
+ {q:'A driver cuts you off and you assume he is rude, ignoring that he might be rushing to a hospital. This is:',
+  c:['Self-serving bias','Fundamental attribution error','Cognitive dissonance','Groupthink'],
+  a:1, why:'We default to dispositional explanations for others while discounting situational pressures.'},
+ {q:'In Milgram\u2019s study, obedience DECREASED most when:',
+  c:['The experimenter wore a lab coat','The learner was in the same room as the teacher','The study was run at Yale','The shocks increased gradually'],
+  a:1, why:'Physical and emotional closeness to the victim, plus distance from authority, sharply reduced obedience.'},
+ {q:'A student runs faster in a race than alone in practice. This illustrates:',
+  c:['Social loafing','Social facilitation','Deindividuation','Group polarization'],
+  a:1, why:'Arousal from an audience improves performance on well-learned tasks like running.'},
+ {q:'Someone collapses on a crowded street and nobody helps. The best explanation is:',
+  c:['Deindividuation','Diffusion of responsibility','Groupthink','Informational influence only'],
+  a:1, why:'With many witnesses, each assumes someone else will act, so responsibility spreads thin.'},
+ {q:'A person who paid a lot for a mediocre concert insists it was excellent. This best illustrates:',
+  c:['Cognitive dissonance reduction','The mere exposure effect','Stereotype threat','Ingroup bias'],
+  a:0, why:'The mismatch between cost and quality creates discomfort, resolved by upgrading the evaluation of the concert.'},
+ {q:'Asch\u2019s conformity experiments primarily demonstrated:',
+  c:['Obedience to authority figures','Conformity to an incorrect group majority','The bystander effect','Social loafing'],
+  a:1, why:'Participants gave answers they knew were wrong to match the group — largely normative influence.'},
+ {q:'Sherif\u2019s Robbers Cave study showed that hostility between groups was best reduced by:',
+  c:['Simple contact between the groups','Competition for a shared prize','Superordinate goals requiring cooperation','Assigning a new leader'],
+  a:2, why:'Only shared goals that neither group could achieve alone broke down the intergroup hostility.'}
+]
+}
+]});
+
+/* ------------------------------------------------ AP US HISTORY */
+COURSES.push({
+id:'apush', name:'AP US History', short:'APUSH', color:'#B0542F', exam:'AP',
+blurb:'Periods 3–7: revolution, expansion, civil war, industry, and world power.',
+units:[
+{
+id:'p3', title:'Period 3 · 1754–1800',
+guide:[
+ {h:'War and imperial crisis', points:[
+  'The <b>French and Indian War</b> (1754–63) removed France from North America and left Britain deep in debt.',
+  'The <b>Proclamation of 1763</b> barred settlement west of the Appalachians, angering colonists.',
+  'Britain ended <b>salutary neglect</b> with the Sugar Act, Stamp Act, and Townshend Acts, sparking "no taxation without representation."',
+  'The <b>Coercive (Intolerable) Acts</b> answered the Boston Tea Party and drove twelve colonies to the First Continental Congress.',
+  '<b>Common Sense</b> by Thomas Paine turned resistance into a case for independence in plain language.'
+ ]},
+ {h:'Revolution and the new republic', points:[
+  'The Declaration of Independence applied Enlightenment ideas of natural rights and consent of the governed.',
+  '<b>Saratoga</b> (1777) brought the French alliance; <b>Yorktown</b> (1781) ended major fighting.',
+  'The <b>Articles of Confederation</b> gave no power to tax or regulate trade; its success was the Northwest Ordinance.',
+  '<b>Shays\u2019 Rebellion</b> exposed that weakness and pushed leaders toward a constitutional convention.',
+  'Compromises at the convention: the <b>Great Compromise</b> on representation and the <b>Three-Fifths Compromise</b> on counting enslaved people.'
+ ]},
+ {h:'Ratification and the first parties', points:[
+  '<b>Federalists</b> favored a strong central government; <b>Anti-Federalists</b> demanded a bill of rights.',
+  '<b>The Federalist Papers</b> defended the Constitution; Federalist 10 argued a large republic controls faction.',
+  'Hamilton\u2019s financial plan: assume state debts, create a national bank, and levy tariffs — read broadly under the "necessary and proper" clause.',
+  'Jefferson\u2019s strict construction opposed the bank; this split produced the Federalist and Democratic-Republican parties.',
+  'Washington\u2019s Farewell Address warned against permanent alliances and political factions.'
+ ]},
+ {h:'Society and unrest', points:[
+  '<b>Republican motherhood</b> gave women a civic role: raising virtuous citizens, which expanded female education.',
+  'Northern states began gradual emancipation while slavery hardened in the South.',
+  'The <b>Whiskey Rebellion</b> (1794) was suppressed, proving the new government could enforce federal law.',
+  'The <b>Alien and Sedition Acts</b> (1798) restricted immigrants and criticism of the government.',
+  'The <b>Virginia and Kentucky Resolutions</b> answered with the theory of state nullification.'
+ ]}
+],
+cards:[
+ ['Proclamation of 1763','British ban on colonial settlement west of the Appalachians after the French and Indian War.'],
+ ['Salutary neglect','Long British practice of loosely enforcing trade laws in the colonies; ended after 1763.'],
+ ['Stamp Act (1765)','Direct tax on printed materials that triggered organized colonial boycotts and the Stamp Act Congress.'],
+ ['Common Sense','Thomas Paine\u2019s 1776 pamphlet arguing in plain language for full independence from monarchy.'],
+ ['Articles of Confederation','First national government; no power to tax or regulate trade, and no executive or judiciary.'],
+ ['Northwest Ordinance (1787)','Set orderly process for new states from western territory and banned slavery north of the Ohio River.'],
+ ['Shays\u2019 Rebellion','1786–87 Massachusetts farmer uprising that exposed the weakness of the Articles.'],
+ ['Great Compromise','Created a bicameral Congress: population-based House and equal-state Senate.'],
+ ['Three-Fifths Compromise','Counted three of every five enslaved people for representation and taxation.'],
+ ['Federalists vs. Anti-Federalists','Federalists wanted a strong central government; Anti-Federalists feared tyranny and demanded a bill of rights.'],
+ ['Hamilton\u2019s financial plan','Assumption of state debts, a national bank, and protective tariffs, justified by loose construction.'],
+ ['Whiskey Rebellion','1794 tax protest crushed by Washington, demonstrating federal authority.'],
+ ['Alien and Sedition Acts','1798 laws restricting immigrants and punishing criticism of the federal government.'],
+ ['Virginia and Kentucky Resolutions','Jefferson and Madison\u2019s argument that states could nullify unconstitutional federal laws.'],
+ ['Republican motherhood','The idea that women should raise children in civic virtue, which justified expanded female education.']
+],
+quiz:[
+ {q:'The most immediate cause of Britain\u2019s new colonial taxes after 1763 was:',
+  c:['Fear of a French invasion','War debt from the French and Indian War','Demands from colonial assemblies','Loss of the West Indies trade'],
+  a:1, why:'Britain sought colonial revenue to pay down the enormous debt from the Seven Years\u2019 War, ending salutary neglect.'},
+ {q:'Shays\u2019 Rebellion mattered mainly because it:',
+  c:['Ended slavery in Massachusetts','Convinced many leaders the Articles government was too weak','Started the Revolutionary War','Led to the Louisiana Purchase'],
+  a:1, why:'The national government could not raise troops to respond, which built momentum for the Constitutional Convention.'},
+ {q:'The Three-Fifths Compromise addressed disagreement over:',
+  c:['Tariff rates','How enslaved people would count toward representation and taxation','Whether to have a national bank','Presidential term length'],
+  a:1, why:'Southern states wanted enslaved people counted for representation; northern states objected. Three-fifths split the difference.'},
+ {q:'Hamilton justified the national bank using:',
+  c:['Strict construction of the Constitution','The necessary and proper clause','The Tenth Amendment','The commerce compromise'],
+  a:1, why:'Loose (broad) construction of the elastic clause allowed powers not explicitly listed but useful for enumerated ones.'},
+ {q:'The Virginia and Kentucky Resolutions advanced the idea that:',
+  c:['States could declare federal laws void','The Supreme Court reviews laws','Congress may tax exports','Political parties should be banned'],
+  a:0, why:'Written against the Alien and Sedition Acts, they introduced nullification — an argument later revived over the tariff and slavery.'},
+ {q:'Washington\u2019s Farewell Address warned primarily against:',
+  c:['Westward expansion','Permanent foreign alliances and political factions','A national bank','Judicial review'],
+  a:1, why:'He feared entangling alliances would drag the young nation into European wars and that parties would tear it apart internally.'}
+]
+},
+{
+id:'p4', title:'Period 4 · 1800–1848',
+guide:[
+ {h:'Jefferson through the Era of Good Feelings', points:[
+  'The <b>Louisiana Purchase</b> (1803) doubled US territory and strained Jefferson\u2019s own strict construction.',
+  '<b>Marbury v. Madison</b> (1803) established <b>judicial review</b>.',
+  'The <b>War of 1812</b> ended in stalemate but produced surging nationalism and killed the Federalist Party after the Hartford Convention.',
+  'The <b>American System</b> — tariffs, a national bank, internal improvements — was Henry Clay\u2019s plan for an integrated economy.',
+  'The <b>Monroe Doctrine</b> (1823) declared the Western Hemisphere closed to further European colonization.'
+ ]},
+ {h:'Markets, migration, and reform', points:[
+  'The <b>Market Revolution</b> linked regions through canals, steamboats, and railroads; the Erie Canal opened the Midwest.',
+  '<b>Lowell mills</b> employed young women in the first US factory system; the <b>cotton gin</b> made slavery vastly more profitable.',
+  'The <b>Second Great Awakening</b> fueled reform: temperance, education, prisons, and abolition.',
+  'The <b>Seneca Falls Convention</b> (1848) issued the Declaration of Sentiments demanding women\u2019s rights including suffrage.',
+  'Abolitionism split between Garrison\u2019s immediatism and Douglass\u2019s political engagement; the <b>cult of domesticity</b> defined middle-class womanhood.'
+ ]},
+ {h:'Jacksonian democracy', points:[
+  'Universal white male suffrage expanded the electorate and the spoils system rewarded loyalists.',
+  'Jackson vetoed the <b>Second Bank</b> recharter, calling it a monopoly serving the wealthy.',
+  'The <b>Nullification Crisis</b> (1832–33) pitted South Carolina against Jackson over the tariff; the Force Bill plus a compromise tariff ended it.',
+  'The <b>Indian Removal Act</b> (1830) led to the <b>Trail of Tears</b> despite <i>Worcester v. Georgia</i>.',
+  'Opposition to Jackson formed the <b>Whig Party</b>, favoring the American System and moral reform.'
+ ]},
+ {h:'Sectional differences emerge', points:[
+  'The North industrialized and urbanized with wage labor and immigration from Ireland and Germany.',
+  'The South became dependent on cotton and enslaved labor, exporting to Britain.',
+  'The West grew through migration and demanded internal improvements and cheap land.',
+  'The <b>Missouri Compromise</b> (1820) admitted Missouri as a slave state and Maine as free, banning slavery above 36°30\u2032.',
+  'Nativist reaction to Catholic immigration produced groups like the Know-Nothings.'
+ ]}
+],
+cards:[
+ ['Marbury v. Madison (1803)','Established judicial review — the Supreme Court can strike down unconstitutional laws.'],
+ ['Louisiana Purchase','1803 acquisition from France that doubled US territory and tested strict construction.'],
+ ['Hartford Convention','1814 meeting of New England Federalists opposing the War of 1812; it destroyed the party.'],
+ ['American System','Clay\u2019s program of protective tariffs, a national bank, and federally funded internal improvements.'],
+ ['Monroe Doctrine','1823 declaration that the Americas were closed to new European colonization.'],
+ ['Market Revolution','Transportation and communication advances that tied regional economies into a national market.'],
+ ['Cotton gin','Whitney\u2019s machine that made short-staple cotton profitable and expanded slavery westward.'],
+ ['Second Great Awakening','Religious revival emphasizing personal salvation that fueled temperance, abolition, and other reforms.'],
+ ['Seneca Falls Convention','1848 women\u2019s rights meeting that produced the Declaration of Sentiments.'],
+ ['Cult of domesticity','Ideal that middle-class women should focus on piety, purity, and the home.'],
+ ['Nullification Crisis','South Carolina\u2019s 1832 attempt to void the tariff, met by Jackson with the Force Bill and a compromise.'],
+ ['Indian Removal Act (1830)','Authorized relocation of southeastern tribes, resulting in the Trail of Tears.'],
+ ['Worcester v. Georgia','Ruled Georgia had no authority over Cherokee land; Jackson declined to enforce it.'],
+ ['Missouri Compromise (1820)','Missouri slave, Maine free, and slavery banned north of 36°30\u2032 in the Louisiana Territory.'],
+ ['Whig Party','Anti-Jackson party supporting the American System, moral reform, and congressional power.']
+],
+quiz:[
+ {q:'Marbury v. Madison is significant because it:',
+  c:['Expanded voting rights','Established judicial review','Upheld the national bank','Banned slavery in territories'],
+  a:1, why:'Chief Justice Marshall claimed the power to declare acts of Congress unconstitutional, defining the Court\u2019s role.'},
+ {q:'The Erie Canal most directly:',
+  c:['Ended the plantation economy','Connected midwestern farms to eastern markets','Started the Second Great Awakening','Caused the Nullification Crisis'],
+  a:1, why:'It slashed shipping costs between the Great Lakes and New York City, accelerating the Market Revolution.'},
+ {q:'The cotton gin\u2019s main effect on slavery was to:',
+  c:['Reduce the demand for enslaved labor','Greatly increase demand for enslaved labor in the Deep South','Have little economic effect','Encourage gradual emancipation'],
+  a:1, why:'Faster processing made cotton hugely profitable, driving the expansion of plantation slavery westward.'},
+ {q:'The Nullification Crisis centered on the question of whether:',
+  c:['A state could void a federal law','Congress could charter a bank','Territories could ban slavery','The president could remove judges'],
+  a:0, why:'South Carolina claimed the right to nullify the tariff; Jackson rejected it as treason while accepting a compromise rate.'},
+ {q:'The Missouri Compromise attempted to:',
+  c:['End the slave trade','Preserve the balance of free and slave states','Fund internal improvements','Remove Native Americans'],
+  a:1, why:'Pairing Missouri with Maine kept Senate parity, and the 36°30\u2032 line was meant to settle future territories.'},
+ {q:'The Declaration of Sentiments was modeled on the:',
+  c:['Constitution','Declaration of Independence','Federalist Papers','Monroe Doctrine'],
+  a:1, why:'Stanton deliberately echoed its structure, adding "and women" to the claim that all are created equal.'}
+]
+},
+{
+id:'p5', title:'Period 5 · 1844–1877',
+guide:[
+ {h:'Expansion and the crisis of the 1850s', points:[
+  '<b>Manifest Destiny</b> framed expansion as divinely ordained; annexation of Texas led to the Mexican-American War.',
+  'The <b>Wilmot Proviso</b> proposed banning slavery in land taken from Mexico and made slavery the central national issue.',
+  'The <b>Compromise of 1850</b> admitted California free, applied popular sovereignty to Utah and New Mexico, and passed a harsh <b>Fugitive Slave Act</b>.',
+  'The <b>Kansas-Nebraska Act</b> (1854) repealed the Missouri Compromise line and produced "Bleeding Kansas."',
+  '<b>Dred Scott</b> (1857) held that Black Americans were not citizens and that Congress could not bar slavery in territories.'
+ ]},
+ {h:'The Civil War', points:[
+  'Lincoln\u2019s 1860 win on a free-soil platform triggered secession beginning with South Carolina.',
+  'Union advantages: population, railroads, industry, and navy. Confederate strategy relied on defense and foreign recognition.',
+  'The <b>Emancipation Proclamation</b> (1863) freed enslaved people in rebelling states, redefined the war\u2019s purpose, and blocked British intervention.',
+  '<b>Gettysburg</b> and <b>Vicksburg</b> (1863) marked the turning point; Sherman\u2019s march applied total war.',
+  'Wartime measures expanded federal power: income tax, national banking, conscription, and suspension of habeas corpus.'
+ ]},
+ {h:'Reconstruction', points:[
+  'The <b>13th Amendment</b> abolished slavery; the <b>14th</b> guaranteed citizenship and equal protection; the <b>15th</b> protected voting regardless of race.',
+  '<b>Black Codes</b> restricted freedpeople\u2019s labor and movement, prompting Radical Reconstruction and military districts.',
+  'The <b>Freedmen\u2019s Bureau</b> provided food, schools, and labor contracts.',
+  'Black men voted and held office; Black churches, colleges, and communities were built.',
+  '<b>Sharecropping</b> replaced slavery with debt-based dependence for most freedpeople.'
+ ]},
+ {h:'The end of Reconstruction', points:[
+  'The <b>Ku Klux Klan</b> used terror to suppress Black political power.',
+  'Northern attention shifted to the economy after the Panic of 1873.',
+  'The Supreme Court narrowed the 14th Amendment in the Slaughterhouse Cases and <i>United States v. Cruikshank</i>.',
+  'The <b>Compromise of 1877</b> settled the disputed election and withdrew federal troops from the South.',
+  'Redeemer governments imposed segregation, poll taxes, and literacy tests over the following decades.'
+ ]}
+],
+cards:[
+ ['Manifest Destiny','Belief that the United States was destined to expand across the continent.'],
+ ['Wilmot Proviso','Failed 1846 proposal to ban slavery in any territory gained from Mexico.'],
+ ['Popular sovereignty','Letting territorial settlers vote on whether to permit slavery.'],
+ ['Compromise of 1850','California free, popular sovereignty in the Southwest, and a stricter Fugitive Slave Act.'],
+ ['Kansas-Nebraska Act','1854 law repealing the Missouri Compromise line and opening the territories to popular sovereignty.'],
+ ['Dred Scott v. Sandford','1857 ruling that Black Americans were not citizens and Congress could not ban slavery in territories.'],
+ ['Emancipation Proclamation','1863 order freeing enslaved people in rebelling states; made ending slavery a Union war aim.'],
+ ['Total war','Sherman\u2019s strategy of destroying the enemy\u2019s economic capacity and civilian will to fight.'],
+ ['13th Amendment','Abolished slavery throughout the United States.'],
+ ['14th Amendment','Granted citizenship and guaranteed due process and equal protection under the law.'],
+ ['15th Amendment','Prohibited denying the vote on the basis of race, color, or previous servitude.'],
+ ['Black Codes','Southern laws after the war restricting freedpeople\u2019s labor, movement, and rights.'],
+ ['Freedmen\u2019s Bureau','Federal agency providing food, education, and labor contracts to formerly enslaved people.'],
+ ['Sharecropping','Farming another\u2019s land for a share of the crop, trapping families in cyclical debt.'],
+ ['Compromise of 1877','Ended the disputed 1876 election and withdrew federal troops, ending Reconstruction.']
+],
+quiz:[
+ {q:'The Wilmot Proviso is important because it:',
+  c:['Ended the Mexican-American War','Made slavery in the new territories the central political issue','Admitted California as a free state','Repealed the Missouri Compromise'],
+  a:1, why:'Though never passed, it forced every politician to take a position on slavery\u2019s expansion, splitting parties along sectional lines.'},
+ {q:'The Emancipation Proclamation applied to:',
+  c:['All enslaved people in the United States','Enslaved people in states still in rebellion','Only border states','Only Washington, D.C.'],
+  a:1, why:'Lincoln issued it as a war measure, deliberately exempting loyal border states to keep them in the Union.'},
+ {q:'Which amendment is most often used today to apply the Bill of Rights to the states?',
+  c:['13th','14th','15th','16th'],
+  a:1, why:'The 14th Amendment\u2019s due process and equal protection clauses became the basis for incorporation.'},
+ {q:'Sharecropping developed primarily because:',
+  c:['Freedpeople preferred it to wage work','Landowners lacked cash and freedpeople lacked land','The federal government mandated it','Cotton prices were too high'],
+  a:1, why:'It matched land-rich, cash-poor planters with landless laborers, but crop liens produced permanent debt.'},
+ {q:'The Compromise of 1877 resulted in:',
+  c:['Passage of the 15th Amendment','Federal troops leaving the South','The impeachment of Andrew Johnson','Creation of the Freedmen\u2019s Bureau'],
+  a:1, why:'Hayes took the presidency and federal enforcement of Black civil rights in the South effectively ended.'},
+ {q:'"Bleeding Kansas" resulted most directly from:',
+  c:['The Dred Scott decision','The Kansas-Nebraska Act','The Compromise of 1850','The Fugitive Slave Act'],
+  a:1, why:'Popular sovereignty drew pro- and anti-slavery settlers into the territory, where the contest turned violent.'}
+]
+},
+{
+id:'p6', title:'Period 6 · 1865–1898',
+guide:[
+ {h:'Industry and business', points:[
+  'Railroads created national markets, standard time zones, and the first giant corporations.',
+  '<b>Vertical integration</b> (Carnegie) controlled every production stage; <b>horizontal integration</b> (Rockefeller) absorbed competitors.',
+  '<b>Social Darwinism</b> and the <b>Gospel of Wealth</b> justified concentrated fortunes.',
+  'The <b>Sherman Antitrust Act</b> (1890) was written vaguely and was first used mostly against unions.',
+  'Technology — Bessemer steel, electric light, the telephone — reorganized production and cities.'
+ ]},
+ {h:'Labor and cities', points:[
+  'The <b>Knights of Labor</b> welcomed all workers; the <b>AFL</b> under Gompers organized skilled workers for wages and hours.',
+  'The Great Railroad Strike (1877), Haymarket (1886), Homestead (1892), and Pullman (1894) were broken with state force.',
+  '<b>New immigrants</b> from southern and eastern Europe filled tenements and factories.',
+  '<b>Political machines</b> like Tammany Hall traded services for votes.',
+  '<b>Settlement houses</b> such as Hull House offered education and services to immigrant neighborhoods.'
+ ]},
+ {h:'The West', points:[
+  'The <b>Homestead Act</b> (1862) and transcontinental railroad accelerated settlement.',
+  'Buffalo destruction, reservation policy, and army campaigns broke Plains Indian resistance, ending at <b>Wounded Knee</b> (1890).',
+  'The <b>Dawes Act</b> (1887) divided tribal land into individual plots to force assimilation.',
+  'Mining, ranching, and commercial farming tied the West to eastern capital and railroad rates.',
+  'Turner\u2019s <b>frontier thesis</b> (1893) claimed the frontier shaped American democracy — and declared it closed.'
+ ]},
+ {h:'Politics and Populism', points:[
+  'Gilded Age parties were closely balanced and focused on tariffs, patronage, and currency.',
+  'The <b>Pendleton Act</b> (1883) created merit-based civil service exams.',
+  'Farmers faced falling prices, high freight rates, and debt, organizing through the Grange and Farmers\u2019 Alliances.',
+  'The <b>Populist Party</b> demanded free silver, a graduated income tax, direct election of senators, and government ownership of railroads.',
+  'Bryan\u2019s 1896 "Cross of Gold" campaign lost, and Populism faded into later Progressive reforms.'
+ ]}
+],
+cards:[
+ ['Vertical integration','Owning every stage of production from raw materials to distribution, as Carnegie did in steel.'],
+ ['Horizontal integration','Buying or merging with competitors to dominate a single industry, as Rockefeller did in oil.'],
+ ['Gospel of Wealth','Carnegie\u2019s argument that the rich should act as stewards who give away their fortunes.'],
+ ['Social Darwinism','Applying "survival of the fittest" to society to justify inequality and oppose regulation.'],
+ ['Sherman Antitrust Act (1890)','Vague ban on combinations restraining trade; initially used mainly against labor unions.'],
+ ['American Federation of Labor','Craft union under Samuel Gompers focused on wages, hours, and working conditions.'],
+ ['Haymarket affair','1886 Chicago bombing that turned public opinion against labor and hurt the Knights of Labor.'],
+ ['New immigrants','Post-1880 arrivals from southern and eastern Europe who faced strong nativist hostility.'],
+ ['Political machine','Urban organization trading jobs and services for votes, such as Tammany Hall.'],
+ ['Settlement house','Community center like Hull House offering classes and services to immigrants.'],
+ ['Dawes Act (1887)','Broke tribal lands into individual allotments to force assimilation; most land was eventually lost.'],
+ ['Frontier thesis','Turner\u2019s 1893 claim that the frontier experience formed American democracy and had now closed.'],
+ ['Pendleton Act','1883 law creating competitive exams for federal jobs, weakening the spoils system.'],
+ ['Populist Party','1890s farmer-based party demanding free silver, income tax, and direct election of senators.'],
+ ['Free silver','Demand for unlimited silver coinage to inflate currency and ease farmers\u2019 debts.']
+],
+quiz:[
+ {q:'Rockefeller\u2019s Standard Oil grew mainly through:',
+  c:['Vertical integration','Horizontal integration','Government subsidies','Union cooperation'],
+  a:1, why:'He absorbed or destroyed rival refiners to control the refining stage, using trusts to centralize ownership.'},
+ {q:'The Dawes Act aimed to:',
+  c:['Protect tribal sovereignty','Assimilate Native Americans by dividing tribal land into individual plots','Create reservations','Return land to tribes'],
+  a:1, why:'Allotment was meant to turn Native people into individual farmers; in practice it transferred most land to white owners.'},
+ {q:'The Populist platform included all of the following EXCEPT:',
+  c:['Free coinage of silver','Direct election of senators','A graduated income tax','A return to the gold standard'],
+  a:3, why:'Populists opposed the gold standard because tight money raised the real burden of farm debt.'},
+ {q:'The Sherman Antitrust Act was, in its first decade, most often applied against:',
+  c:['Railroad trusts','Labor unions','Oil refiners','Banks'],
+  a:1, why:'Courts read strikes as conspiracies in restraint of trade, so the law weakened labor more than it did big business.'},
+ {q:'Political machines maintained power primarily by:',
+  c:['Winning support of business elites only','Providing jobs and services to immigrants in exchange for votes','Enforcing civil service exams','Organizing national labor strikes'],
+  a:1, why:'The exchange was concrete: coal, jobs, and legal help for reliable votes on election day.'},
+ {q:'Turner\u2019s frontier thesis argued that:',
+  c:['Industrialization made the West irrelevant','The frontier shaped American democracy and had closed by 1890','Native resistance ended westward growth','Railroads harmed western farmers'],
+  a:1, why:'He credited the frontier with individualism and democratic institutions and warned that its closing marked a new era.'}
+]
+},
+{
+id:'p7', title:'Period 7 · 1890–1945',
+guide:[
+ {h:'Progressivism and empire', points:[
+  '<b>Muckrakers</b> exposed abuses: Sinclair\u2019s <i>The Jungle</i> led to the Pure Food and Drug Act and Meat Inspection Act.',
+  'Progressive reforms included the initiative, referendum, recall, direct primaries, and the 17th Amendment.',
+  'The <b>16th Amendment</b> allowed an income tax; the <b>18th</b> brought Prohibition; the <b>19th</b> gave women the vote.',
+  'The <b>Spanish-American War</b> (1898) produced an overseas empire; the Philippines were annexed after a brutal insurrection.',
+  '<b>Roosevelt Corollary</b> and dollar diplomacy asserted US dominance in Latin America.'
+ ]},
+ {h:'World War I', points:[
+  'Unrestricted submarine warfare and the <b>Zimmermann Telegram</b> pushed the US into war in 1917.',
+  'The <b>Committee on Public Information</b> ran propaganda; the <b>Espionage and Sedition Acts</b> punished dissent, upheld in <i>Schenck v. US</i>.',
+  'The <b>Great Migration</b> moved hundreds of thousands of Black Southerners to northern cities for war jobs.',
+  'Wilson\u2019s <b>Fourteen Points</b> proposed self-determination and a League of Nations.',
+  'The Senate rejected the Treaty of Versailles; the first <b>Red Scare</b> followed the war.'
+ ]},
+ {h:'The 1920s and the Depression', points:[
+  'Mass production, credit, autos, and radio built a consumer economy alongside the <b>Harlem Renaissance</b>.',
+  'Nativism produced immigration quotas, a revived Klan, and the Scopes Trial\u2019s culture clash.',
+  'The 1929 crash met weak banks, farm distress, and unequal income; the <b>Smoot-Hawley Tariff</b> deepened the collapse.',
+  'The <b>New Deal</b> delivered relief, recovery, and reform: FDIC, CCC, WPA, TVA, and the <b>Social Security Act</b>.',
+  'The <b>Wagner Act</b> protected collective bargaining; the Court-packing attempt failed but the Court stopped blocking New Deal laws.'
+ ]},
+ {h:'World War II', points:[
+  'Neutrality Acts gave way to <b>Lend-Lease</b>; Pearl Harbor brought full entry in December 1941.',
+  'War production ended the Depression; women and minorities entered industry, symbolized by Rosie the Riveter.',
+  '<b>Executive Order 9066</b> interned Japanese Americans, upheld in <i>Korematsu v. US</i>.',
+  'The Double V campaign linked victory abroad to civil rights at home.',
+  'The atomic bombings of Hiroshima and Nagasaki ended the war and opened the nuclear age.'
+ ]}
+],
+cards:[
+ ['Muckrakers','Investigative journalists who exposed corruption and unsafe conditions, spurring Progressive laws.'],
+ ['17th Amendment','Established direct popular election of US senators.'],
+ ['Roosevelt Corollary','Claimed a US right to intervene in Latin America to preserve stability.'],
+ ['Zimmermann Telegram','German proposal of an alliance with Mexico that helped push the US into WWI.'],
+ ['Schenck v. United States','Upheld speech restrictions in wartime under the "clear and present danger" test.'],
+ ['Great Migration','Movement of Black Southerners to northern cities for wartime industrial jobs.'],
+ ['Fourteen Points','Wilson\u2019s peace plan featuring self-determination, open diplomacy, and a League of Nations.'],
+ ['Harlem Renaissance','1920s flowering of Black literature, art, and music centered in Harlem.'],
+ ['Smoot-Hawley Tariff','1930 tariff that triggered retaliation and shrank world trade during the Depression.'],
+ ['New Deal','FDR\u2019s programs for relief, recovery, and reform, permanently expanding federal responsibility.'],
+ ['Social Security Act (1935)','Created old-age pensions, unemployment insurance, and aid to dependent families.'],
+ ['Wagner Act','Guaranteed the right to unionize and bargain collectively; created the NLRB.'],
+ ['Lend-Lease','Program supplying Allied nations with war material before formal US entry.'],
+ ['Executive Order 9066','Authorized removal and internment of Japanese Americans on the West Coast.'],
+ ['Korematsu v. United States','Wartime ruling upholding internment as a military necessity; widely condemned since.']
+],
+quiz:[
+ {q:'The Jungle led most directly to:',
+  c:['The Sherman Antitrust Act','Federal food and drug inspection laws','The 17th Amendment','Prohibition'],
+  a:1, why:'Sinclair aimed at labor conditions, but public disgust at meatpacking sanitation produced inspection legislation instead.'},
+ {q:'Schenck v. United States established the principle that:',
+  c:['All speech is absolutely protected','Speech creating a clear and present danger can be restricted','States cannot regulate speech','Only written speech is protected'],
+  a:1, why:'Holmes\u2019s opinion allowed wartime restrictions when speech posed an immediate danger Congress could prevent.'},
+ {q:'The Great Migration was driven mainly by:',
+  c:['Federal relocation programs','Northern wartime job opportunities and escape from Jim Crow','The Dawes Act','European immigration quotas'],
+  a:1, why:'War cut off European immigration just as northern factories needed labor, and the South offered violence and disfranchisement.'},
+ {q:'Which New Deal program most changed the long-term role of the federal government?',
+  c:['The CCC','The Social Security Act','The NRA','The TVA'],
+  a:1, why:'It created a permanent federal responsibility for old-age and unemployment support that still shapes policy today.'},
+ {q:'The Senate rejected the Treaty of Versailles largely because:',
+  c:['It was too harsh on Germany','Senators feared Article X would commit the US to foreign wars','It banned submarines','It required reparations from the US'],
+  a:1, why:'Lodge and the reservationists objected to collective security obligations limiting congressional war powers.'},
+ {q:'Korematsu v. United States addressed the constitutionality of:',
+  c:['The draft','Japanese American internment','Wartime price controls','Segregated military units'],
+  a:1, why:'The Court accepted the government\u2019s claim of military necessity; the conviction was later vacated and the reasoning repudiated.'}
+]
+}
+]});
+</script>
+<script>
+/* ------------------------------------------------ AP BIOLOGY */
+COURSES.push({
+id:'ap-bio', name:'AP Biology', short:'AP Bio', color:'#2E7D5B', exam:'AP',
+blurb:'Molecules, cells, energy, heredity, and evolution.',
+units:[
+{
+id:'u1', title:'Unit 1 · Chemistry of Life',
+guide:[
+ {h:'Water and bonding', points:[
+  'Water is <b>polar</b>, producing hydrogen bonds that create cohesion, adhesion, high specific heat, and ice that floats.',
+  '<b>Cohesion</b> plus transpiration pulls water up xylem; high specific heat stabilizes temperature.',
+  'Water is the universal solvent for <b>hydrophilic</b> substances; nonpolar <b>hydrophobic</b> molecules exclude it.',
+  'Carbon forms four covalent bonds, allowing long, branched, and ringed skeletons.',
+  '<b>Functional groups</b> (hydroxyl, carbonyl, carboxyl, amino, phosphate, methyl) determine a molecule\u2019s chemical behavior.'
+ ]},
+ {h:'The four macromolecules', points:[
+  '<b>Carbohydrates</b>: monosaccharides link by dehydration synthesis into starch, glycogen, cellulose, and chitin.',
+  '<b>Lipids</b> are nonpolar: saturated fats are straight and solid, unsaturated have kinked double bonds. Phospholipids form bilayers.',
+  '<b>Proteins</b> are amino acids joined by peptide bonds; the R group determines properties.',
+  'Protein structure: primary sequence → secondary (alpha helix, beta sheet) → tertiary folding → quaternary subunits. <b>Denaturation</b> by heat or pH destroys function.',
+  '<b>Nucleic acids</b>: nucleotides of sugar, phosphate, and base. DNA is double-stranded with T; RNA is single-stranded with U.'
+ ]},
+ {h:'Enzymes', points:[
+  'Enzymes lower <b>activation energy</b> without being consumed.',
+  'The <b>active site</b> binds substrate by induced fit; specificity comes from shape and charge.',
+  'Rate depends on temperature, pH, substrate concentration, and enzyme concentration; extremes denature.',
+  '<b>Competitive inhibitors</b> bind the active site; <b>noncompetitive</b> (allosteric) inhibitors bind elsewhere and change shape.',
+  '<b>Feedback inhibition</b> lets the end product shut down an earlier enzyme in the pathway.'
+ ]}
+],
+cards:[
+ ['Hydrogen bond','Weak attraction between a slightly positive hydrogen and a slightly negative atom; gives water its properties.'],
+ ['Cohesion vs. adhesion','Cohesion is water sticking to water; adhesion is water sticking to other surfaces.'],
+ ['Dehydration synthesis','Joining monomers by removing a water molecule.'],
+ ['Hydrolysis','Breaking a polymer apart by adding water.'],
+ ['Saturated vs. unsaturated fat','Saturated has no double bonds and packs tightly; unsaturated has kinked double bonds and stays liquid.'],
+ ['Phospholipid','Molecule with a hydrophilic head and hydrophobic tails that forms the cell membrane bilayer.'],
+ ['Peptide bond','Covalent bond linking amino acids in a protein.'],
+ ['Denaturation','Loss of protein shape and function due to heat, pH, or salt changes.'],
+ ['Activation energy','The energy input needed to start a reaction; enzymes lower it.'],
+ ['Induced fit','The active site changes shape slightly to grip the substrate more tightly.'],
+ ['Competitive inhibition','An inhibitor blocks the active site directly; can be overcome by more substrate.'],
+ ['Noncompetitive inhibition','An inhibitor binds an allosteric site, changing the active site\u2019s shape.'],
+ ['Feedback inhibition','The end product of a pathway inhibits an earlier enzyme, regulating output.']
+],
+quiz:[
+ {q:'Adding more substrate restores enzyme activity. The inhibitor was most likely:',
+  c:['Noncompetitive','Competitive','Allosteric','Denaturing'],
+  a:1, why:'Competitive inhibitors compete for the active site, so flooding the system with substrate outcompetes them.'},
+ {q:'Ice floats because:',
+  c:['Water molecules move faster when frozen','Hydrogen bonds hold molecules in a lattice that is less dense','Ice contains dissolved air','Frozen water is nonpolar'],
+  a:1, why:'The crystalline hydrogen-bond lattice spaces molecules farther apart than in liquid water, lowering density.'},
+ {q:'Which level of protein structure is disrupted first by heat?',
+  c:['Primary','Secondary and tertiary','The peptide bonds','The amino acid sequence'],
+  a:1, why:'Heat breaks the weak hydrogen and ionic interactions holding folds together; covalent peptide bonds remain intact.'},
+ {q:'Cellulose and starch differ mainly in:',
+  c:['The monomer used','The orientation of glycosidic linkages','The presence of nitrogen','Their number of phosphate groups'],
+  a:1, why:'Both are glucose polymers, but the alternating beta linkages in cellulose make it indigestible to most animals.'},
+ {q:'A functional group that makes a molecule acidic is:',
+  c:['Amino','Carboxyl','Methyl','Hydroxyl'],
+  a:1, why:'The carboxyl group readily donates a proton, lowering pH.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Cell Structure and Transport',
+guide:[
+ {h:'Cell structure', points:[
+  '<b>Prokaryotes</b> lack a nucleus and membrane-bound organelles; <b>eukaryotes</b> have both.',
+  'A high <b>surface area to volume ratio</b> is required for efficient exchange, which limits cell size.',
+  '<b>Mitochondria</b> and <b>chloroplasts</b> have double membranes and their own DNA, supporting <b>endosymbiotic theory</b>.',
+  'Rough ER makes and modifies proteins; smooth ER makes lipids and detoxifies; Golgi packages and ships.',
+  '<b>Lysosomes</b> digest waste; the <b>cytoskeleton</b> supports shape and moves materials.'
+ ]},
+ {h:'Membranes and transport', points:[
+  'The <b>fluid mosaic model</b> describes a phospholipid bilayer with embedded proteins, cholesterol, and carbohydrates.',
+  'Small nonpolar molecules cross freely; ions and large polar molecules need transport proteins.',
+  '<b>Passive transport</b> needs no energy: diffusion, osmosis, and facilitated diffusion move down the gradient.',
+  '<b>Active transport</b> uses ATP to pump against the gradient, as in the sodium-potassium pump.',
+  '<b>Endocytosis</b> brings material in by vesicle; <b>exocytosis</b> exports it.'
+ ]},
+ {h:'Osmosis and tonicity', points:[
+  'Water moves toward higher solute concentration — from high water potential to low.',
+  '<b>Hypertonic</b> solution: cell loses water and shrinks (plant cells plasmolyze).',
+  '<b>Hypotonic</b> solution: cell gains water and may lyse; plants become firm (turgid).',
+  '<b>Isotonic</b>: no net movement.',
+  'Water potential Ψ = Ψs + Ψp; solutes lower Ψ and water flows toward the more negative value.'
+ ]}
+],
+cards:[
+ ['Endosymbiotic theory','Mitochondria and chloroplasts descend from engulfed prokaryotes; evidence is double membranes, own DNA, and ribosomes.'],
+ ['Surface area to volume ratio','As a cell grows, volume outpaces surface area, limiting exchange and constraining cell size.'],
+ ['Fluid mosaic model','The membrane is a fluid phospholipid bilayer with proteins drifting within it.'],
+ ['Facilitated diffusion','Passive movement down a gradient through a channel or carrier protein.'],
+ ['Active transport','Movement against the concentration gradient using ATP.'],
+ ['Sodium-potassium pump','Active transporter moving 3 Na⁺ out and 2 K⁺ in per ATP, creating a membrane potential.'],
+ ['Hypertonic solution','Higher solute outside the cell; water leaves and the cell shrinks.'],
+ ['Hypotonic solution','Lower solute outside; water enters and the cell swells or bursts.'],
+ ['Water potential','Ψ = Ψs + Ψp; water moves from higher to lower water potential.'],
+ ['Rough vs. smooth ER','Rough has ribosomes and processes proteins; smooth makes lipids and detoxifies.'],
+ ['Lysosome','Organelle containing hydrolytic enzymes that digest macromolecules and worn organelles.']
+],
+quiz:[
+ {q:'A plant cell placed in distilled water will:',
+  c:['Plasmolyze','Become turgid','Burst immediately','Lose water'],
+  a:1, why:'Water enters the hypotonic environment, but the cell wall resists expansion, producing turgor pressure instead of lysis.'},
+ {q:'Which supports endosymbiotic theory most strongly?',
+  c:['Mitochondria have a single membrane','Mitochondria contain their own circular DNA and ribosomes','Mitochondria are found only in animals','Mitochondria produce glucose'],
+  a:1, why:'Independent circular DNA and prokaryote-like ribosomes indicate descent from free-living bacteria.'},
+ {q:'The sodium-potassium pump is an example of:',
+  c:['Simple diffusion','Facilitated diffusion','Active transport','Osmosis'],
+  a:2, why:'It moves ions against their gradients and therefore requires ATP hydrolysis.'},
+ {q:'As a cell increases in size, its surface area to volume ratio:',
+  c:['Increases, improving exchange','Decreases, limiting exchange','Stays constant','Depends only on shape'],
+  a:1, why:'Volume grows cubically while surface area grows squarely, so large cells cannot exchange materials fast enough.'},
+ {q:'A solution has a lower water potential than the cell. Water will:',
+  c:['Move into the cell','Move out of the cell','Not move','Move in both directions equally'],
+  a:1, why:'Water always flows from higher (less negative) to lower (more negative) water potential.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Cellular Energetics',
+guide:[
+ {h:'Cellular respiration', points:[
+  '<b>Glycolysis</b> in the cytoplasm splits glucose into 2 pyruvate, netting 2 ATP and 2 NADH; it needs no oxygen.',
+  '<b>Pyruvate oxidation</b> produces acetyl-CoA and CO₂ in the mitochondrial matrix.',
+  'The <b>Krebs cycle</b> releases CO₂ and generates NADH, FADH₂, and 2 ATP.',
+  '<b>Oxidative phosphorylation</b>: the electron transport chain pumps H⁺ to build a gradient, and ATP synthase uses chemiosmosis to make roughly 26–28 ATP.',
+  'Oxygen is the final electron acceptor. Without it, <b>fermentation</b> regenerates NAD⁺ to keep glycolysis running.'
+ ]},
+ {h:'Photosynthesis', points:[
+  '<b>Light reactions</b> in the thylakoid split water, release O₂, and produce ATP and NADPH.',
+  'Photosystems II and I absorb light and drive electrons through a transport chain that pumps H⁺ into the thylakoid space.',
+  'The <b>Calvin cycle</b> in the stroma fixes CO₂ using rubisco, then reduces and regenerates RuBP to build G3P.',
+  '<b>C4</b> and <b>CAM</b> plants separate carbon fixation in space or time to limit photorespiration in hot, dry conditions.',
+  'Photosynthesis and respiration are chemically reciprocal, both relying on electron transport and chemiosmosis.'
+ ]}
+],
+cards:[
+ ['Glycolysis','Cytoplasmic splitting of glucose into 2 pyruvate; net 2 ATP and 2 NADH; anaerobic.'],
+ ['Krebs cycle','Matrix reactions that release CO₂ and generate NADH, FADH₂, and ATP.'],
+ ['Electron transport chain','Inner membrane proteins that pass electrons and pump H⁺ to build a proton gradient.'],
+ ['Chemiosmosis','H⁺ flowing back through ATP synthase down its gradient, powering ATP production.'],
+ ['Final electron acceptor','Oxygen in aerobic respiration; forms water at the end of the chain.'],
+ ['Fermentation','Anaerobic pathway that regenerates NAD⁺ so glycolysis can continue; yields lactic acid or ethanol.'],
+ ['Light reactions','Thylakoid reactions splitting water and producing ATP, NADPH, and O₂.'],
+ ['Calvin cycle','Stroma reactions fixing CO₂ with rubisco to build G3P using ATP and NADPH.'],
+ ['Rubisco','Enzyme that fixes CO₂ to RuBP; also binds O₂, causing photorespiration.'],
+ ['C4 and CAM plants','Adaptations separating CO₂ fixation from the Calvin cycle by space (C4) or time (CAM).']
+],
+quiz:[
+ {q:'A drug blocks ATP synthase. The immediate result is:',
+  c:['Glycolysis stops instantly','The proton gradient builds up and ATP production falls','More oxygen is consumed','NADH is no longer produced in the Krebs cycle'],
+  a:1, why:'Protons cannot flow back through the blocked channel, so the gradient accumulates and oxidative phosphorylation halts.'},
+ {q:'Oxygen\u2019s role in cellular respiration is to:',
+  c:['Split glucose','Serve as the final electron acceptor','Provide carbon for ATP','Activate rubisco'],
+  a:1, why:'Oxygen accepts spent electrons and combines with H⁺ to form water, keeping the chain moving.'},
+ {q:'Fermentation is essential because it:',
+  c:['Produces most of the cell\u2019s ATP','Regenerates NAD⁺ so glycolysis can continue','Makes oxygen available','Fixes carbon dioxide'],
+  a:1, why:'Without recycled NAD⁺, glycolysis would stall and the cell would lose even its small anaerobic ATP yield.'},
+ {q:'The oxygen released during photosynthesis comes from:',
+  c:['Carbon dioxide','Water','Glucose','ATP'],
+  a:1, why:'Photolysis splits water at photosystem II to replace lost electrons, releasing O₂ as a byproduct.'},
+ {q:'CAM plants reduce water loss by:',
+  c:['Fixing carbon in bundle sheath cells','Opening stomata at night and storing carbon as an acid','Eliminating rubisco','Skipping the Calvin cycle'],
+  a:1, why:'Nighttime stomatal opening minimizes evaporation; stored organic acids release CO₂ for the Calvin cycle by day.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Heredity and Gene Expression',
+guide:[
+ {h:'Cell division and inheritance', points:[
+  '<b>Mitosis</b> makes two identical diploid cells; <b>meiosis</b> makes four genetically unique haploid gametes.',
+  'Variation comes from <b>crossing over</b> in prophase I, <b>independent assortment</b> in metaphase I, and random fertilization.',
+  '<b>Nondisjunction</b> produces gametes with the wrong chromosome number, as in trisomy 21.',
+  'Mendel: <b>law of segregation</b> (alleles separate into gametes) and <b>law of independent assortment</b> (genes on different chromosomes sort independently).',
+  'Non-Mendelian patterns: incomplete dominance, codominance, multiple alleles, polygenic traits, sex linkage, and epistasis.'
+ ]},
+ {h:'Molecular genetics', points:[
+  'DNA replication is <b>semiconservative</b>: helicase unwinds, polymerase builds 5\u2032→3\u2032, giving a leading and a lagging strand of Okazaki fragments.',
+  '<b>Transcription</b> uses RNA polymerase to make mRNA; eukaryotes then splice out introns and add a cap and poly-A tail.',
+  '<b>Translation</b> at the ribosome reads codons; tRNA anticodons deliver amino acids until a stop codon.',
+  'Mutations: <b>silent</b>, <b>missense</b>, <b>nonsense</b>, and <b>frameshift</b> from insertions or deletions.',
+  'Gene regulation: prokaryotes use <b>operons</b> like <i>lac</i> and <i>trp</i>; eukaryotes use transcription factors, enhancers, and epigenetic marks.'
+ ]}
+],
+cards:[
+ ['Mitosis vs. meiosis','Mitosis: 2 identical diploid cells. Meiosis: 4 unique haploid gametes after two divisions.'],
+ ['Crossing over','Exchange of segments between homologous chromosomes in prophase I, creating new allele combinations.'],
+ ['Independent assortment','Homologous pairs line up randomly in metaphase I, so genes on different chromosomes sort independently.'],
+ ['Nondisjunction','Failure of chromosomes to separate, producing gametes with extra or missing chromosomes.'],
+ ['Incomplete dominance','Heterozygote shows a blended intermediate phenotype.'],
+ ['Codominance','Both alleles are fully and separately expressed, as in AB blood type.'],
+ ['Semiconservative replication','Each new DNA molecule keeps one original strand and one new strand.'],
+ ['Okazaki fragments','Short segments synthesized discontinuously on the lagging strand and joined by ligase.'],
+ ['Codon','A three-nucleotide mRNA sequence specifying one amino acid or a stop signal.'],
+ ['Frameshift mutation','An insertion or deletion that shifts the reading frame, usually destroying the protein.'],
+ ['Operon','A cluster of prokaryotic genes controlled by a single promoter and operator, such as the lac operon.'],
+ ['Epigenetics','Heritable changes in gene expression from DNA methylation or histone modification, not sequence changes.']
+],
+quiz:[
+ {q:'A single nucleotide is deleted early in a gene. The most likely result is:',
+  c:['A silent mutation','A frameshift that alters every downstream codon','A codominant phenotype','Faster transcription'],
+  a:1, why:'Deleting one base shifts the reading frame, so nearly all following amino acids change and the protein usually fails.'},
+ {q:'Crossing a red and a white flower yields all pink offspring. This is:',
+  c:['Codominance','Incomplete dominance','Epistasis','Sex linkage'],
+  a:1, why:'A blended intermediate indicates incomplete dominance; codominance would show both colors distinctly.'},
+ {q:'Genetic variation in meiosis comes primarily from:',
+  c:['Semiconservative replication','Crossing over and independent assortment','Cytokinesis','DNA repair enzymes'],
+  a:1, why:'Both processes shuffle alleles before gametes form; random fertilization adds a third source.'},
+ {q:'In the lac operon, lactose acts to:',
+  c:['Bind the promoter directly','Inactivate the repressor so transcription can proceed','Block RNA polymerase','Methylate the operator'],
+  a:1, why:'The inducer changes the repressor\u2019s shape so it releases the operator, allowing the genes to be transcribed.'},
+ {q:'A color-blind mother and a normal-vision father have children. Their sons will:',
+  c:['All be color blind','All have normal vision','Be color blind half the time','Be carriers only'],
+  a:0, why:'Sons receive their only X from the mother, and both of her X chromosomes carry the recessive allele.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Evolution and Ecology',
+guide:[
+ {h:'Natural selection and evidence', points:[
+  'Natural selection requires variation, heritability, overproduction, and differential reproductive success.',
+  '<b>Fitness</b> means reproductive success, not strength.',
+  'Evidence: fossils, <b>homologous structures</b> (common ancestry), <b>analogous structures</b> (convergent evolution), vestigial traits, embryology, and DNA similarity.',
+  'Selection types: <b>directional</b>, <b>stabilizing</b>, and <b>disruptive</b>.',
+  'Other mechanisms: <b>genetic drift</b> (bottleneck and founder effects), <b>gene flow</b>, mutation, and sexual selection.'
+ ]},
+ {h:'Population genetics and speciation', points:[
+  '<b>Hardy-Weinberg</b>: p + q = 1 and p² + 2pq + q² = 1, valid only with no selection, no mutation, no migration, random mating, and large population.',
+  'Deviation from Hardy-Weinberg indicates evolution is occurring.',
+  '<b>Allopatric speciation</b> follows geographic isolation; <b>sympatric</b> occurs without it, often by polyploidy.',
+  'Reproductive barriers may be <b>prezygotic</b> (habitat, timing, behavior) or <b>postzygotic</b> (hybrid sterility).',
+  '<b>Phylogenetic trees</b> and <b>cladograms</b> show shared derived characteristics and common ancestry.'
+ ]},
+ {h:'Ecology', points:[
+  '<b>Exponential growth</b> is J-shaped; <b>logistic growth</b> is S-shaped and levels off at carrying capacity (K).',
+  '<b>r-selected</b> species produce many low-investment offspring; <b>K-selected</b> produce few with high investment.',
+  'Interactions: competition, predation, mutualism, commensalism, parasitism. The <b>competitive exclusion principle</b> forbids identical niches.',
+  'Roughly 10% of energy transfers between trophic levels, which limits food chain length.',
+  '<b>Keystone species</b> have effects out of proportion to their abundance; disturbance drives ecological succession.'
+ ]}
+],
+cards:[
+ ['Fitness','An organism\u2019s relative contribution of offspring to the next generation.'],
+ ['Homologous structures','Similar structures from shared ancestry, even with different functions.'],
+ ['Analogous structures','Similar functions evolved independently; evidence of convergent evolution.'],
+ ['Directional selection','Selection favoring one extreme, shifting the population mean.'],
+ ['Stabilizing selection','Selection favoring intermediate phenotypes and reducing variation.'],
+ ['Genetic drift','Random change in allele frequency, strongest in small populations.'],
+ ['Bottleneck effect','A sharp population reduction that randomly changes allele frequencies.'],
+ ['Founder effect','A small group starts a new population carrying a nonrepresentative sample of alleles.'],
+ ['Hardy-Weinberg equilibrium','p² + 2pq + q² = 1; holds only when no evolutionary forces are acting.'],
+ ['Allopatric speciation','New species arising after geographic separation of populations.'],
+ ['Carrying capacity (K)','The maximum population an environment can sustain over time.'],
+ ['Competitive exclusion principle','Two species cannot occupy the exact same niche indefinitely.'],
+ ['Keystone species','A species whose removal dramatically restructures its community.'],
+ ['10% rule','Only about 10% of energy passes from one trophic level to the next.']
+],
+quiz:[
+ {q:'In a population at Hardy-Weinberg equilibrium, q² = 0.16. The frequency of heterozygotes is:',
+  c:['0.16','0.36','0.48','0.60'],
+  a:2, why:'q = 0.4 so p = 0.6, and 2pq = 2(0.6)(0.4) = 0.48.'},
+ {q:'Bat wings and insect wings are:',
+  c:['Homologous structures','Analogous structures','Vestigial structures','Evidence of common ancestry'],
+  a:1, why:'They serve the same function but evolved independently, which is convergent evolution.'},
+ {q:'A hurricane kills most of an island lizard population at random. This is:',
+  c:['Directional selection','The bottleneck effect','Gene flow','Sexual selection'],
+  a:1, why:'Random, non-selective loss of individuals changes allele frequencies — a form of genetic drift.'},
+ {q:'A population growing logistically slows most noticeably when:',
+  c:['Resources are unlimited','It approaches carrying capacity','Predators disappear','Mutation rate rises'],
+  a:1, why:'Density-dependent limits such as food and space increase as N approaches K, flattening the curve.'},
+ {q:'Only about 10% of energy moves between trophic levels because:',
+  c:['Producers are inefficient at photosynthesis','Most energy is lost as heat and used in metabolism','Consumers refuse to eat all available food','Decomposers absorb the rest first'],
+  a:1, why:'Respiration, movement, and heat loss consume most assimilated energy, leaving little to be stored as biomass.'}
+]
+}
+]});
+
+/* --------------------------------------- AP US GOVERNMENT */
+COURSES.push({
+id:'ap-gov', name:'AP US Government', short:'AP Gov', color:'#2C5F8A', exam:'AP',
+blurb:'Foundations, branches, civil liberties, and political behavior.',
+units:[
+{
+id:'u1', title:'Unit 1 · Foundations and Federalism',
+guide:[
+ {h:'Ideas behind the Constitution', points:[
+  '<b>Natural rights</b>, the <b>social contract</b>, and <b>popular sovereignty</b> come from Locke and Rousseau.',
+  '<b>Federalist 10</b>: a large republic best controls the danger of faction.',
+  '<b>Brutus 1</b>: a large republic will be too distant from the people and the necessary and proper clause invites tyranny.',
+  '<b>Federalist 51</b>: separation of powers and checks and balances make ambition counteract ambition.',
+  '<b>Federalist 70</b> defends a single energetic executive; <b>Federalist 78</b> defends judicial independence and review.'
+ ]},
+ {h:'Federalism', points:[
+  '<b>Enumerated</b> powers belong to Congress, <b>reserved</b> powers to the states (10th Amendment), and <b>concurrent</b> powers to both.',
+  'The <b>supremacy clause</b> makes federal law superior when there is a conflict.',
+  '<i>McCulloch v. Maryland</i> upheld implied powers through the necessary and proper clause.',
+  '<i>United States v. Lopez</i> limited the commerce clause, marking a shift toward state power.',
+  '<b>Categorical grants</b> come with strict conditions; <b>block grants</b> allow flexibility. Unfunded mandates require action without money.'
+ ]}
+],
+cards:[
+ ['Popular sovereignty','Government authority derives from the consent of the governed.'],
+ ['Federalist 10','Madison\u2019s argument that a large republic controls factions better than a small one.'],
+ ['Brutus 1','Anti-Federalist essay warning that a large central government will threaten liberty.'],
+ ['Federalist 51','Explains separation of powers and checks and balances as protection against tyranny.'],
+ ['Supremacy clause','Federal law prevails over conflicting state law.'],
+ ['Necessary and proper clause','Allows Congress to pass laws needed to execute its enumerated powers.'],
+ ['McCulloch v. Maryland','Upheld implied powers and denied states the right to tax federal institutions.'],
+ ['United States v. Lopez','Limited the commerce clause by striking down a federal gun-free school zones law.'],
+ ['Categorical grant','Federal money for a specific purpose with strict conditions attached.'],
+ ['Block grant','Federal money for a broad purpose, leaving states substantial discretion.']
+],
+quiz:[
+ {q:'McCulloch v. Maryland established that:',
+  c:['States may tax federal institutions','Congress has implied powers under the necessary and proper clause','The commerce clause has strict limits','The Bill of Rights applies to the states'],
+  a:1, why:'Marshall upheld the national bank as an implied power and ruled that the power to tax is the power to destroy.'},
+ {q:'Federalist 10 argues that factions are best controlled by:',
+  c:['Banning political parties','A large republic with many competing interests','Strong state governments','Direct democracy'],
+  a:1, why:'Madison held that in an extended republic no single faction can easily form a national majority.'},
+ {q:'Which type of grant gives states the most flexibility?',
+  c:['Categorical grant','Block grant','Unfunded mandate','Revenue sharing with conditions'],
+  a:1, why:'Block grants fund a broad policy area and let states decide the details.'},
+ {q:'United States v. Lopez is significant because it:',
+  c:['Expanded federal power','Set a limit on the commerce clause','Struck down the necessary and proper clause','Applied the 10th Amendment to Congress'],
+  a:1, why:'The Court found that carrying a gun near a school was not economic activity affecting interstate commerce.'},
+ {q:'Brutus 1 would most likely oppose:',
+  c:['State control over education','A broad reading of the necessary and proper clause','Adding a bill of rights','Annual elections'],
+  a:1, why:'Anti-Federalists feared the elastic clause and supremacy clause would let the national government swallow the states.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Branches, Liberties, and Behavior',
+guide:[
+ {h:'The three branches', points:[
+  'The House is larger, more formal, and controls revenue bills; the Senate confirms appointments and ratifies treaties.',
+  '<b>Filibuster</b> and <b>cloture</b> (60 votes) shape Senate action; the House Rules Committee controls floor debate.',
+  'Presidential powers include veto, executive orders, appointments, and the bully pulpit; <b>signing statements</b> shape implementation.',
+  '<i>Marbury v. Madison</i> established judicial review. <b>Stare decisis</b> holds precedent, but the Court can overturn it.',
+  'The bureaucracy implements law through rulemaking and enforcement, checked by oversight, hearings, and the power of the purse.'
+ ]},
+ {h:'Civil liberties and rights', points:[
+  '<b>Selective incorporation</b> applies most Bill of Rights protections to the states through the 14th Amendment.',
+  '<i>Engel v. Vitale</i> barred school-sponsored prayer; <i>Wisconsin v. Yoder</i> protected free exercise.',
+  '<i>Tinker v. Des Moines</i> protected symbolic student speech; <i>Schenck</i> allowed limits during clear and present danger.',
+  '<i>Gideon v. Wainwright</i> guaranteed counsel; <i>Miranda v. Arizona</i> required warnings about rights.',
+  '<i>Brown v. Board</i> ended school segregation; <i>Baker v. Carr</i> and <i>Shaw v. Reno</i> addressed districting and racial gerrymandering.'
+ ]},
+ {h:'Political behavior', points:[
+  '<b>Political socialization</b> comes from family, school, peers, media, and major events.',
+  'Turnout rises with education, income, and age; <b>rational choice</b>, <b>retrospective</b>, and <b>prospective</b> voting explain choices.',
+  'Linkage institutions — parties, interest groups, elections, and media — connect people to government.',
+  '<b>Iron triangles</b> link agencies, committees, and interest groups; <b>issue networks</b> are looser and shifting.',
+  '<i>Citizens United</i> allowed unlimited independent political spending, fueling super PACs.'
+ ]}
+],
+cards:[
+ ['Selective incorporation','Applying Bill of Rights protections to the states case by case via the 14th Amendment.'],
+ ['Judicial review','The Court\u2019s power to declare laws and executive actions unconstitutional.'],
+ ['Stare decisis','The principle of deciding cases according to precedent.'],
+ ['Cloture','A Senate vote of 60 members to end a filibuster.'],
+ ['Executive order','A presidential directive with the force of law that does not require Congress.'],
+ ['Tinker v. Des Moines','Protected symbolic student speech that does not disrupt school operations.'],
+ ['Gideon v. Wainwright','Guaranteed the right to an attorney in state criminal cases.'],
+ ['Engel v. Vitale','Struck down official school-sponsored prayer under the establishment clause.'],
+ ['Baker v. Carr','Opened redistricting to judicial review under one person, one vote.'],
+ ['Citizens United v. FEC','Held that independent political spending by corporations and unions is protected speech.'],
+ ['Iron triangle','Stable alliance of a bureaucratic agency, congressional committee, and interest group.'],
+ ['Retrospective voting','Voting based on how well the incumbent has performed.']
+],
+quiz:[
+ {q:'Selective incorporation uses which amendment to apply the Bill of Rights to states?',
+  c:['10th','13th','14th','16th'],
+  a:2, why:'The due process clause of the 14th Amendment is the vehicle for applying federal protections to state action.'},
+ {q:'Cloture in the Senate requires:',
+  c:['A simple majority','60 votes','Two-thirds of those present','Unanimous consent'],
+  a:1, why:'Sixty senators must agree to end debate, which is why the filibuster gives a minority substantial leverage.'},
+ {q:'Tinker v. Des Moines protected:',
+  c:['School prayer','Symbolic student speech that does not disrupt school','Freedom of the press for adults only','The right to counsel'],
+  a:1, why:'Students wearing armbands to protest the Vietnam War were exercising protected symbolic speech.'},
+ {q:'An iron triangle consists of:',
+  c:['President, Congress, and Court','Agency, congressional committee, and interest group','Federal, state, and local governments','Voters, parties, and media'],
+  a:1, why:'Each side supplies something the others need, producing durable policy arrangements resistant to outside change.'},
+ {q:'Citizens United v. FEC most directly led to:',
+  c:['Limits on individual contributions','The rise of super PACs making unlimited independent expenditures','Public financing of all campaigns','Bans on corporate lobbying'],
+  a:1, why:'Independent expenditures were treated as protected speech, so groups could raise and spend without limits.'}
+]
+}
+]});
+
+/* --------------------------------------- AP WORLD HISTORY */
+COURSES.push({
+id:'ap-world', name:'AP World History: Modern', short:'AP World', color:'#8A6D2C', exam:'AP',
+blurb:'1200 to the present: empires, exchange, revolutions, and globalization.',
+units:[
+{
+id:'u1', title:'Units 1–2 · 1200–1450: States and Networks',
+guide:[
+ {h:'States around 1200', points:[
+  'Song China used the <b>civil service exam</b>, Neo-Confucianism, and a commercialized economy with paper money.',
+  'The <b>Dar al-Islam</b> spread through Abbasid decline, Turkic and Mamluk states, trade, and Sufi missionaries.',
+  'The <b>Delhi Sultanate</b> ruled a mostly Hindu population; Vijayanagara emerged in the south.',
+  'Mali and Great Zimbabwe grew wealthy from gold, salt, and long-distance trade.',
+  'European feudalism and manorialism fragmented power while the Church provided unity.'
+ ]},
+ {h:'Exchange networks', points:[
+  'The <b>Silk Roads</b> expanded with caravanserai, credit, and the <b>Pax Mongolica</b>.',
+  '<b>Indian Ocean</b> trade ran on monsoon winds, using the dhow and lateen sail; Swahili city-states thrived.',
+  '<b>Trans-Saharan</b> routes relied on camel saddles and caravans linking West Africa to the Mediterranean.',
+  'Exchange spread Islam, Buddhism, and technologies like paper and gunpowder — plus the <b>Black Death</b>.',
+  'Diasporic merchant communities and new financial tools like bills of exchange reshaped commerce.'
+ ]}
+],
+cards:[
+ ['Civil service exam','Chinese merit-based test system that staffed the bureaucracy and reinforced Confucian values.'],
+ ['Neo-Confucianism','Song-era revival blending Confucian ethics with Buddhist and Daoist ideas.'],
+ ['Dar al-Islam','The lands where Islam was practiced and Islamic law shaped society.'],
+ ['Pax Mongolica','Period of Mongol-enforced stability that made Eurasian trade safer and faster.'],
+ ['Caravanserai','Roadside inn along trade routes offering shelter, water, and exchange.'],
+ ['Monsoon winds','Seasonal wind patterns that structured Indian Ocean sailing schedules.'],
+ ['Swahili city-states','East African coastal trading centers blending Bantu and Islamic culture.'],
+ ['Trans-Saharan trade','Camel caravan routes exchanging West African gold for salt and goods from the north.'],
+ ['Black Death','Plague carried along trade routes that killed a third or more of affected populations.'],
+ ['Feudalism','European system exchanging land for military service amid decentralized power.']
+],
+quiz:[
+ {q:'The Chinese civil service exam primarily strengthened:',
+  c:['Hereditary aristocracy','A merit-based bureaucracy grounded in Confucian learning','Military rule','Merchant political power'],
+  a:1, why:'Recruiting officials by examination reinforced central authority and elevated Confucian scholarship over birth.'},
+ {q:'Indian Ocean trade differed from the Silk Roads mainly in that it:',
+  c:['Carried only luxury goods','Relied on predictable monsoon winds and moved bulk goods','Was controlled by one empire','Did not spread religion'],
+  a:1, why:'Sea transport allowed heavier cargo like timber and grain, and monsoons made voyages reliable.'},
+ {q:'The Pax Mongolica most directly:',
+  c:['Ended Silk Road trade','Increased safe long-distance exchange across Eurasia','Isolated China from the west','Destroyed the Indian Ocean network'],
+  a:1, why:'Mongol control of overland routes lowered risk, increasing the flow of goods, people, ideas, and disease.'},
+ {q:'Great Zimbabwe\u2019s wealth came largely from:',
+  c:['Silk manufacturing','Gold and control of interior trade routes','Conquest of Egypt','Maritime exploration of the Atlantic'],
+  a:1, why:'It sat between goldfields and the Swahili coast, taxing and channeling that trade.'}
+]
+},
+{
+id:'u2', title:'Units 3–4 · 1450–1750: Empires and Oceans',
+guide:[
+ {h:'Land-based empires', points:[
+  '<b>Gunpowder empires</b>: Ottoman, Safavid, Mughal, Qing, and Russia expanded using artillery and firearms.',
+  'Legitimacy came from religion, art, monumental building, and tax systems like the Ottoman <b>devshirme</b>.',
+  'Akbar\u2019s religious tolerance contrasted with Aurangzeb\u2019s reimposition of the jizya.',
+  'Ottoman-Safavid conflict was reinforced by the Sunni-Shia divide.',
+  'Russia expanded into Siberia and centralized power under the tsars.'
+ ]},
+ {h:'Maritime empires and exchange', points:[
+  'Caravel, astrolabe, and improved cartography made Atlantic voyaging possible.',
+  'The <b>Columbian Exchange</b> moved crops, animals, and diseases; American silver linked global economies.',
+  '<b>Encomienda</b>, <b>hacienda</b>, and the <b>casta</b> system organized labor and race in Spanish America.',
+  'The <b>Atlantic slave trade</b> forcibly moved over 12 million Africans and reshaped African states.',
+  '<b>Mercantilism</b> and joint-stock companies like the VOC financed and directed imperial expansion.'
+ ]}
+],
+cards:[
+ ['Gunpowder empires','Ottoman, Safavid, Mughal, Qing, and Russian states that expanded using firearms and artillery.'],
+ ['Devshirme','Ottoman system taking Christian boys for state service, including the janissary corps.'],
+ ['Columbian Exchange','Transfer of plants, animals, people, and diseases between the Americas and Afro-Eurasia.'],
+ ['Encomienda','Spanish grant of Indigenous labor to colonists in exchange for supposed protection.'],
+ ['Casta system','Racial hierarchy in Spanish America based on ancestry.'],
+ ['Middle Passage','The brutal Atlantic crossing endured by enslaved Africans.'],
+ ['Mercantilism','Policy of maximizing exports and bullion, treating colonies as sources of raw materials.'],
+ ['Joint-stock company','Business pooling investor money and risk, such as the Dutch VOC.'],
+ ['Syncretism','Blending of belief systems, as in Vodun or the Virgin of Guadalupe.']
+],
+quiz:[
+ {q:'The most demographically devastating part of the Columbian Exchange was:',
+  c:['New crops from the Americas','Old World diseases in the Americas','Horses spreading in the Plains','Silver flowing to China'],
+  a:1, why:'Smallpox, measles, and influenza killed an estimated 80–90% of Indigenous populations lacking immunity.'},
+ {q:'Mercantilism assumed that:',
+  c:['Free trade benefits all parties','Global wealth is fixed, so exports and bullion must be maximized','Colonies should industrialize','Silver had no economic value'],
+  a:1, why:'The zero-sum assumption justified tight colonial trade restrictions and the pursuit of a favorable trade balance.'},
+ {q:'The devshirme system was used by the Ottomans to:',
+  c:['Collect a land tax','Recruit and train administrators and soldiers loyal to the sultan','Convert Persian Shia populations','Fund maritime exploration'],
+  a:1, why:'Boys taken from Christian families were educated and served the sultan directly, creating a loyal elite outside the nobility.'},
+ {q:'American silver mattered globally because it:',
+  c:['Replaced gold in Africa','Financed European trade with China, which demanded silver','Ended the Atlantic slave trade','Reduced Spanish inflation'],
+  a:1, why:'China\u2019s silver-based tax system made it the main destination for Potosí silver, tying the world economy together.'}
+]
+},
+{
+id:'u3', title:'Units 5–9 · 1750–Present',
+guide:[
+ {h:'Revolutions and industry', points:[
+  'Enlightenment ideas fueled the American, French, Haitian, and Latin American revolutions.',
+  'The <b>Industrial Revolution</b> began in Britain with coal, capital, colonies, and agricultural surplus.',
+  'The factory system created an urban working class, new class conflict, and labor movements.',
+  '<b>Marxism</b> and utopian socialism responded to industrial inequality; states adopted reforms.',
+  'Industrialization spread to Japan through the <b>Meiji Restoration</b> and to Russia through state-led programs.'
+ ]},
+ {h:'Imperialism and global conflict', points:[
+  '<b>New imperialism</b> used industrial technology, Social Darwinism, and civilizing rhetoric to justify conquest.',
+  'The <b>Berlin Conference</b> partitioned Africa without African participation.',
+  'Resistance ranged from the Sepoy Rebellion to Ethiopia\u2019s victory at Adwa.',
+  'World War I combined nationalism, alliances, imperial rivalry, and militarism into total war.',
+  'The Depression, fascism, and unresolved WWI settlements produced World War II and the Holocaust.'
+ ]},
+ {h:'Cold War and globalization', points:[
+  'The Cold War split the world into blocs with proxy wars in Korea, Vietnam, and Afghanistan.',
+  '<b>Decolonization</b> came through negotiation in India and Ghana and through war in Algeria and Vietnam.',
+  'Nonalignment offered a third path; the UN and Bretton Woods institutions structured the new order.',
+  'The Soviet collapse in 1991 ended the bipolar system and accelerated market integration.',
+  'Globalization brought multinational corporations, migration, environmental strain, and new resistance movements.'
+ ]}
+],
+cards:[
+ ['Meiji Restoration','Japan\u2019s rapid state-led industrialization and modernization beginning in 1868.'],
+ ['Berlin Conference','1884–85 meeting where European powers divided Africa among themselves.'],
+ ['Social Darwinism','Misapplication of natural selection used to justify imperialism and racial hierarchy.'],
+ ['Sepoy Rebellion','1857 Indian uprising that led Britain to rule India directly.'],
+ ['Total war','Mobilizing an entire society and economy for military effort.'],
+ ['Decolonization','The post-1945 process by which colonies gained independence.'],
+ ['Nonaligned Movement','Coalition of states refusing to side with either Cold War bloc.'],
+ ['Proxy war','Conflict where rival powers back opposing sides without fighting directly.'],
+ ['Green Revolution','Spread of high-yield seeds and fertilizers that raised food production and environmental costs.']
+],
+quiz:[
+ {q:'Britain industrialized first largely because of:',
+  c:['A lack of colonies','Coal, capital, colonial markets, and agricultural surplus','Strong guild restrictions','Isolation from world trade'],
+  a:1, why:'These conditions combined to supply energy, investment, raw materials, labor, and demand at once.'},
+ {q:'The Berlin Conference is best described as:',
+  c:['A treaty ending World War I','European powers dividing Africa without African representation','A meeting of nonaligned nations','A trade agreement with China'],
+  a:1, why:'It set rules for European claims and drew borders that ignored existing political and ethnic realities.'},
+ {q:'The Meiji Restoration shows that:',
+  c:['Industrialization required European colonization','A non-Western state could industrialize rapidly under central direction','Traditional systems always resist change','Industrialization always follows revolution'],
+  a:1, why:'Japan deliberately adopted Western technology and institutions while retaining its own political authority.'},
+ {q:'The Haitian Revolution was distinctive because it:',
+  c:['Was led by European settlers','Was the only successful large-scale revolt by enslaved people creating an independent state','Left slavery intact','Had no connection to Enlightenment ideas'],
+  a:1, why:'Enslaved people overthrew both slavery and colonial rule, alarming slaveholding societies everywhere.'}
+]
+}
+]});
+
+/* ------------------------------------------------ SAT */
+COURSES.push({
+id:'sat', name:'SAT', short:'SAT', color:'#5B4A9E', exam:'Test',
+blurb:'Digital SAT strategy plus Reading, Writing, and Math practice.',
+units:[
+{
+id:'rw', title:'Reading and Writing',
+guide:[
+ {h:'How the section works', points:[
+  'Two modules of 27 questions in 32 minutes each; module 2 adapts based on module 1 performance.',
+  'Every question has its own short passage (25–150 words), so there is no long-passage set to manage.',
+  'Questions appear in order of type: Craft and Structure, Information and Ideas, Standard English Conventions, Expression of Ideas.',
+  'Aim for roughly 71 seconds per question, and never leave a blank — there is no penalty for guessing.'
+ ]},
+ {h:'Reading strategy', points:[
+  'For <b>vocabulary in context</b>, cover the choices, predict your own word, then match.',
+  'For <b>command of evidence</b>, find the claim first, then ask which choice would have to be true to support it.',
+  'For <b>inference</b> questions, choose the conclusion the passage forces, not the one that sounds smartest.',
+  'Wrong answers usually go too far ("always," "proves"), swap a detail, or answer a question that was not asked.',
+  'For quantitative evidence, read the axis labels and units before looking at the choices.'
+ ]},
+ {h:'Grammar rules that repeat', points:[
+  '<b>Subject-verb agreement</b>: cross out prepositional phrases to find the real subject.',
+  '<b>Independent clauses</b> need a period, semicolon, or comma with FANBOYS — never a comma alone.',
+  'A colon needs a complete sentence before it; a dash can act as a strong comma or colon.',
+  '<b>Modifiers</b> must sit next to what they modify — check the noun right after an opening phrase.',
+  '<b>Pronouns</b> need a clear singular or plural antecedent; its = possessive, it\u2019s = it is.',
+  '<b>Transitions</b>: decide the logical relationship (contrast, cause, addition) before reading the options.'
+ ]}
+],
+cards:[
+ ['Digital SAT structure','Two adaptive modules per section; the second gets harder or easier based on the first.'],
+ ['Vocabulary in context','Predict your own word from context before looking at the answer choices.'],
+ ['Command of evidence','Identify the claim, then select the detail that must be true for the claim to hold.'],
+ ['Comma splice','Joining two independent clauses with only a comma — always wrong on the SAT.'],
+ ['Semicolon rule','Use only between two complete, closely related independent clauses.'],
+ ['Colon rule','Requires a complete sentence before it; what follows can be a list, phrase, or clause.'],
+ ['Dangling modifier','An opening descriptive phrase must modify the noun that immediately follows the comma.'],
+ ['Subject-verb agreement trap','Prepositional phrases between subject and verb hide the true subject.'],
+ ['Its vs. it\u2019s','Its shows possession; it\u2019s is a contraction of "it is."'],
+ ['Transition questions','Name the logical relationship yourself before evaluating the choices.'],
+ ['Extreme-language trap','Answers with "always," "never," or "proves" usually overstate the passage.']
+],
+quiz:[
+ {q:'Choose the correct option: "The collection of rare manuscripts ___ housed in the east wing."',
+  c:['are','is','were','have been'],
+  a:1, why:'The subject is "collection," a singular noun. "Of rare manuscripts" is a prepositional phrase and cannot be the subject.'},
+ {q:'Which correctly joins these clauses? "The experiment failed ___ the results were still useful."',
+  c:[', however,','; however,','however,','and however'],
+  a:1, why:'Two independent clauses need a semicolon before a conjunctive adverb like "however," plus a comma after it.'},
+ {q:'"Walking through the museum, ___" Which continuation avoids a dangling modifier?',
+  c:['the paintings impressed us','we were impressed by the paintings','it was impressive to see the paintings','the impression was strong'],
+  a:1, why:'The person doing the walking must directly follow the comma. Paintings cannot walk.'},
+ {q:'A student claims a species adapted to drought. Which finding would BEST support that claim?',
+  c:['The species is found on four continents','The species has deeper roots than related species in wetter regions','The species was first described in 1890','The species has a long lifespan'],
+  a:1, why:'Only the root comparison connects a trait to the specific pressure of drought, which is what the claim requires.'},
+ {q:'"The results were inconclusive; ___ the team repeated the trial." Which transition fits?',
+  c:['similarly,','therefore,','nevertheless,','for example,'],
+  a:1, why:'The second clause is a consequence of the first, so a cause-and-effect transition is needed.'},
+ {q:'Which sentence uses the colon correctly?',
+  c:['The kit includes: rope, a lamp, and matches.','She packed one thing: courage.','He wanted to: leave early.','They brought: nothing at all.'],
+  a:1, why:'A colon must follow a complete independent clause. "She packed one thing" stands alone; the others do not.'}
+]
+},
+{
+id:'math', title:'Math',
+guide:[
+ {h:'How the section works', points:[
+  'Two modules of 22 questions in 35 minutes each; about 75% multiple choice and 25% student-produced response.',
+  'Desmos graphing calculator is built in for the entire section — use it to solve systems and find intersections visually.',
+  'Content weighting: Algebra ≈35%, Advanced Math ≈35%, Problem Solving and Data ≈15%, Geometry and Trig ≈15%.',
+  'Grid-in answers cannot be negative on some question types; check whether the answer must be positive.'
+ ]},
+ {h:'Algebra and functions', points:[
+  'Linear equations: slope = (y₂−y₁)/(x₂−x₁); parallel lines share slope, perpendicular slopes are negative reciprocals.',
+  'Systems: one solution when slopes differ, none when slopes match with different intercepts, infinite when identical.',
+  'Quadratics: standard form gives the y-intercept, <b>vertex form</b> gives the vertex, factored form gives the roots.',
+  'The discriminant b²−4ac tells you how many real solutions exist.',
+  'For function transformations, f(x)+k moves up, f(x+k) moves left — inside changes act opposite to expectation.'
+ ]},
+ {h:'Data, geometry, and speed tactics', points:[
+  'Percent change = (new − old)/old. An increase of x% then decrease of x% never returns to the original.',
+  'For exponential growth use y = a(1+r)^t; for decay use (1−r)^t.',
+  'Similar triangles give proportional sides; SOHCAHTOA plus the fact that sin(x) = cos(90−x).',
+  'Circle equation: (x−h)² + (y−k)² = r². Complete the square to find the center.',
+  'When choices are numbers, <b>backsolving</b> from the middle choice is often faster than algebra.',
+  'When the problem is abstract, <b>plug in</b> a convenient number like 100 for a total.'
+ ]}
+],
+cards:[
+ ['Slope formula','m = (y₂ − y₁)/(x₂ − x₁).'],
+ ['Perpendicular slopes','Negative reciprocals: their product is −1.'],
+ ['Vertex form','y = a(x − h)² + k, where (h, k) is the vertex.'],
+ ['Discriminant','b² − 4ac: positive gives 2 real roots, zero gives 1, negative gives none.'],
+ ['No-solution system','Same slope, different y-intercepts — the lines are parallel.'],
+ ['Percent change','(new − old) ÷ old, then multiply by 100.'],
+ ['Exponential growth','y = a(1 + r)^t, where a is the starting amount and r the rate per period.'],
+ ['Circle equation','(x − h)² + (y − k)² = r², center (h, k) and radius r.'],
+ ['sin(x) = cos(90 − x)','Sine and cosine of complementary angles are equal.'],
+ ['Backsolving','Plug the middle answer choice into the problem and adjust up or down.'],
+ ['Function shift rule','Changes inside the parentheses shift horizontally and in the opposite direction.']
+],
+quiz:[
+ {q:'A line passes through (2, 5) and (6, 13). What is its slope?',
+  c:['1/2','2','4','8'],
+  a:1, why:'(13 − 5)/(6 − 2) = 8/4 = 2.'},
+ {q:'For what value of k does 3x + ky = 7 have no solution with 6x + 4y = 9?',
+  c:['1','2','4','8'],
+  a:1, why:'Parallel lines need proportional coefficients: 3/6 = k/4, so k = 2. The constants are not proportional, so there is no solution.'},
+ {q:'A shirt costs $40 after a 20% discount. What was the original price?',
+  c:['$48','$50','$52','$60'],
+  a:1, why:'0.8x = 40, so x = 50. Adding 20% back to $40 is the classic trap answer of $48.'},
+ {q:'The graph of y = (x − 3)² + 4 has its vertex at:',
+  c:['(−3, 4)','(3, 4)','(3, −4)','(4, 3)'],
+  a:1, why:'In vertex form the sign inside the parentheses flips, giving h = 3, while k = 4 is unchanged.'},
+ {q:'A population of 500 grows 6% per year. Which models it after t years?',
+  c:['500 + 0.06t','500(0.06)^t','500(1.06)^t','500(1 + 6)^t'],
+  a:2, why:'Exponential growth multiplies by (1 + r) each period, so the base is 1.06.'},
+ {q:'If sin(x°) = 0.6, then cos(90 − x)° equals:',
+  c:['0.4','0.6','0.8','Cannot be determined'],
+  a:1, why:'Sine and cosine of complementary angles are equal, so the value is also 0.6.'}
+]
+}
+]});
+
+/* ------------------------------------------------ ACT */
+COURSES.push({
+id:'act', name:'ACT', short:'ACT', color:'#B03A4E', exam:'Test',
+blurb:'Pacing, grammar, math, and the Science section decoded.',
+units:[
+{
+id:'eng', title:'English and Reading',
+guide:[
+ {h:'Pacing', points:[
+  'English: 75 questions in 45 minutes — about 36 seconds each.',
+  'Reading: 40 questions in 35 minutes across four passages — roughly 8 minutes per passage.',
+  'The ACT rewards speed more than the SAT does. Practice with a timer from the beginning.',
+  'Answer every question; there is no wrong-answer penalty.'
+ ]},
+ {h:'English rules', points:[
+  '<b>Shortest is often best</b>: if choices differ only in length and all are grammatical, pick the concise one.',
+  'Watch for redundancy: "annual yearly meeting," "returned back," "each and every."',
+  'Delete the modifier and read the sentence aloud to check comma pairs.',
+  '<b>Who</b> vs. <b>whom</b>: substitute he/him — if "him" works, use "whom."',
+  'Apostrophes: plural nouns take s\u2019, singular take \u2019s, and possessive pronouns never take one.',
+  'For "which choice best accomplishes X" questions, reread X first and let it decide.'
+ ]},
+ {h:'Reading strategy', points:[
+  'Order the passages by your own strength and do your weakest one last.',
+  'Skim for structure, then work question to question with line references.',
+  'Answer only from the text; ACT reading rewards literal accuracy over interpretation.',
+  'Paired passages: answer questions on passage A, then B, then the comparison questions.'
+ ]}
+],
+cards:[
+ ['ACT English pacing','75 questions in 45 minutes — roughly 36 seconds per question.'],
+ ['ACT Reading pacing','40 questions in 35 minutes — about 8 minutes per passage.'],
+ ['Conciseness rule','If several options are grammatical, the shortest clear one is usually correct.'],
+ ['Redundancy trap','Repeating an idea already stated, such as "annual yearly."'],
+ ['Who vs. whom','Substitute he/him: "him" means "whom" is correct.'],
+ ['Apostrophe rule','Singular possessive adds \u2019s; plural possessive adds s\u2019; possessive pronouns take none.'],
+ ['Purpose questions','Reread the stated goal first and choose only what fulfills it.']
+],
+quiz:[
+ {q:'Which is best? "The committee met to discuss ___ the annual budget."',
+  c:['and talk about','and consider','','and review'],
+  a:2, why:'"Discuss" already means talk about, so any addition is redundant. Deleting is correct.'},
+ {q:'"The scientist ___ research changed the field won an award." Choose correctly.',
+  c:['who\u2019s','whose','whos','who is'],
+  a:1, why:'The blank shows possession of research, which requires "whose." "Who\u2019s" means "who is."'},
+ {q:'Which is correctly punctuated?',
+  c:['My brother, who lives in Ohio visits often.','My brother who lives in Ohio, visits often.','My brother, who lives in Ohio, visits often.','My brother who lives in Ohio visits, often.'],
+  a:2, why:'A nonessential clause needs commas on both sides. Delete it and the sentence must still work.'},
+ {q:'On ACT Reading, the best evidence for an answer is:',
+  c:['Your background knowledge of the topic','An explicit statement or clear implication in the passage','The most sophisticated-sounding choice','The longest answer choice'],
+  a:1, why:'ACT Reading is literal. If you cannot point to a line, the answer is probably wrong.'}
+]
+},
+{
+id:'msci', title:'Math and Science',
+guide:[
+ {h:'ACT Math', points:[
+  '60 questions in 60 minutes, roughly ordered easy to hard — bank time early.',
+  'No formula sheet is provided, so memorize area, volume, slope, distance, midpoint, and SOHCAHTOA.',
+  'Know the quadratic formula, the laws of exponents, and basic trig identities.',
+  'The last 15 questions carry trig, matrices, logs, imaginary numbers, and conic sections.',
+  'A calculator is allowed the whole section, but arithmetic-heavy setups usually mean you missed a shortcut.'
+ ]},
+ {h:'ACT Science', points:[
+  'It is a data-reading section, not a knowledge test — around 90% of answers are in the figures.',
+  'Three passage types: <b>Data Representation</b>, <b>Research Summaries</b>, and <b>Conflicting Viewpoints</b>.',
+  'Start with the figures. Read axis labels, units, and the direction of each trend before the questions.',
+  'Save Conflicting Viewpoints for last; it is the only passage requiring careful reading.',
+  'For trend questions, state the relationship in words ("as X increases, Y decreases") before checking choices.',
+  'Only a handful of questions need outside knowledge — usually basic biology, chemistry, or physics.'
+ ]}
+],
+cards:[
+ ['ACT Math pacing','60 questions in 60 minutes, ordered roughly from easiest to hardest.'],
+ ['No formula sheet','ACT provides no formulas; area, volume, slope, and trig must be memorized.'],
+ ['Distance formula','d = √[(x₂ − x₁)² + (y₂ − y₁)²].'],
+ ['Midpoint formula','((x₁ + x₂)/2, (y₁ + y₂)/2).'],
+ ['Data Representation','ACT Science passage type built around graphs and tables with minimal text.'],
+ ['Research Summaries','Passage describing related experiments; questions test design and comparison.'],
+ ['Conflicting Viewpoints','Passage with competing scientist hypotheses; the only heavy-reading Science passage.'],
+ ['Science section strategy','Go to the figures first; check axis labels and units before reading questions.']
+],
+quiz:[
+ {q:'The most efficient ACT Science approach is to:',
+  c:['Read all text carefully before the questions','Go straight to figures and check labels and units','Memorize science formulas beforehand','Do Conflicting Viewpoints first'],
+  a:1, why:'Most questions are answered directly from the data. Reading everything first burns the time you need.'},
+ {q:'A table shows that as temperature rises, reaction rate rises then falls sharply. The best description is:',
+  c:['A direct linear relationship','Rate increases to a maximum, then declines','No relationship','An inverse relationship throughout'],
+  a:1, why:'Describe exactly what the data does, including the turning point, rather than forcing it into one simple trend.'},
+ {q:'What is the distance between (1, 2) and (4, 6)?',
+  c:['3','4','5','7'],
+  a:2, why:'√(3² + 4²) = √25 = 5 — the classic 3-4-5 right triangle.'},
+ {q:'ACT Math questions are generally arranged:',
+  c:['Randomly','From easiest to hardest','By topic','Hardest first'],
+  a:1, why:'Early questions are quick points, so protect time there for the harder final third.'}
+]
+}
+]});
+</script>
+<script>
+/* ============================================================
+   StudyBuddy app
+   ============================================================ */
+
+/* ---------- storage that never throws ---------- */
+const store = (() => {
+  let ok = true, mem = {};
+  try { localStorage.setItem('__sb', '1'); localStorage.removeItem('__sb'); }
+  catch (e) { ok = false; }
+  return {
+    ok,
+    get(k, d) {
+      try { const v = ok ? localStorage.getItem(k) : mem[k]; return v == null ? d : JSON.parse(v); }
+      catch (e) { return d; }
+    },
+    set(k, v) {
+      const s = JSON.stringify(v);
+      try { if (ok) localStorage.setItem(k, s); else mem[k] = s; } catch (e) { mem[k] = s; }
+    },
+    wipe() { try { if (ok) ['sb.progress','sb.cards','sb.streak','sb.custom','sb.last'].forEach(k => localStorage.removeItem(k)); } catch (e) {} mem = {}; }
+  };
+})();
+
+const S = {
+  get progress() { return store.get('sb.progress', {}); },
+  set progress(v) { store.set('sb.progress', v); },
+  get cards() { return store.get('sb.cards', {}); },
+  set cards(v) { store.set('sb.cards', v); },
+  get custom() { return store.get('sb.custom', []); },
+  set custom(v) { store.set('sb.custom', v); },
+  get cfg() { return store.get('sb.cfg', { theme: 'day', key: '', model: 'claude-sonnet-4-6' }); },
+  set cfg(v) { store.set('sb.cfg', v); }
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const today = () => new Date().toISOString().slice(0, 10);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const findCourse = id => COURSES.concat(customCourses()).find(c => c.id === id);
+const findUnit = (c, uid) => c && c.units.find(u => u.id === uid);
+const customCourses = () => S.custom.map(d => ({
+  id: 'my-' + d.id, name: d.name, short: d.name, color: '#4B7F8C', exam: 'Mine',
+  blurb: d.note || 'Made from your own notes.', mine: true,
+  units: [{ id: 'u1', title: d.name, guide: d.guide || [], cards: d.cards || [], quiz: d.quiz || [] }]
+}));
+
+function unitKey(cid, uid) { return cid + '/' + uid; }
+function mastery(cid, uid) { const p = S.progress[unitKey(cid, uid)]; return p ? p.best : null; }
+function courseMastery(c) {
+  const vals = c.units.map(u => mastery(c.id, u.id)).filter(v => v !== null);
+  if (!vals.length) return null;
+  return Math.round(vals.reduce((a, b) => a + b, 0) / c.units.length);
+}
+function recordScore(cid, uid, pct) {
+  const p = S.progress, k = unitKey(cid, uid);
+  const prev = p[k] || { best: 0, tries: 0 };
+  p[k] = { best: Math.max(prev.best, pct), last: pct, tries: prev.tries + 1, when: today() };
+  S.progress = p;
+  bumpStreak();
+}
+function bumpStreak() {
+  const st = store.get('sb.streak', { last: '', n: 0 });
+  const t = today();
+  if (st.last === t) return;
+  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  st.n = st.last === y ? st.n + 1 : 1;
+  st.last = t;
+  store.set('sb.streak', st);
+}
+function streakCount() {
+  const st = store.get('sb.streak', { last: '', n: 0 });
+  if (!st.last) return 0;
+  const t = today(), y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  return (st.last === t || st.last === y) ? st.n : 0;
+}
+function allQuestions(filter) {
+  const out = [];
+  COURSES.concat(customCourses()).forEach(c => {
+    if (filter && filter !== c.id) return;
+    c.units.forEach(u => (u.quiz || []).forEach(q => out.push(Object.assign({}, q, { _c: c.id, _u: u.id, _cn: c.short, _un: u.title }))));
+  });
+  return out;
+}
+
+/* ---------- navigation ---------- */
+const NAV = [
+  { h: '#/', t: 'Dashboard', i: '◧' },
+  { h: '#/courses', t: 'Courses', i: '▤' },
+  { h: '#/tutor', t: 'AI Tutor', i: '✦' },
+  { h: '#/tests', t: 'Practice tests', i: '⏱' },
+  { h: '#/settings', t: 'Settings', i: '⚙' }
+];
+function paintNav() {
+  const h = location.hash || '#/';
+  $('#nav').innerHTML = '<span class="nav-label">Study</span>' + NAV.map(n =>
+    `<a href="${n.h}" class="${h === n.h || (n.h !== '#/' && h.startsWith(n.h)) ? 'on' : ''}"><span class="ico">${n.i}</span>${n.t}</a>`).join('');
+  $('#tabbar').innerHTML = NAV.map(n =>
+    `<a href="${n.h}" class="${h === n.h || (n.h !== '#/' && h.startsWith(n.h)) ? 'on' : ''}"><span class="ico">${n.i}</span>${n.t.split(' ')[0]}</a>`).join('');
+}
+
+/* ---------- theme ---------- */
+function applyTheme() {
+  document.documentElement.dataset.theme = S.cfg.theme || 'day';
+}
+function toggleTheme() {
+  const c = S.cfg; c.theme = c.theme === 'night' ? 'day' : 'night'; S.cfg = c; applyTheme(); render();
+}
+
+/* ============================================================
+   VIEWS
+   ============================================================ */
+const view = () => $('#view');
+
+function topbar() {
+  return `<div class="mobile-top">
+    <a class="brand" href="#/" style="padding:0"><span class="brand-mark"></span><span class="brand-name">StudyBuddy</span></a>
+    <button class="chip" onclick="toggleTheme()">${S.cfg.theme === 'night' ? '☀ Day' : '☾ Night'}</button>
+  </div>`;
+}
+
+/* ---------------- dashboard ---------------- */
+function vDashboard() {
+  const all = COURSES.concat(customCourses());
+  const studied = Object.keys(S.progress).length;
+  const last = store.get('sb.last', null);
+  const totalCards = all.reduce((n, c) => n + c.units.reduce((m, u) => m + (u.cards || []).length, 0), 0);
+  const totalQs = allQuestions().length;
+
+  const resume = last && findCourse(last.c) ? (() => {
+    const c = findCourse(last.c), u = findUnit(c, last.u);
+    if (!u) return '';
+    return `<div class="card" style="border-left:3px solid ${c.color}">
+      <span class="eyebrow">Pick up where you left off</span>
+      <h3 style="margin-bottom:2px">${esc(u.title)}</h3>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin-bottom:14px">${esc(c.name)}</p>
+      <div class="row">
+        <a class="btn" href="#/study/${c.id}/${u.id}/cards">Flashcards</a>
+        <a class="btn ghost" href="#/study/${c.id}/${u.id}/quiz">Quiz</a>
+        <a class="btn ghost" href="#/study/${c.id}/${u.id}/guide">Study guide</a>
+      </div>
+    </div>`;
+  })() : `<div class="card">
+      <span class="eyebrow">Start here</span>
+      <h3 style="margin-bottom:6px">Nothing studied yet</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">Pick a course below, or paste your own notes and let the tutor build a deck from them.</p>
+      <div class="row"><a class="btn" href="#/courses">Browse courses</a><a class="btn ghost" href="#/tutor">Use my notes</a></div>
+    </div>`;
+
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Free · no account · no limits</span>
+    <h1>Study something <span class="hl">today</span>.</h1>
+    <p>Study guides, flashcards, quizzes, and timed practice for AP courses, the SAT, and the ACT — plus a tutor that quizzes you on your own notes.</p>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:22px">
+    ${resume}
+    <div class="card">
+      <span class="eyebrow">Your numbers</span>
+      <div class="row" style="gap:26px;margin-top:8px">
+        <div class="stat"><b>${streakCount()}</b><span>day streak</span></div>
+        <div class="stat"><b>${studied}</b><span>units started</span></div>
+        <div class="stat"><b>${totalCards}</b><span>cards ready</span></div>
+        <div class="stat"><b>${totalQs}</b><span>questions</span></div>
+      </div>
+      <hr class="divide" style="margin:18px 0">
+      <div class="row"><a class="btn mark sm" href="#/tests">Take a timed test</a><button class="chip" onclick="toggleTheme()">${S.cfg.theme === 'night' ? '☀ Day mode' : '☾ Night mode'}</button></div>
+    </div>
+  </div>
+
+  <span class="eyebrow">Your courses</span>
+  <div class="grid g3">${all.map(courseTile).join('')}</div>`;
+}
+
+function courseTile(c) {
+  const m = courseMastery(c);
+  return `<a class="tile" href="#/course/${c.id}" style="--tcolor:${c.color}">
+    <span class="tag" style="margin-bottom:8px;display:inline-block">${esc(c.exam)}</span>
+    <h3>${esc(c.name)}</h3>
+    <p class="blurb">${esc(c.blurb)}</p>
+    <div class="meter ${m !== null && m >= 80 ? 'good' : ''}"><i style="width:${m || 0}%"></i></div>
+    <div class="foot" style="margin-top:8px">
+      <span>${c.units.length} unit${c.units.length > 1 ? 's' : ''}</span><span>·</span>
+      <span>${m === null ? 'not started' : m + '% mastered'}</span>
+    </div>
+  </a>`;
+}
+
+/* ---------------- course library ---------------- */
+function vCourses() {
+  const all = COURSES.concat(customCourses());
+  const groups = [['AP', 'AP courses'], ['Test', 'College entrance exams'], ['Mine', 'Made from your notes']];
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Library</span>
+    <h1>Courses</h1>
+    <p>Every course includes a study guide, a flashcard deck, and a quiz bank per unit. Missing a course? Paste your notes into the AI Tutor and it will build one.</p>
+  </div>
+  ${groups.map(([k, label]) => {
+    const list = all.filter(c => c.exam === k);
+    if (!list.length) return '';
+    return `<span class="eyebrow" style="margin-top:22px">${label}</span><div class="grid g3" style="margin-bottom:8px">${list.map(courseTile).join('')}</div>`;
+  }).join('')}`;
+}
+
+/* ---------------- one course ---------------- */
+function vCourse(cid) {
+  const c = findCourse(cid);
+  if (!c) return notFound();
+  return topbar() + `
+  <a class="crumb" href="#/courses">← All courses</a>
+  <div class="page-head fade">
+    <span class="eyebrow">${esc(c.exam)} · ${c.units.length} units</span>
+    <h1>${esc(c.name)}</h1>
+    <p>${esc(c.blurb)}</p>
+  </div>
+  <div class="grid g2">
+    ${c.units.map(u => {
+      const m = mastery(c.id, u.id);
+      return `<div class="card" style="border-left:3px solid ${c.color}">
+        <div class="spread" style="align-items:flex-start">
+          <h3 style="max-width:80%">${esc(u.title)}</h3>
+          <span class="tag">${m === null ? 'new' : m + '%'}</span>
+        </div>
+        <div class="meter ${m !== null && m >= 80 ? 'good' : ''}" style="margin:12px 0 14px"><i style="width:${m || 0}%"></i></div>
+        <div class="row">
+          ${(u.guide || []).length ? `<a class="btn ghost sm" href="#/study/${c.id}/${u.id}/guide">Study guide</a>` : ''}
+          ${(u.cards || []).length ? `<a class="btn ghost sm" href="#/study/${c.id}/${u.id}/cards">${u.cards.length} flashcards</a>` : ''}
+          ${(u.quiz || []).length ? `<a class="btn sm" href="#/study/${c.id}/${u.id}/quiz">Quiz me</a>` : ''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${c.mine ? `<hr class="divide"><button class="btn ghost sm" onclick="deleteDeck('${c.id.slice(3)}')">Delete this deck</button>` : ''}`;
+}
+
+/* ---------------- study guide ---------------- */
+function vGuide(cid, uid) {
+  const c = findCourse(cid), u = findUnit(c, uid);
+  if (!u) return notFound();
+  store.set('sb.last', { c: cid, u: uid });
+  if (!(u.guide || []).length) return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a><div class="empty"><div class="big">▤</div>No written guide for this deck yet — try the flashcards.</div>`;
+  return topbar() + `
+  <a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a>
+  <div class="page-head fade"><span class="eyebrow">Study guide</span><h1>${esc(u.title)}</h1></div>
+  <div class="card guide" style="max-width:760px">
+    ${u.guide.map(s => `<h3>${esc(s.h)}</h3><ul>${s.points.map(p => `<li>${p}</li>`).join('')}</ul>`).join('')}
+  </div>
+  <div class="row" style="margin-top:20px">
+    <a class="btn" href="#/study/${cid}/${uid}/cards">Study the flashcards</a>
+    <a class="btn ghost" href="#/study/${cid}/${uid}/quiz">Quiz me on this</a>
+  </div>`;
+}
+
+/* ---------------- flashcards ---------------- */
+let DECK = null;
+function vCards(cid, uid) {
+  const c = findCourse(cid), u = findUnit(c, uid);
+  if (!u || !(u.cards || []).length) return notFound();
+  store.set('sb.last', { c: cid, u: uid });
+  DECK = { cid, uid, i: 0, flipped: false, order: shuffle(u.cards.map((_, i) => i)), cards: u.cards, missed: [] };
+  setTimeout(paintCard, 0);
+  return topbar() + `
+  <a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a>
+  <div class="page-head fade"><span class="eyebrow">Flashcards</span><h1>${esc(u.title)}</h1></div>
+  <div class="deck-wrap" id="deckwrap"></div>`;
+}
+function paintCard() {
+  const w = $('#deckwrap'); if (!w || !DECK) return;
+  if (DECK.i >= DECK.order.length) {
+    const known = DECK.order.length - DECK.missed.length;
+    w.innerHTML = `<div class="card center fade">
+      <span class="eyebrow">Deck finished</span>
+      <div class="score-ring" style="--p:${Math.round(known / DECK.order.length * 100)}"><div>${known}/${DECK.order.length}</div></div>
+      <p style="color:var(--ink-soft)">${DECK.missed.length ? `You marked ${DECK.missed.length} card${DECK.missed.length > 1 ? 's' : ''} for review.` : 'You knew every card. Go take the quiz.'}</p>
+      <div class="row center" style="justify-content:center;margin-top:8px">
+        ${DECK.missed.length ? `<button class="btn" onclick="redoMissed()">Review the ${DECK.missed.length} missed</button>` : ''}
+        <a class="btn ${DECK.missed.length ? 'ghost' : ''}" href="#/study/${DECK.cid}/${DECK.uid}/quiz">Take the quiz</a>
+        <button class="btn ghost" onclick="location.reload()">Shuffle and restart</button>
+      </div>
+    </div>`;
+    return;
+  }
+  const idx = DECK.order[DECK.i], card = DECK.cards[idx];
+  w.innerHTML = `
+    <div class="deck-meta">
+      <span>Card ${DECK.i + 1} of ${DECK.order.length}</span>
+      <span>${DECK.missed.length} to review</span>
+    </div>
+    <div class="fcard" id="fc" onclick="flipCard()">
+      <div class="fcard-inner">
+        <div class="fface"><span class="ftag">Term</span><div class="ftext">${esc(card[0])}</div></div>
+        <div class="fface fback"><span class="ftag">Definition</span><div class="ftext">${esc(card[1])}</div></div>
+      </div>
+    </div>
+    <div class="row" style="justify-content:center">
+      <button class="btn ghost" onclick="flipCard()">Flip card</button>
+      <button class="btn ghost" onclick="markCard(false)">Need review</button>
+      <button class="btn mark" onclick="markCard(true)">I knew it</button>
+    </div>
+    <p class="center" style="color:var(--ink-faint);font-size:.78rem;margin-top:12px">Space flips · ← need review · → knew it</p>`;
+}
+function flipCard() { DECK.flipped = !DECK.flipped; $('#fc').classList.toggle('flipped'); }
+function markCard(known) {
+  if (!known) DECK.missed.push(DECK.order[DECK.i]);
+  DECK.i++; DECK.flipped = false; paintCard(); bumpStreak();
+}
+function redoMissed() { DECK.order = shuffle(DECK.missed); DECK.missed = []; DECK.i = 0; paintCard(); }
+
+/* ---------------- quiz ---------------- */
+let QZ = null;
+function prepQuestions(list) {
+  return shuffle(list).map(q => {
+    const pairs = q.c.map((t, i) => ({ t, correct: i === q.a }));
+    const mixed = shuffle(pairs);
+    return { q: q.q, c: mixed.map(p => p.t), a: mixed.findIndex(p => p.correct), why: q.why, tag: q._cn ? q._cn + ' · ' + q._un : '' };
+  });
+}
+function vQuiz(cid, uid) {
+  const c = findCourse(cid), u = findUnit(c, uid);
+  if (!u || !(u.quiz || []).length) return notFound();
+  store.set('sb.last', { c: cid, u: uid });
+  QZ = { cid, uid, title: u.title, sub: c.name, qs: prepQuestions(u.quiz), i: 0, right: 0, marks: [], answered: false, timed: false, test: false };
+  setTimeout(paintQuiz, 0);
+  return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a><div id="qwrap"></div>`;
+}
+function paintQuiz() {
+  const w = $('#qwrap'); if (!w || !QZ) return;
+  if (QZ.i >= QZ.qs.length) return paintQuizResult();
+  const q = QZ.qs[QZ.i];
+  w.innerHTML = `
+  <div class="page-head fade" style="margin-bottom:16px">
+    <span class="eyebrow">${QZ.test ? 'Practice test' : 'Quiz'} · ${esc(QZ.sub)}</span>
+    <h2>${esc(QZ.title)}</h2>
+  </div>
+  <div class="spread" style="margin-bottom:14px">
+    <div class="qprog">${QZ.qs.map((_, i) => {
+      const done = QZ.marks[i] !== undefined;
+      const cls = QZ.test ? (done ? 'done' : i === QZ.i ? 'now' : '') : (QZ.marks[i] === 1 ? 'done' : QZ.marks[i] === 0 ? 'miss' : i === QZ.i ? 'now' : '');
+      return `<i class="${cls}"></i>`;
+    }).join('')}</div>
+    ${QZ.timed ? `<span class="timer" id="clock">--:--</span>` : QZ.test ? `<span class="tag">${QZ.i + 1} / ${QZ.qs.length}</span>` : `<span class="tag">${QZ.right}/${QZ.i} correct</span>`}
+  </div>
+  <div class="card qbox">
+    <span class="eyebrow">Question ${QZ.i + 1} of ${QZ.qs.length}${q.tag ? ' · ' + esc(q.tag) : ''}</span>
+    <p class="qstem">${esc(q.q)}</p>
+    <div id="opts">${q.c.map((t, i) => `<button class="opt" data-i="${i}" onclick="answer(${i})"><span class="k">${'ABCD'[i]}</span><span>${esc(t)}</span></button>`).join('')}</div>
+    <div id="feedback"></div>
+  </div>`;
+  if (QZ.timed) tick();
+}
+function answer(i) {
+  if (QZ.answered) return;
+  QZ.answered = true;
+  const q = QZ.qs[QZ.i], correct = i === q.a;
+  QZ.marks[QZ.i] = correct ? 1 : 0;
+  if (correct) QZ.right++;
+  const opts = document.querySelectorAll('#opts .opt');
+  opts.forEach(o => { o.setAttribute('disabled', ''); });
+  if (QZ.test) {
+    opts[i].classList.add('picked');
+    setTimeout(next, 160);
+    return;
+  }
+  opts[q.a].classList.add('right');
+  if (!correct) opts[i].classList.add('wrong');
+  $('#feedback').innerHTML = `
+    <div class="why fade"><b>${correct ? 'Correct.' : 'Not quite.'}</b> ${esc(q.why)}</div>
+    <button class="btn" onclick="next()">${QZ.i + 1 >= QZ.qs.length ? 'See results' : 'Next question'}</button>`;
+}
+function next() { QZ.i++; QZ.answered = false; paintQuiz(); }
+function paintQuizResult() {
+  const pct = Math.round(QZ.right / QZ.qs.length * 100);
+  if (QZ.cid) recordScore(QZ.cid, QZ.uid, pct); else bumpStreak();
+  if (QZ.timer) { clearInterval(QZ.timer); QZ.timer = null; }
+  const msg = pct >= 90 ? 'You have this cold.' : pct >= 75 ? 'Solid. Clean up the misses and you are there.' :
+    pct >= 50 ? 'Halfway. Reread the guide, then run the deck again.' : 'Start with the study guide and flashcards — the quiz will feel different after.';
+  view().scrollIntoView({ block: 'start' });
+  $('#qwrap').innerHTML = `
+  <div class="card center fade" style="max-width:640px;margin:0 auto">
+    <span class="eyebrow">Result</span>
+    <div class="score-ring" style="--p:${pct}"><div>${pct}%</div></div>
+    <h2 style="margin-bottom:6px">${QZ.right} of ${QZ.qs.length}</h2>
+    <p style="color:var(--ink-soft)">${msg}</p>
+    <div class="row" style="justify-content:center;margin-top:10px">
+      <button class="btn" onclick="location.reload()">Try again</button>
+      ${QZ.cid ? `<a class="btn ghost" href="#/study/${QZ.cid}/${QZ.uid}/cards">Flashcards</a>
+      <a class="btn ghost" href="#/study/${QZ.cid}/${QZ.uid}/guide">Study guide</a>` : `<a class="btn ghost" href="#/tests">New test</a>`}
+    </div>
+  </div>
+  <h3 style="max-width:640px;margin:26px auto 12px">Review every question</h3>
+  <div style="max-width:640px;margin:0 auto">
+    ${QZ.qs.map((q, i) => `<div class="card" style="margin-bottom:10px;border-left:3px solid ${QZ.marks[i] === 1 ? 'var(--green)' : 'var(--margin)'}">
+      <span class="eyebrow">${QZ.marks[i] === 1 ? 'Correct' : 'Missed'} · Q${i + 1}</span>
+      <p style="font-weight:600;margin-bottom:6px">${esc(q.q)}</p>
+      <p style="margin-bottom:6px"><b>Answer:</b> ${esc(q.c[q.a])}</p>
+      <div class="why" style="margin:0">${esc(q.why)}</div>
+    </div>`).join('')}
+  </div>`;
+}
+function tick() {
+  if (QZ.timer) clearInterval(QZ.timer);
+  const paint = () => {
+    const el = $('#clock'); if (!el) return;
+    const left = Math.max(0, QZ.endsAt - Date.now());
+    const m = Math.floor(left / 60000), s = Math.floor(left % 60000 / 1000);
+    el.textContent = m + ':' + String(s).padStart(2, '0');
+    el.classList.toggle('low', left < 60000);
+    if (left <= 0) { clearInterval(QZ.timer); QZ.i = QZ.qs.length; paintQuizResult(); }
+  };
+  paint(); QZ.timer = setInterval(paint, 1000);
+}
+
+/* ---------------- practice tests ---------------- */
+function vTests() {
+  const all = COURSES.concat(customCourses()).filter(c => allQuestions(c.id).length >= 5);
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Timed practice</span>
+    <h1>Practice tests</h1>
+    <p>Questions come at you with a clock and no feedback until the end — the way the real thing works. Full explanations wait for you in the review.</p>
+  </div>
+  <div class="card" style="max-width:640px">
+    <label class="fld"><span>Subject</span>
+      <select id="tsub">
+        <option value="">Mixed — everything you have</option>
+        ${all.map(c => `<option value="${c.id}">${esc(c.name)} (${allQuestions(c.id).length} questions)</option>`).join('')}
+      </select>
+    </label>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px">
+      <label class="fld"><span>Questions</span>
+        <select id="tlen"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>
+      </label>
+      <label class="fld"><span>Time limit</span>
+        <select id="ttime"><option value="0">No limit</option><option value="10">10 minutes</option><option value="20" selected>20 minutes</option><option value="35">35 minutes</option><option value="60">60 minutes</option></select>
+      </label>
+    </div>
+    <button class="btn" onclick="startTest()">Start the test</button>
+    <p style="color:var(--ink-faint);font-size:.8rem;margin:12px 0 0">Answers lock in as you go. The clock keeps running if you switch tabs.</p>
+  </div>`;
+}
+function startTest() {
+  const sub = $('#tsub').value, len = +$('#tlen').value, mins = +$('#ttime').value;
+  const pool = allQuestions(sub || null);
+  if (!pool.length) return;
+  const qs = prepQuestions(pool).slice(0, Math.min(len, pool.length));
+  QZ = { cid: null, uid: null, title: mins ? `${qs.length} questions · ${mins} minutes` : `${qs.length} questions`, sub: sub ? findCourse(sub).name : 'Mixed review', qs, i: 0, right: 0, marks: [], answered: false, test: true, timed: !!mins, endsAt: Date.now() + (mins || 0) * 60000 };
+  view().innerHTML = topbar() + `<a class="crumb" href="#/tests">← Practice tests</a><div id="qwrap"></div>`;
+  paintQuiz();
+}
+
+/* ============================================================
+   AI TUTOR — works with or without an API key
+   ============================================================ */
+const STOP = new Set('the a an and or but of to in for on with is are was were be been being that this these those it its as at by from into than then so such not no can may might will would should could have has had do does did which who whom whose what when where why how all any both each few more most other some only own same too very just also about above after again against because before below between during further here once other over under until while'.split(' '));
+
+function localCards(text) {
+  const out = [], seen = new Set();
+  const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
+  const seps = [/\s+[—–]\s+/, /\s+-\s+/, /:\s+/, /\s+=\s+/, /\s+\u2013\s+/];
+  lines.forEach(line => {
+    const clean = line.replace(/^[-*•\d.)\s]+/, '').trim();
+    for (const sep of seps) {
+      const m = clean.split(sep);
+      if (m.length >= 2 && m[0].length >= 2 && m[0].length <= 70 && m.slice(1).join(' ').length > 8) {
+        const front = m[0].trim(), back = m.slice(1).join(' ').trim();
+        if (!seen.has(front.toLowerCase())) { seen.add(front.toLowerCase()); out.push([front, back]); }
+        return;
+      }
+    }
+  });
+  if (out.length >= 4) return out;
+  /* fall back to cloze deletion on sentences */
+  const sentences = text.replace(/\n/g, ' ').split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(s => s.split(' ').length >= 7);
+  sentences.slice(0, 40).forEach(s => {
+    const words = s.split(/\s+/);
+    let best = null;
+    words.forEach((w, i) => {
+      const bare = w.replace(/[^A-Za-z-]/g, '');
+      if (bare.length < 5 || STOP.has(bare.toLowerCase())) return;
+      const score = bare.length + (/^[A-Z]/.test(bare) && i > 0 ? 6 : 0);
+      if (!best || score > best.score) best = { w: bare, score, i };
+    });
+    if (!best) return;
+    const blanked = words.map((w, i) => i === best.i ? '________' : w).join(' ');
+    if (!seen.has(best.w.toLowerCase())) { seen.add(best.w.toLowerCase()); out.push([blanked, best.w]); }
+  });
+  return out;
+}
+function localQuiz(cards) {
+  if (cards.length < 4) return [];
+  return shuffle(cards).slice(0, 20).map(card => {
+    const wrong = shuffle(cards.filter(c => c[0] !== card[0])).slice(0, 3).map(c => c[1]);
+    if (wrong.length < 3) return null;
+    const choices = shuffle([card[1], ...wrong]);
+    return { q: card[0].includes('________') ? 'Fill in the blank: ' + card[0] : `Which best matches "${card[0]}"?`, c: choices, a: choices.indexOf(card[1]), why: `${card[0].includes('________') ? 'The missing term is' : card[0] + ' —'} ${card[1]}` };
+  }).filter(Boolean);
+}
+
+async function askClaude(messages, system) {
+  const cfg = S.cfg;
+  const headers = { 'content-type': 'application/json' };
+  if (cfg.key) {
+    headers['x-api-key'] = cfg.key;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
+  }
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', headers,
+    body: JSON.stringify({ model: cfg.model || 'claude-sonnet-4-6', max_tokens: 2000, system, messages })
+  });
+  if (!r.ok) throw new Error('API returned ' + r.status);
+  const d = await r.json();
+  return (d.content || []).map(b => b.type === 'text' ? b.text : '').join('\n').trim();
+}
+function parseJSON(t) {
+  const clean = t.replace(/```json|```/g, '').trim();
+  const s = clean.indexOf('['), e = clean.lastIndexOf(']');
+  const o = clean.indexOf('{'), oe = clean.lastIndexOf('}');
+  try { return JSON.parse(clean); } catch (err) {}
+  if (s > -1 && e > s) { try { return JSON.parse(clean.slice(s, e + 1)); } catch (err) {} }
+  if (o > -1 && oe > o) { try { return JSON.parse(clean.slice(o, oe + 1)); } catch (err) {} }
+  return null;
+}
+
+let TUTOR = { msgs: [], api: [], material: '' };
+function vTutor() {
+  const hasKey = !!S.cfg.key;
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Your notes, your deck</span>
+    <h1>AI Tutor</h1>
+    <p>Paste notes, a chapter, a lecture transcript — anything. StudyBuddy turns it into flashcards and a quiz, then drills you on it until it sticks.</p>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div>
+      <div class="card">
+        <label class="fld"><span>Your material</span>
+          <textarea id="mat" placeholder="Paste your notes here.&#10;&#10;Definition lists work best:&#10;Mitochondria — organelle that produces ATP&#10;Osmosis: movement of water across a membrane&#10;&#10;Plain paragraphs work too.">${esc(TUTOR.material)}</textarea>
+          <small>Nothing is uploaded unless you turn on Claude mode in Settings.</small>
+        </label>
+        <div class="row">
+          <button class="btn" onclick="genDeck()">Make flashcards + quiz</button>
+          <button class="btn ghost" onclick="startDrill()">Quiz me out loud</button>
+        </div>
+        <p style="font-size:.8rem;color:var(--ink-faint);margin:12px 0 0">
+          Engine: <b>${hasKey ? 'Claude API' : 'built-in generator'}</b> ·
+          ${hasKey ? 'using your key' : '<a href="#/settings" style="color:var(--ink)">add a key</a> for smarter questions'}
+        </p>
+      </div>
+      <div id="genout" style="margin-top:14px"></div>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Tutor</span>
+      <div class="chat" id="chat">
+        ${TUTOR.msgs.length ? TUTOR.msgs.map(m => `<div class="msg ${m.role === 'user' ? 'me' : 'ai'}">${esc(m.content)}</div>`).join('')
+        : `<div class="msg sys">Paste your material, then press "Quiz me out loud". The tutor asks one question at a time and tells you what you missed.</div>`}
+      </div>
+      <div class="row" style="margin-top:12px;flex-wrap:nowrap">
+        <input type="text" id="chatin" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="btn" onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function material() { const t = $('#mat'); TUTOR.material = t ? t.value : TUTOR.material; return TUTOR.material.trim(); }
+
+async function genDeck() {
+  const text = material();
+  const out = $('#genout');
+  if (text.length < 60) { out.innerHTML = `<div class="note">Paste at least a few sentences of material first — the generator needs something to work with.</div>`; return; }
+  out.innerHTML = `<div class="note"><span class="spin"></span> Building your deck…</div>`;
+  let cards = null, quiz = null;
+  if (S.cfg.key) {
+    try {
+      const raw = await askClaude(
+        [{ role: 'user', content: 'Material:\n\n' + text.slice(0, 12000) }],
+        'You turn study material into practice sets. Reply with ONLY a JSON object, no markdown fences and no preamble, shaped exactly like: {"cards":[["term","definition"]],"quiz":[{"q":"question","c":["A","B","C","D"],"a":0,"why":"one-sentence explanation"}]}. Write 12-20 cards and 8-12 questions. Cover the whole material, not just the start. Make wrong answers plausible. "a" is the index of the correct choice.'
+      );
+      const j = parseJSON(raw);
+      if (j && j.cards) { cards = j.cards; quiz = j.quiz || []; }
+    } catch (e) {
+      out.innerHTML = `<div class="note"><b>Claude mode failed (${esc(e.message)}).</b> Falling back to the built-in generator.</div>`;
+    }
+  }
+  if (!cards) { cards = localCards(text); quiz = localQuiz(cards); }
+  if (!cards.length) { out.innerHTML = `<div class="note">Could not find terms to turn into cards. Try formatting a few lines as <b>term — definition</b>.</div>`; return; }
+  TUTOR.gen = { cards, quiz };
+  out.innerHTML = `<div class="card fade">
+    <span class="eyebrow">Ready</span>
+    <h3 style="margin-bottom:8px">${cards.length} flashcards · ${quiz.length} questions</h3>
+    <p style="color:var(--ink-soft);font-size:.88rem">Save it and it joins your courses on the dashboard.</p>
+    <label class="fld"><span>Name this deck</span><input type="text" id="dname" value="My notes — ${new Date().toLocaleDateString()}"></label>
+    <div class="row"><button class="btn" onclick="saveDeck()">Save to my courses</button><button class="btn ghost" onclick="previewDeck()">Preview cards</button></div>
+    <div id="dprev"></div>
+  </div>`;
+}
+function previewDeck() {
+  $('#dprev').innerHTML = `<hr class="divide">` + TUTOR.gen.cards.slice(0, 8).map(c =>
+    `<p style="font-size:.88rem;margin-bottom:8px"><b>${esc(c[0])}</b><br><span style="color:var(--ink-soft)">${esc(c[1])}</span></p>`).join('') +
+    (TUTOR.gen.cards.length > 8 ? `<p style="color:var(--ink-faint);font-size:.8rem">+ ${TUTOR.gen.cards.length - 8} more</p>` : '');
+}
+function saveDeck() {
+  const list = S.custom;
+  list.push({ id: String(Date.now()), name: ($('#dname').value || 'My deck').slice(0, 60), cards: TUTOR.gen.cards, quiz: TUTOR.gen.quiz, note: 'Built from your notes.' });
+  S.custom = list;
+  location.hash = '#/courses';
+}
+function deleteDeck(id) {
+  S.custom = S.custom.filter(d => d.id !== id);
+  location.hash = '#/courses';
+}
+
+/* ---- spoken-style drilling ---- */
+function pushMsg(role, content) {
+  TUTOR.msgs.push({ role, content });
+  const c = $('#chat');
+  if (c) {
+    if (TUTOR.msgs.length === 1) c.innerHTML = '';
+    c.insertAdjacentHTML('beforeend', `<div class="msg ${role === 'user' ? 'me' : 'ai'} fade">${esc(content)}</div>`);
+    c.scrollTop = c.scrollHeight;
+  }
+}
+function startDrill() {
+  const text = material();
+  if (text.length < 60) { pushMsg('assistant', 'Paste some material into the box on the left first, then I can quiz you on it.'); return; }
+  TUTOR.msgs = []; $('#chat').innerHTML = '';
+  if (S.cfg.key) {
+    TUTOR.mode = 'ai';
+    TUTOR.api = [];
+    pushMsg('assistant', 'Got it. I will ask one question at a time. Answer in your own words and I will tell you what you missed.');
+    aiTurn('Start quizzing me on this material. Ask your first question.');
+  } else {
+    TUTOR.mode = 'local';
+    TUTOR.drill = shuffle(localCards(text)).slice(0, 20);
+    TUTOR.di = 0;
+    if (!TUTOR.drill.length) { pushMsg('assistant', 'I could not pull terms out of that. Try writing a few lines as "term — definition" and press the button again.'); return; }
+    pushMsg('assistant', `Ready — ${TUTOR.drill.length} questions from your notes. Answer in your own words.`);
+    askLocal();
+  }
+}
+function askLocal() {
+  if (TUTOR.di >= TUTOR.drill.length) { pushMsg('assistant', 'That is the whole set. Press "Quiz me out loud" to run it again, or save it as a deck on the left.'); return; }
+  const c = TUTOR.drill[TUTOR.di];
+  pushMsg('assistant', c[0].includes('________') ? `Fill in the blank: ${c[0]}` : `What does this mean: ${c[0]}?`);
+}
+function gradeLocal(answer, correct) {
+  const norm = s => s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w && !STOP.has(w));
+  const a = new Set(norm(answer)), b = norm(correct);
+  if (!b.length) return 0;
+  const hit = b.filter(w => a.has(w) || [...a].some(x => x.length > 4 && (x.startsWith(w.slice(0, 5)) || w.startsWith(x.slice(0, 5))))).length;
+  return hit / b.length;
+}
+async function sendChat() {
+  const inp = $('#chatin'); const t = inp.value.trim();
+  if (!t) return;
+  inp.value = '';
+  pushMsg('user', t);
+  if (TUTOR.mode === 'local' && TUTOR.drill) {
+    const c = TUTOR.drill[TUTOR.di];
+    if (!c) return;
+    const score = gradeLocal(t, c[1]);
+    pushMsg('assistant', score >= 0.5 ? `Right — ${c[1]}` : score >= 0.25 ? `Close. The full answer: ${c[1]}` : `Not quite. ${c[0].includes('________') ? 'The missing term is' : 'It means'}: ${c[1]}`);
+    TUTOR.di++; bumpStreak();
+    setTimeout(askLocal, 350);
+    return;
+  }
+  if (S.cfg.key) { aiTurn(t); return; }
+  pushMsg('assistant', 'Press "Quiz me out loud" to start a round from your notes, or add an API key in Settings for open-ended conversation.');
+}
+async function aiTurn(userText) {
+  const c = $('#chat');
+  c.insertAdjacentHTML('beforeend', `<div class="msg ai" id="think"><span class="spin"></span></div>`);
+  c.scrollTop = c.scrollHeight;
+  try {
+    /* the API requires an alternating history that begins with a user turn */
+    TUTOR.api.push({ role: 'user', content: userText });
+    const history = TUTOR.api.slice(-12);
+    while (history.length && history[0].role !== 'user') history.shift();
+    const reply = await askClaude(history,
+      `You are a patient tutor quizzing a student on material they provided. Ask ONE question at a time. After each answer, say briefly whether it was right, fill in what was missing, then ask the next question. Keep replies under 90 words. Never dump the whole answer key at once.\n\nThe student's material:\n${TUTOR.material.slice(0, 12000)}`);
+    document.getElementById('think')?.remove();
+    TUTOR.api.push({ role: 'assistant', content: reply || '…' });
+    pushMsg('assistant', reply || 'No reply came back. Try again.');
+    bumpStreak();
+  } catch (e) {
+    document.getElementById('think')?.remove();
+    TUTOR.api.pop();
+    pushMsg('assistant', `Could not reach the API (${e.message}). Check your key in Settings, or clear it to use the built-in generator instead.`);
+  }
+}
+
+/* ---------------- settings ---------------- */
+function vSettings() {
+  const cfg = S.cfg;
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Setup</span>
+    <h1>Settings</h1>
+    <p>StudyBuddy runs entirely in your browser. Progress, decks, and keys never leave this device.</p>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <span class="eyebrow">Appearance</span>
+      <h3 style="margin-bottom:10px">Theme</h3>
+      <div class="row">
+        <button class="chip ${cfg.theme !== 'night' ? 'on' : ''}" onclick="setTheme('day')">☀ Day</button>
+        <button class="chip ${cfg.theme === 'night' ? 'on' : ''}" onclick="setTheme('night')">☾ Night</button>
+      </div>
+      <hr class="divide">
+      <span class="eyebrow">Your data</span>
+      <p style="font-size:.88rem;color:var(--ink-soft)">${store.ok ? 'Progress is saved in this browser.' : 'This browser is blocking storage, so progress lasts only for this session.'}</p>
+      <div class="row"><button class="btn ghost sm" onclick="exportData()">Export my data</button><button class="btn red sm" onclick="if(confirm('Erase all progress and saved decks?')){store.wipe();location.reload()}">Erase everything</button></div>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Optional</span>
+      <h3 style="margin-bottom:6px">Claude API key</h3>
+      <p style="font-size:.88rem;color:var(--ink-soft)">Everything works without this. Adding a key upgrades the tutor: it writes better questions and can hold a real conversation about your material.</p>
+      <label class="fld"><span>API key</span>
+        <input type="password" id="keyin" value="${esc(cfg.key)}" placeholder="sk-ant-…">
+        <small>Stored only in this browser. Anthropic charges your own account per use — a personal key on a public site can be used by anyone who finds it, so keep it to your own copy.</small>
+      </label>
+      <label class="fld"><span>Model</span><input type="text" id="modelin" value="${esc(cfg.model)}"></label>
+      <button class="btn" onclick="saveKey()">Save</button>
+      ${cfg.key ? `<button class="btn ghost" onclick="clearKey()">Remove key</button>` : ''}
+    </div>
+  </div>
+  <div class="note" style="max-width:720px;margin-top:18px">
+    <b>About the study content.</b> Everything here was written for StudyBuddy and is meant for practice, not as a replacement for your class. Always check facts against your textbook and the official College Board course description before an exam.
+  </div>`;
+}
+function setTheme(t) { const c = S.cfg; c.theme = t; S.cfg = c; applyTheme(); render(); }
+function saveKey() { const c = S.cfg; c.key = $('#keyin').value.trim(); c.model = $('#modelin').value.trim() || 'claude-sonnet-4-6'; S.cfg = c; render(); }
+function clearKey() { const c = S.cfg; c.key = ''; S.cfg = c; render(); }
+function exportData() {
+  const blob = new Blob([JSON.stringify({ progress: S.progress, custom: S.custom }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'studybuddy-data.json'; a.click();
+}
+
+function notFound() {
+  return topbar() + `<div class="empty"><div class="big">◌</div><h2>Nothing here</h2><p>That page moved or never existed.</p><a class="btn" href="#/">Back to dashboard</a></div>`;
+}
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+function render() {
+  const parts = (location.hash || '#/').replace(/^#\/?/, '').split('/').filter(Boolean);
+  paintNav();
+  window.scrollTo(0, 0);
+  let html;
+  if (!parts.length) html = vDashboard();
+  else if (parts[0] === 'courses') html = vCourses();
+  else if (parts[0] === 'course') html = vCourse(parts[1]);
+  else if (parts[0] === 'study') {
+    const [, cid, uid, mode] = parts;
+    html = mode === 'guide' ? vGuide(cid, uid) : mode === 'quiz' ? vQuiz(cid, uid) : vCards(cid, uid);
+  }
+  else if (parts[0] === 'tests') html = vTests();
+  else if (parts[0] === 'tutor') html = vTutor();
+  else if (parts[0] === 'settings') html = vSettings();
+  else html = notFound();
+  view().innerHTML = html;
+}
+
+document.addEventListener('keydown', e => {
+  if (!DECK || !location.hash.includes('/cards') || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.key === 'ArrowRight') markCard(true);
+  if (e.key === 'ArrowLeft') markCard(false);
+});
+
+window.addEventListener('hashchange', render);
+applyTheme();
+render();
+</script>
+</body>
+</html>

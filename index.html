@@ -370,9 +370,55 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* ============ WORKSHEET / PRINT OUTPUT ===================== */
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:36px 40px;box-shadow:var(--shadow);max-width:860px;margin:0 auto}
+.sheet-head{border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.sheet-head h2{margin:0;font-size:1.4rem}
+.sheet-head .who{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-faint);text-align:right;line-height:2.1}
+.sheet-head .who u{display:inline-block;min-width:150px;text-decoration:none;border-bottom:1px solid var(--ink-faint)}
+.sheet-sub{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:22px}
+.wcols{column-count:2;column-gap:34px;column-rule:1px solid var(--line)}
+@media (max-width:700px){.wcols{column-count:1}}
+.wrow{break-inside:avoid;margin-bottom:13px;padding-bottom:11px;border-bottom:1px dotted var(--line)}
+.wrow b{display:block;font-size:.92rem;margin-bottom:3px}
+.wrow span{font-size:.84rem;color:var(--ink-soft);line-height:1.5}
+.wrow .blank{display:block;border-bottom:1px solid var(--ink-faint);height:1.15em;margin-top:5px}
+.wq{break-inside:avoid;margin-bottom:16px}
+.wq .stem{font-weight:600;font-size:.92rem;margin-bottom:6px}
+.wq ol{margin:0;padding-left:22px;font-size:.86rem;color:var(--ink-soft)}
+.wq ol li{margin-bottom:2px}
+.cutcard{
+  break-inside:avoid;border:1px dashed var(--ink-faint);border-radius:6px;
+  padding:14px 15px;margin-bottom:11px;min-height:88px;display:flex;flex-direction:column;justify-content:center;
+}
+.cutcard b{font-size:.95rem;display:block}
+.cutcard span{font-size:.8rem;color:var(--ink-soft);margin-top:5px;display:block}
+.answerkey{page-break-before:always;margin-top:30px;border-top:2px solid var(--ink);padding-top:16px}
+
+/* ---- Leitner boxes ---- */
+.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lbox{border:1px solid var(--line);border-radius:11px;padding:13px;text-align:center;background:var(--paper)}
+.lbox b{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;display:block;line-height:1.1}
+.lbox span{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+.lbox.b1{border-bottom:3px solid var(--margin)}
+.lbox.b2{border-bottom:3px solid var(--highlight)}
+.lbox.b3{border-bottom:3px solid var(--green)}
+.due-pill{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--margin);color:#fff}
+
+/* ---- accessibility ---- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.fcard:focus-visible{outline:3px solid var(--margin);outline-offset:6px;border-radius:14px}
+.skip-link{position:absolute;left:-9999px;top:8px;z-index:400;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-weight:700}
+.skip-link:focus{left:8px}
+
 /* ======================= PRINT ============================== */
 @media print{
-  .rail,.tabbar,.ask-fab,.ask-panel,.readprog,.mobile-top,.guide-toc,.crumb,.btn,.chip{display:none !important}
+  .rail,.tabbar,.ask-fab,.ask-panel,.readprog,.mobile-top,.guide-toc,.crumb,.btn,.chip,.noprint{display:none !important}
+  .sheet{border:0;box-shadow:none;padding:0;max-width:100%}
+  .wrow,.wq,.cutcard{break-inside:avoid}
+  .cutcard{border:1px dashed #999}
+  .answerkey{page-break-before:always}
+  @page{margin:0.6in}
   body{background:#fff}
   .main{padding:0;max-width:100%}
   .guide-page{border:0;box-shadow:none;padding:0}
@@ -412,6 +458,7 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 </style>
 </head>
 <body>
+<a class="skip-link" href="#view">Skip to main content</a>
 <div class="app">
   <aside class="rail">
     <a class="brand" href="#/">
@@ -2312,7 +2359,7 @@ quiz:[
 ]
 },
 {
-id:'u3', title:'Unit 3 · Costs and Perfect Competition',
+id:'u3', title:'Unit 3 · Production, Cost, and the Perfect Competition Model',
 guide:[
  {h:'Production and cost', points:[
   '<b>Law of diminishing marginal returns</b>: adding a variable input to a fixed input eventually lowers marginal product.',
@@ -3142,6 +3189,1159 @@ quiz:[
 </script>
 <script>
 /* ============================================================
+   Additional units. Pushed into courses defined earlier, then
+   sorted so unit ids read in order.
+   ============================================================ */
+function addUnits(cid, units) {
+  const c = COURSES.find(x => x.id === cid);
+  if (!c) return;
+  c.units.push(...units);
+  c.units.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+}
+
+/* ------------------------------------------ AP US HISTORY */
+addUnits('apush', [
+{
+id:'p1', title:'Period 1 · 1491–1607',
+guide:[
+ {h:'Native societies before contact', points:[
+  'Societies varied because they adapted to local environments — there was no single "Native American" culture.',
+  'The <b>Southwest</b> (Pueblo) built permanent settlements using irrigation in an arid climate.',
+  'The <b>Great Plains</b> peoples were largely nomadic, following buffalo herds.',
+  'The <b>Northeast</b> (Iroquois) combined farming of maize, beans, and squash with hunting, organizing into confederations.',
+  'The <b>Pacific Northwest</b> had abundant fish and timber, supporting dense permanent villages without agriculture.',
+  '<b>Maize cultivation</b> spread north from Mexico, enabling economic development and more complex societies.'
+ ]},
+ {h:'Contact and the Columbian Exchange', points:[
+  'The <b>Columbian Exchange</b> moved crops, animals, and disease in both directions.',
+  'To Europe: maize, potatoes, tomatoes — driving a population boom.',
+  'To the Americas: wheat, sugar, horses, cattle, and devastating diseases.',
+  'Smallpox and measles killed an estimated 80–90% of Indigenous populations who had no immunity.',
+  'Horses transformed Plains cultures, making mounted buffalo hunting and warfare possible.'
+ ]},
+ {h:'Spanish colonization and its debates', points:[
+  'The <b>encomienda system</b> granted colonists Native labor in exchange for supposed protection and conversion.',
+  'The <b>casta system</b> ranked people by ancestry, placing Spanish-born at the top.',
+  'The Spanish shifted toward enslaved African labor as Indigenous populations collapsed.',
+  '<b>Bartolomé de Las Casas</b> condemned the treatment of Native peoples; <b>Sepúlveda</b> defended conquest as natural.',
+  'Europeans justified subjugation through claims of religious and cultural superiority.'
+ ]}
+],
+cards:[
+ ['Maize cultivation','Spread north from Mexico, supporting permanent settlement and more complex societies.'],
+ ['Columbian Exchange','Two-way transfer of crops, animals, people, and disease between the Americas and Afro-Eurasia.'],
+ ['Encomienda system','Spanish grant of Indigenous labor to colonists in exchange for nominal protection and conversion.'],
+ ['Casta system','Racial hierarchy in Spanish America ranking people by ancestry.'],
+ ['Bartolomé de Las Casas','Priest who condemned Spanish abuse of Indigenous peoples and argued for their humanity.'],
+ ['Pueblo peoples','Southwestern societies using irrigation to farm in an arid environment.'],
+ ['Iroquois Confederation','Northeastern alliance combining maize agriculture with hunting and shared governance.'],
+ ['Effect of horses on the Plains','Enabled mounted buffalo hunting and reshaped Plains societies and warfare.'],
+ ['Cause of Indigenous population collapse','Old World diseases against which Native peoples had no acquired immunity.']
+],
+quiz:[
+ {q:'The variety among pre-contact Native societies is best explained by:',
+  c:['Migration from a single origin point','Adaptation to different regional environments','Contact with European traders','A shared political confederation'],
+  a:1, why:'Environment shaped subsistence: irrigation in the arid Southwest, buffalo hunting on the Plains, fishing in the Northwest.'},
+ {q:'Which best describes the demographic result of the Columbian Exchange in the Americas?',
+  c:['A population increase from new crops','Catastrophic decline from Old World disease','Little change until 1700','Growth driven by African migration'],
+  a:1, why:'Epidemic disease, not warfare, caused the overwhelming majority of Indigenous deaths.'},
+ {q:'The encomienda system is best described as:',
+  c:['A trade agreement between Spain and Native nations','A grant of Native labor to Spanish colonists','A system of self-government for Pueblo peoples','A Catholic missionary order'],
+  a:1, why:'It was coerced labor framed as protection and religious instruction, and it was widely abusive.'},
+ {q:'Las Casas and Sepúlveda debated primarily over:',
+  c:['Trade routes to Asia','Whether Indigenous peoples could justly be subjugated','The location of Spanish forts','Whether to import African labor'],
+  a:1, why:'Las Casas argued for Indigenous humanity and rights; Sepúlveda defended conquest as naturally justified.'},
+ {q:'The introduction of the horse most transformed which Native region?',
+  c:['The Pacific Northwest','The Great Plains','The Northeast woodlands','The Southwest'],
+  a:1, why:'Horses made mounted buffalo hunting possible, reorganizing Plains economies and military power.'}
+]
+},
+{
+id:'p2', title:'Period 2 · 1607–1754',
+guide:[
+ {h:'Regional colonial development', points:[
+  '<b>Chesapeake</b>: Jamestown survived on tobacco. The <b>headright system</b> and indentured servitude supplied labor.',
+  '<b>Bacon\u2019s Rebellion</b> (1676) united poor whites and Black laborers against the governor, pushing planters toward racialized slavery instead.',
+  '<b>New England</b> Puritans migrated as families seeking a "city upon a hill," building towns around church and town meeting.',
+  '<b>Middle colonies</b> were the most diverse and became the breadbasket; Pennsylvania under the Quakers offered broad religious tolerance.',
+  '<b>Southern colonies and the West Indies</b> depended on plantation agriculture and increasingly harsh slave codes.'
+ ]},
+ {h:'Slavery, trade, and resistance', points:[
+  'The <b>Atlantic slave trade</b> carried millions of Africans through the <b>Middle Passage</b>.',
+  'Chattel slavery became hereditary and racially defined, unlike earlier forms of servitude.',
+  'Enslaved people resisted through work slowdowns, escape, preserving culture, and revolt — the <b>Stono Rebellion</b> (1739) being the largest in the colonies.',
+  '<b>Mercantilism</b> and the <b>Navigation Acts</b> required colonial trade to benefit Britain.',
+  '<b>Triangular trade</b> linked New England, West Africa, and the West Indies.'
+ ]},
+ {h:'Ideas and conflict', points:[
+  'The <b>First Great Awakening</b> emphasized emotional, personal faith and challenged established clergy — an early experience of shared colonial identity.',
+  '<b>Enlightenment</b> ideas about natural rights and reason spread among colonial elites.',
+  '<b>Salutary neglect</b> let colonial assemblies gain real power over taxation and spending.',
+  '<b>Metacom\u2019s War</b> (King Philip\u2019s War, 1675) devastated New England and broke Native power there.',
+  'The <b>Pueblo Revolt</b> (1680) temporarily expelled the Spanish from New Mexico.'
+ ]}
+],
+cards:[
+ ['Headright system','Grant of land for each servant transported, concentrating land among wealthy planters.'],
+ ['Indentured servitude','Labor for a fixed term in exchange for passage; declined as slavery expanded.'],
+ ['Bacon\u2019s Rebellion','1676 uprising that pushed Virginia planters toward hereditary racial slavery.'],
+ ['City upon a hill','Winthrop\u2019s image of New England as a model Christian community.'],
+ ['Navigation Acts','Laws requiring colonial trade to pass through England, the core of mercantilism.'],
+ ['Middle Passage','The brutal Atlantic crossing endured by enslaved Africans.'],
+ ['Stono Rebellion','1739 South Carolina slave revolt that led to harsher slave codes.'],
+ ['First Great Awakening','Religious revival stressing personal conversion and challenging established clergy.'],
+ ['Salutary neglect','Loose British enforcement that let colonial self-government take root.'],
+ ['Pueblo Revolt','1680 uprising that drove the Spanish from New Mexico for over a decade.']
+],
+quiz:[
+ {q:'Bacon\u2019s Rebellion is most significant because it:',
+  c:['Ended tobacco cultivation','Accelerated the shift from indentured servitude to racial slavery','Established religious tolerance','Started the French and Indian War'],
+  a:1, why:'Elites feared cross-racial alliances among poor laborers and moved to a permanently enslaved, racially defined workforce.'},
+ {q:'New England colonial society differed from the Chesapeake mainly in that it:',
+  c:['Relied on a single cash crop','Was settled by families with a religious mission','Had no representative government','Prohibited all trade'],
+  a:1, why:'Family migration and Puritan community goals produced towns, schools, and longer life expectancy, unlike the male, mortality-heavy Chesapeake.'},
+ {q:'The Navigation Acts were designed to:',
+  c:['Encourage colonial manufacturing','Ensure colonial trade enriched the mother country','Promote free trade with the Dutch','End the slave trade'],
+  a:1, why:'Mercantilism treated colonies as sources of raw material and captive markets for British goods.'},
+ {q:'A major long-term political effect of salutary neglect was:',
+  c:['Weaker colonial assemblies','Colonial self-government becoming an expectation','Direct royal control of towns','Abolition of colonial courts'],
+  a:1, why:'Decades of loose enforcement let assemblies control taxation and spending, so later British tightening felt like a violation of rights.'},
+ {q:'The First Great Awakening contributed to colonial unity by:',
+  c:['Creating a single colonial church','Producing shared religious experience across colonial lines','Ending religious diversity','Strengthening royal authority'],
+  a:1, why:'Itinerant preachers drew intercolonial audiences and encouraged questioning of established authority.'}
+]
+},
+{
+id:'p8', title:'Period 8 · 1945–1980',
+guide:[
+ {h:'The Cold War', points:[
+  '<b>Containment</b> shaped policy: the <b>Truman Doctrine</b> aided Greece and Turkey, the <b>Marshall Plan</b> rebuilt Western Europe, and <b>NATO</b> formalized alliance.',
+  'The <b>Korean War</b> (1950–53) ended near the original border and made containment global and military.',
+  'The <b>domino theory</b> justified escalation in Vietnam; the <b>Gulf of Tonkin Resolution</b> (1964) gave Johnson broad war powers.',
+  'The <b>Tet Offensive</b> (1968) was a military defeat for the North but shattered American public confidence, widening the credibility gap.',
+  'At home, the <b>Second Red Scare</b> and <b>McCarthyism</b> produced loyalty oaths, blacklists, and HUAC hearings.'
+ ]},
+ {h:'Civil rights', points:[
+  '<i>Brown v. Board</i> (1954) overturned <i>Plessy</i>, ruling segregated schools inherently unequal.',
+  'The <b>Montgomery Bus Boycott</b> (1955–56) launched nonviolent mass protest and King\u2019s leadership.',
+  'Sit-ins, Freedom Rides, and <b>Birmingham</b> used direct action to force federal response.',
+  'The <b>Civil Rights Act of 1964</b> banned discrimination in public accommodations and employment; the <b>Voting Rights Act of 1965</b> ended literacy tests and enabled federal oversight.',
+  '<b>Black Power</b> and Malcolm X offered alternatives to nonviolence, emphasizing self-determination and self-defense.'
+ ]},
+ {h:'Society, reform, and reaction', points:[
+  'Johnson\u2019s <b>Great Society</b> created Medicare, Medicaid, Head Start, and the War on Poverty; the <b>Immigration Act of 1965</b> ended national-origins quotas.',
+  'Second-wave feminism grew from Friedan\u2019s <i>The Feminine Mystique</i>, producing NOW, Title IX, and <i>Roe v. Wade</i>.',
+  'Carson\u2019s <i>Silent Spring</i> helped launch environmentalism, leading to the EPA and Clean Air and Water Acts.',
+  'Nixon pursued <b>détente</b> with China and the USSR while <b>Watergate</b> ended his presidency and deepened distrust of government.',
+  'The 1970s brought <b>stagflation</b>, the OPEC oil embargo, and the end of postwar economic confidence.'
+ ]}
+],
+cards:[
+ ['Containment','US strategy of preventing the spread of communism rather than rolling it back.'],
+ ['Marshall Plan','Massive US aid rebuilding Western Europe to blunt communist appeal.'],
+ ['Domino theory','Belief that one country falling to communism would topple its neighbors.'],
+ ['Tet Offensive','1968 attacks that were a military failure for the North but a political turning point in the US.'],
+ ['McCarthyism','Aggressive anticommunist accusations, often without evidence, during the Second Red Scare.'],
+ ['Brown v. Board of Education','1954 ruling that segregated public schools are inherently unequal.'],
+ ['Civil Rights Act of 1964','Banned discrimination in public accommodations, employment, and federally funded programs.'],
+ ['Voting Rights Act of 1965','Suspended literacy tests and authorized federal oversight of registration.'],
+ ['Great Society','Johnson\u2019s programs including Medicare, Medicaid, and the War on Poverty.'],
+ ['Détente','Nixon-era easing of tensions with the USSR and opening to China.'],
+ ['Stagflation','Simultaneous high inflation and high unemployment, which standard policy could not fix.']
+],
+quiz:[
+ {q:'The Tet Offensive is considered a turning point because it:',
+  c:['Was a decisive North Vietnamese military victory','Undermined American confidence in official war reporting','Ended the draft','Triggered the Gulf of Tonkin Resolution'],
+  a:1, why:'The scale of the attacks contradicted claims that victory was near, widening the credibility gap even though the offensive failed militarily.'},
+ {q:'The Voting Rights Act of 1965 most directly addressed:',
+  c:['School segregation','Barriers such as literacy tests used to block Black voters','Employment discrimination','Housing discrimination'],
+  a:1, why:'It suspended discriminatory tests and put federal examiners into jurisdictions with the worst records.'},
+ {q:'Which best explains the shift from nonviolent protest to Black Power for some activists?',
+  c:['Legal victories had ended all discrimination','Frustration at the pace of change and persistent economic inequality','Federal troops opposed nonviolence','The Supreme Court reversed Brown'],
+  a:1, why:'Legal equality had not delivered economic or social equality, especially outside the South, prompting calls for self-determination.'},
+ {q:'Stagflation in the 1970s was difficult to address because:',
+  c:['Unemployment and inflation normally move in opposite directions','There was no central bank','Congress refused to meet','Oil was abundant'],
+  a:0, why:'Standard Keynesian tools fight one by worsening the other, so simultaneous high inflation and unemployment defeated existing policy.'},
+ {q:'The Immigration Act of 1965 is significant because it:',
+  c:['Closed the border entirely','Ended national-origins quotas, reshaping US demographics','Restricted Asian immigration','Applied only to refugees'],
+  a:1, why:'Replacing quotas with family and skills preferences greatly increased immigration from Asia and Latin America.'}
+]
+},
+{
+id:'p9', title:'Period 9 · 1980–Present',
+guide:[
+ {h:'Conservative resurgence', points:[
+  'Reagan\u2019s <b>supply-side economics</b> cut taxes and regulation on the theory that growth would follow.',
+  'Defense spending rose sharply while domestic programs were cut; deficits grew substantially.',
+  'The <b>Moral Majority</b> and evangelical organizing brought social issues into national politics.',
+  'Deregulation reshaped finance, airlines, and telecommunications.',
+  'Debate continued over the size of government, taxation, and the social safety net.'
+ ]},
+ {h:'End of the Cold War and globalization', points:[
+  '<b>Gorbachev\u2019s</b> reforms — glasnost and perestroika — loosened Soviet control.',
+  'The <b>Berlin Wall</b> fell in 1989 and the <b>Soviet Union dissolved</b> in 1991, leaving the US as sole superpower.',
+  '<b>NAFTA</b> and the WTO accelerated economic integration; manufacturing jobs moved abroad.',
+  'The personal computer and internet drove a productivity and investment boom in the 1990s.',
+  'Migration from Latin America and Asia continued reshaping American demographics.'
+ ]},
+ {h:'A new century', points:[
+  'The <b>September 11 attacks</b> (2001) led to the war in Afghanistan, the <b>PATRIOT Act</b>, and the 2003 invasion of Iraq.',
+  'Debates intensified over the balance between national security and civil liberties.',
+  'The <b>2008 financial crisis</b> caused the deepest downturn since the Depression and prompted federal intervention.',
+  'Political <b>polarization</b> deepened, aided by fragmented and partisan media.',
+  'Climate change, healthcare, immigration, and inequality became the era\u2019s defining domestic arguments.'
+ ]}
+],
+cards:[
+ ['Supply-side economics','Theory that cutting taxes and regulation stimulates growth that broadens the tax base.'],
+ ['Reaganomics','Combination of tax cuts, deregulation, reduced domestic spending, and defense increases.'],
+ ['Moral Majority','Evangelical political organization that mobilized religious conservatives.'],
+ ['Glasnost and perestroika','Gorbachev\u2019s policies of openness and economic restructuring in the USSR.'],
+ ['Fall of the Berlin Wall','1989 event symbolizing the collapse of communist control in Eastern Europe.'],
+ ['NAFTA','1994 trade agreement among the US, Canada, and Mexico that deepened economic integration.'],
+ ['PATRIOT Act','Post-9/11 law expanding surveillance powers, sparking civil liberties debate.'],
+ ['2008 financial crisis','Collapse triggered by mortgage-backed securities, causing the worst downturn since the 1930s.'],
+ ['Political polarization','Widening ideological distance between the parties and their voters.']
+],
+quiz:[
+ {q:'Supply-side economics argues that cutting taxes will:',
+  c:['Immediately reduce the deficit through lower spending','Stimulate investment and growth that expands the tax base','Increase government control of industry','Raise interest rates directly'],
+  a:1, why:'The claim is that lower marginal rates spur work and investment; in practice 1980s deficits grew sharply.'},
+ {q:'The dissolution of the Soviet Union in 1991 resulted in:',
+  c:['A new bipolar world order','The US as the sole global superpower','Immediate NATO disbandment','The reunification of Korea'],
+  a:1, why:'With no rival superpower, US foreign policy shifted toward regional conflicts and economic integration.'},
+ {q:'A central constitutional debate raised by the PATRIOT Act concerned:',
+  c:['States\u2019 rights over commerce','The balance between security and civil liberties','Term limits for presidents','Federal control of education'],
+  a:1, why:'Expanded surveillance authority raised Fourth Amendment questions about searches and privacy.'},
+ {q:'NAFTA most directly contributed to:',
+  c:['Higher tariffs among member states','Deeper economic integration and manufacturing shifts abroad','The end of the Cold War','Reduced immigration'],
+  a:1, why:'Lowering trade barriers moved production to lower-cost locations, a persistent point of political conflict.'},
+ {q:'The 2008 financial crisis originated primarily in:',
+  c:['Foreign currency speculation','Risky mortgage lending and mortgage-backed securities','A collapse in oil prices','Federal tax increases'],
+  a:1, why:'Subprime lending packaged into complex securities spread losses through the financial system when housing prices fell.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP US GOVERNMENT */
+addUnits('ap-gov', [
+{
+id:'u3', title:'Unit 3 · Civil Liberties and Civil Rights',
+guide:[
+ {h:'Religion and speech', points:[
+  '<b>Civil liberties</b> protect you from government; <b>civil rights</b> protect you from discrimination.',
+  '<b>Establishment clause</b>: <i>Engel v. Vitale</i> struck down official school prayer.',
+  '<b>Free exercise clause</b>: <i>Wisconsin v. Yoder</i> let Amish families withdraw children from school after eighth grade.',
+  '<i>Tinker v. Des Moines</i> protected symbolic student speech that does not substantially disrupt school.',
+  '<i>Schenck v. US</i> allowed limits on speech posing a clear and present danger.',
+  '<i>New York Times v. US</i> rejected <b>prior restraint</b> on publishing the Pentagon Papers.'
+ ]},
+ {h:'Due process and the accused', points:[
+  '<i>Gideon v. Wainwright</i> guaranteed counsel in state criminal cases.',
+  '<i>Miranda v. Arizona</i> required warning suspects of their rights before interrogation.',
+  'The <b>exclusionary rule</b> bars illegally obtained evidence at trial.',
+  '<i>McDonald v. Chicago</i> incorporated the Second Amendment against the states.',
+  '<i>Roe v. Wade</i> grounded abortion rights in a right to privacy; the Court overturned it in <i>Dobbs</i> (2022), returning the question to the states.'
+ ]},
+ {h:'Civil rights', points:[
+  'The <b>14th Amendment\u2019s equal protection clause</b> is the foundation of modern civil rights law.',
+  '<i>Brown v. Board</i> overturned <i>Plessy</i>\u2019s separate but equal doctrine.',
+  'King\u2019s <b>Letter from Birmingham Jail</b> defended civil disobedience against unjust laws.',
+  'The <b>Civil Rights Act of 1964</b> and <b>Voting Rights Act of 1965</b> gave equal protection legislative teeth.',
+  '<b>Title IX</b> barred sex discrimination in federally funded education.',
+  'Affirmative action has been repeatedly narrowed by the Court, most recently in the 2023 college admissions cases.'
+ ]}
+],
+cards:[
+ ['Civil liberties vs. civil rights','Liberties limit government power over you; rights protect against discrimination.'],
+ ['Engel v. Vitale','Struck down state-sponsored school prayer under the establishment clause.'],
+ ['Wisconsin v. Yoder','Protected Amish free exercise by exempting children from compulsory schooling after eighth grade.'],
+ ['Tinker v. Des Moines','Protected non-disruptive symbolic student speech in public schools.'],
+ ['New York Times v. United States','Rejected prior restraint on publication of the Pentagon Papers.'],
+ ['Gideon v. Wainwright','Required states to provide attorneys to defendants who cannot afford one.'],
+ ['Miranda v. Arizona','Required police to inform suspects of their rights before custodial interrogation.'],
+ ['McDonald v. Chicago','Incorporated the Second Amendment against the states through the 14th Amendment.'],
+ ['Brown v. Board of Education','Held segregated public schools inherently unequal, overturning Plessy.'],
+ ['Letter from Birmingham Jail','King\u2019s defense of nonviolent civil disobedience against unjust laws.'],
+ ['Equal protection clause','14th Amendment provision barring states from denying equal protection of the laws.'],
+ ['Selective incorporation','Case-by-case application of Bill of Rights protections to the states.']
+],
+quiz:[
+ {q:'A school bans all political armbands, though no disruption has occurred. Which precedent applies most directly?',
+  c:['Schenck v. United States','Tinker v. Des Moines','Engel v. Vitale','Gideon v. Wainwright'],
+  a:1, why:'Tinker protects symbolic student speech absent substantial disruption, which is the exact fact pattern.'},
+ {q:'New York Times v. United States is chiefly about:',
+  c:['Libel standards','Prior restraint on publication','Student speech','Free exercise of religion'],
+  a:1, why:'The government carried a heavy burden to justify blocking publication in advance and failed to meet it.'},
+ {q:'Which clause is the basis for applying most Bill of Rights protections to state governments?',
+  c:['Commerce clause','Due process clause of the 14th Amendment','Supremacy clause','Necessary and proper clause'],
+  a:1, why:'Selective incorporation works through the 14th Amendment\u2019s due process clause.'},
+ {q:'Wisconsin v. Yoder is best understood as a case about:',
+  c:['The establishment clause','The free exercise clause','Freedom of assembly','Equal protection'],
+  a:1, why:'The Court weighed the state interest in schooling against a sincere religious practice and sided with free exercise.'},
+ {q:'Brown v. Board of Education overturned which earlier decision?',
+  c:['Marbury v. Madison','Plessy v. Ferguson','Schenck v. United States','Gideon v. Wainwright'],
+  a:1, why:'Plessy had upheld "separate but equal"; Brown held that separation is itself unequal in education.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · American Political Ideologies and Beliefs',
+guide:[
+ {h:'Where beliefs come from', points:[
+  '<b>Political socialization</b> comes from family, school, peers, media, religion, and major events.',
+  '<b>Generational effects</b> shape a cohort permanently; <b>life-cycle effects</b> change with age.',
+  'Core American values: <b>individualism</b>, <b>equality of opportunity</b>, <b>free enterprise</b>, <b>rule of law</b>, and <b>limited government</b>.',
+  'These values often conflict — equality of opportunity can pull against limited government.',
+  'Demographics such as race, gender, religion, education, and region correlate with party identification.'
+ ]},
+ {h:'Ideology and policy', points:[
+  '<b>Liberals</b> generally favor government action to reduce inequality and protect social freedoms.',
+  '<b>Conservatives</b> generally favor limited economic regulation and traditional social arrangements.',
+  '<b>Libertarians</b> want minimal government in both spheres.',
+  'Fiscal policy: <b>Keynesian</b> approaches use spending to boost demand; <b>supply-side</b> approaches cut taxes and regulation.',
+  'Monetary policy is set by the Federal Reserve, insulated from direct electoral pressure.'
+ ]},
+ {h:'Measuring opinion', points:[
+  '<b>Random sampling</b> makes a poll representative; <b>sampling error</b> gives the margin of uncertainty.',
+  '<b>Benchmark polls</b> establish a baseline, <b>tracking polls</b> follow change, <b>exit polls</b> survey voters as they leave.',
+  'Poll quality suffers from bad question wording, low response rates, and the timing of the survey.',
+  'Polls influence candidate strategy, media coverage, and sometimes voter behavior itself.',
+  'Scientific polls differ sharply from self-selected online surveys, which are not representative.'
+ ]}
+],
+cards:[
+ ['Political socialization','The process by which people form political values from family, school, media, and events.'],
+ ['Generational effect','A shared formative event that permanently shapes a cohort\u2019s politics.'],
+ ['Life-cycle effect','Political views that shift predictably with a person\u2019s stage of life.'],
+ ['Equality of opportunity','The belief that everyone should have the same chance to succeed, not the same outcome.'],
+ ['Keynesian economics','Using government spending and demand management to counter downturns.'],
+ ['Supply-side economics','Cutting taxes and regulation to stimulate production and growth.'],
+ ['Random sampling','Selection giving every member of a population an equal chance, making a poll representative.'],
+ ['Sampling error','The margin of uncertainty in a poll result arising from surveying a sample.'],
+ ['Exit poll','Survey of voters immediately after voting, used to explain and project results.'],
+ ['Benchmark vs. tracking poll','Benchmark sets an initial baseline; tracking measures change over a campaign.']
+],
+quiz:[
+ {q:'Voters who came of age during the Great Depression remained more supportive of federal programs for life. This is:',
+  c:['A life-cycle effect','A generational effect','Sampling error','Political efficacy'],
+  a:1, why:'A formative shared experience marks an entire cohort permanently, unlike changes tied to age itself.'},
+ {q:'A poll reports 52% support with a margin of error of ±4. The most accurate conclusion is:',
+  c:['Support is exactly 52%','True support likely falls between 48% and 56%','The poll is invalid','A majority definitely supports it'],
+  a:1, why:'The margin makes the result statistically indistinguishable from a tie, so no majority can be claimed.'},
+ {q:'The single most important factor in making a poll representative is:',
+  c:['A very large sample','Random selection of respondents','Asking many questions','Polling on election day'],
+  a:1, why:'Random selection removes systematic bias; size only narrows the margin of error and cannot fix a biased sample.'},
+ {q:'A libertarian would most likely support:',
+  c:['Expanded federal social programs and social regulation','Limited government in both economic and social matters','Higher tariffs and social regulation','Government ownership of industry'],
+  a:1, why:'Libertarians apply the principle of minimal government consistently across both spheres.'},
+ {q:'Which pair of core American values most directly conflict in debates over social programs?',
+  c:['Rule of law and free enterprise','Limited government and equality of opportunity','Individualism and rule of law','Free enterprise and limited government'],
+  a:1, why:'Expanding opportunity usually requires government action, which cuts against the limited government value.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Political Participation',
+guide:[
+ {h:'Voting', points:[
+  'Voting rights expanded through the <b>15th</b> (race), <b>17th</b> (direct Senate election), <b>19th</b> (women), <b>24th</b> (no poll tax), and <b>26th</b> (age 18) Amendments.',
+  'The <b>Voting Rights Act of 1965</b> enforced the 15th Amendment against literacy tests and similar barriers.',
+  'Turnout rises with education, income, and age; it falls with registration burdens and inconvenient timing.',
+  'Models of voting behavior: <b>rational choice</b>, <b>retrospective</b>, <b>prospective</b>, and <b>party-line</b>.',
+  'Structural factors — registration rules, voter ID laws, early and mail voting — measurably change turnout.'
+ ]},
+ {h:'Parties and interest groups', points:[
+  'Parties recruit candidates, mobilize voters, organize government, and simplify choices for voters.',
+  '<b>Critical elections</b> and <b>realignment</b> shift long-term coalitions.',
+  '<b>Winner-take-all</b> single-member districts are the main reason third parties rarely win.',
+  '<b>Interest groups</b> lobby, litigate, mobilize members, and fund campaigns.',
+  'The <b>free rider problem</b> weakens groups pursuing broadly shared benefits.',
+  '<b>Iron triangles</b> are stable; <b>issue networks</b> are looser and shift with the issue.'
+ ]},
+ {h:'Elections and media', points:[
+  'Nomination runs through <b>primaries</b> and <b>caucuses</b>, then the national convention.',
+  'The <b>electoral college</b> awards votes by state, which is why campaigns concentrate on swing states.',
+  '<b>Incumbency advantage</b> comes from name recognition, fundraising, and constituent service.',
+  'Campaign finance: <b>FECA</b> and <b>BCRA</b> set limits; <i>Citizens United</i> allowed unlimited independent spending through <b>super PACs</b>.',
+  'Media act as gatekeeper, scorekeeper, and watchdog; horse-race coverage and audience fragmentation shape what voters see.'
+ ]}
+],
+cards:[
+ ['24th Amendment','Abolished poll taxes in federal elections.'],
+ ['26th Amendment','Lowered the voting age to 18.'],
+ ['Retrospective voting','Choosing based on the incumbent\u2019s past performance.'],
+ ['Rational choice voting','Voting for the candidate whose positions best serve your own interest.'],
+ ['Winner-take-all system','Single-member plurality districts, the structural reason third parties struggle.'],
+ ['Critical election','An election that produces a lasting realignment of party coalitions.'],
+ ['Free rider problem','People enjoy a group\u2019s benefits without contributing, weakening collective action.'],
+ ['Iron triangle vs. issue network','Iron triangles are stable three-way alliances; issue networks are fluid and issue-specific.'],
+ ['Incumbency advantage','Sitting officeholders\u2019 edge from recognition, funding, and constituent service.'],
+ ['Super PAC','Group that may raise and spend unlimited sums independently of a campaign.'],
+ ['Citizens United v. FEC','Held independent political spending by corporations and unions is protected speech.'],
+ ['Horse-race journalism','Coverage focused on who is winning rather than on policy substance.']
+],
+quiz:[
+ {q:'The primary structural reason third parties rarely win US elections is:',
+  c:['Voters dislike their platforms','Winner-take-all single-member districts','The Constitution bans them','They cannot raise money'],
+  a:1, why:'Only first place wins anything, so votes for third parties translate into no seats and voters avoid "wasting" them.'},
+ {q:'A voter who supports the incumbent because the economy improved is engaged in:',
+  c:['Prospective voting','Retrospective voting','Party-line voting','Rational choice voting'],
+  a:1, why:'Retrospective voting evaluates results already delivered rather than promises about the future.'},
+ {q:'The free rider problem most weakens interest groups that:',
+  c:['Offer members exclusive benefits','Pursue benefits everyone receives regardless of membership','Have very wealthy donors','Focus on litigation'],
+  a:1, why:'If clean air arrives whether or not you join, joining looks irrational to each individual.'},
+ {q:'Which amendment eliminated poll taxes in federal elections?',
+  c:['15th','19th','24th','26th'],
+  a:2, why:'The 24th Amendment removed a financial barrier that had been used to suppress Black voter turnout.'},
+ {q:'A consequence of the electoral college is that campaigns:',
+  c:['Focus evenly on all states','Concentrate resources on a few competitive states','Ignore state issues entirely','Depend only on the national popular vote'],
+  a:1, why:'Because most states are reliably one party, marginal effort only pays off in genuinely contested states.'}
+]
+}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP HUMAN GEOGRAPHY */
+addUnits('ap-hug', [
+{
+id:'u3', title:'Unit 3 · Cultural Patterns and Processes',
+guide:[
+ {h:'Culture and landscape', points:[
+  '<b>Culture</b> is shared practices and beliefs; a <b>cultural trait</b> is a single element of it.',
+  'The <b>cultural landscape</b> is the visible imprint of human activity on a place — architecture, signs, land division.',
+  '<b>Folk culture</b> is local, traditional, and slow to change; <b>popular culture</b> spreads widely and changes fast.',
+  '<b>Placemaking</b> and <b>sense of place</b> describe the meaning people attach to locations.',
+  '<b>Cultural relativism</b> judges a culture on its own terms; <b>ethnocentrism</b> judges it against your own.'
+ ]},
+ {h:'Diffusion', points:[
+  '<b>Relocation diffusion</b> spreads through physical movement of people.',
+  '<b>Expansion diffusion</b> spreads while remaining strong at the source, in three forms.',
+  '<b>Contagious</b>: outward from a point through direct contact, like a viral trend.',
+  '<b>Hierarchical</b>: from large or influential nodes down to smaller ones, like fashion from major cities.',
+  '<b>Stimulus</b>: the underlying idea spreads but is adapted, like fast-food chains altering menus for local diets.'
+ ]},
+ {h:'Language, religion, and interaction', points:[
+  'Language families branch into languages and dialects; a <b>lingua franca</b> enables trade across groups.',
+  '<b>Creole</b> languages form when two languages blend into a new native tongue.',
+  '<b>Universalizing religions</b> (Christianity, Islam, Buddhism) seek converts and diffuse widely.',
+  '<b>Ethnic religions</b> (Hinduism, Judaism) tie closely to a people and place and spread mainly by relocation.',
+  '<b>Acculturation</b> adopts some traits while keeping your own; <b>assimilation</b> replaces them; <b>syncretism</b> blends two into something new.',
+  '<b>Centripetal forces</b> unify a population; <b>centrifugal forces</b> divide it.'
+ ]}
+],
+cards:[
+ ['Cultural landscape','The visible human imprint on the environment: buildings, signage, field patterns.'],
+ ['Folk vs. popular culture','Folk is local, traditional, slow-changing; popular is widespread and rapidly changing.'],
+ ['Relocation diffusion','Spread of a trait through the physical movement of people.'],
+ ['Contagious diffusion','Rapid widespread transmission through direct contact, outward from a source.'],
+ ['Hierarchical diffusion','Spread from large or influential places down to smaller ones.'],
+ ['Stimulus diffusion','The underlying idea spreads but is modified to fit the receiving culture.'],
+ ['Lingua franca','A common language adopted to enable communication among different language speakers.'],
+ ['Creole language','A stable new language formed from the blending of two parent languages.'],
+ ['Universalizing vs. ethnic religion','Universalizing seeks converts globally; ethnic ties to a specific people and place.'],
+ ['Acculturation vs. assimilation','Acculturation adopts some traits while retaining your own; assimilation replaces them entirely.'],
+ ['Syncretism','Blending of two cultural or religious traditions into a new form.'],
+ ['Centrifugal force','A factor that divides a population, such as language or religious conflict.']
+],
+quiz:[
+ {q:'A global coffee chain sells rice dishes in its Asian stores. This is:',
+  c:['Contagious diffusion','Hierarchical diffusion','Stimulus diffusion','Relocation diffusion'],
+  a:2, why:'The core concept spreads but is adapted to local preferences, which is the definition of stimulus diffusion.'},
+ {q:'A trend appears first in New York, Paris, and Tokyo, then in smaller cities. This is:',
+  c:['Contagious diffusion','Hierarchical diffusion','Relocation diffusion','Expansion by conquest'],
+  a:1, why:'Movement down an urban hierarchy from influential nodes is hierarchical diffusion.'},
+ {q:'Which is an ethnic religion?',
+  c:['Islam','Buddhism','Hinduism','Christianity'],
+  a:2, why:'Hinduism is tied to a specific people and region and does not actively seek converts.'},
+ {q:'Immigrants who keep their home language at home while adopting local business customs are demonstrating:',
+  c:['Assimilation','Acculturation','Ethnocentrism','Relocation diffusion'],
+  a:1, why:'Acculturation adopts some host traits while retaining core elements of the original culture.'},
+ {q:'A shared national language most often functions as a:',
+  c:['Centrifugal force','Centripetal force','Relic boundary','Cultural hearth'],
+  a:1, why:'Common language binds a population together; competing languages tend to divide it.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Political Patterns and Processes',
+guide:[
+ {h:'States and nations', points:[
+  'A <b>state</b> has defined borders, permanent population, sovereignty, and recognition.',
+  'A <b>nation</b> is a people with shared culture and identity. A <b>nation-state</b> aligns the two closely.',
+  'A <b>stateless nation</b> (Kurds, Palestinians) has no state of its own; a <b>multinational state</b> contains several nations.',
+  '<b>Sovereignty</b> is independent authority over territory; <b>self-determination</b> is a people\u2019s right to govern themselves.',
+  'Colonialism and the <b>Berlin Conference</b> drew borders that ignored existing ethnic geography, a source of ongoing conflict.',
+  '<b>Neocolonialism</b> continues economic control after formal independence.'
+ ]},
+ {h:'Boundaries and shapes', points:[
+  '<b>Antecedent</b> boundaries precede settlement; <b>subsequent</b> ones develop with the cultural landscape.',
+  '<b>Superimposed</b> boundaries are forced on by outsiders; <b>relic</b> boundaries no longer function but remain visible.',
+  'Disputes: <b>definitional</b> (wording), <b>locational</b> (where the line sits), <b>operational</b> (how it functions), <b>allocational</b> (resources beneath it).',
+  'Shapes: <b>compact</b>, <b>elongated</b>, <b>prorupted</b>, <b>fragmented</b>, <b>perforated</b>.',
+  'An <b>enclave</b> sits inside another state; an <b>exclave</b> is separated from its own state.',
+  '<b>UNCLOS</b> sets maritime zones, making chokepoints and seabed resources contested.'
+ ]},
+ {h:'Governance', points:[
+  '<b>Unitary states</b> concentrate power centrally; <b>federal states</b> divide it among regions.',
+  '<b>Devolution</b> transfers power to subnational units, driven by ethnic, economic, or territorial pressures.',
+  '<b>Supranational organizations</b> (EU, UN, NATO) pool sovereignty for shared goals.',
+  '<b>Reapportionment</b> redistributes seats among states; <b>redistricting</b> redraws lines within them.',
+  '<b>Gerrymandering</b> manipulates district lines through packing and cracking.'
+ ]}
+],
+cards:[
+ ['Nation-state','A state whose borders closely match the territory of a single nation.'],
+ ['Stateless nation','A people with a shared identity but no sovereign state of their own.'],
+ ['Superimposed boundary','A border drawn by outside powers that ignores existing cultural divisions.'],
+ ['Relic boundary','A former border that no longer functions but is still visible on the landscape.'],
+ ['Antecedent boundary','A boundary drawn before an area was heavily settled.'],
+ ['Allocational dispute','A conflict over resources that lie beneath or across a boundary.'],
+ ['Prorupted state','A compact state with a long extension, often to reach a resource or coast.'],
+ ['Perforated state','A state completely surrounding another state.'],
+ ['Enclave vs. exclave','An enclave is surrounded by another state; an exclave is detached from its own.'],
+ ['Devolution','Transfer of power from a central government to subnational regions.'],
+ ['Supranationalism','States pooling some sovereignty in a larger organization such as the EU.'],
+ ['Gerrymandering','Drawing district boundaries to advantage a group, using packing and cracking.']
+],
+quiz:[
+ {q:'The Kurds are a classic example of a:',
+  c:['Nation-state','Stateless nation','Multistate nation','Perforated state'],
+  a:1, why:'They share a distinct identity but their territory is divided among several states with no state of their own.'},
+ {q:'Borders drawn at the Berlin Conference are best classified as:',
+  c:['Antecedent','Subsequent','Superimposed','Relic'],
+  a:2, why:'European powers imposed them from outside without regard to existing ethnic and cultural geography.'},
+ {q:'A conflict over oil reserves that straddle a national border is a:',
+  c:['Definitional dispute','Locational dispute','Operational dispute','Allocational dispute'],
+  a:3, why:'Allocational disputes concern the resources connected to a boundary rather than its location or wording.'},
+ {q:'Scotland gaining its own parliament within the United Kingdom is an example of:',
+  c:['Supranationalism','Devolution','Irredentism','Balkanization'],
+  a:1, why:'Power moved downward from the central government to a subnational unit while the state remained intact.'},
+ {q:'Packing and cracking are techniques used in:',
+  c:['Reapportionment','Gerrymandering','Devolution','Boundary delimitation'],
+  a:1, why:'Packing concentrates opposing voters into few districts; cracking spreads them thin across many.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Agriculture and Rural Land Use',
+guide:[
+ {h:'Agricultural revolutions', points:[
+  'The <b>First Agricultural Revolution</b> was the Neolithic domestication of plants and animals in scattered hearths.',
+  'The <b>Second</b> accompanied the Industrial Revolution: improved tools, crop rotation, and higher yields freeing labor for cities.',
+  'The <b>Third</b> (the <b>Green Revolution</b>) brought high-yield seeds, fertilizers, pesticides, and irrigation.',
+  'The Green Revolution raised food supply dramatically but increased chemical dependence, water use, and inequality between large and small farms.',
+  '<b>GMOs</b> continue this trajectory and remain contested on environmental and economic grounds.'
+ ]},
+ {h:'Types of agriculture', points:[
+  '<b>Subsistence</b> farming feeds the household; <b>commercial</b> farming produces for sale.',
+  '<b>Intensive</b> agriculture uses much labor or capital on little land; <b>extensive</b> uses little on much land.',
+  '<b>Shifting cultivation</b> (slash-and-burn) and <b>pastoral nomadism</b> are extensive subsistence forms.',
+  '<b>Plantations</b>, <b>market gardening</b>, <b>mixed crop and livestock</b>, and <b>ranching</b> are commercial forms.',
+  '<b>Von Thünen\u2019s model</b> predicts land use rings by transport cost and perishability: dairy and market gardening nearest the market, ranching furthest.'
+ ]},
+ {h:'Land, systems, and consequences', points:[
+  'Survey patterns: <b>metes and bounds</b> follows natural features, <b>township and range</b> creates a grid, <b>long lot</b> gives each holding water access.',
+  '<b>Agribusiness</b> and global <b>commodity chains</b> connect farms to distant consumers.',
+  '<b>Monoculture</b> raises efficiency but increases vulnerability to pests and price shocks.',
+  'Environmental costs include <b>desertification</b>, <b>soil salinization</b>, deforestation, and aquifer depletion.',
+  '<b>Food deserts</b> and food insecurity are distribution problems, not production shortfalls.'
+ ]}
+],
+cards:[
+ ['Green Revolution','Spread of high-yield seeds, fertilizers, and irrigation that sharply raised output and chemical dependence.'],
+ ['Intensive vs. extensive agriculture','Intensive uses high inputs on small land; extensive uses low inputs on large land.'],
+ ['Shifting cultivation','Clearing and burning a plot, farming briefly, then moving as fertility declines.'],
+ ['Pastoral nomadism','Extensive subsistence herding across arid lands following seasonal pasture.'],
+ ['Market gardening','Commercial production of fruits and vegetables near urban markets.'],
+ ['Von Thünen model','Predicts concentric land-use rings based on transport cost and perishability.'],
+ ['Metes and bounds','Survey system using natural landmarks to define irregular boundaries.'],
+ ['Township and range','Rectangular grid survey system used across much of the US interior.'],
+ ['Long lot','Narrow strips running back from a river, giving each holding water access.'],
+ ['Monoculture','Growing a single crop, efficient but vulnerable to pests and price swings.'],
+ ['Desertification','Degradation of dryland into desert through overuse, overgrazing, and drought.'],
+ ['Food desert','An area with limited access to affordable, nutritious food.']
+],
+quiz:[
+ {q:'Von Thünen\u2019s model predicts that dairy farming locates near the market because:',
+  c:['Dairy requires the most land','Dairy products are perishable and costly to transport','Land is cheapest near cities','Dairy needs the least labor'],
+  a:1, why:'Perishability and transport cost push high-value, spoilable goods closest to the consumer.'},
+ {q:'Pastoral nomadism is best classified as:',
+  c:['Intensive commercial','Extensive subsistence','Intensive subsistence','Extensive commercial'],
+  a:1, why:'It uses low inputs across vast arid land to feed the group rather than to sell.'},
+ {q:'A major criticism of the Green Revolution is that it:',
+  c:['Reduced total food production','Favored larger farms and increased chemical and water dependence','Eliminated monoculture','Had no environmental impact'],
+  a:1, why:'Yields rose sharply, but the required inputs were expensive and environmentally costly, widening gaps between farms.'},
+ {q:'Long lot survey systems were designed primarily to give each holding:',
+  c:['Equal square area','Access to a river or road','Protection from flooding','Identical soil quality'],
+  a:1, why:'Narrow strips perpendicular to a waterway ensure every property touches the transport and water source.'},
+ {q:'Food deserts demonstrate that hunger in wealthy countries is primarily a problem of:',
+  c:['Total food production','Access and distribution','Soil fertility','Crop genetics'],
+  a:1, why:'Enough food exists nationally; the failure is in getting affordable, nutritious food to specific neighborhoods.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Cities and Urban Land Use',
+guide:[
+ {h:'Urban systems', points:[
+  '<b>Site</b> is a city\u2019s physical setting; <b>situation</b> is its relative position and connectivity.',
+  '<b>Central place theory</b> (Christaller): each service has a <b>threshold</b> (minimum customers) and a <b>range</b> (maximum travel distance).',
+  'Higher-order services have larger thresholds and ranges, so there are fewer of those cities.',
+  'The <b>rank-size rule</b> says the nth city is 1/n the size of the largest; a <b>primate city</b> dwarfs all others.',
+  'The <b>gravity model</b> predicts interaction as proportional to size and inversely to distance.',
+  '<b>World cities</b> command global finance and culture regardless of raw population.'
+ ]},
+ {h:'Internal structure', points:[
+  '<b>Burgess concentric zone</b>: rings outward from the central business district.',
+  '<b>Hoyt sector</b>: wedges following transport corridors.',
+  '<b>Harris-Ullman multiple nuclei</b>: several specialized centers rather than one.',
+  '<b>Galactic (peripheral)</b>: edge cities around a ring road, typical of the auto era.',
+  '<b>Latin American (Griffin-Ford)</b>: elite spine from the center, with poverty at the periphery — the reverse of the US pattern.'
+ ]},
+ {h:'Urban change and challenges', points:[
+  '<b>Suburbanization</b> and <b>sprawl</b> followed cars and highways; <b>edge cities</b> grew at the periphery.',
+  '<b>Redlining</b> and <b>blockbusting</b> produced lasting residential segregation.',
+  '<b>Gentrification</b> raises property values and displaces long-term lower-income residents.',
+  '<b>New urbanism</b> and <b>smart growth</b> promote walkability, mixed use, and density; <b>greenbelts</b> limit sprawl.',
+  'Persistent challenges: affordable housing, transport access, food deserts, and environmental sustainability.'
+ ]}
+],
+cards:[
+ ['Threshold and range','Threshold is the minimum market needed for a service; range is how far people will travel for it.'],
+ ['Central place theory','Christaller\u2019s model explaining the size and spacing of settlements by services offered.'],
+ ['Rank-size rule','The nth largest city is roughly 1/n the population of the largest.'],
+ ['Primate city','A city more than twice the size of the next largest, dominating the country.'],
+ ['Gravity model','Interaction between two places rises with size and falls with distance.'],
+ ['Concentric zone model','Burgess model of rings expanding outward from the central business district.'],
+ ['Sector model','Hoyt model of wedge-shaped districts following transport routes.'],
+ ['Multiple nuclei model','Harris-Ullman model with several specialized centers instead of one core.'],
+ ['Griffin-Ford model','Latin American city model with an elite spine from the center and poverty at the edge.'],
+ ['Redlining','Denying loans or insurance in neighborhoods based on racial composition.'],
+ ['Blockbusting','Inducing panic selling by suggesting racial change is coming to a neighborhood.'],
+ ['Gentrification','Reinvestment that raises values and displaces existing lower-income residents.'],
+ ['New urbanism','Planning approach favoring walkability, mixed use, and traditional neighborhood design.']
+],
+quiz:[
+ {q:'A specialty heart surgery center serves a much larger area than a convenience store because it has a higher:',
+  c:['Threshold and range','Density','Primacy','Bid-rent'],
+  a:0, why:'It needs far more potential patients to survive and people will travel much further for it.'},
+ {q:'A country where the largest city is five times the size of the second is said to have a:',
+  c:['Rank-size distribution','Primate city','Megalopolis','World city'],
+  a:1, why:'Primacy means one city dominates national economic, political, and cultural life disproportionately.'},
+ {q:'The Latin American city model differs from US models mainly in that:',
+  c:['It has no central business district','Wealth concentrates near the center along a spine, with poverty at the periphery','It has no residential zones','It follows a strict grid'],
+  a:1, why:'The socioeconomic gradient runs opposite to the US suburban pattern.'},
+ {q:'Blockbusting refers to:',
+  c:['Building high-rise blocks downtown','Pressuring owners to sell cheaply by warning of racial change','Demolishing a city block for redevelopment','Zoning for mixed use'],
+  a:1, why:'Agents profited by inducing panic selling and reselling at higher prices, accelerating segregation.'},
+ {q:'A common criticism of gentrification is that it:',
+  c:['Reduces property values','Displaces long-term lower-income residents','Prevents any new investment','Always increases sprawl'],
+  a:1, why:'Rising rents and taxes push out the residents who lived there before reinvestment.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Industrial and Economic Development',
+guide:[
+ {h:'Industry and location', points:[
+  'The Industrial Revolution began in Britain and diffused through Europe, North America, and later East Asia.',
+  '<b>Weber\u2019s least cost theory</b> locates industry by transport, labor, and agglomeration costs.',
+  '<b>Bulk-reducing</b> industries locate near raw materials; <b>bulk-gaining</b> industries locate near markets.',
+  '<b>Agglomeration</b> clusters related firms to share labor pools, suppliers, and knowledge.',
+  'Economic sectors: <b>primary</b> (extraction), <b>secondary</b> (manufacturing), <b>tertiary</b> (services), <b>quaternary</b> (information), <b>quinary</b> (top decision making).'
+ ]},
+ {h:'Measuring development', points:[
+  '<b>GDP per capita</b> measures output but hides distribution.',
+  'The <b>Human Development Index</b> combines income, education, and life expectancy.',
+  'The <b>Gender Inequality Index</b> tracks reproductive health, empowerment, and labor participation.',
+  'Improving women\u2019s education and access to work correlates strongly with lower fertility and higher development.',
+  'Development indicators should be read together — no single number captures wellbeing.'
+ ]},
+ {h:'Theories and global trade', points:[
+  '<b>Rostow\u2019s stages of growth</b> models linear progress from traditional society to high mass consumption.',
+  '<b>Wallerstein\u2019s world-systems theory</b> divides the world into <b>core</b>, <b>semi-periphery</b>, and <b>periphery</b>.',
+  '<b>Dependency theory</b> argues that poorer countries are kept dependent by the structure of global trade.',
+  '<b>Comparative advantage</b> and <b>complementarity</b> drive specialization and trade.',
+  '<b>Outsourcing</b> and <b>offshoring</b> shifted manufacturing toward lower-cost regions.',
+  'Trade blocs (EU, USMCA, ASEAN, Mercosur) and the WTO structure global commerce; <b>microloans</b> target grassroots development.'
+ ]}
+],
+cards:[
+ ['Weber\u2019s least cost theory','Industry locates to minimize transport, labor, and agglomeration costs.'],
+ ['Bulk-reducing industry','Locates near raw materials because the product weighs less than its inputs.'],
+ ['Bulk-gaining industry','Locates near markets because the product is heavier or bulkier than its inputs.'],
+ ['Agglomeration','Clustering of related firms to share suppliers, labor, and knowledge.'],
+ ['Quaternary sector','Information, research, and knowledge-based economic activity.'],
+ ['Human Development Index','Composite of income, education, and life expectancy.'],
+ ['Gender Inequality Index','Measure combining reproductive health, empowerment, and labor market participation.'],
+ ['Rostow\u2019s stages of growth','Linear model from traditional society through takeoff to high mass consumption.'],
+ ['World-systems theory','Wallerstein\u2019s division of the world into core, semi-periphery, and periphery.'],
+ ['Dependency theory','Argument that global trade structures keep poorer countries reliant on wealthier ones.'],
+ ['Complementarity','Two places trade because one has a surplus of what the other needs.'],
+ ['Microloans','Very small loans, often to women, intended to start local enterprises.']
+],
+quiz:[
+ {q:'A soft drink bottling plant locates near its consumers because it is a:',
+  c:['Bulk-reducing industry','Bulk-gaining industry','Footloose industry','Primary sector activity'],
+  a:1, why:'Adding water makes the finished product heavier than its inputs, so shipping it far is expensive.'},
+ {q:'The Human Development Index improves on GDP per capita by including:',
+  c:['Only industrial output','Education and life expectancy alongside income','Military spending','Population density'],
+  a:1, why:'Combining health, education, and income gives a fuller picture of wellbeing than output alone.'},
+ {q:'Wallerstein would classify a country that manufactures for core markets using low-wage labor as:',
+  c:['Core','Semi-periphery','Periphery','Outside the system'],
+  a:1, why:'Semi-periphery countries sit between the two, industrializing while remaining dependent on core capital.'},
+ {q:'Which best explains why steel mills historically located near coal and iron ore?',
+  c:['Labor was cheapest there','Steel is a bulk-reducing industry','Consumers lived nearby','Agglomeration was impossible'],
+  a:1, why:'Raw inputs weighed far more than the finished steel, so shipping the ore was the costly step.'},
+ {q:'Improving women\u2019s access to education most strongly correlates with:',
+  c:['Higher total fertility rates','Lower fertility and higher development indicators','No measurable change','Increased primary sector employment'],
+  a:1, why:'Education expands opportunity and delays childbearing, which is among the most reliable relationships in development geography.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP MACROECONOMICS */
+addUnits('ap-macro', [
+{
+id:'u2', title:'Unit 2 · Economic Indicators and the Business Cycle',
+guide:[
+ {h:'Measuring output', points:[
+  '<b>GDP</b> = C + I + G + (X − M), the market value of final goods produced within a country.',
+  'Excluded: intermediate goods, used goods, transfer payments, financial transactions, and unreported activity.',
+  '<b>Nominal GDP</b> uses current prices; <b>real GDP</b> adjusts for inflation and is the valid comparison over time.',
+  '<b>GDP deflator</b> = (nominal ÷ real) × 100.',
+  'GDP ignores distribution, leisure, environmental cost, and household production.'
+ ]},
+ {h:'Unemployment', points:[
+  'Unemployment rate = unemployed ÷ labor force. The labor force excludes anyone not seeking work.',
+  '<b>Frictional</b>: between jobs. <b>Structural</b>: skills mismatch. <b>Cyclical</b>: caused by recession.',
+  'The <b>natural rate</b> equals frictional plus structural; full employment means zero cyclical unemployment.',
+  '<b>Discouraged workers</b> leave the labor force, which can make the rate look artificially better.',
+  'The rate also misses underemployment, so it understates real labor market slack.'
+ ]},
+ {h:'Inflation and the cycle', points:[
+  '<b>CPI</b> tracks a fixed basket; inflation rate = (new CPI − old) ÷ old × 100.',
+  '<b>Demand-pull</b> inflation comes from excess spending; <b>cost-push</b> from rising input costs.',
+  'CPI overstates inflation through substitution bias and slow adjustment for new or improved goods.',
+  '<b>Real interest rate</b> = nominal − inflation. Unexpected inflation helps borrowers and hurts lenders.',
+  'The business cycle runs expansion → peak → contraction → trough, around a long-run growth trend.'
+ ]}
+],
+cards:[
+ ['GDP formula','C + I + G + (X − M): consumption, investment, government spending, and net exports.'],
+ ['What GDP excludes','Intermediate goods, used goods, transfer payments, and unreported activity.'],
+ ['Real vs. nominal GDP','Real adjusts for price changes; only real GDP compares validly across years.'],
+ ['GDP deflator','(Nominal GDP ÷ real GDP) × 100.'],
+ ['Frictional unemployment','Short-term joblessness while moving between jobs.'],
+ ['Structural unemployment','Joblessness from a mismatch between worker skills and available jobs.'],
+ ['Cyclical unemployment','Joblessness caused by a downturn in the business cycle.'],
+ ['Natural rate of unemployment','Frictional plus structural; the rate at full employment with no cyclical unemployment.'],
+ ['Discouraged worker','Someone who stops looking for work and therefore leaves the labor force.'],
+ ['Demand-pull vs. cost-push inflation','Demand-pull comes from excess spending; cost-push from rising input costs.'],
+ ['Real interest rate','Nominal interest rate minus the inflation rate.']
+],
+quiz:[
+ {q:'A large number of discouraged workers leave the labor force. The measured unemployment rate will:',
+  c:['Rise','Fall','Stay the same','Become negative'],
+  a:1, why:'They are removed from both numerator and denominator as non-participants, so the rate falls even though conditions worsened.'},
+ {q:'Which is included in GDP?',
+  c:['A used car resold by a dealer','Social Security payments','A newly built house','Stock purchased on an exchange'],
+  a:2, why:'New residential construction counts as investment. The others are transfers, resales, or financial swaps.'},
+ {q:'If nominal GDP is $600B and real GDP is $500B, the GDP deflator is:',
+  c:['83','100','120','1.2'],
+  a:2, why:'(600 ÷ 500) × 100 = 120, meaning prices rose 20% from the base year.'},
+ {q:'A borrower with a 6% fixed loan benefits most when:',
+  c:['Inflation is lower than expected','Inflation is higher than expected','The nominal rate rises','Deflation occurs'],
+  a:1, why:'Unexpected inflation lowers the real value of repayments, transferring purchasing power from lender to borrower.'},
+ {q:'An economy at full employment still has unemployment because:',
+  c:['Cyclical unemployment never reaches zero','Frictional and structural unemployment always exist','The labor force is miscounted','Inflation prevents hiring'],
+  a:1, why:'People are always between jobs or mismatched to openings; full employment means only that cyclical unemployment is gone.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Financial Sector',
+guide:[
+ {h:'Money and banking', points:[
+  'Money serves three functions: <b>medium of exchange</b>, <b>unit of account</b>, and <b>store of value</b>.',
+  '<b>M1</b> is currency and checkable deposits; <b>M2</b> adds savings deposits and near-money.',
+  '<b>Fractional reserve banking</b> lets banks lend out deposits above the required reserve.',
+  '<b>Money multiplier</b> = 1 ÷ reserve requirement. A $1,000 deposit at 10% reserves can create up to $10,000.',
+  'Actual expansion is smaller when banks hold excess reserves or people hold cash.'
+ ]},
+ {h:'Money and loanable funds markets', points:[
+  'The <b>money market</b> sets the <b>nominal</b> interest rate. Money demand slopes down; money supply is vertical.',
+  'Higher interest rates raise the opportunity cost of holding money, reducing quantity demanded.',
+  'The <b>loanable funds market</b> sets the <b>real</b> interest rate through saving and borrowing.',
+  'Government deficits shift loanable funds demand right, raising real rates and <b>crowding out</b> private investment.',
+  'Bond prices and interest rates move inversely.'
+ ]},
+ {h:'Monetary policy', points:[
+  'Fed tools: <b>open market operations</b>, the <b>discount rate</b>, reserve requirements, and interest on reserves.',
+  '<b>Expansionary</b>: buy bonds, lower rates → more investment → AD shifts right.',
+  '<b>Contractionary</b>: sell bonds, raise rates → less spending → fights inflation.',
+  'Open market operations are the primary tool because they are precise and reversible.',
+  'The chain runs: money supply → interest rate → investment → aggregate demand → output and price level.'
+ ]}
+],
+cards:[
+ ['Three functions of money','Medium of exchange, unit of account, and store of value.'],
+ ['M1 vs. M2','M1 is currency and checkable deposits; M2 adds savings and near-money.'],
+ ['Fractional reserve banking','Banks hold only a fraction of deposits and lend out the rest.'],
+ ['Money multiplier','1 ÷ the required reserve ratio; the maximum expansion from a new deposit.'],
+ ['Money market','Determines the nominal interest rate; supply is vertical, demand slopes down.'],
+ ['Loanable funds market','Determines the real interest rate through saving and investment.'],
+ ['Open market operations','Fed buying or selling government bonds to change the money supply.'],
+ ['Expansionary monetary policy','Buying bonds and lowering rates to increase investment and shift AD right.'],
+ ['Bond prices and interest rates','Move inversely: when rates rise, existing bond prices fall.'],
+ ['Crowding out','Government borrowing raises real interest rates, reducing private investment.']
+],
+quiz:[
+ {q:'With a 20% reserve requirement, a new $500 deposit can expand the money supply by at most:',
+  c:['$500','$1,000','$2,500','$10,000'],
+  a:2, why:'The multiplier is 1 ÷ 0.20 = 5, so $500 × 5 = $2,500 maximum.'},
+ {q:'To fight inflation, the Fed would most likely:',
+  c:['Buy bonds and lower the discount rate','Sell bonds and raise the discount rate','Lower the reserve requirement','Increase government spending'],
+  a:1, why:'Selling bonds drains reserves, raising interest rates and reducing spending. The last option is fiscal, not monetary.'},
+ {q:'An increase in the money supply causes the nominal interest rate to:',
+  c:['Rise, reducing investment','Fall, increasing investment','Stay fixed','Become negative'],
+  a:1, why:'Shifting the vertical money supply right meets money demand at a lower rate, which stimulates investment.'},
+ {q:'Which market determines the real interest rate?',
+  c:['The money market','The loanable funds market','The foreign exchange market','The goods market'],
+  a:1, why:'Saving supply and investment demand set the real rate; the money market sets the nominal rate.'},
+ {q:'If market interest rates rise, the price of previously issued bonds will:',
+  c:['Rise','Fall','Stay the same','Double'],
+  a:1, why:'Older bonds pay less than new ones, so buyers will only take them at a discount.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Long-Run Consequences of Stabilization Policies',
+guide:[
+ {h:'The Phillips curve', points:[
+  'The <b>short-run Phillips curve</b> shows an inverse relationship between inflation and unemployment.',
+  'The <b>long-run Phillips curve</b> is vertical at the natural rate — no permanent tradeoff exists.',
+  'AD shifts move you <i>along</i> the SRPC; SRAS shifts move the SRPC itself.',
+  '<b>Stagflation</b> appears as a rightward shift of the SRPC: higher inflation at every unemployment rate.',
+  'Rising inflation <b>expectations</b> shift the SRPC upward, which is why credibility matters for central banks.'
+ ]},
+ {h:'Money, inflation, and growth', points:[
+  'In the long run, sustained money growth beyond output growth produces inflation.',
+  'The quantity theory MV = PQ links money supply and velocity to prices and output.',
+  '<b>Economic growth</b> means shifting <b>LRAS</b> right through more resources, better technology, or higher productivity.',
+  'Investment in <b>physical capital</b>, <b>human capital</b>, and R&D raises long-run capacity.',
+  'Policies that only shift AD change prices in the long run, not real output.'
+ ]},
+ {h:'Deficits, debt, and policy limits', points:[
+  'A <b>deficit</b> is an annual shortfall; <b>debt</b> is the accumulated total.',
+  'Persistent deficits raise real interest rates and crowd out private investment.',
+  'Fiscal policy faces recognition, decision, and implementation <b>lags</b>.',
+  'Under <b>rational expectations</b>, anticipated policy is offset by behavior, weakening its real effect.',
+  'Automatic stabilizers work faster than discretionary policy because they need no legislation.'
+ ]}
+],
+cards:[
+ ['Short-run Phillips curve','Inverse relationship between inflation and unemployment in the short run.'],
+ ['Long-run Phillips curve','Vertical at the natural rate of unemployment; no permanent tradeoff.'],
+ ['What shifts the SRPC','Changes in inflation expectations or supply shocks.'],
+ ['Stagflation on the Phillips curve','A rightward shift of the SRPC: higher inflation at every unemployment rate.'],
+ ['Quantity theory of money','MV = PQ; sustained money growth beyond output growth causes inflation.'],
+ ['Long-run economic growth','A rightward shift of LRAS from more resources, technology, or productivity.'],
+ ['Human capital','Skills and education embodied in workers that raise productivity.'],
+ ['Deficit vs. debt','A deficit is one year\u2019s shortfall; debt is the accumulation of past deficits.'],
+ ['Policy lags','Recognition, decision, and implementation delays that reduce fiscal policy effectiveness.'],
+ ['Rational expectations','If people anticipate policy, they adjust behavior and blunt its real effects.']
+],
+quiz:[
+ {q:'The long-run Phillips curve is vertical because:',
+  c:['Inflation is always zero in the long run','There is no permanent tradeoff between inflation and unemployment','Unemployment cannot change','Money is neutral in the short run'],
+  a:1, why:'Once expectations adjust, unemployment returns to the natural rate regardless of the inflation rate.'},
+ {q:'A negative supply shock will:',
+  c:['Move the economy along the SRPC','Shift the SRPC right, raising inflation and unemployment together','Shift the LRPC left','Lower inflation expectations'],
+  a:1, why:'Higher input costs worsen both variables simultaneously, which is stagflation.'},
+ {q:'Which policy would most increase long-run economic growth?',
+  c:['A one-time stimulus check','Investment in education and infrastructure','Buying bonds on the open market','Increasing transfer payments'],
+  a:1, why:'Only changes to productive capacity shift LRAS; demand-side measures affect prices in the long run.'},
+ {q:'Automatic stabilizers respond faster than discretionary fiscal policy because they:',
+  c:['Are controlled by the Federal Reserve','Require no new legislation','Only affect interest rates','Are always contractionary'],
+  a:1, why:'Progressive taxes and unemployment benefits adjust immediately as incomes change, skipping all three policy lags.'},
+ {q:'Sustained inflation in the long run is most closely associated with:',
+  c:['Rising productivity','Money supply growth exceeding output growth','Falling government spending','Increases in LRAS'],
+  a:1, why:'More money chasing a similar quantity of goods raises the price level over time.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Open Economy: International Trade and Finance',
+guide:[
+ {h:'Balance of payments', points:[
+  'The <b>current account</b> records trade in goods and services, income, and transfers.',
+  'The <b>capital and financial account</b> records purchases of assets across borders.',
+  'The two accounts offset: a current account deficit is matched by a financial account surplus.',
+  'A trade deficit therefore means foreigners are acquiring domestic assets, not simply "losing."',
+  'Exports are recorded as credits; imports as debits.'
+ ]},
+ {h:'Exchange rates', points:[
+  '<b>Appreciation</b> means a currency buys more foreign currency; <b>depreciation</b> means less.',
+  'Determinants: relative interest rates, relative price levels, relative income, tastes, and speculation.',
+  'Higher domestic interest rates attract foreign capital, increasing demand for the currency and causing appreciation.',
+  'A stronger currency makes exports more expensive abroad and imports cheaper, reducing net exports.',
+  'On a FOREX graph, demand for a currency comes from foreigners wanting domestic goods and assets.'
+ ]},
+ {h:'Linking the pieces', points:[
+  'Expansionary monetary policy lowers interest rates → capital outflow → currency depreciates → net exports rise.',
+  'Contractionary policy has the opposite chain, partially offsetting itself through trade.',
+  'Deficit-financed fiscal expansion can raise rates, appreciate the currency, and shrink net exports.',
+  '<b>Floating</b> exchange rates are set by markets; <b>fixed</b> rates are maintained by central bank intervention.',
+  'This chain — rates, capital flows, currency, net exports — is the single most tested relationship in this unit.'
+ ]}
+],
+cards:[
+ ['Current account','Records trade in goods and services, investment income, and transfers.'],
+ ['Capital and financial account','Records cross-border purchases of assets; offsets the current account.'],
+ ['Appreciation','A currency gaining value relative to another.'],
+ ['Depreciation','A currency losing value relative to another.'],
+ ['Effect of higher domestic interest rates','Attracts foreign capital, raising currency demand and causing appreciation.'],
+ ['Effect of appreciation on net exports','Exports become pricier abroad and imports cheaper, so net exports fall.'],
+ ['Floating exchange rate','Value determined by supply and demand in the foreign exchange market.'],
+ ['Fixed exchange rate','Value held at a set level through central bank intervention.'],
+ ['The open-economy chain','Interest rate → capital flow → exchange rate → net exports.']
+],
+quiz:[
+ {q:'US interest rates rise relative to the rest of the world. The dollar will:',
+  c:['Depreciate, raising net exports','Appreciate, lowering net exports','Remain unchanged','Appreciate, raising net exports'],
+  a:1, why:'Foreign investors buy dollars to access higher returns, and the stronger dollar makes US exports pricier abroad.'},
+ {q:'A current account deficit is necessarily accompanied by:',
+  c:['A financial account deficit','A financial account surplus','A balanced budget','Currency appreciation'],
+  a:1, why:'The accounts must offset: money leaving through trade returns as foreign purchases of domestic assets.'},
+ {q:'A weaker domestic currency will generally:',
+  c:['Make exports more expensive abroad','Make exports cheaper abroad and increase net exports','Reduce foreign demand for domestic goods','Have no effect on trade'],
+  a:1, why:'Depreciation lowers the foreign-currency price of exports, increasing quantity demanded abroad.'},
+ {q:'Expansionary monetary policy affects net exports by:',
+  c:['Raising rates and appreciating the currency','Lowering rates, depreciating the currency, and raising net exports','Directly setting tariffs','Reducing the money supply'],
+  a:1, why:'Lower returns push capital abroad, weakening the currency and making exports more competitive.'},
+ {q:'On a FOREX graph for the euro, demand for euros increases when:',
+  c:['Europeans buy more American goods','Americans buy more European goods','European interest rates fall','European inflation rises sharply'],
+  a:1, why:'Buying European goods requires acquiring euros first, which shifts euro demand right.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP MICROECONOMICS */
+addUnits('ap-micro', [
+{
+id:'u1', title:'Unit 1 · Basic Economic Concepts',
+guide:[
+ {h:'Scarcity and choice', points:[
+  '<b>Scarcity</b> forces trade-offs, so every choice carries an <b>opportunity cost</b>.',
+  'The <b>production possibilities curve</b> bows outward because resources are not equally suited to all uses.',
+  'Points inside are inefficient; points outside are unattainable without growth or trade.',
+  '<b>Comparative advantage</b> — lower opportunity cost — determines who should specialize, not absolute advantage.',
+  'Trade benefits both parties when the terms of trade lie between the two opportunity costs.'
+ ]},
+ {h:'Thinking at the margin', points:[
+  'Rational decisions compare <b>marginal benefit</b> to <b>marginal cost</b>, not totals or averages.',
+  'The optimum is where MB = MC; beyond it, extra units cost more than they are worth.',
+  '<b>Sunk costs</b> are already spent and should never influence a forward-looking decision.',
+  '<b>Diminishing marginal utility</b>: each additional unit consumed adds less satisfaction.',
+  'The <b>utility-maximizing rule</b>: allocate spending so MUx/Px = MUy/Py across all goods.'
+ ]}
+],
+cards:[
+ ['Opportunity cost','The value of the next best alternative given up when making a choice.'],
+ ['Why the PPC bows outward','Resources are not equally productive in all uses, so opportunity cost increases.'],
+ ['Comparative advantage','Producing at a lower opportunity cost than another producer.'],
+ ['Marginal analysis','Comparing the added benefit and added cost of one more unit.'],
+ ['MB = MC rule','The optimal quantity is where marginal benefit equals marginal cost.'],
+ ['Sunk cost','A cost already incurred that cannot be recovered and should be ignored going forward.'],
+ ['Diminishing marginal utility','Each additional unit consumed provides less added satisfaction.'],
+ ['Utility-maximizing rule','Spend so that marginal utility per dollar is equal across all goods.'],
+ ['Allocative efficiency','Producing the combination of goods society values most, where P = MC.']
+],
+quiz:[
+ {q:'A firm has spent $2 million on research that cannot be recovered. In deciding whether to continue, it should:',
+  c:['Continue to justify the $2 million','Ignore the $2 million and compare future benefits to future costs','Stop because the money is gone','Double the investment'],
+  a:1, why:'Sunk costs are irrelevant to forward-looking decisions; only marginal benefit versus marginal cost matters now.'},
+ {q:'A consumer maximizes utility when:',
+  c:['Total utility is highest for one good','Marginal utility per dollar is equal across all goods','Marginal utility is zero for every good','Prices are equal'],
+  a:1, why:'If one good delivered more utility per dollar, shifting spending toward it would raise total satisfaction.'},
+ {q:'Marginal benefit exceeds marginal cost at the current output. The firm should:',
+  c:['Produce less','Produce more','Shut down','Keep output unchanged'],
+  a:1, why:'Each additional unit adds more value than it costs, so expanding raises net benefit until MB = MC.'},
+ {q:'A point outside the production possibilities curve represents output that is:',
+  c:['Efficient','Inefficient','Currently unattainable','Allocatively optimal'],
+  a:2, why:'It requires more resources, better technology, or trade before it becomes reachable.'},
+ {q:'Country X can produce a car at the cost of 4 tons of wheat; Country Y gives up 7 tons. Country X should:',
+  c:['Specialize in wheat','Specialize in cars','Not trade at all','Produce both equally'],
+  a:1, why:'Lower opportunity cost per car gives X the comparative advantage in cars regardless of total output.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Imperfect Competition',
+guide:[
+ {h:'Monopoly', points:[
+  'A monopoly is a single seller with high barriers to entry and no close substitutes.',
+  'It is a <b>price maker</b>: its demand curve slopes down, so <b>marginal revenue lies below demand</b>.',
+  'It produces where MR = MC, then charges the price on the demand curve above that quantity.',
+  'Because <b>P > MC</b>, output is too low and there is <b>deadweight loss</b>.',
+  'A <b>natural monopoly</b> has continuously falling ATC, so one firm serves the market most cheaply.',
+  '<b>Price discrimination</b> charges different buyers different prices, capturing consumer surplus and eliminating deadweight loss under perfect discrimination.'
+ ]},
+ {h:'Monopolistic competition and oligopoly', points:[
+  '<b>Monopolistic competition</b>: many firms, differentiated products, easy entry.',
+  'It earns zero economic profit in the long run but produces with <b>excess capacity</b> — not at minimum ATC — and P > MC.',
+  '<b>Oligopoly</b>: few firms whose decisions are interdependent.',
+  '<b>Game theory</b> models this. A <b>dominant strategy</b> is best regardless of the rival\u2019s choice.',
+  'The <b>prisoner\u2019s dilemma</b> shows why firms defect from collusion even though cooperating would pay more.',
+  '<b>Cartels</b> are unstable because each member gains by cheating.'
+ ]},
+ {h:'Regulation', points:[
+  '<b>Socially optimal</b> regulation sets P = MC, which is allocatively efficient but may force losses on a natural monopoly.',
+  '<b>Fair return</b> regulation sets P = ATC, letting the firm break even.',
+  'Antitrust law targets collusion, predatory pricing, and anticompetitive mergers.',
+  'Barriers to entry include economies of scale, patents, resource control, and legal restrictions.'
+ ]}
+],
+cards:[
+ ['Why MR lies below demand for a monopoly','Selling one more unit requires lowering price on all units sold.'],
+ ['Monopoly deadweight loss','Arises because P > MC, so mutually beneficial trades do not happen.'],
+ ['Natural monopoly','Falling average total cost over the whole market, so one firm is cheapest.'],
+ ['Price discrimination','Charging different prices to different buyers based on willingness to pay.'],
+ ['Monopolistic competition','Many firms, differentiated products, free entry, zero long-run economic profit.'],
+ ['Excess capacity','Monopolistically competitive firms produce below minimum ATC output.'],
+ ['Dominant strategy','A choice that is best no matter what the other player does.'],
+ ['Prisoner\u2019s dilemma','Individually rational choices produce a worse outcome than cooperation would.'],
+ ['Why cartels are unstable','Each member profits by secretly cheating on the agreed output.'],
+ ['Socially optimal price','P = MC, the allocatively efficient outcome.'],
+ ['Fair return price','P = ATC, allowing a regulated firm to break even.']
+],
+quiz:[
+ {q:'A monopoly produces less than the socially optimal quantity because:',
+  c:['It faces a perfectly elastic demand curve','It sets price above marginal cost','Its costs are always higher','It has no marginal revenue'],
+  a:1, why:'Restricting output to keep price above MC leaves beneficial trades unmade, creating deadweight loss.'},
+ {q:'In long-run equilibrium, a monopolistically competitive firm:',
+  c:['Earns positive economic profit','Produces at minimum ATC','Earns zero economic profit but has excess capacity','Sets P = MC'],
+  a:2, why:'Free entry drives profit to zero, but product differentiation leaves it producing below the efficient scale.'},
+ {q:'Two firms would both profit from colluding but each secretly cuts price. This illustrates:',
+  c:['Natural monopoly','The prisoner\u2019s dilemma','Price discrimination','Perfect competition'],
+  a:1, why:'Defecting is individually rational for each firm, so the cooperative outcome is unstable.'},
+ {q:'Regulating a natural monopoly at P = MC typically results in:',
+  c:['Economic profit','A loss, since MC is below ATC','Zero output','Perfect competition'],
+  a:1, why:'With continuously falling ATC, marginal cost sits below average cost, so pricing at MC cannot cover total cost.'},
+ {q:'Perfect price discrimination has the effect of:',
+  c:['Increasing deadweight loss','Eliminating deadweight loss while transferring surplus to the firm','Lowering all prices','Creating excess capacity'],
+  a:1, why:'Charging each buyer their maximum willingness to pay restores efficient output but leaves consumers no surplus.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Factor Markets',
+guide:[
+ {h:'Demand for labor', points:[
+  'Labor demand is <b>derived demand</b> — it comes from demand for the product labor makes.',
+  '<b>Marginal revenue product</b> (MRP) = marginal product × price of output. It is the firm\u2019s labor demand curve.',
+  'MRP falls because of <b>diminishing marginal returns</b>.',
+  'Hire until <b>MRP = MRC</b> (marginal resource cost).',
+  'In a competitive labor market the firm is a wage taker, so MRC equals the market wage.'
+ ]},
+ {h:'Market structures in factor markets', points:[
+  'A perfectly competitive labor market has many buyers and sellers, so each firm faces a perfectly elastic labor supply.',
+  'A <b>monopsony</b> is a single buyer of labor and faces the upward-sloping market supply curve.',
+  'Because the monopsonist must raise the wage for everyone to hire one more worker, <b>MRC lies above supply</b>.',
+  'A monopsonist hires <b>fewer</b> workers at a <b>lower</b> wage than a competitive market would.',
+  'Unions and minimum wages can raise both employment and wages in a monopsony, unlike in a competitive market.'
+ ]},
+ {h:'Choosing input combinations', points:[
+  '<b>Least-cost rule</b>: MP_L / P_L = MP_K / P_K — equal marginal product per dollar across inputs.',
+  '<b>Profit-maximizing rule</b>: MRP_L / P_L = MRP_K / P_K = 1.',
+  'If an input\u2019s marginal product per dollar is higher, shift spending toward it.',
+  'Changes in output price shift MRP and therefore labor demand.',
+  'Productivity gains raise MRP and raise wages in competitive markets.'
+ ]}
+],
+cards:[
+ ['Derived demand','Demand for a resource arising from demand for the product it produces.'],
+ ['Marginal revenue product','Marginal product × output price; the firm\u2019s demand curve for a resource.'],
+ ['Marginal resource cost','The added cost of hiring one more unit of a resource.'],
+ ['Hiring rule','Hire additional units until MRP equals MRC.'],
+ ['Monopsony','A single buyer of a resource, facing the upward-sloping market supply curve.'],
+ ['Why MRC exceeds supply in monopsony','Hiring one more worker requires raising the wage for all workers.'],
+ ['Monopsony outcome','Fewer workers hired at a lower wage than under perfect competition.'],
+ ['Least-cost rule','MP_L ÷ P_L = MP_K ÷ P_K.'],
+ ['Profit-maximizing input rule','MRP ÷ price equals 1 for every input.']
+],
+quiz:[
+ {q:'A monopsonist compared with a competitive labor market will hire:',
+  c:['More workers at a higher wage','Fewer workers at a lower wage','The same workers at a higher wage','More workers at a lower wage'],
+  a:1, why:'Because MRC lies above supply, the monopsonist restricts hiring and pays below the competitive wage.'},
+ {q:'A firm should hire an additional worker when:',
+  c:['MRP is greater than MRC','MRP is less than MRC','Marginal product is at its maximum','Total product is rising'],
+  a:0, why:'While the worker adds more revenue than cost, hiring increases profit; stop where they are equal.'},
+ {q:'Labor demand is called derived demand because it:',
+  c:['Derives from workers\u2019 preferences','Derives from demand for the output labor produces','Is set by government','Never changes'],
+  a:1, why:'If demand for the product falls, MRP falls and labor demand falls with it.'},
+ {q:'A worker\u2019s MRP rises when:',
+  c:['The output price falls','Worker productivity increases','More workers are hired','The wage rises'],
+  a:1, why:'MRP is marginal product times output price, so higher productivity raises it directly.'},
+ {q:'A minimum wage set above the monopsony wage but below the competitive wage will:',
+  c:['Always reduce employment','Potentially increase both wages and employment','Have no effect','Create a labor surplus'],
+  a:1, why:'It removes the monopsonist\u2019s incentive to restrict hiring, so employment can rise — the opposite of the competitive case.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Market Failure and the Role of Government',
+guide:[
+ {h:'Externalities', points:[
+  'A <b>negative externality</b> means marginal social cost exceeds marginal private cost, so the market <b>overproduces</b>.',
+  'A <b>positive externality</b> means marginal social benefit exceeds marginal private benefit, so the market <b>underproduces</b>.',
+  'Deadweight loss occurs at the market quantity in both cases because it differs from the socially optimal quantity.',
+  'Corrections: a <b>Pigouvian tax</b> on negative externalities, a <b>subsidy</b> for positive ones.',
+  '<b>Tradable permits</b> cap total pollution and let firms trade the right to emit.',
+  'The <b>Coase theorem</b> says that with clear property rights and low bargaining costs, private parties can resolve externalities themselves.'
+ ]},
+ {h:'Public goods and information', points:[
+  '<b>Public goods</b> are <b>nonrival</b> and <b>nonexcludable</b>, so private markets undersupply them.',
+  'The <b>free rider problem</b> is why: you benefit whether or not you pay.',
+  '<b>Common resources</b> are rival but nonexcludable, producing the <b>tragedy of the commons</b>.',
+  '<b>Asymmetric information</b> causes <b>adverse selection</b> before a transaction and <b>moral hazard</b> after it.',
+  'Insurance markets illustrate both problems clearly.'
+ ]},
+ {h:'Distribution and government', points:[
+  'The <b>Lorenz curve</b> plots cumulative income share; the further from the diagonal, the more unequal.',
+  'The <b>Gini coefficient</b> runs 0 (perfect equality) to 1 (perfect inequality).',
+  'A <b>progressive</b> tax takes a larger share from higher incomes; <b>regressive</b> takes a larger share from lower incomes.',
+  'Sales taxes are regressive because lower-income households spend a larger share of income.',
+  'Antitrust policy addresses market power as its own form of market failure.'
+ ]}
+],
+cards:[
+ ['Negative externality','Marginal social cost exceeds marginal private cost, so the market overproduces.'],
+ ['Positive externality','Marginal social benefit exceeds marginal private benefit, so the market underproduces.'],
+ ['Pigouvian tax','A tax equal to the external cost, shifting production to the socially optimal quantity.'],
+ ['Tradable permits','A cap on total emissions with tradable rights, letting reductions happen where cheapest.'],
+ ['Coase theorem','With clear property rights and low bargaining costs, private parties can solve externalities.'],
+ ['Public good','Nonrival and nonexcludable, so private markets undersupply it.'],
+ ['Free rider problem','People benefit without paying, so voluntary funding falls short.'],
+ ['Tragedy of the commons','Rival but nonexcludable resources get overused and depleted.'],
+ ['Adverse selection','Hidden information before a transaction, as when only high-risk people buy insurance.'],
+ ['Moral hazard','Changed behavior after a transaction because someone else bears the risk.'],
+ ['Lorenz curve','Graph of cumulative income share; distance from the diagonal shows inequality.'],
+ ['Gini coefficient','Inequality measure from 0 (perfect equality) to 1 (perfect inequality).'],
+ ['Regressive tax','Takes a larger percentage of income from lower earners, as sales taxes do.']
+],
+quiz:[
+ {q:'A factory pollutes a river. Without intervention, the market will produce:',
+  c:['Less than the socially optimal quantity','More than the socially optimal quantity','Exactly the optimal quantity','Nothing at all'],
+  a:1, why:'The firm ignores the external cost, so its private cost curve sits below the social one and output is too high.'},
+ {q:'Which is the defining pair of characteristics of a public good?',
+  c:['Rival and excludable','Nonrival and nonexcludable','Rival and nonexcludable','Nonrival and excludable'],
+  a:1, why:'One person\u2019s use does not reduce another\u2019s, and no one can be kept from benefiting — hence the free rider problem.'},
+ {q:'Someone buys collision insurance and then drives more recklessly. This is:',
+  c:['Adverse selection','Moral hazard','A positive externality','A public good'],
+  a:1, why:'The behavior change happens after the contract because the insurer now bears the risk.'},
+ {q:'A subsidy is the appropriate correction for:',
+  c:['A negative externality','A positive externality','A monopoly','A regressive tax'],
+  a:1, why:'Underproduction from unpriced external benefits is corrected by lowering the effective cost of producing more.'},
+ {q:'A Gini coefficient rising from 0.32 to 0.45 indicates:',
+  c:['Increasing income equality','Increasing income inequality','A larger economy','Lower unemployment'],
+  a:1, why:'Values closer to 1 mean income is concentrated among fewer people.'}
+]
+}
+]);
+</script>
+<script>
+/* ============================================================
    FULL AP CATALOG
    Every AP course, with its real College Board unit list and the
    approximate multiple-choice section format used by Master review.
@@ -3440,6 +4640,7 @@ const NAV = [
   { h: '#/courses', t: 'Courses', i: '▤', m: 'Courses' },
   { h: '#/tutor', t: 'AI Tutor', i: '✦', m: 'Tutor' },
   { h: '#/tests', t: 'Practice tests', i: '⏱', m: 'Tests' },
+  { h: '#/review', t: 'Due today', i: '◷', m: 'Due' },
   { h: '#/stats', t: 'Students', i: '◉', m: 'Stats' },
   { h: '#/settings', t: 'Settings', i: '⚙', m: 'More' }
 ];
@@ -3604,6 +4805,7 @@ function vCourse(cid) {
           ${(u.guide || []).length ? `<a class="btn ghost sm" href="#/study/${c.id}/${u.id}/guide">Study guide</a>` : ''}
           ${(u.cards || []).length ? `<a class="btn ghost sm" href="#/study/${c.id}/${u.id}/cards">${u.cards.length} flashcards</a>` : ''}
           ${(u.quiz || []).length ? `<a class="btn sm" href="#/study/${c.id}/${u.id}/quiz">Quiz me</a>` : ''}
+          ${(u.cards || []).length ? `<a class="chip" href="#/print/cards/${c.id}/${u.id}">Print</a>` : ''}
         </div>
       </div>`;
     }).join('')}
@@ -3698,7 +4900,7 @@ function paintCard() {
       <p style="color:var(--ink-soft)">${DECK.missed.length ? `You marked ${DECK.missed.length} card${DECK.missed.length > 1 ? 's' : ''} for review.` : 'You knew every card. Go take the quiz.'}</p>
       <div class="row center" style="justify-content:center;margin-top:8px">
         ${DECK.missed.length ? `<button class="btn" onclick="redoMissed()">Review the ${DECK.missed.length} missed</button>` : ''}
-        <a class="btn ${DECK.missed.length ? 'ghost' : ''}" href="#/study/${DECK.cid}/${DECK.uid}/quiz">Take the quiz</a>
+        ${DECK.cid ? `<a class="btn ${DECK.missed.length ? 'ghost' : ''}" href="#/study/${DECK.cid}/${DECK.uid}/quiz">Take the quiz</a>` : `<a class="btn ghost" href="#/review">Back to review</a>`}
         <button class="btn ghost" onclick="location.reload()">Shuffle and restart</button>
       </div>
     </div>`;
@@ -3707,27 +4909,46 @@ function paintCard() {
   const idx = DECK.order[DECK.i], card = DECK.cards[idx];
   w.innerHTML = `
     <div class="deck-meta">
-      <span>Card ${DECK.i + 1} of ${DECK.order.length}</span>
+      <span>Card ${DECK.i + 1} of ${DECK.order.length}${DECK.labels ? ' · ' + esc(DECK.labels[DECK.order[DECK.i]] || '') : ''}</span>
       <span>${DECK.missed.length} to review</span>
     </div>
-    <div class="fcard" id="fc" onclick="flipCard()">
+    <div class="fcard" id="fc" tabindex="0" role="button" aria-expanded="false"
+         aria-label="Flashcard ${DECK.i + 1} of ${DECK.order.length}. Term: ${esc(card[0])}. Press Enter or Space to reveal the definition."
+         onclick="flipCard()" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();flipCard();}">
       <div class="fcard-inner">
-        <div class="fface"><span class="ftag">Term</span><div class="ftext">${esc(card[0])}</div></div>
-        <div class="fface fback"><span class="ftag">Definition</span><div class="ftext">${esc(card[1])}</div></div>
+        <div class="fface" aria-hidden="${DECK.flipped}"><span class="ftag">Term</span><div class="ftext">${esc(card[0])}</div></div>
+        <div class="fface fback" aria-hidden="${!DECK.flipped}"><span class="ftag">Definition</span><div class="ftext">${esc(card[1])}</div></div>
       </div>
     </div>
+    <p class="sr-only" id="fclive" aria-live="polite" role="status"></p>
     <div class="row" style="justify-content:center">
       <button class="btn ghost" onclick="flipCard()">Flip card</button>
       <button class="btn ghost" onclick="markCard(false)">Need review</button>
       <button class="btn mark" onclick="markCard(true)">I knew it</button>
     </div>
-    <p class="center" style="color:var(--ink-faint);font-size:.78rem;margin-top:12px">Space flips · ← need review · → knew it</p>`;
+    <p class="center" style="color:var(--ink-faint);font-size:.78rem;margin-top:12px">Enter or Space flips · ← need review · → knew it</p>`;
+  const fc = $('#fc');
+  if (fc && DECK.autofocus) fc.focus();
+  const live = $('#fclive');
+  if (live && DECK.autofocus) live.textContent = `Card ${DECK.i + 1} of ${DECK.order.length}. Term: ${DECK.cards[DECK.order[DECK.i]][0]}`;
 }
-function flipCard() { DECK.flipped = !DECK.flipped; $('#fc').classList.toggle('flipped'); }
+function flipCard() {
+  DECK.flipped = !DECK.flipped;
+  const el = $('#fc');
+  el.classList.toggle('flipped');
+  el.setAttribute('aria-expanded', String(DECK.flipped));
+  const card = DECK.cards[DECK.order[DECK.i]];
+  el.querySelectorAll('.fface')[0].setAttribute('aria-hidden', String(DECK.flipped));
+  el.querySelectorAll('.fface')[1].setAttribute('aria-hidden', String(!DECK.flipped));
+  const live = $('#fclive');
+  if (live) live.textContent = DECK.flipped ? 'Definition: ' + card[1] : 'Term: ' + card[0];
+}
 function markCard(known) {
   tally('cards');
   if (!known) DECK.missed.push(DECK.order[DECK.i]);
-  DECK.i++; DECK.flipped = false; paintCard(); bumpStreak();
+  DECK.i++; DECK.flipped = false;
+  DECK.autofocus = document.activeElement && document.activeElement.id === 'fc';
+  paintCard(); bumpStreak();
 }
 function redoMissed() { DECK.order = shuffle(DECK.missed); DECK.missed = []; DECK.i = 0; paintCard(); }
 
@@ -4136,7 +5357,28 @@ function vSettings() {
       <hr class="divide">
       <span class="eyebrow">Your data</span>
       <p style="font-size:.88rem;color:var(--ink-soft)">${store.ok ? 'Progress is saved in this browser.' : 'This browser is blocking storage, so progress lasts only for this session.'}</p>
-      <div class="row"><button class="btn ghost sm" onclick="exportData()">Export my data</button><button class="btn red sm" onclick="if(confirm('Erase all progress and saved decks?')){store.wipe();location.reload()}">Erase everything</button></div>
+      <div class="row"><button class="btn red sm" onclick="if(confirm('Erase all progress and saved decks?')){store.wipe();location.reload()}">Erase everything</button></div>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Backup and restore</span>
+      <h3 style="margin-bottom:6px">Move your progress between devices</h3>
+      <p style="font-size:.88rem;color:var(--ink-soft)">Studying on a school Chromebook and a computer at home? Export a file on one, import it on the other. This covers your mistake book, review schedule, quiz scores, streak, and saved decks.</p>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" onclick="downloadBackup()">Export backup file</button>
+        <label class="btn ghost" style="cursor:pointer;margin:0">
+          Import a backup
+          <input type="file" accept="application/json,.json" style="display:none"
+            onchange="if(this.files[0])restoreBackup(this.files[0], document.getElementById('rmode').value)">
+        </label>
+      </div>
+      <label class="fld" style="margin-top:12px"><span>When importing</span>
+        <select id="rmode">
+          <option value="merge">Merge — keep the best of both devices</option>
+          <option value="replace">Replace — overwrite what is on this device</option>
+        </select>
+        <small>Merging keeps your higher quiz score per unit, unions your mistake book, and takes the lower Leitner box when two devices disagree.</small>
+      </label>
+      <div id="restoremsg"></div>
     </div>
     <div class="card">
       <span class="eyebrow">Optional</span>
@@ -4188,6 +5430,12 @@ function render() {
     html = mode === 'guide' ? vGuide(cid, uid) : mode === 'quiz' ? vQuiz(cid, uid) : vCards(cid, uid);
   }
   else if (parts[0] === 'mistakes') html = vMistakes();
+  else if (parts[0] === 'review') html = vReview();
+  else if (parts[0] === 'assign') html = vAssign();
+  else if (parts[0] === 'import') html = vImport();
+  else if (parts[0] === 'account') html = vAccount();
+  else if (parts[0] === 'group') html = vGroup();
+  else if (parts[0] === 'print') html = vPrint(parts[1], parts[2], parts[3]);
   else if (parts[0] === 'exam') html = vMasterReview(parts[1]);
   else if (parts[0] === 'stats') html = vStats();
   else if (parts[0] === 'tests') html = vTests();
@@ -4199,8 +5447,13 @@ function render() {
 }
 
 document.addEventListener('keydown', e => {
-  if (!DECK || !location.hash.includes('/cards') || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (!DECK) return;
+  if (!location.hash.includes('/cards') && !location.hash.includes('/review')) return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  /* the card element handles its own Enter and Space so screen reader users get
+     standard button behaviour; without this guard it would fire twice and cancel out */
+  const onCard = e.target.closest && e.target.closest('.fcard');
+  if (e.code === 'Space' && !onCard) { e.preventDefault(); flipCard(); }
   if (e.key === 'ArrowRight') markCard(true);
   if (e.key === 'ArrowLeft') markCard(false);
 });
@@ -4476,8 +5729,30 @@ function runMaster(cid, count, mins) {
 function outlineSection(c) {
   const outline = c.outline || [];
   if (!outline.length) return '';
+  /* Match on the unit number rather than the full title. A written unit called
+     "Units 1-2 - The Global Tapestry" covers catalog units 1 and 2, and small
+     wording differences never cause a finished unit to look missing. */
+  const keysOf = title => {
+    const m = String(title).match(/^\s*(units?|periods?|big idea|content area)\s+([\d\s,\u2013\u2014-]+)/i);
+    if (!m) return new Set();
+    const kind = m[1].toLowerCase().replace(/s$/, '');
+    const out = new Set();
+    m[2].split(',').forEach(part => {
+      const r = part.trim().match(/^(\d+)\s*[\u2013\u2014-]\s*(\d+)$/);
+      if (r) { for (let i = +r[1]; i <= +r[2]; i++) out.add(kind + ':' + i); }
+      else { const n = part.trim().match(/\d+/); if (n) out.add(kind + ':' + n[0]); }
+    });
+    return out;
+  };
+  const writtenKeys = new Set();
   const writtenTitles = c.units.map(u => u.title.toLowerCase());
-  const remaining = outline.filter(t => !writtenTitles.some(w => w === t.toLowerCase()));
+  c.units.forEach(u => keysOf(u.title).forEach(k => writtenKeys.add(k)));
+  const remaining = outline.filter(t => {
+    if (writtenTitles.some(w => w === t.toLowerCase())) return false;
+    const ks = keysOf(t);
+    if (ks.size && [...ks].every(k => writtenKeys.has(k))) return false;
+    return true;
+  });
   if (!remaining.length) return '';
   const heading = c.outlineOnly ? 'Course units' : 'The rest of this course';
   const blurb = c.outlineOnly
@@ -4648,6 +5923,691 @@ function defaultDeckName() { return TUTOR.deckName || ('My notes — ' + new Dat
 </html>
 <script>
 /* ============================================================
+   LEITNER SPACED REPETITION (3 boxes)
+   Box 1 → review today. Box 2 → in 3 days. Box 3 → in 7 days.
+   Right answer promotes one box, wrong answer drops to box 1.
+   ============================================================ */
+const Leitner = {
+  GAP: { 1: 0, 2: 3, 3: 7 },
+  all() { return store.get('sb.leitner', {}); },
+  save(m) { store.set('sb.leitner', m); },
+  plus(days) { return new Date(Date.now() + days * 864e5).toISOString().slice(0, 10); },
+  get(k) { return this.all()[k] || null; },
+  grade(k, correct, meta) {
+    const m = this.all();
+    const cur = m[k] || { box: 1, seen: 0 };
+    const box = correct ? Math.min(3, (cur.box || 1) + 1) : 1;
+    m[k] = { box, due: this.plus(this.GAP[box]), seen: (cur.seen || 0) + 1, last: today(), ...(meta || cur.meta ? { meta: meta || cur.meta } : {}) };
+    this.save(m);
+    return box;
+  },
+  counts() {
+    const c = { 1: 0, 2: 0, 3: 0, due: 0, total: 0 };
+    const t = today();
+    Object.values(this.all()).forEach(v => {
+      c.total++; c[v.box] = (c[v.box] || 0) + 1;
+      if (!v.due || v.due <= t) c.due++;
+    });
+    return c;
+  },
+  /* every card in the app that is scheduled and due now */
+  dueCards() {
+    const m = this.all(), t = today(), out = [];
+    COURSES.concat(customCourses()).forEach(c => c.units.forEach(u => {
+      (u.cards || []).forEach((card, i) => {
+        const k = 'card:' + c.id + '/' + u.id + '/' + i;
+        const rec = m[k];
+        if (rec && (!rec.due || rec.due <= t)) out.push({ k, card, cid: c.id, uid: u.id, cn: c.short, un: u.title, box: rec.box });
+      });
+    }));
+    return out;
+  }
+};
+
+/* flashcards feed the schedule */
+const _markCard = markCard;
+markCard = function (known) {
+  if (DECK) {
+    const idx = DECK.order[DECK.i];
+    if (idx !== undefined) Leitner.grade('card:' + DECK.cid + '/' + DECK.uid + '/' + idx, known);
+  }
+  return _markCard(known);
+};
+/* quizzes feed it too */
+const _answerL = answer;
+answer = function (i) {
+  if (QZ && !QZ.answered) {
+    const q = QZ.qs[QZ.i];
+    if (q) Leitner.grade('q:' + qid(q.q), i === q.a);
+  }
+  return _answerL(i);
+};
+
+/* ---- due review session ---- */
+function vReview() {
+  const due = Leitner.dueCards();
+  const c = Leitner.counts();
+  if (!due.length) {
+    return topbar() + `
+    <div class="page-head fade"><span class="eyebrow">Spaced repetition</span><h1>Nothing due today</h1>
+    <p>Cards come back on a schedule: miss one and it returns tomorrow, get it right and it waits 3 days, then 7. Studying any deck adds cards to the schedule.</p></div>
+    ${leitnerBoxes()}
+    <div class="empty" style="margin-top:20px"><div class="big">◷</div>
+      <p>${c.total ? 'Everything scheduled is resting. Come back tomorrow.' : 'Study a flashcard deck and cards start appearing here.'}</p>
+      <a class="btn" href="#/courses">Pick a deck</a></div>`;
+  }
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Spaced repetition</span>
+    <h1><span class="hl">${due.length}</span> card${due.length > 1 ? 's' : ''} due today</h1>
+    <p>These are the cards the schedule says you are about to forget. Working through them is the highest-value ten minutes available to you today.</p>
+  </div>
+  ${leitnerBoxes()}
+  <div class="card" style="margin-top:16px;max-width:560px">
+    <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">Pulled from ${new Set(due.map(d => d.cn)).size} course${new Set(due.map(d => d.cn)).size > 1 ? 's' : ''}, shuffled together.</p>
+    <button class="btn mark" onclick="startReview()">Start review · ${due.length} cards</button>
+  </div>`;
+}
+function leitnerBoxes() {
+  const c = Leitner.counts();
+  return `<div class="boxes" style="max-width:560px">
+    <div class="lbox b1"><b>${c[1] || 0}</b><span>Box 1 · daily</span></div>
+    <div class="lbox b2"><b>${c[2] || 0}</b><span>Box 2 · 3 days</span></div>
+    <div class="lbox b3"><b>${c[3] || 0}</b><span>Box 3 · 7 days</span></div>
+  </div>`;
+}
+function startReview() {
+  const due = shuffle(Leitner.dueCards());
+  DECK = {
+    cid: null, uid: null, review: true, i: 0, flipped: false,
+    order: due.map((_, i) => i), cards: due.map(d => d.card), keys: due.map(d => d.k),
+    labels: due.map(d => d.cn + ' · ' + d.un), missed: []
+  };
+  view().innerHTML = topbar() + `<a class="crumb" href="#/review">← Spaced repetition</a>
+    <div class="page-head fade"><span class="eyebrow">Due today</span><h1>Review session</h1></div>
+    <div class="deck-wrap" id="deckwrap"></div>`;
+  paintCard();
+}
+
+/* ============================================================
+   BACKUP AND RESTORE
+   ============================================================ */
+const BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.tally'];
+function collectData() {
+  const out = { app: 'StudyBuddy', version: 2, exported: new Date().toISOString(), data: {} };
+  BACKUP_KEYS.forEach(k => { const v = store.get(k, null); if (v !== null) out.data[k] = v; });
+  return out;
+}
+function downloadBackup() {
+  const blob = new Blob([JSON.stringify(collectData(), null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `studybuddy-backup-${today()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function restoreBackup(file, mode) {
+  const msg = $('#restoremsg');
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const j = JSON.parse(reader.result);
+      if (!j || j.app !== 'StudyBuddy' || !j.data) throw new Error('That is not a StudyBuddy backup file.');
+      if (mode === 'replace') {
+        BACKUP_KEYS.forEach(k => { if (j.data[k] !== undefined) store.set(k, j.data[k]); });
+      } else {
+        /* merge: keep the better result for every unit, union everything else */
+        const p = store.get('sb.progress', {}), np = j.data['sb.progress'] || {};
+        Object.entries(np).forEach(([k, v]) => {
+          p[k] = (!p[k] || v.best > p[k].best) ? v : p[k];
+        });
+        store.set('sb.progress', p);
+        const miss = store.get('sb.missed', {}), nm = j.data['sb.missed'] || {};
+        Object.entries(nm).forEach(([k, v]) => {
+          miss[k] = miss[k] ? { ...v, n: Math.max(v.n, miss[k].n) } : v;
+        });
+        store.set('sb.missed', miss);
+        const lt = store.get('sb.leitner', {}), nl = j.data['sb.leitner'] || {};
+        Object.entries(nl).forEach(([k, v]) => {
+          /* the lower box is the safer assumption when two devices disagree */
+          lt[k] = lt[k] ? (v.box < lt[k].box ? v : lt[k]) : v;
+        });
+        store.set('sb.leitner', lt);
+        const cust = store.get('sb.custom', []), nc = j.data['sb.custom'] || [];
+        const ids = new Set(cust.map(d => d.id));
+        nc.forEach(d => { if (!ids.has(d.id)) cust.push(d); });
+        store.set('sb.custom', cust);
+        const t = store.get('sb.tally', { cards: 0, questions: 0 }), nt = j.data['sb.tally'] || {};
+        store.set('sb.tally', { cards: Math.max(t.cards || 0, nt.cards || 0), questions: Math.max(t.questions || 0, nt.questions || 0) });
+      }
+      msg.innerHTML = `<p style="color:var(--green);font-size:.85rem;margin:10px 0 0">Restored from ${esc((j.exported || '').slice(0, 10))}. Reloading…</p>`;
+      setTimeout(() => location.reload(), 900);
+    } catch (e) {
+      msg.innerHTML = `<p style="color:var(--margin);font-size:.85rem;margin:10px 0 0">${esc(e.message)}</p>`;
+    }
+  };
+  reader.onerror = () => { msg.innerHTML = `<p style="color:var(--margin);font-size:.85rem;margin:10px 0 0">Could not read that file.</p>`; };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   PRINTABLE WORKSHEETS
+   ============================================================ */
+function vPrint(type, cid, uid) {
+  let title = '', sub = '', body = '';
+  if (type === 'mistakes') {
+    const items = Object.values(Missed.all());
+    if (!items.length) return notFound();
+    title = 'Mistake worksheet';
+    sub = `${items.length} questions · ${today()}`;
+    body = `<div class="wcols">${items.map((it, i) => `<div class="wq">
+        <p class="stem">${i + 1}. ${esc(it.q)}</p>
+        <ol type="A">${it.c.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      </div>`).join('')}</div>
+      <div class="answerkey"><h3>Answer key</h3><div class="wcols">
+      ${items.map((it, i) => `<div class="wrow"><b>${i + 1}. ${esc(it.c[it.a])}</b><span>${esc(it.why)}</span></div>`).join('')}
+      </div></div>`;
+  } else {
+    const c = findCourse(cid), u = findUnit(c, uid);
+    if (!u) return notFound();
+    sub = `${c.name} · ${u.title}`;
+    if (type === 'cards') {
+      title = 'Study sheet';
+      body = `<div class="wcols">${(u.cards || []).map(k => `<div class="wrow"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('')}</div>`;
+    } else if (type === 'blank') {
+      title = 'Fill-in worksheet';
+      body = `<div class="wcols">${(u.cards || []).map(k => `<div class="wrow"><b>${esc(k[0])}</b><span class="blank"></span></div>`).join('')}</div>
+        <div class="answerkey"><h3>Answer key</h3><div class="wcols">
+        ${(u.cards || []).map(k => `<div class="wrow"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('')}
+        </div></div>`;
+    } else if (type === 'cut') {
+      title = 'Cut-out flashcards';
+      body = `<div class="wcols">${(u.cards || []).map(k => `<div class="cutcard"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('')}</div>`;
+    } else {
+      title = 'Practice worksheet';
+      const qs = u.quiz || [];
+      body = `<div class="wcols">${qs.map((q, i) => `<div class="wq">
+          <p class="stem">${i + 1}. ${esc(q.q)}</p>
+          <ol type="A">${q.c.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+        </div>`).join('')}</div>
+        <div class="answerkey"><h3>Answer key</h3><div class="wcols">
+        ${qs.map((q, i) => `<div class="wrow"><b>${i + 1}. ${esc(q.c[q.a])}</b><span>${esc(q.why)}</span></div>`).join('')}
+        </div></div>`;
+    }
+  }
+  const back = type === 'mistakes' ? '#/mistakes' : '#/course/' + cid;
+  return topbar() + `
+  <div class="noprint" style="margin-bottom:18px">
+    <a class="crumb" href="${back}">← Back</a>
+    <div class="row">
+      <button class="btn" onclick="window.print()">Print this sheet</button>
+      ${type !== 'mistakes' ? `
+        <a class="chip ${type === 'cards' ? 'on' : ''}" href="#/print/cards/${cid}/${uid}">Study sheet</a>
+        <a class="chip ${type === 'blank' ? 'on' : ''}" href="#/print/blank/${cid}/${uid}">Fill in the blanks</a>
+        <a class="chip ${type === 'cut' ? 'on' : ''}" href="#/print/cut/${cid}/${uid}">Cut-out cards</a>
+        <a class="chip ${type === 'quiz' ? 'on' : ''}" href="#/print/quiz/${cid}/${uid}">Practice questions</a>` : ''}
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="sheet-head">
+      <div><h2>${esc(title)}</h2></div>
+      <div class="who">Name <u></u><br>Date <u></u></div>
+    </div>
+    <p class="sheet-sub">${esc(sub)} · StudyBuddy</p>
+    ${body}
+  </div>`;
+}
+
+/* ============================================================
+   ASSIGNMENT LINKS  (tutor → student)
+   ============================================================ */
+function b64e(str) {
+  return btoa(String.fromCharCode(...new TextEncoder().encode(str)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function b64d(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(s + '==='.slice((s.length + 3) % 4));
+  return new TextDecoder().decode(Uint8Array.from(bin, ch => ch.charCodeAt(0)));
+}
+
+let ASSIGN = { cards: [], quiz: [], name: '' };
+function vAssign() {
+  const all = COURSES.concat(customCourses()).filter(c => !c.outlineOnly);
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Tutor tools</span>
+    <h1>Make an assignment</h1>
+    <p>Build a targeted set and get a link. Send it to a student and it opens straight into StudyBuddy with the deck loaded — no account, no app, no file.</p>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <label class="fld"><span>Assignment name</span>
+        <input type="text" id="asname" value="${esc(ASSIGN.name)}" placeholder="e.g. Integration by parts — practice set">
+      </label>
+      <label class="fld"><span>Pull from a unit</span>
+        <select id="assrc" onchange="assignPreview()">
+          <option value="">Choose a unit…</option>
+          ${all.map(c => `<optgroup label="${esc(c.name)}">${c.units.map(u =>
+            `<option value="${c.id}|${u.id}">${esc(u.title)}</option>`).join('')}</optgroup>`).join('')}
+        </select>
+      </label>
+      <div class="row" style="margin-bottom:14px">
+        <label style="font-size:.86rem"><input type="checkbox" id="asC" checked onchange="assignPreview()"> flashcards</label>
+        <label style="font-size:.86rem"><input type="checkbox" id="asQ" checked onchange="assignPreview()"> questions</label>
+        <label style="font-size:.86rem">limit <input type="number" id="asN" value="10" min="1" max="50" style="width:64px;display:inline-block;padding:5px 8px" onchange="assignPreview()"></label>
+      </div>
+      <hr class="divide">
+      <label class="fld"><span>Or write your own</span>
+        <textarea id="asown" placeholder="One per line:&#10;Integration by parts — ∫u dv = uv − ∫v du&#10;LIATE: order for choosing u" style="min-height:110px" onchange="assignPreview()"></textarea>
+        <small>Same <b>term — definition</b> format as the tutor. These get added to whatever you selected above.</small>
+      </label>
+      <button class="btn" onclick="makeAssignment()">Create the link</button>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Preview</span>
+      <div id="aspreview"><p style="color:var(--ink-faint);font-size:.88rem">Pick a unit to see what the student will get.</p></div>
+    </div>
+  </div>`;
+}
+function assignPreview() {
+  const sel = $('#assrc').value, wantC = $('#asC').checked, wantQ = $('#asQ').checked;
+  const n = Math.max(1, Math.min(50, +$('#asN').value || 10));
+  let cards = [], quiz = [];
+  if (sel) {
+    const [cid, uid] = sel.split('|');
+    const u = findUnit(findCourse(cid), uid);
+    if (u) {
+      if (wantC) cards = shuffle(u.cards || []).slice(0, n);
+      if (wantQ) quiz = shuffle(u.quiz || []).slice(0, n);
+    }
+  }
+  const own = ($('#asown') ? $('#asown').value : '').trim();
+  if (own) cards = cards.concat(localCards(own));
+  ASSIGN = { cards, quiz, name: $('#asname').value.trim() };
+  $('#aspreview').innerHTML = (cards.length || quiz.length)
+    ? `<h3 style="margin-bottom:8px">${cards.length} cards · ${quiz.length} questions</h3>
+       ${cards.slice(0, 5).map(c => `<p style="font-size:.86rem;margin-bottom:6px"><b>${esc(c[0])}</b><br><span style="color:var(--ink-soft)">${esc(c[1])}</span></p>`).join('')}
+       ${cards.length > 5 ? `<p style="font-size:.8rem;color:var(--ink-faint)">+ ${cards.length - 5} more</p>` : ''}`
+    : `<p style="color:var(--ink-faint);font-size:.88rem">Nothing selected yet.</p>`;
+}
+function makeAssignment() {
+  assignPreview();
+  if (!ASSIGN.cards.length && !ASSIGN.quiz.length) {
+    $('#aspreview').innerHTML = `<div class="note">Pick a unit or write some cards first.</div>`;
+    return;
+  }
+  const payload = { n: ASSIGN.name || 'Practice set', c: ASSIGN.cards, q: ASSIGN.quiz };
+  const enc = b64e(JSON.stringify(payload));
+  const url = location.origin + location.pathname + '#/import?d=' + enc;
+  const tooLong = url.length > 8000;
+  $('#aspreview').innerHTML = `
+    <span class="eyebrow">Ready to send</span>
+    <h3 style="margin-bottom:6px">${esc(payload.n)}</h3>
+    <p style="color:var(--ink-soft);font-size:.87rem">${payload.c.length} cards · ${payload.q.length} questions</p>
+    <label class="fld" style="margin-top:12px"><span>Link</span>
+      <textarea id="aslink" readonly style="min-height:90px;font-size:.76rem;font-family:'IBM Plex Mono',monospace">${esc(url)}</textarea>
+    </label>
+    <div class="row">
+      <button class="btn" onclick="copyAssign()">Copy link</button>
+      <a class="btn ghost" href="#/import?d=${enc}">Open it yourself</a>
+    </div>
+    <div id="ascopied"></div>
+    ${tooLong ? `<div class="note" style="margin-top:12px"><b>That link is very long (${(url.length / 1000).toFixed(1)}k characters)</b> and some chat apps will cut it. Trim to fewer cards, or send the backup file instead.</div>` : ''}`;
+}
+function copyAssign() {
+  const t = $('#aslink');
+  t.select();
+  const done = () => { $('#ascopied').innerHTML = `<p style="color:var(--green);font-size:.84rem;margin:10px 0 0">Copied. Paste it to your student.</p>`; };
+  if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(done).catch(() => { document.execCommand('copy'); done(); });
+  else { document.execCommand('copy'); done(); }
+}
+
+function vImport() {
+  const d = ROUTE_Q.get('d');
+  if (!d) return notFound();
+  let p;
+  try { p = JSON.parse(b64d(d)); } catch (e) { p = null; }
+  if (!p || (!p.c && !p.q)) {
+    return topbar() + `<div class="empty"><div class="big">◌</div><h2>That link is damaged</h2>
+      <p>It may have been cut short by a chat app. Ask for it again, or have your tutor send fewer cards.</p>
+      <a class="btn" href="#/">Go to StudyBuddy</a></div>`;
+  }
+  const cards = p.c || [], quiz = p.q || [];
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Assignment</span>
+    <h1>${esc(p.n || 'Practice set')}</h1>
+    <p>Someone sent you this set. Save it and it joins your courses on the dashboard, with flashcards, a quiz, and spaced repetition like anything else.</p>
+  </div>
+  <div class="card" style="max-width:620px">
+    <div class="row" style="gap:26px;margin-bottom:16px">
+      <div class="stat"><b>${cards.length}</b><span>flashcards</span></div>
+      <div class="stat"><b>${quiz.length}</b><span>questions</span></div>
+    </div>
+    ${cards.slice(0, 4).map(c => `<p style="font-size:.87rem;margin-bottom:7px"><b>${esc(c[0])}</b><br><span style="color:var(--ink-soft)">${esc(c[1])}</span></p>`).join('')}
+    ${cards.length > 4 ? `<p style="font-size:.8rem;color:var(--ink-faint);margin-bottom:14px">+ ${cards.length - 4} more</p>` : ''}
+    <button class="btn" onclick='saveImport(${JSON.stringify(JSON.stringify(p)).replace(/'/g, "&#39;")})'>Save to my courses</button>
+    <a class="btn ghost" href="#/">Not now</a>
+  </div>`;
+}
+function saveImport(raw) {
+  const p = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  const list = S.custom;
+  list.push({
+    id: String(Date.now()), name: (p.n || 'Practice set').slice(0, 70),
+    cards: p.c || [], quiz: p.q || [], note: 'Sent to you by your tutor.'
+  });
+  S.custom = list;
+  location.hash = '#/courses';
+}
+</script>
+<script>
+/* ============================================================
+   SUPABASE — sign in, cloud sync, live group study
+   Only the PUBLISHABLE key belongs here. It is designed to be
+   public and is gated by Row Level Security. A secret key
+   (sb_secret_...) must never appear in this file.
+   ============================================================ */
+CONFIG.supabase = {
+  /* Paste your project URL from Supabase → Project Settings → API.
+     It looks like https://abcdefghijk.supabase.co
+     Sign-in and group study stay switched off until this is filled in. */
+  url: '',
+  publishableKey: 'sb_publishable_UE8ZBYXw6oO1L1h_1ZKNzQ_34Ys_6DF'
+};
+
+const SB = { client: null, user: null, ready: false, error: null };
+function sbConfigured() { return !!(CONFIG.supabase.url && CONFIG.supabase.publishableKey); }
+
+async function sbClient() {
+  if (SB.client) return SB.client;
+  if (!sbConfigured()) throw new Error('Supabase project URL is not set');
+  const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+  SB.client = createClient(CONFIG.supabase.url, CONFIG.supabase.publishableKey, {
+    auth: { persistSession: true, autoRefreshToken: true }
+  });
+  return SB.client;
+}
+async function sbInit() {
+  if (!sbConfigured()) return;
+  try {
+    const c = await sbClient();
+    const { data } = await c.auth.getSession();
+    SB.user = data.session ? data.session.user : null;
+    SB.ready = true;
+    c.auth.onAuthStateChange((_e, s) => {
+      SB.user = s ? s.user : null;
+      if (location.hash.startsWith('#/account')) render();
+    });
+    if (SB.user) pullCloud();
+  } catch (e) { SB.error = e.message; }
+}
+
+/* ---------------- account ---------------- */
+function vAccount() {
+  if (!sbConfigured()) {
+    return topbar() + `
+    <div class="page-head fade"><span class="eyebrow">Accounts</span><h1>Sign-in is not switched on</h1>
+    <p>StudyBuddy works fully without an account — everything saves in this browser. Signing in only adds syncing across devices and live group study.</p></div>
+    <div class="card" style="max-width:640px">
+      <span class="eyebrow">To turn it on</span>
+      <h3 style="margin-bottom:8px">Add your Supabase project URL</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem">Open <b>index.html</b>, find <b>CONFIG.supabase</b> near the bottom, and paste your project URL. Find it in Supabase under Project Settings → API. It looks like <span class="mono">https://abcdefghijk.supabase.co</span></p>
+      <div class="note" style="margin-top:14px">Only the <b>publishable</b> key goes in this file. A secret key would give anyone who views the page full access to your database.</div>
+      <hr class="divide">
+      <p style="font-size:.88rem;color:var(--ink-soft)">No account? Use <a href="#/settings" style="color:var(--ink)"><b>Backup and restore</b></a> in Settings — it moves your progress between devices with a file and no server at all.</p>
+    </div>`;
+  }
+  if (SB.user) {
+    const last = store.get('sb.syncedAt', null);
+    return topbar() + `
+    <div class="page-head fade"><span class="eyebrow">Account</span><h1>Signed in</h1>
+    <p>Your progress, mistake book, and review schedule sync to your account so a school Chromebook and a home computer stay in step.</p></div>
+    <div class="grid g2" style="align-items:start">
+      <div class="card">
+        <span class="eyebrow">You</span>
+        <h3 style="margin-bottom:4px;word-break:break-all">${esc(SB.user.email || 'Signed in')}</h3>
+        <p style="color:var(--ink-faint);font-size:.82rem">${last ? 'Last synced ' + esc(last) : 'Not synced yet'}</p>
+        <div class="row" style="margin-top:14px">
+          <button class="btn" onclick="pushCloud()">Save to cloud</button>
+          <button class="btn ghost" onclick="pullCloud(true)">Load from cloud</button>
+        </div>
+        <div id="syncmsg"></div>
+        <hr class="divide">
+        <button class="btn ghost sm" onclick="sbSignOut()">Sign out</button>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Live group study</span>
+        <h3 style="margin-bottom:6px">Run a session</h3>
+        <p style="color:var(--ink-soft);font-size:.88rem">Everyone answers the same question at once and you see the tally live. Good for club workshops.</p>
+        <a class="btn mark" href="#/group" style="margin-top:10px">Open group study</a>
+      </div>
+    </div>`;
+  }
+  return topbar() + `
+  <div class="page-head fade"><span class="eyebrow">Optional</span><h1>Sign in</h1>
+  <p>You do not need an account to use StudyBuddy. Signing in syncs your progress across devices and unlocks live group study.</p></div>
+  <div class="card" style="max-width:440px">
+    <label class="fld"><span>Email</span><input type="text" id="authEmail" placeholder="you@school.edu"></label>
+    <label class="fld"><span>Password</span><input type="password" id="authPass" placeholder="at least 6 characters" onkeydown="if(event.key==='Enter')sbSignIn()"></label>
+    <div class="row">
+      <button class="btn" onclick="sbSignIn()">Sign in</button>
+      <button class="btn ghost" onclick="sbSignUp()">Create account</button>
+    </div>
+    <div id="authmsg"></div>
+    <hr class="divide">
+    <p style="font-size:.83rem;color:var(--ink-faint)">Prefer no account? <a href="#/settings" style="color:var(--ink)">Back up to a file</a> instead — same result, no server.</p>
+  </div>`;
+}
+function authMsg(text, ok) {
+  const el = $('#authmsg'); if (!el) return;
+  el.innerHTML = `<p style="color:${ok ? 'var(--green)' : 'var(--margin)'};font-size:.85rem;margin:10px 0 0">${esc(text)}</p>`;
+}
+async function sbSignIn() {
+  const email = $('#authEmail').value.trim(), password = $('#authPass').value;
+  if (!email || !password) return authMsg('Enter an email and password.');
+  authMsg('Signing in…', true);
+  try {
+    const c = await sbClient();
+    const { error } = await c.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    await pullCloud();
+    location.hash = '#/account'; render();
+  } catch (e) { authMsg(e.message || 'Could not sign in.'); }
+}
+async function sbSignUp() {
+  const email = $('#authEmail').value.trim(), password = $('#authPass').value;
+  if (!email || password.length < 6) return authMsg('Password needs at least 6 characters.');
+  authMsg('Creating your account…', true);
+  try {
+    const c = await sbClient();
+    const { error } = await c.auth.signUp({ email, password });
+    if (error) throw error;
+    authMsg('Account created. Check your email if confirmation is required, then sign in.', true);
+  } catch (e) { authMsg(e.message || 'Could not create the account.'); }
+}
+async function sbSignOut() {
+  try { const c = await sbClient(); await c.auth.signOut(); } catch (e) {}
+  SB.user = null; render();
+}
+
+/* ---------------- cloud sync ---------------- */
+function syncMsg(text, ok) {
+  const el = $('#syncmsg'); if (!el) return;
+  el.innerHTML = `<p style="color:${ok ? 'var(--green)' : 'var(--margin)'};font-size:.84rem;margin:10px 0 0">${esc(text)}</p>`;
+}
+async function pushCloud() {
+  if (!SB.user) return;
+  syncMsg('Saving…', true);
+  try {
+    const c = await sbClient();
+    const { error } = await c.from('progress').upsert({
+      user_id: SB.user.id, data: collectData(), updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id' });
+    if (error) throw error;
+    store.set('sb.syncedAt', new Date().toLocaleString());
+    syncMsg('Saved to your account.', true);
+  } catch (e) { syncMsg('Could not save: ' + (e.message || e), false); }
+}
+async function pullCloud(loud) {
+  if (!SB.user) return;
+  if (loud) syncMsg('Loading…', true);
+  try {
+    const c = await sbClient();
+    const { data, error } = await c.from('progress').select('data').eq('user_id', SB.user.id).maybeSingle();
+    if (error) throw error;
+    if (!data || !data.data) { if (loud) syncMsg('Nothing saved to this account yet.', false); return; }
+    const j = data.data;
+    BACKUP_KEYS.forEach(k => { if (j.data && j.data[k] !== undefined) store.set(k, j.data[k]); });
+    store.set('sb.syncedAt', new Date().toLocaleString());
+    if (loud) { syncMsg('Loaded. Reloading…', true); setTimeout(() => location.reload(), 800); }
+  } catch (e) { if (loud) syncMsg('Could not load: ' + (e.message || e), false); }
+}
+
+/* ============================================================
+   LIVE GROUP STUDY  (Supabase Realtime broadcast, no tables)
+   ============================================================ */
+const GROUP = { channel: null, code: '', host: false, q: null, tally: {}, answered: false, name: '' };
+function vGroup() {
+  if (!sbConfigured()) return vAccount();
+  if (GROUP.channel) return groupRoomHTML();
+  const all = COURSES.concat(customCourses()).filter(c => !c.outlineOnly);
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Group study</span>
+    <h1>Everyone answers together</h1>
+    <p>One person hosts and pushes questions to the room. Everyone else joins with the code and answers on their own device. The host sees the tally as it comes in.</p>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <span class="eyebrow">Join a room</span>
+      <h3 style="margin-bottom:10px">Got a code?</h3>
+      <label class="fld"><span>Your name</span><input type="text" id="gname" placeholder="First name"></label>
+      <label class="fld"><span>Room code</span><input type="text" id="gcode" placeholder="ABCD" maxlength="6" style="text-transform:uppercase;font-family:'IBM Plex Mono',monospace;letter-spacing:.2em"></label>
+      <button class="btn" onclick="joinRoom()">Join</button>
+      <div id="gmsg"></div>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Host a room</span>
+      <h3 style="margin-bottom:10px">Run the session</h3>
+      <label class="fld"><span>Questions from</span>
+        <select id="gunit">
+          ${all.map(c => `<optgroup label="${esc(c.name)}">${c.units.filter(u => (u.quiz || []).length).map(u =>
+            `<option value="${c.id}|${u.id}">${esc(u.title)}</option>`).join('')}</optgroup>`).join('')}
+        </select>
+      </label>
+      <button class="btn mark" onclick="hostRoom()">Start hosting</button>
+    </div>
+  </div>`;
+}
+function roomCode() { return Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join(''); }
+async function openChannel(code) {
+  const c = await sbClient();
+  const ch = c.channel('study-' + code, { config: { broadcast: { self: false } } });
+  ch.on('broadcast', { event: 'question' }, ({ payload }) => {
+    GROUP.q = payload; GROUP.answered = false; GROUP.tally = {};
+    render();
+  });
+  ch.on('broadcast', { event: 'answer' }, ({ payload }) => {
+    if (!GROUP.host) return;
+    GROUP.tally[payload.name] = payload.pick;
+    render();
+  });
+  ch.on('broadcast', { event: 'end' }, () => { leaveRoom(true); });
+  await ch.subscribe();
+  GROUP.channel = ch; GROUP.code = code;
+  return ch;
+}
+async function hostRoom() {
+  const sel = $('#gunit').value;
+  if (!sel) return;
+  const [cid, uid] = sel.split('|');
+  const u = findUnit(findCourse(cid), uid);
+  GROUP.host = true; GROUP.pool = prepQuestions(u.quiz); GROUP.idx = -1;
+  try { await openChannel(roomCode()); render(); }
+  catch (e) { $('#gmsg') && ($('#gmsg').innerHTML = `<p style="color:var(--margin);font-size:.85rem">${esc(e.message)}</p>`); }
+}
+async function joinRoom() {
+  const code = ($('#gcode').value || '').trim().toUpperCase();
+  GROUP.name = ($('#gname').value || 'Student').trim().slice(0, 20);
+  if (code.length < 4) { $('#gmsg').innerHTML = `<p style="color:var(--margin);font-size:.85rem">Enter the 4-letter code.</p>`; return; }
+  GROUP.host = false;
+  try { await openChannel(code); render(); }
+  catch (e) { $('#gmsg').innerHTML = `<p style="color:var(--margin);font-size:.85rem">${esc(e.message)}</p>`; }
+}
+function nextGroupQuestion() {
+  GROUP.idx++;
+  const q = GROUP.pool[GROUP.idx];
+  if (!q) { GROUP.q = null; render(); return; }
+  GROUP.q = { q: q.q, c: q.c, a: q.a, why: q.why, n: GROUP.idx + 1, total: GROUP.pool.length };
+  GROUP.tally = {};
+  GROUP.channel.send({ type: 'broadcast', event: 'question', payload: { ...GROUP.q, a: undefined, why: undefined } });
+  render();
+}
+function groupAnswer(i) {
+  if (GROUP.answered) return;
+  GROUP.answered = i;
+  GROUP.channel.send({ type: 'broadcast', event: 'answer', payload: { name: GROUP.name, pick: i } });
+  render();
+}
+function leaveRoom(silent) {
+  if (GROUP.channel) {
+    if (GROUP.host && !silent) GROUP.channel.send({ type: 'broadcast', event: 'end', payload: {} });
+    try { GROUP.channel.unsubscribe(); } catch (e) {}
+  }
+  Object.assign(GROUP, { channel: null, code: '', host: false, q: null, tally: {}, answered: false });
+  render();
+}
+function groupRoomHTML() {
+  const q = GROUP.q;
+  if (GROUP.host) {
+    const picks = Object.values(GROUP.tally);
+    const counts = q ? q.c.map((_, i) => picks.filter(p => p === i).length) : [];
+    const max = Math.max(1, ...counts);
+    return topbar() + `
+    <div class="page-head fade">
+      <span class="eyebrow">Hosting · ${picks.length} answered</span>
+      <h1>Room code <span class="hl mono">${esc(GROUP.code)}</span></h1>
+      <p>Students open StudyBuddy → Group study and enter this code.</p>
+    </div>
+    <div class="card" style="max-width:720px">
+      ${q ? `<span class="eyebrow">Question ${q.n} of ${q.total}</span>
+        <p class="qstem">${esc(q.q)}</p>
+        ${q.c.map((t, i) => `<div class="opt" style="cursor:default;${i === q.a ? 'border-color:var(--green)' : ''}">
+            <span class="k">${'ABCD'[i]}</span>
+            <span style="flex:1">${esc(t)}</span>
+            <span class="mono" style="font-size:.8rem">${counts[i]}</span>
+            <span style="width:90px;height:8px;background:var(--canvas-2);border-radius:4px;overflow:hidden;display:inline-block">
+              <span style="display:block;height:100%;width:${counts[i] / max * 100}%;background:${i === q.a ? 'var(--green)' : 'var(--margin)'}"></span></span>
+          </div>`).join('')}
+        <div class="why">${esc(q.why || '')}</div>` :
+      `<p style="color:var(--ink-soft)">${GROUP.idx >= 0 ? 'That was the last question.' : 'Waiting for you to send the first question.'}</p>`}
+      <div class="row" style="margin-top:14px">
+        <button class="btn" onclick="nextGroupQuestion()">${GROUP.idx < 0 ? 'Send first question' : 'Next question'}</button>
+        <button class="btn ghost" onclick="leaveRoom()">End session</button>
+      </div>
+    </div>`;
+  }
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">In room ${esc(GROUP.code)}</span>
+    <h1>${q ? 'Answer now' : 'Waiting for the next question'}</h1>
+  </div>
+  <div class="card qbox">
+    ${q ? `<span class="eyebrow">Question ${q.n} of ${q.total}</span>
+      <p class="qstem">${esc(q.q)}</p>
+      ${q.c.map((t, i) => `<button class="opt ${GROUP.answered === i ? 'picked' : ''}" ${GROUP.answered !== false ? 'disabled' : ''} onclick="groupAnswer(${i})">
+        <span class="k">${'ABCD'[i]}</span><span>${esc(t)}</span></button>`).join('')}
+      ${GROUP.answered !== false ? `<p style="color:var(--ink-soft);font-size:.9rem;margin-top:10px">Answer sent. Waiting for the group.</p>` : ''}`
+      : `<p style="color:var(--ink-soft)">The host has not sent a question yet. Keep this page open.</p>`}
+    <hr class="divide">
+    <button class="btn ghost sm" onclick="leaveRoom()">Leave room</button>
+  </div>`;
+}
+</script>
+<script>
+/* ============================================================
    MISTAKE TRACKING
    Every question you get wrong is saved with the reason you missed
    it. Getting it right later clears it. This is the single highest
@@ -4760,6 +6720,7 @@ function vMistakes() {
       <div class="row">
         <button class="btn mark" onclick="retryMistakes(0)">Retry all ${items.length}</button>
         ${repeat ? `<button class="btn ghost" onclick="retryMistakes(2)">Just the repeats</button>` : ''}
+        <a class="btn ghost" href="#/print/mistakes">Print worksheet</a>
       </div>
     </div>
   </div>
@@ -4910,10 +6871,13 @@ vDashboard = function () {
 };
 
 NAV.splice(4, 0, { h: '#/mistakes', t: 'Mistakes', i: '◔', m: 'Fix' });
+NAV.push({ h: '#/assign', t: 'Tutor tools', i: '✎', m: 'Tutor' });
+NAV.push({ h: '#/account', t: 'Account', i: '◐', m: 'Me' });
 
 /* ---------------- boot ---------------- */
 applyTheme();
 syncCustomUnits();
 render();
 initCounter();
+if (typeof sbInit === 'function') sbInit();
 </script>

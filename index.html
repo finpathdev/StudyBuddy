@@ -1386,7 +1386,7 @@ quiz:[
 ]
 },
 {
-id:'u2', title:'Unit 2 · Cell Structure and Transport',
+id:'u2', title:'Unit 2 · Cell Structure and Function',
 guide:[
  {h:'Cell structure', points:[
   '<b>Prokaryotes</b> lack a nucleus and membrane-bound organelles; <b>eukaryotes</b> have both.',
@@ -1490,7 +1490,7 @@ quiz:[
 ]
 },
 {
-id:'u4', title:'Unit 4 · Heredity and Gene Expression',
+id:'u5', title:'Units 5–6 · Heredity and Gene Expression',
 guide:[
  {h:'Cell division and inheritance', points:[
   '<b>Mitosis</b> makes two identical diploid cells; <b>meiosis</b> makes four genetically unique haploid gametes.',
@@ -1540,7 +1540,7 @@ quiz:[
 ]
 },
 {
-id:'u5', title:'Unit 5 · Evolution and Ecology',
+id:'u7', title:'Units 7–8 · Natural Selection and Ecology',
 guide:[
  {h:'Natural selection and evidence', points:[
   'Natural selection requires variation, heritability, overproduction, and differential reproductive success.',
@@ -4341,6 +4341,2176 @@ quiz:[
 ]);
 </script>
 <script>
+/* ------------------------------------------ AP BIOLOGY (completes) */
+addUnits('ap-bio', [
+{
+id:'u4', title:'Unit 4 · Cell Communication and Cell Cycle',
+guide:[
+ {h:'Cell signaling', points:[
+  'Three stages: <b>reception</b> (ligand binds receptor), <b>transduction</b> (relay), <b>response</b> (cell action).',
+  'Signaling types: <b>direct contact</b> (gap junctions), <b>paracrine</b> (local), <b>endocrine</b> (hormones, long distance), and <b>synaptic</b>.',
+  'Nonpolar signals like steroids cross the membrane and bind intracellular receptors; polar signals bind surface receptors.',
+  '<b>Second messengers</b> such as cAMP and phosphorylation cascades <b>amplify</b> one signal into thousands of responses.',
+  '<b>Negative feedback</b> restores homeostasis; <b>positive feedback</b> amplifies until an endpoint, as in childbirth and clotting.'
+ ]},
+ {h:'The cell cycle', points:[
+  'Interphase is <b>G1</b> (growth), <b>S</b> (DNA replication), <b>G2</b> (preparation), followed by <b>mitosis</b> and cytokinesis.',
+  'Mitosis runs prophase, metaphase, anaphase, telophase.',
+  '<b>Checkpoints</b> at G1/S, G2/M, and the spindle checkpoint verify that conditions and DNA are correct.',
+  '<b>Cyclins</b> bind <b>CDKs</b> to drive the cycle forward; their levels rise and fall on schedule.',
+  '<b>Cancer</b> results from checkpoint failure, producing uncontrolled division.'
+ ]}
+],
+cards:[
+ ['Three stages of cell signaling','Reception, transduction, response.'],
+ ['Ligand','A signal molecule that binds a specific receptor.'],
+ ['Paracrine vs. endocrine signaling','Paracrine acts on nearby cells; endocrine travels through the bloodstream.'],
+ ['Second messenger','A small intracellular molecule such as cAMP that relays and amplifies a signal.'],
+ ['Signal amplification','Each step of a cascade activates many molecules, so one signal produces a large response.'],
+ ['Negative feedback','Response reverses the stimulus, maintaining homeostasis.'],
+ ['Positive feedback','Response amplifies the stimulus toward a definite endpoint.'],
+ ['Interphase','G1 growth, S phase DNA replication, and G2 preparation for division.'],
+ ['Cell cycle checkpoint','A control point verifying that conditions and DNA are correct before proceeding.'],
+ ['Cyclins and CDKs','Cyclin levels rise and fall to activate cyclin-dependent kinases that drive the cycle.']
+],
+quiz:[
+ {q:'A steroid hormone can bind an intracellular receptor because it:',
+  c:['Is very large','Is nonpolar and crosses the membrane','Uses a second messenger','Binds gap junctions'],
+  a:1, why:'Nonpolar molecules pass directly through the phospholipid bilayer, so their receptors sit inside the cell.'},
+ {q:'A single hormone molecule triggers thousands of product molecules. This is:',
+  c:['Negative feedback','Signal amplification','Reception','Apoptosis'],
+  a:1, why:'Each enzyme in the cascade activates many downstream molecules, multiplying the response at every step.'},
+ {q:'DNA is replicated during which phase?',
+  c:['G1','S','G2','M'],
+  a:1, why:'S phase is synthesis, when each chromosome is copied into sister chromatids.'},
+ {q:'Uncontrolled cell division in cancer results most directly from:',
+  c:['Too much cytokinesis','Failure of cell cycle checkpoints','Excess cyclin degradation','Loss of the cell membrane'],
+  a:1, why:'Checkpoints normally halt a cycle with damaged DNA or poor conditions; when they fail, division proceeds regardless.'}
+]
+}
+]);
+
+/* -------------------------------- AP ENVIRONMENTAL SCIENCE (completes) */
+addUnits('ap-es', [
+{
+id:'u2', title:'Unit 2 · The Living World: Biodiversity',
+guide:[
+ {h:'Why biodiversity matters', points:[
+  '<b>Biodiversity</b> includes species, genetic, and habitat diversity.',
+  'Higher genetic diversity makes a population more resilient to disease and environmental change.',
+  '<b>Ecosystem services</b>: provisioning (food, timber), regulating (climate, water), supporting (pollination), and cultural.',
+  '<b>Island biogeography</b>: larger islands nearer the mainland support more species than small, distant ones.',
+  '<b>Ecological tolerance</b> is the range of conditions an organism can survive; the optimum sits in the middle.'
+ ]},
+ {h:'Disruption and adaptation', points:[
+  'Natural disruptions include fires, floods, drought, and volcanic activity, on periodic and episodic timescales.',
+  'Many ecosystems <i>depend</i> on disturbance — some pine cones require fire to open.',
+  '<b>Adaptations</b> arise through natural selection over generations, not within an individual lifetime.',
+  '<b>Ecological succession</b> rebuilds communities after disturbance.',
+  '<b>Keystone</b> and <b>indicator</b> species reveal ecosystem structure and health.'
+ ]}
+],
+cards:[
+ ['Biodiversity','Variety of species, genes, and habitats in an area.'],
+ ['Genetic diversity','Variation within a species; higher diversity means greater resilience to disease and change.'],
+ ['Ecosystem services','Benefits humans get from ecosystems: provisioning, regulating, supporting, and cultural.'],
+ ['Island biogeography','Larger, closer islands hold more species than smaller, more distant ones.'],
+ ['Ecological tolerance','The range of environmental conditions an organism can survive.'],
+ ['Periodic vs. episodic disruption','Periodic recurs regularly; episodic is occasional and irregular.'],
+ ['Fire-dependent ecosystem','A community requiring periodic fire, as with serotinous pine cones.'],
+ ['Adaptation','An inherited trait favored by natural selection across generations.']
+],
+quiz:[
+ {q:'Island biogeography predicts the greatest species richness on an island that is:',
+  c:['Small and far from the mainland','Large and near the mainland','Small and near the mainland','Large and far from the mainland'],
+  a:1, why:'Large area supports more niches and larger populations, and proximity raises the immigration rate.'},
+ {q:'A population with low genetic diversity is most vulnerable to:',
+  c:['Rising sea level only','A new disease sweeping through the population','Increased sunlight','Ecological succession'],
+  a:1, why:'With little variation, few or no individuals carry resistance alleles, so a single pathogen can affect nearly all of them.'},
+ {q:'Pollination by insects is best classified as which ecosystem service?',
+  c:['Provisioning','Regulating','Supporting','Cultural'],
+  a:2, why:'Supporting services underpin the processes that make other services possible.'},
+ {q:'Some pine species only release seeds after fire. This shows that:',
+  c:['Fire always destroys ecosystems','Some ecosystems depend on periodic disturbance','Succession cannot occur after fire','Fire reduces genetic diversity'],
+  a:1, why:'Suppressing fire in these systems prevents regeneration and allows dangerous fuel buildup.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Populations',
+guide:[
+ {h:'Population dynamics', points:[
+  '<b>Generalists</b> tolerate wide conditions and eat varied food; <b>specialists</b> thrive narrowly and are more extinction-prone.',
+  '<b>r-selected</b> species produce many offspring with little care; <b>K-selected</b> produce few with heavy investment.',
+  '<b>Survivorship curves</b>: Type I (high late mortality, humans), Type II (constant, birds), Type III (high early mortality, fish).',
+  '<b>Carrying capacity (K)</b> is the population an environment can sustain; overshoot causes dieback.',
+  '<b>Density-dependent</b> limits (disease, competition) intensify as population grows; <b>density-independent</b> limits (weather, fire) do not.'
+ ]},
+ {h:'Human populations', points:[
+  'Growth rate = (births + immigration) − (deaths + emigration), often expressed per 1,000.',
+  'The <b>rule of 70</b>: doubling time in years ≈ 70 ÷ percent growth rate.',
+  'The <b>demographic transition</b> moves from high birth and death rates to low ones as a country develops.',
+  '<b>Age structure diagrams</b>: a wide base means rapid growth, a column means stability, a narrow base means decline.',
+  '<b>Total fertility rate</b> of about 2.1 is replacement level; access to education and family planning lowers TFR.'
+ ]}
+],
+cards:[
+ ['Generalist vs. specialist','Generalists tolerate broad conditions; specialists are efficient but more extinction-prone.'],
+ ['r-selected species','Many offspring, little parental care, early maturity, boom-and-bust populations.'],
+ ['K-selected species','Few offspring, heavy parental investment, populations near carrying capacity.'],
+ ['Type III survivorship curve','High mortality among the young, typical of fish and many invertebrates.'],
+ ['Carrying capacity','The maximum population an environment can sustain over time.'],
+ ['Density-dependent factor','A limit that intensifies as population density rises, such as disease or competition.'],
+ ['Density-independent factor','A limit unaffected by density, such as a hurricane or drought.'],
+ ['Rule of 70','Doubling time in years is roughly 70 divided by the percent growth rate.'],
+ ['Demographic transition','Shift from high birth and death rates to low ones as development proceeds.'],
+ ['Replacement level fertility','About 2.1 children per woman, the rate that holds population steady.']
+],
+quiz:[
+ {q:'A population grows at 2% per year. Its doubling time is roughly:',
+  c:['20 years','35 years','70 years','140 years'],
+  a:1, why:'The rule of 70 gives 70 ÷ 2 = 35 years.'},
+ {q:'Which is a density-independent limiting factor?',
+  c:['Competition for food','An infectious disease outbreak','A hurricane','Predation'],
+  a:2, why:'A storm kills the same proportion regardless of how crowded the population is.'}, 
+ {q:'A Type III survivorship curve indicates:',
+  c:['Most individuals survive to old age','Constant mortality across all ages','Very high mortality among the young','No mortality until reproduction'],
+  a:2, why:'Species producing enormous numbers of offspring with no parental care lose most of them early.'},
+ {q:'An age structure diagram with a very wide base indicates:',
+  c:['A declining population','A stable population','Rapid future growth','Zero fertility'],
+  a:2, why:'Large cohorts of children will enter reproductive age, producing growth even if fertility falls.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Earth Systems and Resources',
+guide:[
+ {h:'Geology and soil', points:[
+  '<b>Plate boundaries</b>: divergent (spreading), convergent (subduction, mountains), transform (earthquakes).',
+  'Soil forms from weathered rock plus organic matter over long timescales.',
+  '<b>Soil horizons</b>: O (organic), A (topsoil), B (subsoil, accumulation), C (parent material).',
+  '<b>Soil texture</b> — sand, silt, clay — controls porosity, permeability, and water-holding capacity.',
+  'Loam balances all three and is the most productive agricultural soil.'
+ ]},
+ {h:'Atmosphere and water', points:[
+  'Atmosphere layers: <b>troposphere</b> (weather), <b>stratosphere</b> (ozone layer), mesosphere, thermosphere.',
+  'Uneven solar heating drives global circulation: <b>Hadley</b>, Ferrel, and polar cells create deserts near 30° latitude.',
+  'The <b>Coriolis effect</b> deflects moving air and water because the Earth rotates.',
+  'A <b>watershed</b> is the land draining into a common body of water.',
+  '<b>El Niño</b> weakens trade winds and shifts rainfall patterns across the Pacific; La Niña strengthens them.',
+  '<b>Rain shadows</b> form on the leeward side of mountains as descending air dries.'
+ ]}
+],
+cards:[
+ ['Divergent plate boundary','Plates move apart, creating new crust as at mid-ocean ridges.'],
+ ['Convergent plate boundary','Plates collide, producing subduction zones, volcanoes, and mountains.'],
+ ['Soil horizons','O organic, A topsoil, B subsoil, C parent material.'],
+ ['Loam','Balanced mix of sand, silt, and clay; the most agriculturally productive soil.'],
+ ['Porosity vs. permeability','Porosity is pore space; permeability is how easily water moves through.'],
+ ['Troposphere','Lowest atmospheric layer where weather occurs.'],
+ ['Stratosphere','Layer containing the ozone that absorbs ultraviolet radiation.'],
+ ['Hadley cell','Circulation from the equator to about 30°, producing rainforests and deserts.'],
+ ['Coriolis effect','Deflection of moving air and water caused by Earth\u2019s rotation.'],
+ ['El Niño','Weakened trade winds and warm eastern Pacific water that shift global rainfall.'],
+ ['Rain shadow','Dry region on the leeward side of a mountain range.']
+],
+quiz:[
+ {q:'Major deserts cluster near 30° latitude because:',
+  c:['Sunlight is most direct there','Descending dry air from Hadley cells arrives there','Ocean currents are coldest there','The Coriolis effect is strongest there'],
+  a:1, why:'Air rising at the equator loses moisture, then descends around 30° as dry, sinking air.'},
+ {q:'Which soil horizon is richest in humus and most important for plant growth?',
+  c:['O','A','B','C'],
+  a:1, why:'The A horizon (topsoil) mixes mineral particles with decomposed organic matter.'},
+ {q:'The ozone layer that absorbs ultraviolet radiation is located in the:',
+  c:['Troposphere','Stratosphere','Mesosphere','Thermosphere'],
+  a:1, why:'Stratospheric ozone shields the surface, unlike tropospheric ozone which is a pollutant.'},
+ {q:'A clay-heavy soil compared with a sandy soil will generally have:',
+  c:['Higher permeability','Higher water-holding capacity and lower permeability','Lower porosity and higher permeability','No effect on drainage'],
+  a:1, why:'Small particles hold water tightly but slow its movement, which can waterlog roots.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Land and Water Use',
+guide:[
+ {h:'Agriculture and land', points:[
+  'The <b>tragedy of the commons</b>: shared resources with no ownership get overused.',
+  '<b>Clearcutting</b> is efficient but causes erosion, habitat loss, and flooding.',
+  'Irrigation methods by efficiency: <b>drip</b> > <b>spray</b> > <b>flood</b> and furrow.',
+  'Over-irrigation causes <b>waterlogging</b> and <b>salinization</b>, which sterilizes soil.',
+  '<b>Concentrated animal feeding operations (CAFOs)</b> raise output but concentrate waste and antibiotic use.'
+ ]},
+ {h:'Impacts and sustainability', points:[
+  '<b>Pesticide resistance</b> evolves quickly, creating a pesticide treadmill of stronger applications.',
+  '<b>Integrated pest management</b> combines biological, mechanical, and limited chemical controls.',
+  'Fishing impacts: <b>bycatch</b>, bottom trawling, and collapse from overharvesting.',
+  '<b>Ecological footprint</b> measures the land and water needed to support a lifestyle.',
+  'Sustainable practices: contour plowing, terracing, windbreaks, no-till, crop rotation, and rotational grazing.',
+  'Mining impacts include tailings, acid mine drainage, and habitat destruction.'
+ ]}
+],
+cards:[
+ ['Tragedy of the commons','Shared unregulated resources get depleted because individual gain outweighs shared cost.'],
+ ['Clearcutting','Removing all trees in an area; efficient but causes erosion and habitat loss.'],
+ ['Drip irrigation','The most water-efficient method, delivering water directly to roots.'],
+ ['Salinization','Salt buildup in soil from evaporating irrigation water, reducing fertility.'],
+ ['CAFO','Concentrated animal feeding operation; high output with concentrated waste and antibiotic use.'],
+ ['Pesticide treadmill','Resistance forces ever stronger or more frequent pesticide application.'],
+ ['Integrated pest management','Combining biological, mechanical, and limited chemical pest control.'],
+ ['Bycatch','Non-target species caught and usually discarded during fishing.'],
+ ['Ecological footprint','Land and water area needed to support a person or population.'],
+ ['Contour plowing','Plowing along land contours to reduce soil erosion on slopes.']
+],
+quiz:[
+ {q:'The most water-efficient irrigation method is:',
+  c:['Flood irrigation','Furrow irrigation','Spray irrigation','Drip irrigation'],
+  a:3, why:'Delivering water directly to the root zone minimizes evaporation and runoff.'},
+ {q:'Repeated irrigation in a dry climate most commonly leads to:',
+  c:['Increased soil fertility','Salinization that reduces crop yields','Permanent aquifer recharge','Lower evaporation'],
+  a:1, why:'Water evaporates and leaves dissolved salts behind, accumulating until plants cannot take up water.'},
+ {q:'The pesticide treadmill occurs because:',
+  c:['Pesticides become cheaper over time','Resistant pests survive and reproduce, requiring stronger applications','Farmers stop using pesticides','Pesticides break down too slowly'],
+  a:1, why:'Each application selects for resistant individuals, so effectiveness declines and doses escalate.'},
+ {q:'Overfishing of a shared ocean fishery best illustrates:',
+  c:['The tragedy of the commons','Integrated pest management','Salinization','Rain shadow effect'],
+  a:0, why:'Each boat gains fully from its own catch while the cost of depletion is shared by everyone.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Energy Resources and Consumption',
+guide:[
+ {h:'Nonrenewable energy', points:[
+  'Fossil fuels formed from ancient organic matter over millions of years, making them nonrenewable on human timescales.',
+  '<b>Coal</b> is the most abundant and the dirtiest, emitting the most CO₂ and sulfur per unit energy.',
+  '<b>Natural gas</b> burns cleanest of the fossil fuels; extraction by <b>fracking</b> raises water contamination and methane leak concerns.',
+  '<b>Nuclear fission</b> of uranium-235 produces no CO₂ but leaves long-lived radioactive waste.',
+  'Chernobyl and Fukushima shaped public opposition to nuclear power despite its low emissions.'
+ ]},
+ {h:'Renewables and efficiency', points:[
+  '<b>Solar</b> (photovoltaic and thermal), <b>wind</b>, and <b>hydroelectric</b> produce no operating emissions.',
+  'Hydroelectric dams flood habitat, block fish migration, and trap sediment.',
+  '<b>Geothermal</b> is reliable but geographically limited; <b>biomass</b> is renewable but emits particulates.',
+  'Solar and wind are <b>intermittent</b>, so storage or backup generation is required.',
+  '<b>Energy conservation</b> and efficiency — insulation, LED lighting, better vehicle mileage — are the cheapest way to cut demand.',
+  '<b>Cogeneration</b> captures waste heat from electricity generation for a second use.'
+ ]}
+],
+cards:[
+ ['Why fossil fuels are nonrenewable','They form over millions of years, far slower than we consume them.'],
+ ['Coal','Most abundant fossil fuel and the highest emitter of CO₂ and sulfur per unit energy.'],
+ ['Fracking','Injecting high-pressure fluid to release natural gas; raises water and methane concerns.'],
+ ['Nuclear fission','Splitting uranium-235 to release energy; no CO₂ but long-lived radioactive waste.'],
+ ['Intermittency','Solar and wind produce only when the sun shines or wind blows, requiring storage or backup.'],
+ ['Hydroelectric drawbacks','Habitat flooding, blocked fish migration, and trapped sediment.'],
+ ['Geothermal energy','Reliable heat from Earth\u2019s interior, limited to tectonically active regions.'],
+ ['Cogeneration','Capturing waste heat from power generation for heating or industry.'],
+ ['Energy conservation','Reducing demand through efficiency; the cheapest and fastest emissions reduction.']
+],
+quiz:[
+ {q:'Per unit of energy produced, which fossil fuel emits the most carbon dioxide?',
+  c:['Natural gas','Oil','Coal','Propane'],
+  a:2, why:'Coal has the highest carbon-to-energy ratio, which is why coal plants dominate power sector emissions.'},
+ {q:'The primary environmental concern with nuclear power is:',
+  c:['Carbon dioxide emissions','Long-lived radioactive waste storage','Sulfur dioxide release','Habitat flooding'],
+  a:1, why:'Fission produces no CO₂, but spent fuel remains hazardous for thousands of years.'},
+ {q:'The main drawback of solar and wind compared with coal is:',
+  c:['Higher emissions','Intermittency requiring storage or backup','Greater land contamination','Higher fuel costs'],
+  a:1, why:'Output depends on conditions, so grids need storage, backup, or transmission to balance supply.'},
+ {q:'Which measure reduces energy demand most cheaply?',
+  c:['Building new nuclear plants','Improving building insulation and lighting efficiency','Expanding coal capacity','Constructing new dams'],
+  a:1, why:'Efficiency measures cost far less per unit of energy saved than any new generation costs per unit produced.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Atmospheric Pollution',
+guide:[
+ {h:'Outdoor air pollution', points:[
+  'Primary pollutants are emitted directly (CO, SO₂, NOₓ, particulates); <b>secondary</b> pollutants form in the atmosphere.',
+  '<b>Photochemical smog</b> forms when NOₓ and VOCs react in sunlight, producing tropospheric <b>ozone</b>.',
+  'Smog peaks on hot, sunny, windless days in cities with heavy traffic.',
+  '<b>Thermal inversion</b> traps a cool polluted layer under warm air, concentrating pollutants near the ground.',
+  '<b>Acid deposition</b> from SO₂ and NOₓ lowers lake pH, leaches soil nutrients, and damages forests and buildings.'
+ ]},
+ {h:'Indoor air and control', points:[
+  'Major indoor pollutants: <b>radon</b>, asbestos, carbon monoxide, formaldehyde, lead, and mold.',
+  '<b>Radon</b> is a naturally occurring radioactive gas that seeps into basements and is a leading cause of lung cancer.',
+  'Developing countries face indoor smoke from burning biomass for cooking and heating.',
+  'Control technologies: <b>catalytic converters</b>, <b>scrubbers</b>, electrostatic precipitators, and baghouse filters.',
+  'The <b>Clean Air Act</b> set national standards for criteria pollutants and drove large emission reductions.'
+ ]}
+],
+cards:[
+ ['Primary vs. secondary pollutant','Primary is emitted directly; secondary forms from reactions in the atmosphere.'],
+ ['Photochemical smog','Ozone-rich haze formed when NOₓ and VOCs react in sunlight.'],
+ ['Tropospheric ozone','A harmful secondary pollutant at ground level, unlike protective stratospheric ozone.'],
+ ['Thermal inversion','Warm air traps cooler polluted air near the ground, concentrating pollutants.'],
+ ['Acid deposition','SO₂ and NOₓ forming acids that lower lake pH and damage forests and structures.'],
+ ['Radon','Naturally occurring radioactive gas that accumulates indoors and causes lung cancer.'],
+ ['Catalytic converter','Vehicle device converting CO, NOₓ, and hydrocarbons into less harmful gases.'],
+ ['Scrubber','Smokestack device that removes sulfur dioxide from exhaust gases.'],
+ ['Clean Air Act','US law setting national standards for criteria air pollutants.']
+],
+quiz:[
+ {q:'Photochemical smog is worst on days that are:',
+  c:['Cold, cloudy, and windy','Hot, sunny, and still','Rainy and warm','Cold and clear with high wind'],
+  a:1, why:'Sunlight drives the reactions and still air prevents dispersal, so ozone accumulates.'},
+ {q:'Tropospheric ozone differs from stratospheric ozone in that it:',
+  c:['Protects against ultraviolet radiation','Is a harmful pollutant at ground level','Is a primary pollutant','Has a different chemical formula'],
+  a:1, why:'Same molecule, opposite effect: helpful high up, damaging to lungs and plants at the surface.'},
+ {q:'A thermal inversion worsens air pollution because it:',
+  c:['Increases wind speed','Traps polluted air beneath a warm layer','Removes ozone','Increases rainfall'],
+  a:1, why:'Normally warm surface air rises and disperses pollutants; an inversion reverses that and caps them in place.'},
+ {q:'The leading indoor air pollutant linked to lung cancer in the United States is:',
+  c:['Asbestos','Radon','Formaldehyde','Carbon monoxide'],
+  a:1, why:'Radon seeps from bedrock into enclosed spaces and its decay products damage lung tissue.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Aquatic and Terrestrial Pollution',
+guide:[
+ {h:'Water pollution', points:[
+  '<b>Point source</b> pollution comes from an identifiable pipe or site; <b>nonpoint source</b> is diffuse runoff.',
+  'Nutrient runoff causes <b>eutrophication</b>, algal blooms, and hypoxic dead zones.',
+  '<b>Biological oxygen demand (BOD)</b> measures oxygen consumed by decomposition; high BOD suffocates aquatic life.',
+  '<b>Thermal pollution</b> from power plant cooling water lowers dissolved oxygen.',
+  '<b>Bioaccumulation</b> builds toxins within an organism; <b>biomagnification</b> concentrates them up the food chain.'
+ ]},
+ {h:'Waste and human health', points:[
+  '<b>Sanitary landfills</b> use liners and leachate collection; older dumps contaminated groundwater.',
+  '<b>Incineration</b> reduces volume but releases pollutants and leaves toxic ash.',
+  'Sewage treatment: primary (physical settling), secondary (biological), tertiary (chemical and nutrient removal).',
+  '<b>Dose-response curves</b> show how effect changes with exposure; <b>LD50</b> is the dose lethal to half a test population.',
+  '<b>Endocrine disruptors</b> interfere with hormones at very low doses.',
+  'Waterborne pathogens cause cholera, dysentery, and typhoid where sanitation is inadequate.'
+ ]}
+],
+cards:[
+ ['Point vs. nonpoint source pollution','Point comes from an identifiable location; nonpoint is diffuse runoff.'],
+ ['Eutrophication','Nutrient enrichment causing algal blooms whose decay depletes oxygen.'],
+ ['Biological oxygen demand','Oxygen consumed by decomposers; high BOD means low oxygen for aquatic life.'],
+ ['Thermal pollution','Heated discharge that lowers dissolved oxygen and stresses aquatic organisms.'],
+ ['Bioaccumulation','Buildup of a toxin within a single organism over its lifetime.'],
+ ['Biomagnification','Increasing toxin concentration at each higher trophic level.'],
+ ['Sanitary landfill','Engineered waste site with liners and leachate collection to protect groundwater.'],
+ ['Primary vs. secondary sewage treatment','Primary settles solids physically; secondary uses bacteria to break down organic matter.'],
+ ['LD50','The dose that kills 50% of a test population; a standard toxicity measure.'],
+ ['Endocrine disruptor','A chemical that interferes with hormone systems at very low concentrations.']
+],
+quiz:[
+ {q:'Fertilizer washing off many farm fields is an example of:',
+  c:['Point source pollution','Nonpoint source pollution','Thermal pollution','Primary pollution'],
+  a:1, why:'The runoff has no single identifiable outlet, which makes it far harder to regulate than a pipe.'},
+ {q:'Top predators carry the highest pesticide concentrations because of:',
+  c:['Bioaccumulation only','Biomagnification up the food chain','Eutrophication','High BOD'],
+  a:1, why:'Each trophic level concentrates the toxins in everything it eats, so levels multiply upward.'},
+ {q:'A high biological oxygen demand in a stream indicates:',
+  c:['Very clean water','Heavy organic pollution consuming dissolved oxygen','High dissolved oxygen','Thermal pollution only'],
+  a:1, why:'Decomposers consuming abundant organic waste strip oxygen from the water, suffocating fish.'},
+ {q:'Secondary sewage treatment primarily uses:',
+  c:['Physical settling of solids','Bacteria to break down organic matter','Chlorine disinfection','Nutrient removal chemicals'],
+  a:1, why:'Primary is physical, secondary is biological, and tertiary handles chemicals and nutrients.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Global Change',
+guide:[
+ {h:'Ozone and climate', points:[
+  '<b>CFCs</b> released chlorine that destroyed stratospheric ozone, thinning it most over Antarctica.',
+  'The <b>Montreal Protocol</b> phased out CFCs and is the most successful international environmental agreement.',
+  '<b>Greenhouse gases</b> — CO₂, CH₄, N₂O, water vapor, CFCs — absorb outgoing infrared radiation.',
+  'Methane has a far higher warming potential per molecule than CO₂ but a shorter atmospheric lifetime.',
+  'Effects: rising sea level from thermal expansion and ice melt, shifting ranges, and more extreme weather.',
+  '<b>Ocean acidification</b> occurs as absorbed CO₂ forms carbonic acid, dissolving shells and coral.'
+ ]},
+ {h:'Biodiversity loss', points:[
+  '<b>HIPPCO</b> names the drivers: <b>H</b>abitat destruction, <b>I</b>nvasive species, <b>P</b>opulation growth, <b>P</b>ollution, <b>C</b>limate change, <b>O</b>verexploitation.',
+  'Habitat loss and fragmentation are the largest single cause of extinction.',
+  '<b>Invasive species</b> lack natural predators and outcompete natives.',
+  'Conservation tools: protected areas, wildlife corridors, captive breeding, and the Endangered Species Act.',
+  '<b>Sustainability</b> means meeting present needs without compromising future generations.'
+ ]}
+],
+cards:[
+ ['CFCs','Chlorofluorocarbons that release ozone-destroying chlorine in the stratosphere.'],
+ ['Montreal Protocol','International agreement phasing out CFCs; the most successful environmental treaty.'],
+ ['Greenhouse effect','Atmospheric gases absorbing outgoing infrared radiation and warming the surface.'],
+ ['Methane warming potential','Far stronger per molecule than CO₂ but shorter-lived in the atmosphere.'],
+ ['Thermal expansion','Sea level rise caused by warming water expanding, alongside ice melt.'],
+ ['Ocean acidification','Absorbed CO₂ forms carbonic acid, lowering pH and dissolving shells and coral.'],
+ ['HIPPCO','Habitat destruction, Invasive species, Population growth, Pollution, Climate change, Overexploitation.'],
+ ['Invasive species','A non-native species that spreads unchecked without natural predators.'],
+ ['Wildlife corridor','Connected habitat allowing movement between fragmented areas.'],
+ ['Sustainability','Meeting present needs without compromising future generations.']
+],
+quiz:[
+ {q:'The single largest cause of species extinction worldwide is:',
+  c:['Invasive species','Habitat destruction and fragmentation','Overexploitation','Climate change'],
+  a:1, why:'Habitat loss is the H in HIPPCO and outweighs all other drivers in current extinction data.'},
+ {q:'Ocean acidification is caused by:',
+  c:['Acid rain runoff','Oceans absorbing atmospheric CO₂','Thermal pollution','Ozone depletion'],
+  a:1, why:'Dissolved CO₂ forms carbonic acid, which lowers pH and makes shell building harder.'},
+ {q:'The Montreal Protocol addressed:',
+  c:['Greenhouse gas emissions','CFCs depleting stratospheric ozone','Acid rain','Ocean plastic'],
+  a:1, why:'It phased out CFCs, and the ozone layer has been measurably recovering since.'},
+ {q:'Compared with CO₂, methane has:',
+  c:['Lower warming potential and longer lifetime','Higher warming potential per molecule and shorter lifetime','Identical properties','No greenhouse effect'],
+  a:1, why:'Methane traps far more heat per molecule but breaks down in roughly a decade rather than centuries.'}
+]
+}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP CHEMISTRY (completes) */
+addUnits('ap-chem', [
+{
+id:'u3', title:'Unit 3 · Intermolecular Forces and Properties',
+guide:[
+ {h:'Intermolecular forces', points:[
+  'Strength order: <b>ion-dipole</b> > <b>hydrogen bonding</b> > <b>dipole-dipole</b> > <b>London dispersion</b>.',
+  '<b>London dispersion forces</b> exist in every molecule and grow with more electrons and larger, more polarizable surfaces.',
+  '<b>Hydrogen bonding</b> requires H bonded to N, O, or F.',
+  'Stronger IMFs mean higher boiling point, higher viscosity, higher surface tension, and lower vapor pressure.',
+  '"Like dissolves like": polar solvents dissolve polar solutes, nonpolar dissolve nonpolar.'
+ ]},
+ {h:'Gases and solutions', points:[
+  '<b>Ideal gas law</b>: PV = nRT. <b>KMT</b> assumes negligible volume and no attractions.',
+  'Real gases deviate at <b>high pressure</b> and <b>low temperature</b>, where volume and attractions matter.',
+  '<b>Partial pressures</b> add to the total (Dalton\u2019s law), each proportional to mole fraction.',
+  '<b>Molarity</b> = moles of solute ÷ liters of solution; dilution follows M₁V₁ = M₂V₂.',
+  '<b>Beer\u2019s law</b>: A = εbc, so absorbance is proportional to concentration.',
+  'Chromatography and distillation separate mixtures using differences in IMFs and boiling points.'
+ ]}
+],
+cards:[
+ ['London dispersion forces','Temporary induced dipoles present in all molecules; stronger with more electrons.'],
+ ['Hydrogen bonding','Strong dipole force requiring hydrogen bonded to N, O, or F.'],
+ ['Ion-dipole force','Strongest intermolecular attraction, between an ion and a polar molecule.'],
+ ['IMF strength and boiling point','Stronger intermolecular forces raise boiling point and lower vapor pressure.'],
+ ['Like dissolves like','Polar solvents dissolve polar solutes; nonpolar dissolve nonpolar.'],
+ ['Ideal gas law','PV = nRT.'],
+ ['When real gases deviate','At high pressure and low temperature, where molecular volume and attractions matter.'],
+ ['Dalton\u2019s law','Total pressure equals the sum of partial pressures.'],
+ ['Molarity','Moles of solute divided by liters of solution.'],
+ ['Beer\u2019s law','A = εbc; absorbance is proportional to concentration.']
+],
+quiz:[
+ {q:'Water has an unusually high boiling point for its molar mass because of:',
+  c:['London dispersion forces','Hydrogen bonding','Ion-dipole forces','Covalent network bonding'],
+  a:1, why:'Two lone pairs and two O–H bonds let each molecule form multiple hydrogen bonds, which take extra energy to break.'},
+ {q:'Real gases deviate most from ideal behavior at:',
+  c:['High temperature and low pressure','Low temperature and high pressure','Standard conditions','High volume only'],
+  a:1, why:'Molecules are close together and slow, so their own volume and mutual attractions stop being negligible.'},
+ {q:'Which has the strongest London dispersion forces?',
+  c:['He','Ne','Ar','Xe'],
+  a:3, why:'Xenon has the most electrons and the largest, most polarizable electron cloud.'},
+ {q:'Doubling the concentration of a colored solution will:',
+  c:['Halve the absorbance','Double the absorbance','Leave absorbance unchanged','Make absorbance negative'],
+  a:1, why:'Beer\u2019s law makes absorbance directly proportional to concentration at fixed path length.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Chemical Reactions',
+guide:[
+ {h:'Reactions and equations', points:[
+  '<b>Physical changes</b> alter form only; <b>chemical changes</b> break and form bonds, making new substances.',
+  'Evidence of chemical change: gas, precipitate, color change, temperature change, or light.',
+  '<b>Net ionic equations</b> show only the species that actually change; spectator ions are removed.',
+  'Reaction types: synthesis, decomposition, single replacement, double replacement, combustion, and acid-base.',
+  '<b>Oxidation-reduction</b> involves electron transfer — OIL RIG: oxidation is loss, reduction is gain.'
+ ]},
+ {h:'Stoichiometry', points:[
+  'Balanced coefficients give mole ratios, the bridge between any two substances in a reaction.',
+  'The <b>limiting reactant</b> is fully consumed and determines theoretical yield.',
+  '<b>Percent yield</b> = (actual ÷ theoretical) × 100.',
+  '<b>Titration</b> finds unknown concentration: at the equivalence point, moles of acid equal moles of base for a 1:1 reaction.',
+  'Gravimetric analysis uses a precipitate\u2019s mass to determine an unknown quantity.'
+ ]}
+],
+cards:[
+ ['Evidence of chemical change','Gas formation, precipitate, unexpected color change, temperature change, or light.'],
+ ['Net ionic equation','Shows only species that change; spectator ions are cancelled out.'],
+ ['Spectator ion','An ion present on both sides of an equation that does not participate.'],
+ ['OIL RIG','Oxidation Is Loss of electrons, Reduction Is Gain.'],
+ ['Mole ratio','Ratio from balanced coefficients used to convert between substances.'],
+ ['Limiting reactant','The reactant fully consumed first, setting the maximum product.'],
+ ['Percent yield','(Actual yield ÷ theoretical yield) × 100.'],
+ ['Equivalence point','The point in a titration where moles of acid and base are stoichiometrically equal.'],
+ ['Gravimetric analysis','Determining an amount by measuring the mass of a precipitate.']
+],
+quiz:[
+ {q:'In a titration, 25.0 mL of 0.100 M NaOH neutralizes 50.0 mL of HCl. The HCl concentration is:',
+  c:['0.025 M','0.050 M','0.100 M','0.200 M'],
+  a:1, why:'Moles NaOH = 0.00250. A 1:1 reaction means 0.00250 mol HCl in 0.0500 L, giving 0.0500 M.'},
+ {q:'The limiting reactant in a reaction is the one that:',
+  c:['Has the greatest mass','Is completely consumed first','Has the highest molar mass','Appears first in the equation'],
+  a:1, why:'Once it runs out the reaction stops, so it sets the theoretical yield regardless of leftover reactants.'},
+ {q:'In a net ionic equation, spectator ions are:',
+  c:['Written on the product side only','Omitted because they do not change','Doubled','Converted to solids'],
+  a:1, why:'They appear identically on both sides, so removing them isolates the actual chemical change.'},
+ {q:'A substance that loses electrons during a reaction is:',
+  c:['Reduced and acts as the oxidizing agent','Oxidized and acts as the reducing agent','Neither oxidized nor reduced','Always a spectator'],
+  a:1, why:'Losing electrons is oxidation, and by donating them the substance reduces something else.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Kinetics',
+guide:[
+ {h:'Rate laws', points:[
+  'Rate measures change in concentration per unit time.',
+  'The <b>rate law</b> (rate = k[A]ˣ[B]ʸ) must be determined experimentally, not from coefficients.',
+  '<b>Order</b>: zero order is independent of concentration, first order is proportional, second order is proportional to the square.',
+  'Integrated rate laws give straight lines: [A] vs t (zero), ln[A] vs t (first), 1/[A] vs t (second).',
+  '<b>Half-life</b> is constant only for first-order reactions.'
+ ]},
+ {h:'Mechanisms and catalysts', points:[
+  '<b>Collision model</b>: reaction requires sufficient energy and correct orientation.',
+  '<b>Activation energy</b> is the barrier; raising temperature increases the fraction of molecules that clear it.',
+  'A <b>mechanism</b> is a sequence of elementary steps whose sum is the overall reaction.',
+  'The <b>rate-determining step</b> is the slowest step and controls the observed rate law.',
+  '<b>Intermediates</b> are produced then consumed; <b>catalysts</b> are consumed then regenerated.',
+  'Catalysts lower activation energy by providing an alternative pathway; they never change ΔH or equilibrium position.'
+ ]}
+],
+cards:[
+ ['Rate law','rate = k[A]ˣ[B]ʸ, with exponents found experimentally rather than from coefficients.'],
+ ['Zero order reaction','Rate is independent of concentration; a plot of [A] vs time is linear.'],
+ ['First order reaction','Rate is proportional to concentration; ln[A] vs time is linear and half-life is constant.'],
+ ['Second order reaction','Rate proportional to concentration squared; 1/[A] vs time is linear.'],
+ ['Activation energy','The minimum energy needed for a collision to produce a reaction.'],
+ ['Collision model','Reactions need sufficient energy and correct molecular orientation.'],
+ ['Rate-determining step','The slowest elementary step, which controls the overall rate law.'],
+ ['Reaction intermediate','A species produced in one step and consumed in a later one.'],
+ ['Catalyst','Lowers activation energy via an alternate pathway; regenerated and does not shift equilibrium.']
+],
+quiz:[
+ {q:'Doubling [A] quadruples the rate. The reaction is:',
+  c:['Zero order in A','First order in A','Second order in A','Third order in A'],
+  a:2, why:'2² = 4, so the exponent on [A] is 2.'},
+ {q:'A plot of ln[A] versus time yields a straight line. The reaction is:',
+  c:['Zero order','First order','Second order','Cannot be determined'],
+  a:1, why:'That linearization is the signature of first-order kinetics, which also means a constant half-life.'},
+ {q:'A catalyst increases reaction rate by:',
+  c:['Raising the activation energy','Providing a pathway with lower activation energy','Shifting the equilibrium toward products','Increasing ΔH'],
+  a:1, why:'It changes the route, not the thermodynamics — equilibrium position and ΔH are unaffected.'},
+ {q:'The overall rate law is determined by:',
+  c:['The balanced equation coefficients','The slowest elementary step','The fastest elementary step','The number of intermediates'],
+  a:1, why:'The rate-determining step is the bottleneck, so its reactants set the observed rate law.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Thermodynamics',
+guide:[
+ {h:'Heat and enthalpy', points:[
+  '<b>Exothermic</b> reactions release heat and have negative ΔH; <b>endothermic</b> absorb heat with positive ΔH.',
+  'Heat flows from hotter to colder until thermal equilibrium.',
+  '<b>Calorimetry</b>: q = mcΔT, where c is specific heat capacity.',
+  'A high specific heat means a substance resists temperature change, which is why water moderates climate.',
+  'Heat lost by one substance equals heat gained by the other in an insulated system.'
+ ]},
+ {h:'Calculating enthalpy change', points:[
+  '<b>Hess\u2019s law</b>: enthalpy is a state function, so ΔH values for steps add to the overall ΔH.',
+  'Reversing a reaction flips the sign of ΔH; multiplying it scales ΔH.',
+  '<b>Bond enthalpy</b>: ΔH ≈ bonds broken (energy in) − bonds formed (energy out).',
+  '<b>Enthalpy of formation</b>: ΔH°rxn = ΣΔH°f(products) − ΣΔH°f(reactants).',
+  'ΔH°f of any element in its standard state is zero.'
+ ]}
+],
+cards:[
+ ['Exothermic reaction','Releases heat to the surroundings; ΔH is negative.'],
+ ['Endothermic reaction','Absorbs heat from the surroundings; ΔH is positive.'],
+ ['q = mcΔT','Heat equals mass × specific heat capacity × temperature change.'],
+ ['Specific heat capacity','Energy needed to raise one gram of a substance by one degree.'],
+ ['Hess\u2019s law','Enthalpy is a state function, so step enthalpies add to the overall value.'],
+ ['Reversing a reaction','Flips the sign of ΔH.'],
+ ['Bond enthalpy calculation','ΔH ≈ bonds broken minus bonds formed.'],
+ ['Standard enthalpy of formation','ΔH°rxn = Σ products − Σ reactants; elements in standard state are zero.'],
+ ['Why water moderates climate','Its unusually high specific heat resists temperature change.']
+],
+quiz:[
+ {q:'A reaction that releases heat has:',
+  c:['Positive ΔH and feels cold','Negative ΔH and feels warm','Positive ΔH and feels warm','Negative ΔH and feels cold'],
+  a:1, why:'Energy leaves the system into the surroundings, warming them, and ΔH is negative by convention.'},
+ {q:'The standard enthalpy of formation of O₂(g) is:',
+  c:['0 kJ/mol','−286 kJ/mol','+286 kJ/mol','Cannot be determined'],
+  a:0, why:'By definition, an element in its standard state has zero enthalpy of formation.'},
+ {q:'How much heat raises 50.0 g of water (c = 4.18 J/g°C) by 10.0 °C?',
+  c:['209 J','418 J','2090 J','20900 J'],
+  a:2, why:'q = (50.0)(4.18)(10.0) = 2090 J.'},
+ {q:'Hess\u2019s law is valid because enthalpy is:',
+  c:['Always negative','A state function independent of path','Proportional to temperature','Equal to entropy'],
+  a:1, why:'Only the initial and final states matter, so any route between them gives the same ΔH.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Equilibrium',
+guide:[
+ {h:'The equilibrium state', points:[
+  '<b>Dynamic equilibrium</b>: forward and reverse rates are equal, so concentrations stay constant.',
+  '<b>K</b> = products over reactants, each raised to its coefficient. Pure solids and liquids are omitted.',
+  'A large K favors products; a small K favors reactants.',
+  '<b>Reaction quotient Q</b> uses current concentrations. Q < K shifts forward, Q > K shifts reverse, Q = K means equilibrium.',
+  'ICE tables track Initial, Change, and Equilibrium amounts.'
+ ]},
+ {h:'Disturbing equilibrium', points:[
+  '<b>Le Châtelier\u2019s principle</b>: a system shifts to counteract a disturbance.',
+  'Adding a reactant shifts forward; removing a product shifts forward.',
+  'Increasing pressure shifts toward the side with fewer moles of gas.',
+  'Temperature is the only change that alters K: heating shifts an endothermic reaction forward.',
+  'Catalysts speed both directions equally and never shift the position of equilibrium.',
+  '<b>Ksp</b> governs solubility; the <b>common ion effect</b> reduces solubility by adding a shared ion.'
+ ]}
+],
+cards:[
+ ['Dynamic equilibrium','Forward and reverse rates equal, so concentrations remain constant.'],
+ ['Equilibrium constant K','Products over reactants raised to coefficients; solids and pure liquids omitted.'],
+ ['Reaction quotient Q','Same expression using current concentrations; comparing Q to K predicts the shift.'],
+ ['Q < K','The reaction proceeds forward toward products.'],
+ ['Le Châtelier\u2019s principle','A disturbed system shifts to partially counteract the change.'],
+ ['Pressure and equilibrium','Increasing pressure shifts toward the side with fewer moles of gas.'],
+ ['Only temperature changes K','Concentration and pressure shift position; temperature changes the constant itself.'],
+ ['Ksp','Solubility product constant governing how much of a sparingly soluble salt dissolves.'],
+ ['Common ion effect','Adding an ion already in the equilibrium decreases solubility.']
+],
+quiz:[
+ {q:'For an exothermic reaction at equilibrium, increasing temperature will:',
+  c:['Shift toward products and increase K','Shift toward reactants and decrease K','Have no effect','Shift toward products without changing K'],
+  a:1, why:'Heat behaves as a product, so adding it pushes the system backward and lowers K.'},
+ {q:'If Q is greater than K, the reaction will:',
+  c:['Proceed forward','Proceed in reverse','Already be at equilibrium','Stop entirely'],
+  a:1, why:'Too much product relative to equilibrium means the system consumes products to restore the ratio.'},
+ {q:'Adding a catalyst to a system at equilibrium will:',
+  c:['Shift toward products','Shift toward reactants','Reach equilibrium faster without shifting it','Increase K'],
+  a:2, why:'Both directions speed equally, so the position and constant are unchanged.'},
+ {q:'Adding NaCl to a saturated AgCl solution will:',
+  c:['Increase AgCl solubility','Decrease AgCl solubility','Have no effect','Increase Ksp'],
+  a:1, why:'The common chloride ion shifts the dissolution equilibrium backward, precipitating more AgCl.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Acids and Bases',
+guide:[
+ {h:'pH and strength', points:[
+  '<b>Brønsted-Lowry</b>: acids donate protons, bases accept them, forming conjugate pairs.',
+  'pH = −log[H⁺]; pH + pOH = 14 at 25 °C.',
+  '<b>Strong acids and bases</b> dissociate completely; <b>weak</b> ones reach equilibrium described by Ka or Kb.',
+  'A larger Ka means a stronger acid. Ka × Kb = Kw for a conjugate pair.',
+  'The stronger the acid, the weaker its conjugate base.'
+ ]},
+ {h:'Buffers and titrations', points:[
+  'A <b>buffer</b> is a weak acid with its conjugate base and resists pH change.',
+  '<b>Henderson-Hasselbalch</b>: pH = pKa + log([A⁻]/[HA]). Buffer capacity is greatest when pH = pKa.',
+  'Strong acid with strong base gives an equivalence point at pH 7.',
+  'Weak acid with strong base gives an equivalence point above 7 because the conjugate base is present.',
+  'The <b>half-equivalence point</b> is where pH = pKa.',
+  'Polyprotic acids show multiple equivalence points, one per ionizable proton.'
+ ]}
+],
+cards:[
+ ['Brønsted-Lowry acid','A proton donor; its conjugate base is what remains after donating.'],
+ ['pH formula','pH = −log[H⁺]; pH + pOH = 14 at 25 °C.'],
+ ['Strong vs. weak acid','Strong dissociates completely; weak reaches an equilibrium described by Ka.'],
+ ['Ka and acid strength','A larger Ka means a stronger acid and a weaker conjugate base.'],
+ ['Buffer','A weak acid and its conjugate base together, resisting pH change.'],
+ ['Henderson-Hasselbalch','pH = pKa + log([A⁻]/[HA]).'],
+ ['Half-equivalence point','Where half the acid is neutralized and pH equals pKa.'],
+ ['Weak acid–strong base equivalence point','Above pH 7, because the conjugate base remains in solution.'],
+ ['Polyprotic acid','An acid with more than one ionizable proton, giving multiple equivalence points.']
+],
+quiz:[
+ {q:'A solution has [H⁺] = 1 × 10⁻⁴ M. Its pH and pOH are:',
+  c:['pH 4, pOH 10','pH 10, pOH 4','pH 4, pOH 4','pH 8, pOH 6'],
+  a:0, why:'pH = −log(10⁻⁴) = 4, and pOH = 14 − 4 = 10.'},
+ {q:'Titrating a weak acid with a strong base gives an equivalence point that is:',
+  c:['Exactly pH 7','Below pH 7','Above pH 7','Impossible to predict'],
+  a:2, why:'The conjugate base produced hydrolyzes water, making the solution basic at equivalence.'},
+ {q:'A buffer resists pH change most effectively when:',
+  c:['pH is far below pKa','pH equals pKa','All acid is neutralized','Only strong acid is present'],
+  a:1, why:'Equal concentrations of acid and conjugate base give maximum capacity in both directions.'},
+ {q:'If an acid has a very large Ka, its conjugate base is:',
+  c:['Very strong','Very weak','Neutral','Also a strong acid'],
+  a:1, why:'Strong acids give up protons readily, so their conjugates have almost no tendency to take them back.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Applications of Thermodynamics',
+guide:[
+ {h:'Entropy and free energy', points:[
+  '<b>Entropy (S)</b> measures dispersal of energy and matter. Gases have more entropy than liquids, which have more than solids.',
+  'Entropy increases when moles of gas increase, solids dissolve, or temperature rises.',
+  '<b>Gibbs free energy</b>: ΔG = ΔH − TΔS.',
+  'A reaction is <b>thermodynamically favorable</b> when ΔG < 0.',
+  'Negative ΔH and positive ΔS is always favorable; positive ΔH and negative ΔS never is. The mixed cases depend on temperature.',
+  'Favorable does not mean fast — kinetics and thermodynamics are separate questions.'
+ ]},
+ {h:'Electrochemistry', points:[
+  '<b>Galvanic (voltaic) cells</b> use a spontaneous redox reaction to produce electricity; ΔG < 0 and E°cell > 0.',
+  '<b>Electrolytic cells</b> use electricity to drive a nonspontaneous reaction; E°cell < 0.',
+  '<b>Oxidation at the anode, reduction at the cathode</b> in both cell types.',
+  'E°cell = E°cathode − E°anode; ΔG° = −nFE°.',
+  'A <b>salt bridge</b> maintains charge balance so current keeps flowing.',
+  'Coupling an unfavorable reaction to a favorable one can drive it, as with ATP in biology.'
+ ]}
+],
+cards:[
+ ['Entropy','A measure of the dispersal of energy and matter; higher for gases than liquids or solids.'],
+ ['What raises entropy','More moles of gas, dissolving a solid, or raising temperature.'],
+ ['Gibbs free energy','ΔG = ΔH − TΔS.'],
+ ['Thermodynamically favorable','ΔG is negative.'],
+ ['Always favorable case','Negative ΔH combined with positive ΔS, at any temperature.'],
+ ['Favorable vs. fast','Thermodynamics predicts direction; kinetics determines rate. They are independent.'],
+ ['Galvanic cell','Spontaneous redox reaction producing electricity; E°cell is positive.'],
+ ['Electrolytic cell','Uses external electricity to drive a nonspontaneous reaction; E°cell is negative.'],
+ ['Anode and cathode','Oxidation happens at the anode, reduction at the cathode.'],
+ ['ΔG° = −nFE°','Links cell potential to free energy; positive E° means negative ΔG.']
+],
+quiz:[
+ {q:'A reaction has positive ΔH and positive ΔS. It is favorable:',
+  c:['At all temperatures','At no temperature','Only at high temperature','Only at low temperature'],
+  a:2, why:'The −TΔS term grows with temperature until it outweighs the positive ΔH.'},
+ {q:'Which change increases entropy the most?',
+  c:['Water freezing','A gas condensing','A solid subliming to gas','Two gases combining into one'],
+  a:2, why:'Going straight from a highly ordered solid to a gas produces the greatest dispersal of matter.'},
+ {q:'In any electrochemical cell, oxidation occurs at the:',
+  c:['Cathode','Anode','Salt bridge','Electrolyte'],
+  a:1, why:'This holds for both galvanic and electrolytic cells, though the electrode signs differ.'},
+ {q:'A galvanic cell has E°cell = +1.10 V. Its ΔG° is:',
+  c:['Positive, and the reaction is unfavorable','Negative, and the reaction is favorable','Zero','Cannot be determined'],
+  a:1, why:'ΔG° = −nFE°, so a positive cell potential gives a negative free energy change.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP STATISTICS (completes) */
+addUnits('ap-stats', [
+{
+id:'u2', title:'Unit 2 · Exploring Two-Variable Data',
+guide:[
+ {h:'Describing a relationship', points:[
+  'Describe a scatterplot by <b>direction, form, strength, and unusual points</b> — always in context.',
+  '<b>Correlation r</b> runs from −1 to 1, measures only <i>linear</i> strength, and has no units.',
+  'r is not resistant to outliers, and correlation never establishes causation.',
+  'The <b>least-squares regression line</b> minimizes the sum of squared residuals and always passes through (x̄, ȳ).',
+  'Slope interpretation: for each one-unit increase in x, predicted y changes by b.'
+ ]},
+ {h:'Residuals and fit', points:[
+  '<b>Residual</b> = observed − predicted. A positive residual means the model underpredicted.',
+  'A <b>residual plot</b> with no pattern supports a linear model; a curved pattern means linear is wrong.',
+  '<b>r²</b> is the proportion of variation in y explained by the linear model with x.',
+  'An <b>influential point</b> substantially changes the slope; high-leverage points have extreme x values.',
+  '<b>Extrapolation</b> beyond the observed x range is unreliable.',
+  'Transformations such as logs can linearize nonlinear relationships.'
+ ]}
+],
+cards:[
+ ['Describing a scatterplot','Direction, form, strength, and unusual features — in context.'],
+ ['Correlation r','Measures strength and direction of a linear relationship; runs −1 to 1 and has no units.'],
+ ['Why r is limited','It captures only linear association and is not resistant to outliers.'],
+ ['Least-squares regression line','The line minimizing the sum of squared residuals; passes through (x̄, ȳ).'],
+ ['Residual','Observed minus predicted; positive means the model underpredicted.'],
+ ['Residual plot','No pattern supports a linear model; a curve indicates the model is wrong.'],
+ ['r squared','The proportion of variation in y explained by the linear model with x.'],
+ ['Influential point','An observation whose removal substantially changes the regression slope.'],
+ ['Extrapolation','Predicting outside the observed range of x; unreliable.']
+],
+quiz:[
+ {q:'A residual plot shows a clear U-shaped pattern. This means:',
+  c:['The linear model is appropriate','A linear model is not appropriate','The correlation is exactly zero','There are no outliers'],
+  a:1, why:'Systematic curvature in the residuals means the relationship is nonlinear, whatever r suggests.'},
+ {q:'If r² = 0.64, then:',
+  c:['64% of points lie on the line','64% of the variation in y is explained by the model','r = 0.64','The slope is 0.64'],
+  a:1, why:'r² is the proportion of variability accounted for; here r would be ±0.8.'},
+ {q:'A residual of −3.2 means the actual value was:',
+  c:['3.2 above the prediction','3.2 below the prediction','3.2 times the prediction','Equal to the prediction'],
+  a:1, why:'Residual = observed − predicted, so a negative value means the model overpredicted.'},
+ {q:'A strong correlation between ice cream sales and drownings most likely reflects:',
+  c:['Ice cream causing drownings','A lurking variable such as hot weather','A calculation error','A negative association'],
+  a:1, why:'Temperature drives both, which is the classic illustration that correlation is not causation.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Probability and Random Variables',
+guide:[
+ {h:'Probability rules', points:[
+  'P(A or B) = P(A) + P(B) − P(A and B). <b>Mutually exclusive</b> events cannot both happen, so P(A and B) = 0.',
+  '<b>Independent</b> events satisfy P(A and B) = P(A)P(B) and P(A|B) = P(A).',
+  'Mutually exclusive and independent are different ideas — mutually exclusive events are never independent.',
+  '<b>Conditional probability</b>: P(A|B) = P(A and B) ÷ P(B).',
+  'Complement rule: P(not A) = 1 − P(A), which is often the fastest route to "at least one" problems.'
+ ]},
+ {h:'Random variables', points:[
+  'Mean of a discrete random variable: μ = Σ x·P(x). It is the long-run average, not a guaranteed outcome.',
+  'Combining: μ(X±Y) = μX ± μY always. Variances <b>add</b> for independent variables, even when subtracting.',
+  'Standard deviations never add — you must add variances and then take the square root.',
+  '<b>Binomial</b> setting: fixed n, two outcomes, independent trials, constant p. μ = np, σ = √(np(1−p)).',
+  '<b>Geometric</b> setting: same conditions but counting trials until the first success, with μ = 1/p.'
+ ]}
+],
+cards:[
+ ['Addition rule','P(A or B) = P(A) + P(B) − P(A and B).'],
+ ['Mutually exclusive','Events that cannot occur together; P(A and B) = 0.'],
+ ['Independent events','P(A and B) = P(A)P(B), and knowing one does not change the other.'],
+ ['Conditional probability','P(A|B) = P(A and B) ÷ P(B).'],
+ ['Complement rule','P(not A) = 1 − P(A); useful for "at least one" problems.'],
+ ['Mean of a random variable','μ = Σ x·P(x), the long-run average outcome.'],
+ ['Combining random variables','Means add or subtract; variances always add for independent variables.'],
+ ['Binomial conditions','Fixed number of trials, two outcomes, independence, constant probability.'],
+ ['Binomial mean and SD','μ = np and σ = √(np(1−p)).'],
+ ['Geometric mean','μ = 1/p, the expected number of trials until the first success.']
+],
+quiz:[
+ {q:'X and Y are independent with σX = 3 and σY = 4. The standard deviation of X − Y is:',
+  c:['1','5','7','25'],
+  a:1, why:'Variances add even when subtracting: 9 + 16 = 25, so σ = 5.'},
+ {q:'A binomial setting requires all of the following EXCEPT:',
+  c:['A fixed number of trials','Exactly two outcomes per trial','Constant probability of success','Trials continuing until the first success'],
+  a:3, why:'That last condition describes a geometric setting, not a binomial one.'},
+ {q:'If events A and B are mutually exclusive, then they are:',
+  c:['Always independent','Never independent (unless one has probability 0)','Always complementary','Always equally likely'],
+  a:1, why:'Knowing A occurred guarantees B did not, which is maximal dependence.'},
+ {q:'For 20 free throws with p = 0.8, the expected number made is:',
+  c:['4','8','16','20'],
+  a:2, why:'μ = np = 20 × 0.8 = 16.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Sampling Distributions',
+guide:[
+ {h:'What a sampling distribution is', points:[
+  'A <b>sampling distribution</b> is the distribution of a statistic across all possible samples of size n.',
+  'It is distinct from the population distribution and from a single sample\u2019s distribution.',
+  'A statistic is <b>unbiased</b> when the mean of its sampling distribution equals the parameter.',
+  '<b>Variability</b> decreases as sample size increases — larger samples give more precise estimates.',
+  'Population size barely matters as long as the population is at least 10 times the sample.'
+ ]},
+ {h:'The key results', points:[
+  'For proportions: μ(p̂) = p and σ(p̂) = √(p(1−p)/n), approximately normal when np ≥ 10 and n(1−p) ≥ 10.',
+  'For means: μ(x̄) = μ and σ(x̄) = σ/√n.',
+  'The <b>Central Limit Theorem</b>: for large n (usually n ≥ 30), x̄ is approximately normal regardless of population shape.',
+  'If the population is already normal, x̄ is normal for any n.',
+  'Larger n shrinks the standard error by a factor of √n, so quadrupling n halves it.'
+ ]}
+],
+cards:[
+ ['Sampling distribution','The distribution of a statistic across all possible samples of a given size.'],
+ ['Unbiased statistic','One whose sampling distribution centers on the true parameter.'],
+ ['Standard error of a mean','σ ÷ √n.'],
+ ['Standard error of a proportion','√(p(1−p)/n).'],
+ ['Central Limit Theorem','For large n, the sampling distribution of x̄ is approximately normal whatever the population shape.'],
+ ['Large counts condition','np ≥ 10 and n(1−p) ≥ 10 for proportions.'],
+ ['10% condition','The sample must be no more than 10% of the population for independence.'],
+ ['Effect of quadrupling n','Standard error is halved, since it depends on the square root of n.']
+],
+quiz:[
+ {q:'The Central Limit Theorem says that for large n, the sampling distribution of x̄ is:',
+  c:['Identical to the population distribution','Approximately normal regardless of population shape','Always skewed right','Uniform'],
+  a:1, why:'This is why inference about means works even for badly non-normal populations.'},
+ {q:'Increasing sample size from 100 to 400 changes the standard error by:',
+  c:['Doubling it','Halving it','Quartering it','Leaving it unchanged'],
+  a:1, why:'Standard error scales with 1/√n, and √400 is twice √100.'},
+ {q:'A statistic is unbiased if:',
+  c:['Its sampling distribution has small spread','The mean of its sampling distribution equals the parameter','It comes from a large sample','It is always correct'],
+  a:1, why:'Unbiasedness is about centering, not precision — those are separate properties.'},
+ {q:'For a sample proportion to be treated as approximately normal, you need:',
+  c:['n ≥ 30','np ≥ 10 and n(1−p) ≥ 10','A normal population','p = 0.5'],
+  a:1, why:'The large counts condition ensures enough expected successes and failures for the normal approximation.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Inference for Proportions',
+guide:[
+ {h:'Confidence intervals', points:[
+  'Form: statistic ± (critical value)(standard error).',
+  'One-proportion z-interval: p̂ ± z*√(p̂(1−p̂)/n).',
+  'Conditions: <b>random</b> sample, <b>10%</b> condition, and <b>large counts</b> (at least 10 successes and 10 failures).',
+  'Interpretation: "We are 95% confident the true proportion lies between __ and __."',
+  'Confidence <i>level</i> interpretation: in repeated sampling, 95% of such intervals capture the true parameter.',
+  'Higher confidence widens the interval; larger n narrows it.'
+ ]},
+ {h:'Significance tests', points:[
+  'State H₀ (no difference) and Hₐ, check conditions, compute the test statistic, find the p-value, then conclude in context.',
+  'The <b>p-value</b> is the probability of a result at least this extreme <i>assuming H₀ is true</i>.',
+  'If p-value < α, reject H₀; otherwise fail to reject. You never "accept" H₀.',
+  '<b>Type I error</b>: rejecting a true H₀, with probability α. <b>Type II error</b>: failing to reject a false H₀.',
+  '<b>Power</b> = 1 − P(Type II). Power rises with larger n, larger effect size, or larger α.',
+  'For a test of one proportion, use p₀ in the standard error, not p̂.'
+ ]}
+],
+cards:[
+ ['Confidence interval form','Statistic ± (critical value)(standard error).'],
+ ['Conditions for proportion inference','Random sample, 10% condition, and at least 10 successes and 10 failures.'],
+ ['Interpreting a confidence level','In repeated sampling, that percentage of intervals would capture the true parameter.'],
+ ['p-value','Probability of a result at least this extreme assuming the null hypothesis is true.'],
+ ['Decision rule','Reject H₀ when the p-value is below α; otherwise fail to reject.'],
+ ['Type I error','Rejecting a true null hypothesis; its probability is α.'],
+ ['Type II error','Failing to reject a false null hypothesis.'],
+ ['Power','1 − P(Type II error); increased by larger n, larger effect, or larger α.'],
+ ['Standard error in a proportion test','Uses the null value p₀ rather than the sample p̂.']
+],
+quiz:[
+ {q:'A 95% confidence interval means:',
+  c:['95% of the data lie in the interval','95% of such intervals from repeated samples capture the parameter','There is a 95% chance the sample is correct','The parameter is in the interval 95% of the time it is calculated'],
+  a:1, why:'The confidence is in the long-run procedure; a given interval either contains the parameter or does not.'},
+ {q:'A p-value of 0.03 at α = 0.05 means you should:',
+  c:['Accept the null hypothesis','Reject the null hypothesis','Fail to reject the null hypothesis','Increase the sample size'],
+  a:1, why:'The result is unlikely enough under H₀ to provide convincing evidence against it.'},
+ {q:'Which change increases the power of a test?',
+  c:['Decreasing sample size','Decreasing α','Increasing sample size','Making the effect size smaller'],
+  a:2, why:'More data reduces standard error, making a true difference easier to detect.'},
+ {q:'Increasing the confidence level from 90% to 99% will:',
+  c:['Narrow the interval','Widen the interval','Leave the width unchanged','Reduce the standard error'],
+  a:1, why:'A larger critical value is needed to be more certain, which stretches the margin of error.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Inference for Means',
+guide:[
+ {h:'The t distribution', points:[
+  'When σ is unknown — nearly always — use <b>t</b> instead of z, with s in place of σ.',
+  'The t distribution is bell-shaped but has heavier tails, giving wider intervals.',
+  '<b>Degrees of freedom</b> = n − 1 for one sample. As df grows, t approaches z.',
+  'One-sample t-interval: x̄ ± t*(s/√n).',
+  'Conditions: random sample, 10% condition, and normal/large sample (n ≥ 30 or roughly symmetric data with no strong outliers).'
+ ]},
+ {h:'Comparing means', points:[
+  '<b>Paired t</b> applies when observations come in natural pairs — analyze the differences as one sample.',
+  'Before-and-after measurements on the same subjects are always paired, never two-sample.',
+  '<b>Two-sample t</b> compares independent groups: (x̄₁ − x̄₂) ± t*√(s₁²/n₁ + s₂²/n₂).',
+  'Check conditions for each group separately in a two-sample procedure.',
+  'A confidence interval for a difference that contains 0 means no significant difference at that level.'
+ ]}
+],
+cards:[
+ ['When to use t instead of z','Whenever the population standard deviation σ is unknown.'],
+ ['Shape of the t distribution','Bell-shaped with heavier tails than the normal, producing wider intervals.'],
+ ['Degrees of freedom','n − 1 for a one-sample t procedure.'],
+ ['One-sample t-interval','x̄ ± t*(s/√n).'],
+ ['Conditions for t procedures','Random sample, 10% condition, and normality or a large sample.'],
+ ['Paired t-test','Used for naturally paired data; analyze the differences as a single sample.'],
+ ['Two-sample t-test','Compares two independent groups\u2019 means.'],
+ ['Interval containing zero','Indicates no statistically significant difference at that confidence level.']
+],
+quiz:[
+ {q:'Twenty students take a test before and after a review session. The correct procedure is:',
+  c:['Two-sample t-test','Paired t-test on the differences','One-proportion z-test','Chi-square test'],
+  a:1, why:'The same students appear in both measurements, so the observations are not independent.'},
+ {q:'The t distribution has wider tails than the normal because:',
+  c:['Sample sizes are always small','Estimating σ with s adds extra uncertainty','It is not symmetric','It has no mean'],
+  a:1, why:'Using a sample standard deviation introduces variability the z procedure does not account for.'},
+ {q:'A 95% confidence interval for μ₁ − μ₂ is (−1.2, 4.8). You should conclude:',
+  c:['Group 1 is significantly larger','Group 2 is significantly larger','There is no significant difference at the 5% level','The test was invalid'],
+  a:2, why:'The interval contains 0, so a difference of zero remains plausible.'},
+ {q:'Degrees of freedom for a one-sample t procedure with n = 25 is:',
+  c:['24','25','26','5'],
+  a:0, why:'df = n − 1 = 24.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Chi-Square Tests',
+guide:[
+ {h:'Three chi-square tests', points:[
+  '<b>Goodness of fit</b>: one categorical variable against a claimed distribution. df = categories − 1.',
+  '<b>Homogeneity</b>: the same categorical variable across several populations or treatments.',
+  '<b>Independence</b>: two categorical variables measured on one sample.',
+  'Homogeneity and independence use the same computation; the difference is how the data were collected.',
+  'For a two-way table, df = (rows − 1)(columns − 1).'
+ ]},
+ {h:'Computing and concluding', points:[
+  'χ² = Σ (observed − expected)² ÷ expected.',
+  'Expected count for a cell = (row total × column total) ÷ grand total.',
+  'Condition: all <b>expected</b> counts must be at least 5 — observed counts may be smaller.',
+  'The chi-square distribution is right-skewed, and larger χ² means stronger evidence against H₀.',
+  'Chi-square tests are always one-sided in the right tail.',
+  'The largest contributing cells identify where the data most departed from expectation.'
+ ]}
+],
+cards:[
+ ['Chi-square goodness of fit','Tests one categorical variable against a claimed distribution; df = categories − 1.'],
+ ['Chi-square test for homogeneity','Compares the distribution of one categorical variable across several populations.'],
+ ['Chi-square test for independence','Tests whether two categorical variables are associated within one sample.'],
+ ['Chi-square statistic','χ² = Σ (observed − expected)² ÷ expected.'],
+ ['Expected count','(row total × column total) ÷ grand total.'],
+ ['Chi-square condition','All expected counts at least 5; observed counts may be smaller.'],
+ ['Degrees of freedom for a two-way table','(rows − 1)(columns − 1).'],
+ ['Shape of chi-square','Right-skewed, and always tested in the right tail.']
+],
+quiz:[
+ {q:'A 3 × 4 two-way table has how many degrees of freedom?',
+  c:['3','6','7','12'],
+  a:1, why:'(3 − 1)(4 − 1) = 6.'},
+ {q:'The chi-square condition requires that:',
+  c:['All observed counts are at least 5','All expected counts are at least 5','The sample size exceeds 30','The data are normally distributed'],
+  a:1, why:'The approximation depends on expected counts; small observed counts are acceptable.'},
+ {q:'Researchers sample one group and record both handedness and eye colour. The right test is:',
+  c:['Goodness of fit','Homogeneity','Independence','Two-sample t'],
+  a:2, why:'Two categorical variables measured on a single sample calls for a test of independence.'},
+ {q:'A large chi-square statistic indicates:',
+  c:['Observed counts closely match expected counts','Observed counts differ substantially from expected','The sample was too small','The variables are definitely independent'],
+  a:1, why:'The statistic sums squared deviations, so bigger values mean a worse fit to the null model.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Inference for Slopes',
+guide:[
+ {h:'Regression inference', points:[
+  'The population model is y = α + βx + ε; the sample line b₀ + b₁x estimates it.',
+  'H₀: β = 0 means there is no linear relationship between x and y.',
+  'Test statistic t = b₁ ÷ SE(b₁), with <b>df = n − 2</b>.',
+  'Confidence interval for slope: b₁ ± t*·SE(b₁).',
+  'Computer output gives the slope, its standard error, t, and a two-sided p-value in a standard layout.'
+ ]},
+ {h:'Conditions', points:[
+  'Remember <b>LINER</b>: <b>L</b>inear, <b>I</b>ndependent, <b>N</b>ormal residuals, <b>E</b>qual variance, <b>R</b>andom.',
+  'Check linearity and equal variance with a residual plot showing no pattern and constant spread.',
+  'Check normality of residuals with a dotplot or histogram.',
+  'If the interval for β excludes 0, there is convincing evidence of a linear relationship.',
+  'A significant slope still does not establish causation unless the data came from an experiment.'
+ ]}
+],
+cards:[
+ ['Population regression model','y = α + βx + ε, estimated by the sample least-squares line.'],
+ ['Null hypothesis for slope','H₀: β = 0, meaning no linear relationship between x and y.'],
+ ['Test statistic for slope','t = b₁ ÷ SE(b₁).'],
+ ['Degrees of freedom for slope inference','n − 2.'],
+ ['Confidence interval for slope','b₁ ± t* × SE(b₁).'],
+ ['LINER conditions','Linear, Independent, Normal residuals, Equal variance, Random.'],
+ ['Interval excluding zero','Convincing evidence of a linear relationship.'],
+ ['Significant slope and causation','Still requires an experiment; a significant slope alone proves only association.']
+],
+quiz:[
+ {q:'Degrees of freedom for a t-test of a regression slope with n = 30 is:',
+  c:['28','29','30','2'],
+  a:0, why:'df = n − 2 = 28, because both an intercept and a slope are estimated.'},
+ {q:'A 95% confidence interval for the slope is (0.8, 2.4). This suggests:',
+  c:['No linear relationship','Convincing evidence of a positive linear relationship','x causes y','The residuals are not normal'],
+  a:1, why:'The interval excludes 0 and is entirely positive, though causation still requires an experiment.'},
+ {q:'The "E" in the LINER conditions stands for:',
+  c:['Extrapolation','Equal variance of residuals','Estimated slope','Error rate'],
+  a:1, why:'Residual spread must stay roughly constant across all values of x.'},
+ {q:'The null hypothesis in regression inference states that:',
+  c:['The slope is 1','The slope is 0','The correlation is 1','The intercept is 0'],
+  a:1, why:'A slope of zero means x provides no linear information about y.'}
+]
+}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP CALCULUS AB (completes) */
+addUnits('ap-calc-ab', [
+{
+id:'u3', title:'Unit 3 · Composite, Implicit, and Inverse Functions',
+guide:[
+ {h:'Implicit differentiation', points:[
+  'Differentiate both sides with respect to x, applying the chain rule to every y term to produce dy/dx.',
+  'Example: for x² + y² = 25, differentiating gives 2x + 2y(dy/dx) = 0, so dy/dx = −x/y.',
+  'Collect all dy/dx terms on one side and factor to solve.',
+  'A horizontal tangent occurs where the numerator of dy/dx is 0; a vertical tangent where the denominator is 0.',
+  'The second derivative of an implicit relation usually still contains dy/dx, which must then be substituted.'
+ ]},
+ {h:'Inverse functions and higher derivatives', points:[
+  'If g is the inverse of f, then g\u2032(x) = 1 ÷ f\u2032(g(x)).',
+  'To evaluate an inverse derivative at a point, first find the input that maps to it.',
+  'd/dx[arcsin x] = 1/√(1−x²); d/dx[arctan x] = 1/(1+x²).',
+  'Higher-order derivatives: f\u2033 measures concavity and describes acceleration in motion problems.',
+  'Chain rule applies repeatedly for nested compositions, working from the outside in.'
+ ]}
+],
+cards:[
+ ['Implicit differentiation','Differentiate both sides with respect to x, applying the chain rule to y terms.'],
+ ['dy/dx for x² + y² = r²','−x/y.'],
+ ['Horizontal tangent in implicit form','Where the numerator of dy/dx equals zero.'],
+ ['Vertical tangent in implicit form','Where the denominator of dy/dx equals zero.'],
+ ['Inverse function derivative','g\u2032(x) = 1 ÷ f\u2032(g(x)).'],
+ ['Derivative of arcsin x','1 ÷ √(1 − x²).'],
+ ['Derivative of arctan x','1 ÷ (1 + x²).'],
+ ['Second derivative','Rate of change of the derivative; gives concavity and acceleration.']
+],
+quiz:[
+ {q:'For x² + y² = 25, dy/dx equals:',
+  c:['x/y','−x/y','−y/x','2x + 2y'],
+  a:1, why:'Differentiating gives 2x + 2y·dy/dx = 0, so dy/dx = −x/y.'},
+ {q:'If f(2) = 5 and f\u2032(2) = 4, and g is the inverse of f, then g\u2032(5) equals:',
+  c:['4','1/4','5','1/5'],
+  a:1, why:'g\u2032(5) = 1 ÷ f\u2032(g(5)) = 1 ÷ f\u2032(2) = 1/4.'},
+ {q:'An implicit curve has a vertical tangent where:',
+  c:['dy/dx = 0','The numerator of dy/dx is 0','The denominator of dy/dx is 0','y = 0 always'],
+  a:2, why:'A zero denominator makes the slope undefined, which is a vertical tangent.'},
+ {q:'d/dx[arctan(3x)] equals:',
+  c:['1/(1+9x²)','3/(1+9x²)','3/(1+3x²)','1/(1+3x)'],
+  a:1, why:'Chain rule: 1/(1+(3x)²) times the inner derivative 3.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Contextual Applications of Differentiation',
+guide:[
+ {h:'Motion and rates', points:[
+  'The derivative is an <b>instantaneous rate of change</b>, and units are always units of y per unit of x.',
+  'For motion: position s(t), velocity v(t) = s\u2032(t), acceleration a(t) = v\u2032(t).',
+  '<b>Speed</b> is |v|. An object speeds up when v and a share a sign and slows when they differ.',
+  'The object changes direction where velocity changes sign, not merely where it equals zero.',
+  'Always interpret with units and context on the free-response section.'
+ ]},
+ {h:'Related rates and approximation', points:[
+  '<b>Related rates</b>: write an equation relating the quantities, differentiate with respect to <i>time</i>, then substitute values <b>after</b> differentiating.',
+  'Substituting numbers too early is the single most common error in these problems.',
+  '<b>Linearization</b>: L(x) = f(a) + f\u2032(a)(x − a) approximates f near a.',
+  'A tangent line overestimates a concave-down function and underestimates a concave-up one.',
+  '<b>L\u2019Hospital\u2019s rule</b> applies only to indeterminate forms 0/0 or ∞/∞: take the derivative of numerator and denominator separately.'
+ ]}
+],
+cards:[
+ ['Velocity and acceleration','v(t) = s\u2032(t) and a(t) = v\u2032(t).'],
+ ['Speed','The absolute value of velocity.'],
+ ['When an object speeds up','When velocity and acceleration have the same sign.'],
+ ['Related rates method','Relate the quantities, differentiate with respect to time, then substitute values.'],
+ ['Most common related rates error','Substituting numbers before differentiating.'],
+ ['Linearization','L(x) = f(a) + f\u2032(a)(x − a); the tangent line approximation.'],
+ ['Tangent line and concavity','Overestimates a concave-down function, underestimates a concave-up one.'],
+ ['L\u2019Hospital\u2019s rule','For 0/0 or ∞/∞ only: differentiate numerator and denominator separately.']
+],
+quiz:[
+ {q:'A particle has v(t) = −4 and a(t) = −2. The particle is:',
+  c:['Speeding up','Slowing down','At rest','Changing direction'],
+  a:0, why:'Velocity and acceleration share a sign, so the speed is increasing even though it moves in the negative direction.'},
+ {q:'The most common error in related rates problems is:',
+  c:['Using the chain rule','Substituting given values before differentiating','Differentiating with respect to time','Drawing a diagram'],
+  a:1, why:'Substituting early turns a changing quantity into a constant, and its derivative wrongly becomes zero.'},
+ {q:'A tangent line approximation of a concave-up function will:',
+  c:['Overestimate the function','Underestimate the function','Be exact','Be undefined'],
+  a:1, why:'A concave-up curve lies above its tangent line everywhere except the point of tangency.'},
+ {q:'L\u2019Hospital\u2019s rule may be applied to:',
+  c:['Any limit','Only indeterminate forms such as 0/0 or ∞/∞','Only limits at infinity','Only continuous functions'],
+  a:1, why:'Applying it to a determinate form gives a wrong answer; check the form first.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Analytical Applications of Differentiation',
+guide:[
+ {h:'Shape of a graph', points:[
+  'f is <b>increasing</b> where f\u2032 > 0 and <b>decreasing</b> where f\u2032 < 0.',
+  '<b>Critical points</b> occur where f\u2032 = 0 or f\u2032 is undefined.',
+  '<b>First derivative test</b>: a sign change of f\u2032 from + to − gives a local maximum, − to + gives a local minimum.',
+  'f is <b>concave up</b> where f\u2033 > 0 and <b>concave down</b> where f\u2033 < 0.',
+  'An <b>inflection point</b> requires f\u2033 to actually change sign, not merely equal zero.',
+  '<b>Second derivative test</b>: at a critical point, f\u2033 < 0 gives a maximum and f\u2033 > 0 gives a minimum.'
+ ]},
+ {h:'Theorems and optimization', points:[
+  '<b>Extreme Value Theorem</b>: a function continuous on a closed interval attains an absolute max and min.',
+  '<b>Mean Value Theorem</b>: if f is continuous on [a,b] and differentiable on (a,b), some c has f\u2032(c) = (f(b)−f(a))/(b−a).',
+  'Always state the hypotheses when a free-response question invokes these theorems.',
+  '<b>Optimization</b>: write the quantity to optimize, use a constraint to reduce to one variable, then find critical points.',
+  'For an absolute extremum on a closed interval, compare critical point values with the endpoints.',
+  'Justify every conclusion by referring to the sign of the derivative, not to a calculator graph.'
+ ]}
+],
+cards:[
+ ['Increasing and decreasing','f increases where f\u2032 > 0 and decreases where f\u2032 < 0.'],
+ ['Critical point','Where f\u2032 equals zero or is undefined.'],
+ ['First derivative test','A sign change of f\u2032 from + to − gives a local maximum; − to + gives a minimum.'],
+ ['Concavity','Concave up where f\u2033 > 0, concave down where f\u2033 < 0.'],
+ ['Inflection point','Where f\u2033 changes sign, not merely where it equals zero.'],
+ ['Second derivative test','At a critical point, f\u2033 < 0 means a maximum and f\u2033 > 0 means a minimum.'],
+ ['Extreme Value Theorem','A continuous function on a closed interval attains an absolute maximum and minimum.'],
+ ['Mean Value Theorem','Some c in (a,b) has f\u2032(c) equal to the average rate of change over [a,b].'],
+ ['Absolute extrema on a closed interval','Compare values at critical points and at both endpoints.']
+],
+quiz:[
+ {q:'f\u2032 changes from negative to positive at x = 3. At x = 3, f has:',
+  c:['A local maximum','A local minimum','An inflection point','A vertical asymptote'],
+  a:1, why:'The function stops decreasing and starts increasing, which is a local minimum by the first derivative test.'},
+ {q:'f\u2033(2) = 0. This guarantees that:',
+  c:['x = 2 is an inflection point','Nothing on its own; f\u2033 must change sign','f has a maximum at 2','f is linear'],
+  a:1, why:'f(x) = x⁴ has f\u2033(0) = 0 but no inflection point there, since concavity never changes.'},
+ {q:'The Mean Value Theorem requires f to be:',
+  c:['Continuous on (a,b) only','Continuous on [a,b] and differentiable on (a,b)','Increasing on [a,b]','Twice differentiable'],
+  a:1, why:'Both hypotheses are required and must be stated explicitly when invoking the theorem.'},
+ {q:'To find the absolute maximum of a continuous f on [0,5], you must check:',
+  c:['Only critical points','Only the endpoints','Critical points and both endpoints','The second derivative only'],
+  a:2, why:'An absolute extremum on a closed interval can occur at an endpoint where the derivative is nonzero.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Integration and Accumulation of Change',
+guide:[
+ {h:'Riemann sums and the definite integral', points:[
+  'A definite integral is the limit of Riemann sums and represents accumulated change.',
+  '<b>Left sums</b> underestimate an increasing function; <b>right sums</b> overestimate it.',
+  '<b>Trapezoidal</b> sums overestimate a concave-up function and underestimate a concave-down one.',
+  'Properties: ∫ₐᵃ f = 0, reversing limits flips the sign, and integrals add over adjacent intervals.',
+  'The integral of a rate gives the total change in the quantity.'
+ ]},
+ {h:'The Fundamental Theorem', points:[
+  '<b>FTC Part 1</b>: d/dx ∫ₐˣ f(t)dt = f(x). Differentiating an accumulation function returns the integrand.',
+  'With a variable upper limit g(x), the chain rule gives f(g(x))·g\u2032(x).',
+  '<b>FTC Part 2</b>: ∫ₐᵇ f(x)dx = F(b) − F(a) where F is any antiderivative.',
+  '<b>u-substitution</b> reverses the chain rule; change the limits when working with a definite integral.',
+  'Always include + C for indefinite integrals.',
+  'Common antiderivatives: ∫1/x dx = ln|x| + C, ∫eˣ dx = eˣ + C, ∫cos x dx = sin x + C.'
+ ]}
+],
+cards:[
+ ['Definite integral meaning','The limit of Riemann sums; the accumulated change of a quantity.'],
+ ['Left Riemann sum','Underestimates an increasing function, overestimates a decreasing one.'],
+ ['Trapezoidal sum','Overestimates a concave-up function and underestimates a concave-down one.'],
+ ['Integral of a rate','Gives the total change in the underlying quantity.'],
+ ['Fundamental Theorem Part 1','d/dx ∫ₐˣ f(t)dt = f(x).'],
+ ['Variable upper limit','d/dx ∫ₐ^g(x) f(t)dt = f(g(x))·g\u2032(x).'],
+ ['Fundamental Theorem Part 2','∫ₐᵇ f(x)dx = F(b) − F(a).'],
+ ['u-substitution','Reverses the chain rule; change the limits for a definite integral.'],
+ ['Antiderivative of 1/x','ln|x| + C.']
+],
+quiz:[
+ {q:'If f is increasing on [a,b], a left Riemann sum will:',
+  c:['Overestimate the integral','Underestimate the integral','Equal the integral exactly','Be undefined'],
+  a:1, why:'Each rectangle uses the smallest value on its subinterval, so the total falls short.'},
+ {q:'d/dx ∫₁^{x²} sin(t)dt equals:',
+  c:['sin(x²)','2x·sin(x²)','cos(x²)','sin(x²) − sin(1)'],
+  a:1, why:'FTC Part 1 with the chain rule: sin(x²) multiplied by the derivative of the upper limit, 2x.'},
+ {q:'If v(t) is velocity, then ∫₀⁵ v(t)dt represents:',
+  c:['Total distance travelled','Displacement over [0,5]','Average velocity','Acceleration at t = 5'],
+  a:1, why:'The signed integral gives displacement; total distance would require integrating |v(t)|.'},
+ {q:'A trapezoidal sum for a concave-up function will:',
+  c:['Underestimate the integral','Overestimate the integral','Be exact','Depend on the number of subintervals only'],
+  a:1, why:'Chords of a concave-up curve lie above it, so the trapezoids include extra area.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Differential Equations',
+guide:[
+ {h:'Slope fields and solutions', points:[
+  'A <b>differential equation</b> relates a function to its derivatives.',
+  'A <b>slope field</b> draws short segments of slope dy/dx at many points, sketching the solution family.',
+  'To match a slope field to an equation, test a few easy points such as where x or y is 0.',
+  'A <b>particular solution</b> uses an initial condition to pin down the constant.',
+  'Verify a proposed solution by substituting it back into the equation.'
+ ]},
+ {h:'Separation of variables', points:[
+  'Separate so all y terms sit with dy and all x terms with dx, then integrate both sides.',
+  'Add + C on one side only, then apply the initial condition to solve for C.',
+  'Exponential model: dy/dt = ky gives y = y₀e^{kt}. Positive k is growth, negative is decay.',
+  'Solve for y explicitly when the question asks for y = f(x).',
+  'Half-life and doubling time both follow from the exponential solution.'
+ ]}
+],
+cards:[
+ ['Differential equation','An equation relating a function to its derivatives.'],
+ ['Slope field','A grid of short segments showing dy/dx, sketching the family of solutions.'],
+ ['Particular solution','The single solution satisfying a given initial condition.'],
+ ['Separation of variables','Move y terms with dy and x terms with dx, then integrate both sides.'],
+ ['Exponential model','dy/dt = ky has solution y = y₀e^{kt}.'],
+ ['Positive vs. negative k','Positive k gives growth; negative k gives decay.'],
+ ['Where to add + C','On one side only, then use the initial condition to evaluate it.']
+],
+quiz:[
+ {q:'The general solution of dy/dt = 3y is:',
+  c:['y = 3t + C','y = Ce^{3t}','y = e^{3t} + C','y = 3e^t'],
+  a:1, why:'Separating gives ln|y| = 3t + C, and exponentiating produces y = Ce^{3t}.'},
+ {q:'Solving dy/dx = x/y with y(0) = 2 gives:',
+  c:['y² = x² + 4','y² = x² − 4','y = x + 2','y² = 2x + 4'],
+  a:0, why:'Separating gives y dy = x dx, so y²/2 = x²/2 + C. Substituting (0,2) gives C = 2, hence y² = x² + 4.'},
+ {q:'A slope field showing horizontal segments everywhere along the x-axis suggests that:',
+  c:['dy/dx depends only on x','dy/dx = 0 when y = 0','The solution is linear','No solution exists'],
+  a:1, why:'Horizontal segments mean the derivative is zero at those points, so y = 0 makes dy/dx vanish.'},
+ {q:'A particular solution differs from the general solution because it:',
+  c:['Has no constant of integration','Uses an initial condition to determine the constant','Is always linear','Requires a slope field'],
+  a:1, why:'The initial condition selects one curve from the infinite family.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Applications of Integration',
+guide:[
+ {h:'Accumulation and area', points:[
+  '<b>Average value</b> of f on [a,b] = (1/(b−a))∫ₐᵇ f(x)dx.',
+  'Do not confuse average value of a function with average rate of change.',
+  '<b>Area between curves</b> = ∫(top − bottom)dx, or ∫(right − left)dy.',
+  'Find intersection points first to set the limits, and split the integral if the curves cross.',
+  'Integrating with respect to y is often simpler when the region is bounded left and right.'
+ ]},
+ {h:'Volume and motion', points:[
+  '<b>Disc method</b>: V = π∫R² dx when the region touches the axis of rotation.',
+  '<b>Washer method</b>: V = π∫(R² − r²)dx when there is a gap between the region and the axis.',
+  '<b>Known cross sections</b>: V = ∫A(x)dx, where A is the area formula for the given shape.',
+  'Displacement = ∫v(t)dt; <b>total distance</b> = ∫|v(t)|dt.',
+  'Final position = initial position + ∫v(t)dt over the interval.'
+ ]}
+],
+cards:[
+ ['Average value of a function','(1 ÷ (b − a)) × ∫ₐᵇ f(x)dx.'],
+ ['Area between curves','∫(top − bottom)dx, splitting the integral where the curves cross.'],
+ ['Disc method','V = π∫R²dx, used when the region touches the axis of rotation.'],
+ ['Washer method','V = π∫(R² − r²)dx, used when a gap separates the region from the axis.'],
+ ['Known cross sections','V = ∫A(x)dx, using the area formula for the given cross-sectional shape.'],
+ ['Displacement','∫v(t)dt over the interval.'],
+ ['Total distance travelled','∫|v(t)|dt over the interval.'],
+ ['Final position','Initial position plus the integral of velocity.']
+],
+quiz:[
+ {q:'A region is rotated about a line that it does not touch. The correct method is:',
+  c:['Disc method','Washer method','Cross sections','Average value'],
+  a:1, why:'The gap creates a hole, so the inner radius must be subtracted.'},
+ {q:'Total distance travelled by a particle is found by integrating:',
+  c:['v(t)','|v(t)|','a(t)','s(t)'],
+  a:1, why:'Absolute value prevents backward motion from cancelling forward motion.'},
+ {q:'The average value of f on [1,5] is:',
+  c:['∫₁⁵ f(x)dx','(1/4)∫₁⁵ f(x)dx','(1/5)∫₁⁵ f(x)dx','f(5) − f(1)'],
+  a:1, why:'Divide the integral by the interval width, which is 5 − 1 = 4.'},
+ {q:'A solid has square cross sections perpendicular to the x-axis with side s(x). Its volume is:',
+  c:['∫s(x)dx','∫[s(x)]²dx','π∫[s(x)]²dx','2∫s(x)dx'],
+  a:1, why:'A square of side s has area s², and volume integrates the cross-sectional area.'}
+]
+}
+]);
+
+/* ------------------------------ AP COMPUTER SCIENCE PRINCIPLES (completes) */
+addUnits('ap-csp', [
+{
+id:'u1', title:'Big Idea 1 · Creative Development',
+guide:[
+ {h:'Building programs', points:[
+  'Programs are developed through an <b>iterative</b> cycle: investigate, design, prototype, test, refine.',
+  '<b>Collaboration</b> produces better programs by bringing in more perspectives and catching more errors.',
+  'A program\u2019s <b>purpose</b> is what it does for the user; its <b>function</b> is how it behaves.',
+  '<b>Program input</b> can come from users, devices, files, or other programs; output can be visual, audible, tactile, or textual.',
+  'Comments and documentation explain intent to other developers and to your future self.'
+ ]},
+ {h:'Finding and fixing errors', points:[
+  '<b>Syntax errors</b> break the rules of the language and stop the program running.',
+  '<b>Logic errors</b> run fine but produce the wrong result.',
+  '<b>Runtime errors</b> crash the program during execution, such as dividing by zero.',
+  '<b>Overflow errors</b> occur when a number exceeds the space allocated for it.',
+  'Debugging techniques: test with varied inputs, add display statements, hand-trace the code, and isolate one section at a time.'
+ ]}
+],
+cards:[
+ ['Iterative development','Repeatedly designing, testing, and refining rather than building once.'],
+ ['Program purpose vs. function','Purpose is what it accomplishes for the user; function is how it behaves.'],
+ ['Syntax error','A violation of language rules that prevents the program from running.'],
+ ['Logic error','The program runs but produces an incorrect result.'],
+ ['Runtime error','An error that crashes the program during execution.'],
+ ['Overflow error','A value exceeding the space allocated to represent it.'],
+ ['Debugging by hand-tracing','Stepping through code manually to see what each line does.'],
+ ['Value of collaboration','More perspectives catch more errors and produce better designs.']
+],
+quiz:[
+ {q:'A program runs without crashing but always computes an average that is too high. This is a:',
+  c:['Syntax error','Logic error','Runtime error','Overflow error'],
+  a:1, why:'The code is valid and executes, but the instructions do not express the intended behaviour.'},
+ {q:'Iterative development means:',
+  c:['Writing the whole program before testing','Repeatedly designing, testing, and refining','Working alone to avoid conflicts','Skipping the design stage'],
+  a:1, why:'Each cycle exposes problems earlier, when they are cheaper to fix.'},
+ {q:'Dividing by zero at runtime produces a:',
+  c:['Syntax error','Logic error','Runtime error','Compile error'],
+  a:2, why:'The code is syntactically valid; the failure only appears when that line actually executes.'},
+ {q:'Adding display statements while debugging helps because it:',
+  c:['Fixes syntax errors automatically','Shows the actual values at each stage','Speeds up execution','Removes logic errors'],
+  a:1, why:'Seeing real values reveals where the program\u2019s state first diverges from expectation.'}
+]
+},
+{
+id:'u2', title:'Big Idea 2 · Data',
+guide:[
+ {h:'Representing data', points:[
+  'Computers store everything in <b>binary</b>. A <b>bit</b> is one binary digit; 8 bits make a <b>byte</b>.',
+  'n bits represent 2ⁿ distinct values, so more bits allow larger numbers and more colours.',
+  '<b>Analog</b> data is continuous and must be <b>sampled</b> to become digital; higher sampling rates give better fidelity.',
+  '<b>Lossless</b> compression restores the original exactly; <b>lossy</b> discards data permanently for smaller files.',
+  'Choose lossless for text and code, lossy for photos, audio, and video where small losses are acceptable.'
+ ]},
+ {h:'Using data', points:[
+  '<b>Metadata</b> is data about data — file size, creation date, location.',
+  '<b>Filtering</b> and <b>cleaning</b> data remove errors, duplicates, and irrelevant records before analysis.',
+  'Correlation found in data does not establish causation.',
+  '<b>Bias in data</b> arises from how it was collected and propagates into any conclusion or model built on it.',
+  'Large datasets can reveal patterns invisible in small ones, but scale also magnifies bias.',
+  'Privacy risk grows as separate datasets are combined to identify individuals.'
+ ]}
+],
+cards:[
+ ['Bit and byte','A bit is one binary digit; 8 bits make a byte.'],
+ ['Values from n bits','2ⁿ distinct values.'],
+ ['Sampling','Measuring an analog signal at intervals to represent it digitally.'],
+ ['Lossless compression','Reduces size with no data lost; the original is fully recoverable.'],
+ ['Lossy compression','Permanently discards data to achieve smaller files.'],
+ ['Metadata','Data about data, such as file size, date, or location.'],
+ ['Data cleaning','Removing errors, duplicates, and irrelevant records before analysis.'],
+ ['Bias in data','Systematic distortion from how data was collected, carried into any conclusion drawn.'],
+ ['Correlation and causation','A pattern in data does not establish that one variable causes the other.']
+],
+quiz:[
+ {q:'How many distinct values can 6 bits represent?',
+  c:['12','32','64','128'],
+  a:2, why:'2⁶ = 64.'},
+ {q:'Which compression type should be used for a program\u2019s source code?',
+  c:['Lossy, for smaller files','Lossless, because every character matters','Either works equally well','Neither; code cannot be compressed'],
+  a:1, why:'Discarding any character would break the code, so nothing can be lost.'},
+ {q:'A higher sampling rate when digitising audio results in:',
+  c:['A smaller file and lower quality','A larger file and higher fidelity','No change in quality','Lossless compression'],
+  a:1, why:'More measurements per second capture the waveform more accurately but take more storage.'},
+ {q:'A facial recognition system performs worse on some groups. The most likely cause is:',
+  c:['Insufficient processing speed','Bias in the training data','Lossless compression','Too much metadata'],
+  a:1, why:'Models learn the patterns present in their data, so unrepresentative data produces unequal performance.'}
+]
+},
+{
+id:'u4', title:'Big Idea 4 · Computer Systems and Networks',
+guide:[
+ {h:'How the internet works', points:[
+  'The internet is a network of networks running on open <b>protocols</b> that nobody owns.',
+  '<b>IP</b> addresses identify devices; <b>DNS</b> translates domain names into IP addresses.',
+  '<b>TCP</b> guarantees reliable, ordered delivery by acknowledging and resending lost packets; <b>UDP</b> is faster but does not.',
+  'Data travels as <b>packets</b> that may take different routes and are reassembled at the destination.',
+  '<b>Redundancy</b> in routing gives <b>fault tolerance</b>: if one path fails, traffic reroutes.',
+  '<b>Bandwidth</b> is data per second; <b>latency</b> is the delay before transfer begins.'
+ ]},
+ {h:'Parallel and distributed computing', points:[
+  '<b>Sequential</b> computing runs one operation at a time in order.',
+  '<b>Parallel</b> computing splits a task across processors running simultaneously.',
+  '<b>Distributed</b> computing spreads a task across multiple networked machines.',
+  '<b>Speedup</b> = sequential time ÷ parallel time.',
+  'Only the parallel portion of a task benefits, so speedup is always less than the number of processors.',
+  'Distributed computing makes problems solvable that no single machine could handle.'
+ ]}
+],
+cards:[
+ ['Protocol','An agreed set of rules governing data transmission between devices.'],
+ ['DNS','Translates human-readable domain names into IP addresses.'],
+ ['TCP vs. UDP','TCP guarantees reliable ordered delivery; UDP is faster but makes no guarantee.'],
+ ['Packet','A small unit of data that travels independently and is reassembled at the destination.'],
+ ['Fault tolerance','Continuing to work when part of the system fails, enabled by redundant paths.'],
+ ['Bandwidth vs. latency','Bandwidth is throughput per second; latency is the delay before transfer starts.'],
+ ['Sequential computing','Operations run one at a time in order.'],
+ ['Parallel computing','A task split across processors running simultaneously.'],
+ ['Distributed computing','A task spread across multiple networked machines.'],
+ ['Speedup','Sequential run time divided by parallel run time.']
+],
+quiz:[
+ {q:'A task takes 90 seconds sequentially and 30 seconds in parallel. The speedup is:',
+  c:['3','30','60','120'],
+  a:0, why:'Speedup = 90 ÷ 30 = 3.'},
+ {q:'DNS is responsible for:',
+  c:['Encrypting web traffic','Translating domain names into IP addresses','Splitting data into packets','Compressing images'],
+  a:1, why:'Without DNS you would have to type numeric IP addresses for every site.'},
+ {q:'Redundancy in network routing provides:',
+  c:['Faster compression','Fault tolerance','Lower bandwidth','Stronger encryption'],
+  a:1, why:'Multiple paths mean a failed link does not sever the connection.'},
+ {q:'Doubling the number of processors rarely halves run time because:',
+  c:['Processors slow each other down permanently','Only the parallelisable portion of the task benefits','Speedup is always exactly 1','Parallel computing needs more memory'],
+  a:1, why:'Any sequential portion still takes the same time no matter how many processors are added.'}
+]
+},
+{
+id:'u6', title:'Task · Create Performance Task',
+guide:[
+ {h:'What the program must contain', points:[
+  'A <b>list</b> (or other collection) storing data that the program actually uses to fulfil its purpose.',
+  'A <b>student-developed procedure</b> with at least one <b>parameter</b> that affects its result.',
+  'An <b>algorithm</b> inside that procedure using <b>sequencing</b>, <b>selection</b>, and <b>iteration</b>.',
+  'A <b>call</b> to that procedure somewhere in the program.',
+  'Instructions for input and output of the program.',
+  'The list must be genuinely necessary — storing data you never use scores no points.'
+ ]},
+ {h:'The written responses and video', points:[
+  'A video under one minute showing the running program\u2019s input and output, with no narration required.',
+  'Describe the program\u2019s <b>purpose</b> and its <b>functionality</b>.',
+  'Explain how the selected code segment manages complexity, and why the list makes the program easier to write.',
+  'Identify two calls to your procedure with different arguments and trace the resulting condition and output.',
+  'Describe two calls, the condition each triggers, and the result each produces.',
+  'Write about your own code specifically — generic descriptions do not earn credit.'
+ ]}
+],
+cards:[
+ ['Required list','A collection storing data the program actually uses to fulfil its purpose.'],
+ ['Student-developed procedure','A procedure you wrote with at least one parameter affecting its result.'],
+ ['Required algorithm','Must combine sequencing, selection, and iteration inside your procedure.'],
+ ['Why the list must be necessary','Storing data you never use earns no credit for managing complexity.'],
+ ['Video requirement','Under one minute, showing the running program\u2019s input and output.'],
+ ['Managing complexity','Explaining how a list or procedure makes the program simpler than writing it out longhand.'],
+ ['Two calls requirement','Identify two calls with different arguments and trace each result.'],
+ ['Common scoring mistake','Writing generic descriptions instead of describing your own specific code.']
+],
+quiz:[
+ {q:'The Create task requires the student-developed procedure to include:',
+  c:['At least one parameter that affects the result','Exactly three parameters','No parameters','Only global variables'],
+  a:0, why:'A parameter that changes the outcome is what demonstrates abstraction.'},
+ {q:'The required algorithm must combine:',
+  c:['Only sequencing','Sequencing and selection only','Sequencing, selection, and iteration','Recursion and iteration'],
+  a:2, why:'All three control structures must appear within the selected procedure.'},
+ {q:'A list in the Create task earns credit only when it:',
+  c:['Contains more than ten items','Is genuinely used to fulfil the program\u2019s purpose','Is declared at the top','Holds only strings'],
+  a:1, why:'A list that is created but never meaningfully used does not manage any complexity.'},
+ {q:'The program video must:',
+  c:['Include narration explaining the code','Be under one minute and show input and output','Show the source code scrolling','Last exactly five minutes'],
+  a:1, why:'It must demonstrate the running program in under a minute; narration is optional.'}
+]
+}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP EUROPEAN HISTORY (completes) */
+addUnits('ap-euro', [
+{
+id:'u3', title:'Unit 3 · Absolutism and Constitutionalism',
+guide:[
+ {h:'Absolutism', points:[
+  '<b>Divine right</b> claimed monarchs answered to God alone. Louis XIV of France was the model.',
+  '<b>Versailles</b> domesticated the nobility by making court attendance the route to influence.',
+  '<b>Colbert\u2019s mercantilism</b> built French industry and a favourable trade balance.',
+  '<b>Peter the Great</b> westernized Russia by force, building St Petersburg and reorganizing the nobility.',
+  'Prussia rose on military discipline under the Hohenzollerns; Austria expanded as a multiethnic empire.'
+ ]},
+ {h:'Constitutionalism', points:[
+  'The <b>English Civil War</b> pitted Parliament against Charles I and ended in his execution.',
+  'The <b>Glorious Revolution</b> (1688) replaced James II with William and Mary bloodlessly.',
+  'The <b>English Bill of Rights</b> made Parliament supreme over the crown.',
+  'The <b>Dutch Republic</b> prospered through commerce, banking, and religious toleration.',
+  'The <b>balance of power</b> became the organizing principle of European diplomacy, limiting any one state\u2019s dominance.'
+ ]}
+],
+cards:[
+ ['Divine right of kings','The claim that a monarch\u2019s authority comes from God and is answerable to no subject.'],
+ ['Versailles','Louis XIV\u2019s palace, used to control the nobility by centring status on court attendance.'],
+ ['Colbert','Louis XIV\u2019s minister who applied mercantilism to build French industry and trade surplus.'],
+ ['Peter the Great','Tsar who forcibly westernized Russia and founded St Petersburg.'],
+ ['English Civil War','Conflict between Parliament and Charles I ending in the king\u2019s execution.'],
+ ['Glorious Revolution','1688 bloodless replacement of James II by William and Mary.'],
+ ['English Bill of Rights','Established parliamentary supremacy over the monarchy.'],
+ ['Balance of power','Diplomatic principle preventing any single state from dominating Europe.']
+],
+quiz:[
+ {q:'Louis XIV used Versailles primarily to:',
+  c:['Defend France militarily','Control the nobility by centring status on the court','House the peasantry','Store the treasury'],
+  a:1, why:'Nobles competing for royal attention at court could not build independent regional power bases.'},
+ {q:'The Glorious Revolution is significant because it:',
+  c:['Restored absolute monarchy','Established parliamentary supremacy without major bloodshed','Began the English Civil War','Ended the Dutch Republic'],
+  a:1, why:'William and Mary accepted the Bill of Rights, subordinating the crown to Parliament.'},
+ {q:'Peter the Great\u2019s reforms were aimed mainly at:',
+  c:['Isolating Russia from Europe','Modernizing Russia along Western European lines','Abolishing serfdom','Establishing a parliament'],
+  a:1, why:'He imported Western technology, military organisation, and customs, often by compulsion.'},
+ {q:'The balance of power principle was intended to:',
+  c:['Unify Europe under one monarch','Prevent any single state from dominating Europe','End all warfare','Promote free trade'],
+  a:1, why:'States allied against whichever power grew strongest, which shaped European diplomacy for centuries.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Scientific, Philosophical, and Political Developments',
+guide:[
+ {h:'The Scientific Revolution', points:[
+  '<b>Copernicus</b> proposed heliocentrism; <b>Galileo</b> supported it observationally and was condemned by the Church.',
+  '<b>Newton</b> unified terrestrial and celestial motion under universal gravitation.',
+  '<b>Bacon</b> championed <b>empiricism</b> and inductive reasoning; <b>Descartes</b> championed <b>rationalism</b> and deduction.',
+  'Together they produced the scientific method, shifting authority from tradition to observation.',
+  'New institutions such as the Royal Society organized and spread research.'
+ ]},
+ {h:'The Enlightenment', points:[
+  '<b>Locke</b>: natural rights and government by consent. <b>Montesquieu</b>: separation of powers.',
+  '<b>Voltaire</b> attacked religious intolerance; <b>Rousseau</b> argued for the general will and popular sovereignty.',
+  '<b>Adam Smith</b> made the case for free markets; <b>Wollstonecraft</b> argued for women\u2019s education and rights.',
+  '<b>Salons</b>, often hosted by women, circulated ideas across social boundaries.',
+  '<b>Enlightened absolutism</b>: Frederick the Great, Catherine the Great, and Joseph II adopted reforms without surrendering power.',
+  'Enlightenment ideas supplied the vocabulary of the revolutions that followed.'
+ ]}
+],
+cards:[
+ ['Heliocentrism','Copernicus\u2019s model placing the sun at the centre, supported observationally by Galileo.'],
+ ['Newton\u2019s achievement','Unified terrestrial and celestial motion under universal gravitation.'],
+ ['Empiricism','Bacon\u2019s emphasis on observation and inductive reasoning.'],
+ ['Rationalism','Descartes\u2019s emphasis on reason and deduction from first principles.'],
+ ['Locke','Argued for natural rights and government resting on consent of the governed.'],
+ ['Montesquieu','Advocated separation of powers among branches of government.'],
+ ['Rousseau','Argued for popular sovereignty expressed through the general will.'],
+ ['Mary Wollstonecraft','Argued for women\u2019s education and equal rights.'],
+ ['Salon','Gathering, often hosted by women, where Enlightenment ideas circulated.'],
+ ['Enlightened absolutism','Monarchs adopting Enlightenment reforms while keeping absolute power.']
+],
+quiz:[
+ {q:'Bacon and Descartes differed in that Bacon emphasized:',
+  c:['Deduction from first principles','Observation and inductive reasoning','Divine revelation','Classical authority'],
+  a:1, why:'Bacon built knowledge upward from evidence; Descartes reasoned downward from certain premises.'},
+ {q:'Montesquieu is best known for advocating:',
+  c:['Absolute monarchy','Separation of powers','Religious uniformity','Mercantilism'],
+  a:1, why:'His argument that power must check power directly shaped the US Constitution.'},
+ {q:'Enlightened absolutism is best described as:',
+  c:['Monarchs surrendering power to parliaments','Monarchs adopting reforms while retaining absolute authority','Rule by elected assemblies','Abolition of monarchy'],
+  a:1, why:'Rulers like Frederick and Catherine modernised administration and law without giving up sovereignty.'},
+ {q:'Salons were significant because they:',
+  c:['Trained military officers','Circulated Enlightenment ideas across social boundaries','Enforced Church doctrine','Financed exploration'],
+  a:1, why:'Often hosted by women, they mixed nobles, writers, and philosophers in ways formal institutions did not.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Revolution and Napoleon',
+guide:[
+ {h:'The French Revolution', points:[
+  'Causes: fiscal crisis, an unequal <b>Estates system</b>, resentment of privilege, food shortages, and Enlightenment ideas.',
+  'The Third Estate formed the National Assembly and swore the <b>Tennis Court Oath</b>.',
+  'The <b>Declaration of the Rights of Man and of the Citizen</b> asserted liberty, equality, and popular sovereignty.',
+  'Radicalization produced the <b>Reign of Terror</b> under Robespierre and the Committee of Public Safety.',
+  'Olympe de Gouges and the women\u2019s march on Versailles showed women\u2019s active political role.'
+ ]},
+ {h:'Napoleon and reaction', points:[
+  'Napoleon seized power in 1799 and crowned himself emperor in 1804.',
+  'The <b>Napoleonic Code</b> guaranteed legal equality and property rights while restricting women\u2019s status.',
+  'His conquests spread revolutionary ideas and provoked <b>nationalism</b> in occupied territories.',
+  'The Russian campaign of 1812 destroyed his army and led to his defeat at Waterloo in 1815.',
+  'The <b>Congress of Vienna</b> under <b>Metternich</b> restored legitimate monarchs and rebuilt the balance of power.',
+  '<b>Conservatism</b> dominated after 1815, but liberalism and nationalism kept resurfacing.'
+ ]}
+],
+cards:[
+ ['Estates system','French social division into clergy, nobility, and everyone else, with privilege concentrated at the top.'],
+ ['Tennis Court Oath','Third Estate pledge not to disband until France had a constitution.'],
+ ['Declaration of the Rights of Man','1789 statement of liberty, equality, and popular sovereignty.'],
+ ['Reign of Terror','Radical phase under Robespierre with mass executions of suspected enemies.'],
+ ['Napoleonic Code','Legal system guaranteeing equality before the law while restricting women\u2019s rights.'],
+ ['Effect of Napoleonic conquest','Spread revolutionary ideas and provoked nationalism in occupied lands.'],
+ ['Congress of Vienna','1815 settlement restoring monarchs and rebuilding the balance of power.'],
+ ['Metternich','Austrian statesman who directed the conservative post-Napoleonic order.']
+],
+quiz:[
+ {q:'The Napoleonic Code is best described as:',
+  c:['A restoration of feudal privilege','Legal equality and property rights, with reduced status for women','A democratic constitution','A religious code'],
+  a:1, why:'It preserved revolutionary legal equality for men while rolling back women\u2019s legal position.'},
+ {q:'Napoleon\u2019s conquests unintentionally strengthened:',
+  c:['Feudalism','Nationalism in the occupied territories','The power of the Catholic Church','Absolute monarchy in France'],
+  a:1, why:'Resistance to French rule crystallised local national identities across Europe.'},
+ {q:'The Congress of Vienna aimed primarily to:',
+  c:['Spread revolutionary ideals','Restore legitimate monarchs and restore the balance of power','Unify Germany','Abolish serfdom'],
+  a:1, why:'Metternich sought stability by reversing revolutionary change and preventing French dominance.'},
+ {q:'The Reign of Terror is best understood as:',
+  c:['A foreign invasion','The radical phase using mass executions against suspected enemies','A royalist restoration','A peasant famine'],
+  a:1, why:'The Committee of Public Safety justified terror as necessary to defend the revolution.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Industrialization and Its Effects',
+guide:[
+ {h:'Industrial change', points:[
+  'Britain industrialized first thanks to coal, capital, colonies, agricultural surplus, and stable institutions.',
+  'The <b>factory system</b> replaced cottage industry, imposing clock discipline and division of labour.',
+  'Railways and steam power transformed transport and created national markets.',
+  '<b>Urbanization</b> produced overcrowding, disease, and pollution before sanitation reform.',
+  'A new class structure emerged: industrial <b>bourgeoisie</b> and urban <b>proletariat</b>.'
+ ]},
+ {h:'Responses', points:[
+  '<b>Liberalism</b> favoured free markets, constitutional government, and limited suffrage.',
+  '<b>Socialism</b> and <b>Marx</b> argued that class conflict would end in workers seizing the means of production.',
+  '<b>Labour unions</b> and Chartism demanded wages, hours, and political rights.',
+  'Reform acts gradually widened the franchise; factory acts limited child labour and hours.',
+  'The <b>cult of domesticity</b> defined separate spheres for middle-class men and women.',
+  'Public health and sanitation reforms eventually cut urban mortality sharply.'
+ ]}
+],
+cards:[
+ ['Why Britain industrialized first','Coal, capital, colonial markets, agricultural surplus, and stable institutions.'],
+ ['Factory system','Centralized production imposing clock discipline and division of labour.'],
+ ['Bourgeoisie and proletariat','Industrial middle class owning capital, and wage-earning urban workers.'],
+ ['Liberalism','Support for free markets, constitutions, and limited suffrage.'],
+ ['Marxism','Theory that class conflict ends with workers seizing the means of production.'],
+ ['Chartism','British working-class movement demanding political rights including universal male suffrage.'],
+ ['Factory acts','Legislation limiting child labour and working hours.'],
+ ['Separate spheres','Ideology assigning public life to men and the home to women.']
+],
+quiz:[
+ {q:'The most immediate social consequence of factory-based industry was:',
+  c:['Decline of cities','Rapid urbanization with overcrowding and disease','The end of child labour','Universal suffrage'],
+  a:1, why:'Workers concentrated near factories faster than housing and sanitation could be built.'},
+ {q:'Marx argued that history is driven primarily by:',
+  c:['Great individuals','Class conflict over the means of production','Religious belief','National rivalry'],
+  a:1, why:'He saw economic relations as the base determining political and social structures.'},
+ {q:'Nineteenth-century liberals generally supported:',
+  c:['Universal suffrage immediately','Free markets, constitutions, and property-based suffrage','Restoration of absolute monarchy','Abolition of private property'],
+  a:1, why:'Classical liberalism valued constitutional limits and free trade, but not yet mass democracy.'},
+ {q:'Chartism is best described as:',
+  c:['A religious revival','A working-class movement demanding political rights','A trade agreement','An artistic style'],
+  a:1, why:'Its charter demanded suffrage and reforms to make Parliament answerable to workers.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Nationalism and 19th-Century Thought',
+guide:[
+ {h:'Nation building', points:[
+  'The <b>Revolutions of 1848</b> spread across Europe demanding liberal and national reform, and mostly failed.',
+  'Their failure pushed nationalists toward <b>realpolitik</b> — practical power politics over ideals.',
+  '<b>Cavour</b> unified Italy through diplomacy and alliance with France; Garibaldi delivered the south.',
+  '<b>Bismarck</b> unified Germany through three engineered wars, proclaiming the empire in 1871.',
+  'German unification upset the balance of power and reshaped European alliances.'
+ ]},
+ {h:'Ideas and empire', points:[
+  '<b>Romanticism</b> valued emotion, nature, and the folk past; <b>realism</b> depicted ordinary life plainly.',
+  '<b>Darwin</b>\u2019s theory of natural selection was distorted into <b>Social Darwinism</b> to justify empire and inequality.',
+  '<b>Freud</b> proposed the unconscious; <b>Nietzsche</b> challenged traditional morality and religion.',
+  '<b>New imperialism</b> was driven by industrial demand, national prestige, and civilizing rhetoric.',
+  'The <b>Berlin Conference</b> partitioned Africa among European powers without African participation.',
+  'Mass politics, socialist parties, and the early women\u2019s suffrage movement emerged late in the century.'
+ ]}
+],
+cards:[
+ ['Revolutions of 1848','Widespread liberal and nationalist uprisings that largely failed.'],
+ ['Realpolitik','Politics based on practical power rather than ideology or morality.'],
+ ['Cavour','Piedmontese statesman who unified Italy through diplomacy and alliance.'],
+ ['Bismarck','Prussian chancellor who unified Germany through engineered wars.'],
+ ['Romanticism','Movement valuing emotion, nature, and national folk traditions.'],
+ ['Realism','Artistic movement depicting ordinary life and social conditions plainly.'],
+ ['Social Darwinism','Misapplication of natural selection to justify imperialism and inequality.'],
+ ['New imperialism','Late-century scramble for colonies driven by industry, prestige, and racial ideology.'],
+ ['Berlin Conference','1884–85 meeting where Europeans partitioned Africa among themselves.']
+],
+quiz:[
+ {q:'The failure of the 1848 revolutions led nationalists to conclude that:',
+  c:['Liberal ideals alone could achieve unification','Unification required practical power politics','Monarchy should be abolished everywhere','Industrialization should be reversed'],
+  a:1, why:'Bismarck and Cavour both succeeded by using armies and diplomacy rather than popular idealism.'},
+ {q:'German unification in 1871 most directly:',
+  c:['Restored the balance of power','Upset the balance of power and reshaped alliances','Ended European imperialism','Weakened Prussia'],
+  a:1, why:'A powerful industrial Germany at the centre of Europe alarmed France and Russia in particular.'},
+ {q:'Social Darwinism was used primarily to justify:',
+  c:['Universal education','Imperial conquest and social inequality','Religious toleration','Labour unions'],
+  a:1, why:'"Survival of the fittest" applied to nations and races supplied a pseudo-scientific defence of empire.'},
+ {q:'Romanticism differed from Enlightenment thought by emphasizing:',
+  c:['Reason and universal law','Emotion, nature, and national folk traditions','Mathematical proof','Religious uniformity'],
+  a:1, why:'Romantics reacted against the Enlightenment\u2019s confidence in abstract reason.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · 20th-Century Global Conflicts',
+guide:[
+ {h:'The World Wars', points:[
+  'WWI causes: <b>militarism, alliances, imperialism, nationalism</b>, triggered by the assassination at Sarajevo.',
+  '<b>Total war</b> mobilized entire economies and populations; trench warfare produced enormous casualties.',
+  'The <b>Treaty of Versailles</b> imposed reparations and a war guilt clause on Germany, fuelling later resentment.',
+  'The <b>Russian Revolution</b> (1917) brought Lenin to power; <b>Stalin</b> followed with collectivization, five-year plans, and purges.',
+  'Economic collapse and unresolved grievances enabled <b>fascism</b> under Mussolini and Nazism under Hitler.'
+ ]},
+ {h:'Catastrophe and aftermath', points:[
+  'Appeasement failed to contain German expansion, and war began in 1939.',
+  'The <b>Holocaust</b> systematically murdered six million Jews along with Roma, disabled people, and others.',
+  'Civilian bombing, occupation, and genocide made WWII far deadlier than WWI.',
+  'The war ended European global dominance and left the continent divided.',
+  'The <b>United Nations</b> and later human rights conventions responded directly to the war\u2019s atrocities.'
+ ]}
+],
+cards:[
+ ['Causes of WWI','Militarism, alliances, imperialism, and nationalism, triggered at Sarajevo.'],
+ ['Total war','Mobilizing an entire society and economy for military effort.'],
+ ['Treaty of Versailles','Imposed reparations and war guilt on Germany, fuelling later resentment.'],
+ ['Russian Revolution','1917 overthrow bringing Lenin and the Bolsheviks to power.'],
+ ['Stalin\u2019s policies','Collectivization, five-year plans, and mass purges.'],
+ ['Fascism','Authoritarian nationalist ideology glorifying the state and rejecting liberal democracy.'],
+ ['Appeasement','Conceding to German demands in hope of avoiding war; it failed.'],
+ ['The Holocaust','Systematic murder of six million Jews and millions of other targeted people.']
+],
+quiz:[
+ {q:'The war guilt clause of the Treaty of Versailles mattered because it:',
+  c:['Ended reparations','Fuelled German resentment that later movements exploited','Created the United Nations','Restored the German monarchy'],
+  a:1, why:'Assigning sole blame plus crushing reparations gave nationalist movements a powerful grievance.'},
+ {q:'Total war differs from earlier warfare mainly in that it:',
+  c:['Uses only professional soldiers','Mobilizes entire economies and civilian populations','Avoids civilian areas','Is fought only at sea'],
+  a:1, why:'Industrial capacity and civilian labour became military targets and assets.'},
+ {q:'Appeasement in the 1930s is best described as:',
+  c:['Immediate military response to aggression','Conceding to demands in hope of avoiding war','A trade agreement','A colonial policy'],
+  a:1, why:'Concessions at Munich and elsewhere did not satisfy expansionist aims.'},
+ {q:'A major long-term consequence of WWII for Europe was:',
+  c:['Strengthened colonial empires','The end of European global dominance and a divided continent','Restoration of monarchies','Elimination of nationalism'],
+  a:1, why:'Power shifted to the United States and USSR, and decolonization followed quickly.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Cold War and Contemporary Europe',
+guide:[
+ {h:'A divided continent', points:[
+  'Europe split into a Soviet-dominated East and a US-aligned West behind the <b>Iron Curtain</b>.',
+  'The <b>Marshall Plan</b> rebuilt Western Europe; <b>NATO</b> and the <b>Warsaw Pact</b> formalized the divide.',
+  'Berlin was the flashpoint: the airlift, then the Wall in 1961.',
+  'Uprisings in Hungary (1956) and Czechoslovakia (1968) were crushed by Soviet force.',
+  '<b>Decolonization</b> stripped Britain, France, and others of empire, sometimes violently as in Algeria.'
+ ]},
+ {h:'Integration and change', points:[
+  'Western Europe built extensive <b>welfare states</b> funded by postwar growth.',
+  'Economic integration progressed from the Coal and Steel Community to the EEC and then the <b>European Union</b> under Maastricht.',
+  '<b>1968</b> brought student and worker protests across Europe challenging authority and traditional roles.',
+  'Gorbachev\u2019s reforms led to the fall of the Berlin Wall in 1989 and the Soviet collapse in 1991.',
+  'Post-communist transitions varied widely, and Yugoslavia fragmented violently.',
+  'Contemporary debates centre on migration, the euro, populism, and the limits of integration.'
+ ]}
+],
+cards:[
+ ['Iron Curtain','The division between Soviet-controlled Eastern Europe and the Western bloc.'],
+ ['Marshall Plan','US aid rebuilding Western Europe and blunting communist appeal.'],
+ ['NATO and Warsaw Pact','Opposing military alliances formalizing the Cold War division.'],
+ ['Berlin Wall','Barrier built in 1961 to stop emigration from East to West Berlin.'],
+ ['Decolonization','Postwar loss of European empires, sometimes negotiated and sometimes violent.'],
+ ['Welfare state','Extensive social provision built in postwar Western Europe.'],
+ ['Maastricht Treaty','1992 agreement creating the European Union and paving the way for the euro.'],
+ ['1968 protests','Student and worker movements across Europe challenging established authority.'],
+ ['Fall of the Berlin Wall','1989 event marking the collapse of communist control in Eastern Europe.']
+],
+quiz:[
+ {q:'The Marshall Plan was intended to:',
+  c:['Rearm Germany','Rebuild Western Europe and reduce the appeal of communism','Create the European Union','Fund decolonization'],
+  a:1, why:'Economic recovery was understood as the most effective barrier to communist political gains.'},
+ {q:'The Berlin Wall was built primarily to:',
+  c:['Defend against a Western invasion','Stop East Germans emigrating to the West','Divide Germany permanently by treaty','Protect against air raids'],
+  a:1, why:'Mass emigration of skilled workers was draining East Germany before 1961.'},
+ {q:'European economic integration began with:',
+  c:['The Maastricht Treaty','The Coal and Steel Community','The Warsaw Pact','The Marshall Plan'],
+  a:1, why:'Pooling coal and steel tied French and German industry together, making another war impractical.'},
+ {q:'The collapse of Yugoslavia in the 1990s demonstrated:',
+  c:['The success of European integration','That ethnic nationalism remained a destabilizing force','The strength of the Warsaw Pact','The end of all European conflict'],
+  a:1, why:'Suppressed national identities resurfaced violently once the unifying regime fell.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP ENGLISH LANGUAGE (completes) */
+addUnits('ap-lang', [
+{
+id:'u3', title:'Style and Language',
+guide:[
+ {h:'Diction and syntax', points:[
+  '<b>Diction</b> is word choice; note whether it is formal, colloquial, technical, or emotionally loaded.',
+  '<b>Connotation</b> carries the associations a word triggers beyond its literal meaning.',
+  '<b>Syntax</b> is sentence construction. Short sentences create urgency; long periodic sentences build suspense.',
+  '<b>Parallelism</b> creates rhythm and signals that ideas are equally weighted.',
+  'Shifts in <b>tone</b> often mark the turn of an argument and are worth flagging in an essay.'
+ ]},
+ {h:'Figurative and rhetorical devices', points:[
+  '<b>Metaphor</b> and <b>simile</b> make abstract ideas concrete and emotionally available.',
+  '<b>Irony</b> creates distance between what is said and what is meant.',
+  '<b>Understatement</b> and <b>hyperbole</b> both draw attention by distorting scale.',
+  '<b>Rhetorical questions</b> pull the audience into reasoning rather than asking for information.',
+  'Naming a device earns nothing. Explaining its <i>effect on that audience</i> earns the point.',
+  'Choose two or three devices and analyse them properly rather than listing eight.'
+ ]}
+],
+cards:[
+ ['Diction','Word choice, considered for formality, precision, and emotional loading.'],
+ ['Connotation','The associations a word carries beyond its literal definition.'],
+ ['Syntax','Sentence construction; short sentences create urgency, long ones build suspense.'],
+ ['Parallelism','Repeated grammatical structure creating rhythm and equal emphasis.'],
+ ['Periodic sentence','A sentence that withholds its main clause until the end for suspense.'],
+ ['Irony','A gap between what is stated and what is meant.'],
+ ['Rhetorical question','A question posed for effect rather than to obtain an answer.'],
+ ['Analysing a device','Explain the effect on the specific audience, not merely the name of the device.']
+],
+quiz:[
+ {q:'Which sentence does real style analysis?',
+  c:['The author uses a metaphor.','The author uses several rhetorical devices.','Comparing the policy to a leaking dam turns a budget abstraction into an image of imminent collapse.','The syntax is varied.'],
+  a:2, why:'It names the choice and explains the effect it produces for the reader, which is what the rubric rewards.'},
+ {q:'A writer shifts from long, flowing sentences to a series of three-word sentences. The most likely effect is:',
+  c:['Increased formality','A sense of urgency and emphasis','Reduced credibility','A change of topic only'],
+  a:1, why:'Abrupt syntax slows reading and forces attention onto each statement.'},
+ {q:'Connotation refers to:',
+  c:['A word\u2019s dictionary definition','The associations and feelings a word carries','The length of a sentence','The order of clauses'],
+  a:1, why:'Choosing "thrifty" over "cheap" changes the feeling while keeping the denotation.'},
+ {q:'The most common style-analysis mistake is:',
+  c:['Quoting too briefly','Listing devices without explaining their effect','Discussing tone','Referring to the audience'],
+  a:1, why:'Device-spotting without analysis earns no evidence-and-commentary credit.'}
+]
+},
+{
+id:'u4', title:'Multiple-Choice Strategy',
+guide:[
+ {h:'How the section works', points:[
+  'Roughly 45 questions in 60 minutes across five passages, split between reading and writing questions.',
+  '<b>Reading</b> questions ask about rhetorical choices, purpose, and audience.',
+  '<b>Writing</b> questions ask you to revise a draft for a stated goal.',
+  'No penalty for guessing, so answer everything.',
+  'Budget roughly a minute per question and do not linger on any one item.'
+ ]},
+ {h:'Attacking the questions', points:[
+  'Read the question stem carefully — it usually names the exact goal the answer must serve.',
+  'For "in order to" questions, identify the purpose first, then find the choice that achieves it.',
+  'Eliminate answers that are true but do not answer the question asked.',
+  'Distrust absolute language: "always," "never," "proves," and "entirely" usually overstate.',
+  'For revision questions, reread the sentences before and after the underlined portion.',
+  'When two answers look identical, one of them adds a claim the passage never makes — find it.'
+ ]}
+],
+cards:[
+ ['AP Lang MCQ format','About 45 questions in 60 minutes across five passages.'],
+ ['Reading vs. writing questions','Reading asks about rhetorical choices; writing asks you to revise a draft.'],
+ ['"In order to" questions','Identify the stated purpose first, then match the choice that achieves it.'],
+ ['True-but-irrelevant trap','An answer that is accurate but does not answer the question asked.'],
+ ['Extreme-language trap','Choices with "always," "never," or "proves" usually overstate the passage.'],
+ ['Revision questions','Reread the surrounding sentences before choosing.'],
+ ['Guessing policy','No penalty, so never leave a question blank.']
+],
+quiz:[
+ {q:'A question asks which sentence best achieves the writer\u2019s goal of qualifying a claim. The best approach is to:',
+  c:['Pick the longest option','Name the goal first, then test each option against it','Pick the option with the strongest wording','Choose the first accurate statement'],
+  a:1, why:'The stem defines the standard; an option can be well written and still fail the stated goal.'},
+ {q:'Two answer choices both seem accurate. The likely difference is that one:',
+  c:['Is longer','Adds a claim the passage never makes','Uses simpler vocabulary','Appears later in the list'],
+  a:1, why:'Distractors usually overreach by a single unsupported step.'},
+ {q:'On the AP Lang multiple-choice section you should:',
+  c:['Leave hard questions blank','Answer every question','Skip the writing questions','Spend five minutes per question'],
+  a:1, why:'There is no wrong-answer penalty, so a blank is strictly worse than a guess.'},
+ {q:'An answer choice claims the author "proves" a point. This is suspicious because:',
+  c:['Authors never make claims','Absolute language usually overstates what a passage does','Proof is always implied','It is too short'],
+  a:1, why:'Rhetorical passages argue and persuade; they rarely prove anything in a strict sense.'}
+]
+}
+]);
+
+/* ------------------------------------------ AP PHYSICS 1 (completes) */
+addUnits('ap-phys1', [
+{
+id:'u3', title:'Unit 3 · Work, Energy, and Power',
+guide:[
+ {h:'Work and energy', points:[
+  '<b>Work</b> = Fd cos θ. A force perpendicular to motion does no work.',
+  '<b>Kinetic energy</b> = ½mv². Doubling speed quadruples kinetic energy.',
+  'Gravitational potential energy = mgh; spring potential energy = ½kx².',
+  'The <b>work-energy theorem</b>: net work equals the change in kinetic energy.',
+  '<b>Conservation of energy</b>: total mechanical energy stays constant when only conservative forces act.'
+ ]},
+ {h:'Power and dissipation', points:[
+  '<b>Power</b> = work ÷ time = Fv, measured in watts.',
+  'Friction converts mechanical energy into thermal energy, so mechanical energy is not conserved.',
+  'Energy bar charts track transfers between kinetic, potential, and thermal forms.',
+  'A system definition determines which forces are internal and which do external work.',
+  'Energy methods often solve problems far faster than kinematics when time is not involved.'
+ ]}
+],
+cards:[
+ ['Work formula','W = Fd cos θ; perpendicular forces do no work.'],
+ ['Kinetic energy','KE = ½mv²; doubling speed quadruples it.'],
+ ['Gravitational potential energy','PE = mgh, relative to a chosen reference height.'],
+ ['Spring potential energy','PE = ½kx².'],
+ ['Work-energy theorem','Net work on an object equals its change in kinetic energy.'],
+ ['Conservation of mechanical energy','Total mechanical energy is constant when only conservative forces act.'],
+ ['Power','Work per unit time, also equal to Fv, measured in watts.'],
+ ['Effect of friction on energy','Converts mechanical energy into thermal energy, so it is not conserved.']
+],
+quiz:[
+ {q:'A car\u2019s speed doubles. Its kinetic energy becomes:',
+  c:['Twice as large','Four times as large','Half as large','Unchanged'],
+  a:1, why:'KE depends on v², so doubling v multiplies energy by four — which is why stopping distance grows so fast.'},
+ {q:'A waiter carries a tray horizontally at constant speed. The work done by the upward force on the tray is:',
+  c:['Positive and large','Zero','Negative','Equal to mgh'],
+  a:1, why:'The force is perpendicular to the displacement, so cos 90° = 0.'},
+ {q:'A block slides down a rough incline. Compared with a frictionless incline, its speed at the bottom is:',
+  c:['Greater','Smaller, because some energy became thermal','The same','Zero'],
+  a:1, why:'Friction dissipates part of the initial potential energy as heat rather than kinetic energy.'},
+ {q:'Two engines do the same work, but one takes half the time. That engine has:',
+  c:['Half the power','The same power','Twice the power','Four times the power'],
+  a:2, why:'Power is work divided by time, so halving the time doubles the power.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Linear Momentum',
+guide:[
+ {h:'Momentum and impulse', points:[
+  '<b>Momentum</b> p = mv is a vector pointing in the direction of velocity.',
+  '<b>Impulse</b> J = FΔt = Δp. Extending the collision time reduces the force.',
+  'This is why airbags, crumple zones, and bending your knees on landing reduce injury.',
+  'On a force-time graph, the area under the curve is the impulse.',
+  'Newton\u2019s third law means the impulses two colliding objects exert on each other are equal and opposite.'
+ ]},
+ {h:'Collisions', points:[
+  '<b>Momentum is conserved</b> in any collision with no net external force.',
+  '<b>Elastic</b> collisions conserve both momentum and kinetic energy.',
+  '<b>Inelastic</b> collisions conserve momentum but lose kinetic energy to heat and deformation.',
+  'A <b>perfectly inelastic</b> collision has the objects stick together and move as one.',
+  'Explosions run the process backward: total momentum stays zero if it started at zero.',
+  'Always set a positive direction before applying conservation of momentum.'
+ ]}
+],
+cards:[
+ ['Momentum','p = mv, a vector in the direction of velocity.'],
+ ['Impulse','J = FΔt = change in momentum.'],
+ ['Why airbags reduce injury','They extend collision time, reducing the force for the same change in momentum.'],
+ ['Area under a force-time graph','Equals the impulse delivered.'],
+ ['Conservation of momentum','Total momentum is constant when no net external force acts.'],
+ ['Elastic collision','Conserves both momentum and kinetic energy.'],
+ ['Inelastic collision','Conserves momentum but loses kinetic energy to heat and deformation.'],
+ ['Perfectly inelastic collision','Objects stick together and move with a common velocity.']
+],
+quiz:[
+ {q:'An airbag reduces injury because it:',
+  c:['Reduces the change in momentum','Increases the collision time, lowering the force','Increases the impulse','Eliminates momentum'],
+  a:1, why:'The change in momentum is fixed by the crash; spreading it over more time lowers the peak force.'},
+ {q:'Two carts stick together after colliding. This collision is:',
+  c:['Elastic','Perfectly inelastic','Explosive','Frictionless'],
+  a:1, why:'Sticking together is the defining feature; momentum is conserved but kinetic energy is not.'},
+ {q:'In an isolated system, an explosion sends two fragments apart. The total momentum after is:',
+  c:['Greater than before','Less than before','Equal to the momentum before','Always zero regardless of the initial state'],
+  a:2, why:'With no external force, momentum is conserved, so it equals whatever it was initially.'},
+ {q:'Which quantity is conserved in ALL collisions with no external force?',
+  c:['Kinetic energy','Momentum','Speed','Mechanical energy'],
+  a:1, why:'Only elastic collisions also conserve kinetic energy; momentum is conserved in every case.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Torque and Rotational Dynamics',
+guide:[
+ {h:'Torque and rotational inertia', points:[
+  '<b>Torque</b> τ = rF sin θ. Force applied farther from the pivot produces more torque.',
+  'Applying force perpendicular to the lever arm maximizes torque.',
+  '<b>Rotational inertia</b> depends on mass <i>and</i> how far that mass sits from the axis.',
+  'Mass concentrated far from the axis resists angular acceleration more.',
+  'Newton\u2019s second law for rotation: <b>τ_net = Iα</b>.'
+ ]},
+ {h:'Rotational motion and equilibrium', points:[
+  'Angular kinematics mirrors linear kinematics with θ, ω, and α replacing x, v, and a.',
+  'Tangential quantities relate by v = rω and a = rα.',
+  '<b>Rotational equilibrium</b> requires net torque to be zero.',
+  'Full <b>static equilibrium</b> requires both net force and net torque to be zero.',
+  'For balance problems, choose the pivot at an unknown force to eliminate it from the torque equation.'
+ ]}
+],
+cards:[
+ ['Torque','τ = rF sin θ; force applied farther from the pivot creates more torque.'],
+ ['Maximizing torque','Apply force perpendicular to the lever arm, as far from the pivot as possible.'],
+ ['Rotational inertia','Resistance to angular acceleration, depending on mass and its distance from the axis.'],
+ ['Newton\u2019s second law for rotation','Net torque equals rotational inertia times angular acceleration.'],
+ ['Relating linear and angular','v = rω and a = rα.'],
+ ['Rotational equilibrium','Net torque is zero.'],
+ ['Static equilibrium','Both net force and net torque are zero.'],
+ ['Choosing a pivot','Place it at an unknown force to remove that force from the torque equation.']
+],
+quiz:[
+ {q:'To loosen a stubborn bolt you should:',
+  c:['Push closer to the bolt','Use a longer wrench and push perpendicular to it','Push parallel to the wrench','Reduce the applied force'],
+  a:1, why:'Torque rises with both lever arm length and the perpendicular component of the force.'},
+ {q:'Two discs have equal mass, but one has its mass concentrated at the rim. That disc will:',
+  c:['Have less rotational inertia','Have greater rotational inertia and angularly accelerate more slowly','Have identical rotational inertia','Not rotate at all'],
+  a:1, why:'Rotational inertia depends on how far the mass sits from the axis, not mass alone.'},
+ {q:'An object in static equilibrium must have:',
+  c:['Zero net force only','Zero net torque only','Both zero net force and zero net torque','Zero velocity only'],
+  a:2, why:'Without both, the object would translate or rotate.'},
+ {q:'A point at radius r on a rotating disc has tangential speed:',
+  c:['ω/r','rω','r/ω','rω²'],
+  a:1, why:'v = rω, so points farther from the axis move faster despite the same angular speed.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Energy and Momentum of Rotating Systems',
+guide:[
+ {h:'Rotational energy and angular momentum', points:[
+  '<b>Rotational kinetic energy</b> = ½Iω².',
+  'A rolling object has both translational and rotational kinetic energy, so it accelerates more slowly than a sliding one.',
+  '<b>Angular momentum</b> L = Iω for a rigid body.',
+  '<b>Conservation of angular momentum</b>: with no net external torque, L stays constant.',
+  'Reducing I increases ω proportionally — a spinning skater pulling in their arms speeds up.'
+ ]},
+ {h:'Applying conservation', points:[
+  'For a rolling race down an incline, the object with less rotational inertia per unit mass wins.',
+  'A solid sphere beats a hollow sphere, which beats a hoop, regardless of mass or radius.',
+  'Angular momentum is conserved separately from linear momentum and from energy.',
+  'A collision can conserve angular momentum while losing kinetic energy.',
+  'Planetary orbits speed up near the sun for the same reason a skater does — smaller r means larger ω.'
+ ]}
+],
+cards:[
+ ['Rotational kinetic energy','KE = ½Iω².'],
+ ['Rolling objects','Have both translational and rotational kinetic energy, so they accelerate more slowly.'],
+ ['Angular momentum','L = Iω for a rigid rotating body.'],
+ ['Conservation of angular momentum','L is constant when no net external torque acts.'],
+ ['Skater pulling arms in','Reducing rotational inertia increases angular speed to keep L constant.'],
+ ['Rolling race result','Lower rotational inertia per unit mass wins: solid sphere beats hollow beats hoop.'],
+ ['Independence of conservation laws','Angular momentum, linear momentum, and energy are conserved separately.']
+],
+quiz:[
+ {q:'A spinning skater pulls their arms in. Their angular speed:',
+  c:['Decreases, since inertia falls','Increases, because angular momentum is conserved','Stays the same','Drops to zero'],
+  a:1, why:'With L fixed and I reduced, ω must rise proportionally.'},
+ {q:'A solid sphere and a hoop of equal mass roll down the same incline. The winner is:',
+  c:['The hoop','The solid sphere','They tie','It depends on the mass'],
+  a:1, why:'The sphere has less rotational inertia per unit mass, so more energy goes into translation.'},
+ {q:'Angular momentum is conserved when:',
+  c:['No net external force acts','No net external torque acts','Kinetic energy is conserved','The object is at rest'],
+  a:1, why:'Torque is to rotation what force is to translation, so torque is the relevant condition.'},
+ {q:'A rolling object arrives at the bottom of a ramp slower than a sliding frictionless one because:',
+  c:['It has more mass','Some energy went into rotational kinetic energy','Gravity is weaker','It travelled farther'],
+  a:1, why:'The same initial potential energy is split between translation and rotation.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Oscillations',
+guide:[
+ {h:'Simple harmonic motion', points:[
+  '<b>SHM</b> occurs when the restoring force is proportional to displacement and directed toward equilibrium.',
+  'For a spring, <b>Hooke\u2019s law</b> gives F = −kx.',
+  '<b>Amplitude</b> is maximum displacement; <b>period</b> T is the time for one full cycle; frequency f = 1/T.',
+  'Spring period: T = 2π√(m/k) — it depends on mass and stiffness but <b>not</b> on amplitude.',
+  'Pendulum period: T = 2π√(L/g) — it depends on length and gravity but <b>not</b> on mass or amplitude for small angles.'
+ ]},
+ {h:'Energy in oscillation', points:[
+  'At maximum displacement, velocity is zero and potential energy is at its maximum.',
+  'At equilibrium, potential energy is zero and kinetic energy is at its maximum.',
+  'Total mechanical energy stays constant in ideal SHM: E = ½kA².',
+  'Acceleration is greatest at the extremes and zero at equilibrium.',
+  'Damping removes energy, shrinking amplitude while leaving the period nearly unchanged.'
+ ]}
+],
+cards:[
+ ['Simple harmonic motion','Motion where restoring force is proportional to displacement and points toward equilibrium.'],
+ ['Hooke\u2019s law','F = −kx, with the minus sign indicating a restoring force.'],
+ ['Spring period','T = 2π√(m/k); independent of amplitude.'],
+ ['Pendulum period','T = 2π√(L/g); independent of mass and, for small angles, of amplitude.'],
+ ['Where velocity is maximum','At the equilibrium position.'],
+ ['Where acceleration is maximum','At the points of maximum displacement.'],
+ ['Total energy in SHM','E = ½kA², constant in the absence of damping.'],
+ ['Damping','Energy loss that reduces amplitude while barely changing the period.']
+],
+quiz:[
+ {q:'Doubling the amplitude of a mass on a spring changes its period by:',
+  c:['Doubling it','Halving it','Not at all','Quadrupling it'],
+  a:2, why:'Period depends only on mass and spring constant, which is what makes SHM useful for timekeeping.'},
+ {q:'A pendulum is moved to the moon, where g is smaller. Its period will:',
+  c:['Decrease','Increase','Stay the same','Become zero'],
+  a:1, why:'T = 2π√(L/g), so a smaller g gives a longer period.'},
+ {q:'At maximum displacement in SHM, the mass has:',
+  c:['Maximum velocity and zero acceleration','Zero velocity and maximum acceleration','Maximum velocity and maximum acceleration','Zero of both'],
+  a:1, why:'The restoring force peaks at the extremes, where the mass has momentarily stopped.'},
+ {q:'Increasing the mass on a spring will:',
+  c:['Decrease the period','Increase the period','Leave the period unchanged','Increase the frequency'],
+  a:1, why:'T = 2π√(m/k), so more mass means slower oscillation.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Fluids',
+guide:[
+ {h:'Pressure and buoyancy', points:[
+  '<b>Density</b> ρ = m/V. <b>Pressure</b> P = F/A, measured in pascals.',
+  'Pressure in a fluid at depth h is P = P₀ + ρgh — it depends on depth, not on container shape.',
+  '<b>Pascal\u2019s principle</b>: pressure applied to an enclosed fluid transmits undiminished, which is how hydraulic lifts multiply force.',
+  '<b>Archimedes\u2019 principle</b>: buoyant force equals the weight of the fluid displaced.',
+  'An object floats when its average density is less than the fluid\u2019s, and sinks when it is greater.',
+  'A floating object displaces fluid weighing exactly as much as the object does.'
+ ]},
+ {h:'Fluid flow', points:[
+  'The <b>continuity equation</b> A₁v₁ = A₂v₂ means fluid speeds up through a narrower pipe.',
+  '<b>Bernoulli\u2019s principle</b>: where fluid speed increases, pressure decreases.',
+  'This explains lift on a wing and why shower curtains pull inward.',
+  'Ideal fluid assumptions: incompressible, non-viscous, and steady flow.',
+  'Volume flow rate stays constant along a pipe with no leaks.'
+ ]}
+],
+cards:[
+ ['Density','ρ = mass ÷ volume.'],
+ ['Pressure','P = force ÷ area, measured in pascals.'],
+ ['Pressure with depth','P = P₀ + ρgh; depends on depth, not container shape.'],
+ ['Pascal\u2019s principle','Pressure applied to an enclosed fluid transmits undiminished throughout.'],
+ ['Archimedes\u2019 principle','Buoyant force equals the weight of the fluid displaced.'],
+ ['Condition for floating','Average density less than that of the fluid.'],
+ ['Continuity equation','A₁v₁ = A₂v₂; fluid speeds up in a narrower pipe.'],
+ ['Bernoulli\u2019s principle','Where fluid speed increases, pressure decreases.']
+],
+quiz:[
+ {q:'A block floats with 40% of its volume submerged. Its density relative to the fluid is:',
+  c:['40% of the fluid density','60% of the fluid density','140% of the fluid density','Equal to the fluid density'],
+  a:0, why:'A floating object displaces its own weight, so the submerged fraction equals the density ratio.'},
+ {q:'Water flows from a wide pipe into a narrow one. In the narrow section the water:',
+  c:['Slows down and pressure rises','Speeds up and pressure falls','Speeds up and pressure rises','Stops entirely'],
+  a:1, why:'Continuity forces higher speed, and Bernoulli then requires lower pressure.'},
+ {q:'Pressure at the bottom of a container depends on:',
+  c:['The container\u2019s shape','The depth of the fluid','The total volume of fluid','The container material'],
+  a:1, why:'P = ρgh involves only depth, density, and gravity, which is the hydrostatic paradox.'},
+ {q:'A hydraulic lift multiplies force using:',
+  c:['Archimedes\u2019 principle','Pascal\u2019s principle','Bernoulli\u2019s principle','The continuity equation'],
+  a:1, why:'Equal pressure across a larger piston area produces a proportionally larger force.'}
+]
+}
+]);
+</script>
+<script>
 /* ============================================================
    FULL AP CATALOG
    Every AP course, with its real College Board unit list and the
@@ -4439,7 +6609,8 @@ const CATALOG = [
 
 /* ---------------- English ---------------- */
 {id:'ap-lang', g:'English', color:'#8E4A6B', fmt:{q:45,min:60},
- units:['Skill · Rhetorical Situation: Reading','Skill · Rhetorical Situation: Writing','Skill · Claims and Evidence: Reading','Skill · Claims and Evidence: Writing','Skill · Reasoning and Organization: Reading','Skill · Reasoning and Organization: Writing','Skill · Style: Reading','Skill · Style: Writing','Essay · Synthesis','Essay · Rhetorical Analysis','Essay · Argument']},
+ note:'This course is organised by skill rather than by content units. StudyBuddy groups the same material into the four things you are actually assessed on.',
+ units:['Rhetorical Analysis','Argument and Synthesis','Style and Language','Multiple-Choice Strategy']},
 
 {id:'ap-lit', g:'English', name:'AP English Literature', short:'AP Lit', color:'#7A3F5C', fmt:{q:55,min:60},
  blurb:'Close reading of short fiction, poetry, and longer fiction or drama.',
@@ -4547,6 +6718,116 @@ const FORMAL = {
     if (!c.group) c.group = 'Other';
   });
 })();
+</script>
+<script>
+/* ------------------------------------------ AP CALCULUS BC (completes)
+   BC covers all of AB plus two additional units, so it reuses the AB
+   material and adds what is unique to BC. */
+(function buildBC() {
+  const ab = COURSES.find(c => c.id === 'ap-calc-ab');
+  const bc = COURSES.find(c => c.id === 'ap-calc-bc');
+  if (!ab || !bc) return;
+  bc.units = ab.units.map(u => JSON.parse(JSON.stringify(u)));
+})();
+
+/* any catalogued course that now has written units is no longer an outline */
+function clearOutlineFlags() { COURSES.forEach(c => { if (c.outlineOnly && c.units.length) c.outlineOnly = false; }); }
+
+addUnits('ap-calc-bc', [
+{
+id:'u9', title:'Unit 9 · Parametric, Polar, and Vector-Valued Functions',
+guide:[
+ {h:'Parametric and vector functions', points:[
+  'For parametric equations, <b>dy/dx = (dy/dt) ÷ (dx/dt)</b>.',
+  'The second derivative is d/dt(dy/dx) ÷ (dx/dt) — divide by dx/dt again, not by dt².',
+  '<b>Speed</b> = √((dx/dt)² + (dy/dt)²).',
+  '<b>Arc length</b> = ∫√((dx/dt)² + (dy/dt)²)dt.',
+  'For a vector-valued function, position, velocity, and acceleration are found component by component.',
+  'Total distance travelled is the integral of speed, not of velocity.'
+ ]},
+ {h:'Polar functions', points:[
+  'Conversions: x = r cos θ, y = r sin θ, r² = x² + y².',
+  '<b>Area in polar</b> = ½∫r²dθ between the bounding angles.',
+  'For the area between two polar curves, use ½∫(r_outer² − r_inner²)dθ.',
+  'Find the bounds by solving where the curves intersect, and sketch first to confirm.',
+  'The slope of a polar curve still requires converting to parametric form in x and y.'
+ ]}
+],
+cards:[
+ ['Parametric derivative','dy/dx = (dy/dt) ÷ (dx/dt).'],
+ ['Parametric second derivative','d/dt(dy/dx) divided by dx/dt.'],
+ ['Speed of a parametric curve','√((dx/dt)² + (dy/dt)²).'],
+ ['Parametric arc length','∫√((dx/dt)² + (dy/dt)²)dt.'],
+ ['Total distance for a moving particle','The integral of speed, not of velocity.'],
+ ['Polar to rectangular','x = r cos θ, y = r sin θ, r² = x² + y².'],
+ ['Polar area','½∫r²dθ over the bounding angles.'],
+ ['Area between polar curves','½∫(r_outer² − r_inner²)dθ.']
+],
+quiz:[
+ {q:'For x = t², y = t³, dy/dx equals:',
+  c:['3t','3t/2','2t/3','6t'],
+  a:1, why:'dy/dt = 3t² and dx/dt = 2t, so dy/dx = 3t²/2t = 3t/2.'},
+ {q:'The area enclosed by one petal of a polar curve is found using:',
+  c:['∫r dθ','½∫r²dθ','∫r²dθ','2π∫r dθ'],
+  a:1, why:'The polar area formula sums infinitesimal circular sectors of area ½r²dθ.'},
+ {q:'Total distance travelled by a parametric particle is:',
+  c:['∫(dy/dt)dt','∫√((dx/dt)² + (dy/dt)²)dt','∫(dx/dt)dt','The displacement magnitude'],
+  a:1, why:'Integrating speed accumulates path length regardless of direction changes.'},
+ {q:'The second derivative for a parametric curve is found by:',
+  c:['Differentiating dy/dx with respect to x directly','Differentiating dy/dx with respect to t, then dividing by dx/dt','Dividing d²y/dt² by d²x/dt²','Squaring dy/dx'],
+  a:1, why:'The chain rule requires converting the t-derivative back into an x-derivative.'}
+]
+},
+{
+id:'u10', title:'Unit 10 · Infinite Sequences and Series',
+guide:[
+ {h:'Convergence tests', points:[
+  '<b>nth term test</b>: if the terms do not approach 0, the series diverges. It can never prove convergence.',
+  '<b>Geometric series</b> Σarⁿ converges when |r| < 1, with sum a/(1−r).',
+  '<b>p-series</b> Σ1/nᵖ converges when p > 1. The harmonic series (p = 1) diverges.',
+  '<b>Ratio test</b>: converges if lim|aₙ₊₁/aₙ| < 1; inconclusive at exactly 1.',
+  'Comparison and limit comparison tests match a series against a known one.',
+  '<b>Alternating series test</b>: converges if terms decrease in magnitude to 0.'
+ ]},
+ {h:'Power and Taylor series', points:[
+  '<b>Absolute convergence</b> implies convergence; <b>conditional convergence</b> means it converges but not absolutely.',
+  '<b>Radius and interval of convergence</b> come from the ratio test; always check the endpoints separately.',
+  '<b>Taylor series</b>: Σ f⁽ⁿ⁾(a)(x−a)ⁿ ÷ n!. A <b>Maclaurin series</b> is centred at a = 0.',
+  'Memorize the Maclaurin series for eˣ, sin x, cos x, and 1/(1−x).',
+  '<b>Alternating series error bound</b>: the error is less than the first omitted term.',
+  '<b>Lagrange error bound</b> bounds the remainder of a Taylor polynomial.'
+ ]}
+],
+cards:[
+ ['nth term test','If terms do not approach 0 the series diverges; it never proves convergence.'],
+ ['Geometric series','Σarⁿ converges when |r| < 1 with sum a ÷ (1 − r).'],
+ ['p-series','Σ1/nᵖ converges when p > 1; the harmonic series diverges.'],
+ ['Ratio test','Converges if the limit of |aₙ₊₁/aₙ| is less than 1; inconclusive at 1.'],
+ ['Alternating series test','Converges if terms decrease in magnitude to zero.'],
+ ['Conditional convergence','The series converges but the series of absolute values does not.'],
+ ['Interval of convergence','Found with the ratio test; endpoints must be checked separately.'],
+ ['Taylor series','Σ f⁽ⁿ⁾(a)(x − a)ⁿ ÷ n!; centred at zero it is a Maclaurin series.'],
+ ['Maclaurin series for eˣ','1 + x + x²/2! + x³/3! + …'],
+ ['Alternating series error bound','The error is smaller than the first omitted term.']
+],
+quiz:[
+ {q:'The series Σ1/n^(1/2) is:',
+  c:['Convergent, since it is a p-series with p > 1','Divergent, since p = 1/2 is not greater than 1','Convergent by the ratio test','Convergent by the alternating series test'],
+  a:1, why:'A p-series converges only when p exceeds 1, and 1/2 does not.'},
+ {q:'The nth term test can be used to:',
+  c:['Prove a series converges','Prove a series diverges','Find the sum of a series','Find the radius of convergence'],
+  a:1, why:'If terms do not shrink to zero the series cannot converge, but shrinking terms alone guarantee nothing.'},
+ {q:'The geometric series 3 + 3/2 + 3/4 + … converges to:',
+  c:['3','4.5','6','It diverges'],
+  a:2, why:'a = 3 and r = 1/2, so the sum is 3 ÷ (1 − 1/2) = 6.'},
+ {q:'After finding the radius of convergence with the ratio test, you must:',
+  c:['Stop, the interval is complete','Test both endpoints separately','Apply the nth term test','Differentiate the series'],
+  a:1, why:'The ratio test is inconclusive when the limit equals 1, which is exactly what happens at the endpoints.'}
+]
+}
+]);
+
+clearOutlineFlags();
 </script>
 <script>
 /* ============================================================
@@ -6313,7 +8594,7 @@ CONFIG.supabase = {
   /* Paste your project URL from Supabase → Project Settings → API.
      It looks like https://abcdefghijk.supabase.co
      Sign-in and group study stay switched off until this is filled in. */
-  url: 'https://your-ref.supabase.co',
+  url: '',
   publishableKey: 'sb_publishable_UE8ZBYXw6oO1L1h_1ZKNzQ_34Ys_6DF'
 };
 

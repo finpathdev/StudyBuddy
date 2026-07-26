@@ -9316,6 +9316,13 @@ const PWA = { prompt: null, installed: false, swOK: false };
   ttl.name = 'apple-mobile-web-app-title';
   ttl.content = 'StudyBuddy';
   document.head.appendChild(ttl);
+  /* iOS ignores the manifest icons and reads this instead. It is deliberately
+     square: iOS applies its own rounded mask, and a pre-rounded image would
+     get rounded twice and look pinched at the corners. */
+  const touch = document.createElement('link');
+  touch.rel = 'apple-touch-icon';
+  touch.href = './apple-touch-icon.png';
+  document.head.appendChild(touch);
 
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();

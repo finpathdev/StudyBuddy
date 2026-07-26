@@ -9327,6 +9327,11 @@ const PWA = { prompt: null, installed: false, swOK: false };
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault();
     PWA.prompt = e;
+    /* The browser only offers this when the app is NOT installed, so its
+       arrival is proof the app is gone. Clears the stale flag after an
+       uninstall, which otherwise left the install page permanently hidden. */
+    if (store.get('sb.installed', false)) store.set('sb.installed', false);
+    PWA.installed = false;
     if (location.hash.startsWith('#/install')) render();
     const btn = document.getElementById('installfab');
     if (btn) btn.classList.remove('hidden');
@@ -9337,12 +9342,27 @@ const PWA = { prompt: null, installed: false, swOK: false };
     if (location.hash.startsWith('#/install')) render();
   });
 
+  verifyInstalled();
+
   if (servable && 'serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
       .then(() => { PWA.swOK = true; })
       .catch(() => { PWA.swOK = false; });
   }
 })();
+
+/* Chrome can tell us whether the installed copy still exists. */
+async function verifyInstalled() {
+  if (!navigator.getInstalledRelatedApps) return;
+  try {
+    const apps = await navigator.getInstalledRelatedApps();
+    const stillThere = apps.some(a => a.platform === 'webapp');
+    if (!stillThere && store.get('sb.installed', false)) {
+      store.set('sb.installed', false);
+      if (location.hash.startsWith('#/install')) render();
+    }
+  } catch (e) {}
+}
 
 function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches ||
@@ -9440,15 +9460,29 @@ function vInstall() {
   const label = { desktop: 'Laptop', ios: 'iPhone / iPad', android: 'Android' };
 
   if (already) {
+    const running = isStandalone();
     return topbar() + `
-    <div class="page-head fade"><span class="eyebrow">Installed</span><h1>You are running the app</h1>
-    <p>StudyBuddy is installed on this device. No browser bar, and it keeps working with no connection.</p></div>
-    <div class="card" style="max-width:560px">
-      <span class="eyebrow">Offline</span>
-      <h3 style="margin-bottom:6px">${PWA.swOK ? 'Offline mode is on' : 'Offline mode is not active'}</h3>
-      <p style="color:var(--ink-soft);font-size:.9rem">${PWA.swOK
-        ? 'Guides, flashcards, quizzes and your mistake book all work with no signal. The AI tutor and sign-in still need a connection.'
-        : 'The offline worker did not register. Check that <b>sw.js</b> sits beside index.html in your repo.'}</p>
+    <div class="page-head fade">
+      <span class="eyebrow">Installed</span>
+      <h1>${running ? 'You are running the app' : 'StudyBuddy is installed on this device'}</h1>
+      <p>${running
+        ? 'No browser bar, and it keeps working with no connection.'
+        : 'Open it from your home screen or dock. If you deleted it, use the button below to install it again.'}</p>
+    </div>
+    <div class="grid g2" style="align-items:start">
+      <div class="card">
+        <span class="eyebrow">Offline</span>
+        <h3 style="margin-bottom:6px">${PWA.swOK ? 'Offline mode is on' : 'Offline mode is not active'}</h3>
+        <p style="color:var(--ink-soft);font-size:.9rem">${PWA.swOK
+          ? 'Guides, flashcards, quizzes and your mistake book all work with no signal. The AI tutor and sign-in still need a connection.'
+          : 'The offline worker did not register. Check that <b>sw.js</b> sits beside index.html.'}</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Deleted it?</span>
+        <h3 style="margin-bottom:6px">Install it again</h3>
+        <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">If the app is no longer on this device, this brings back the install options.</p>
+        <button class="btn mark" onclick="forgetInstall()">Show install options</button>
+      </div>
     </div>`;
   }
   if (local) {
@@ -9491,6 +9525,13 @@ function vInstall() {
     </div>
   </div>`;
 }
+/* Clear the remembered install so the options come back after an uninstall. */
+function forgetInstall() {
+  store.set('sb.installed', false);
+  PWA.installed = false;
+  render();
+}
+
 function copyPageUrl() {
   const t = $('#pageurl'); t.select();
   const done = () => { $('#urlcopied').innerHTML = `<p style="color:var(--green);font-size:.83rem;margin:8px 0 0">Copied — send it to your phone.</p>`; };
@@ -9501,7 +9542,7 @@ function copyPageUrl() {
 /* a quiet prompt in the corner once the browser says installing is possible */
 function mountInstallFab() {
   if (document.getElementById('installfab')) return;
-  if (isStandalone() || store.get('sb.installed', false)) return;
+  if (isStandalone()) return;
   document.body.insertAdjacentHTML('beforeend',
     `<a class="ask-fab hidden" id="installfab" href="#/install"
         style="left:22px;right:auto;background:var(--paper);color:var(--ink);border-color:var(--line)">

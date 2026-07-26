@@ -6831,6 +6831,228 @@ clearOutlineFlags();
 </script>
 <script>
 /* ============================================================
+   AP BIOLOGY — split the grouped units into the eight real
+   College Board units so the course reads 8 of 8 and each unit
+   can be studied on its own.
+   ============================================================ */
+(function splitBio() {
+  const c = COURSES.find(x => x.id === 'ap-bio');
+  if (c) c.units = c.units.filter(u => u.id !== 'u5' && u.id !== 'u7');
+})();
+
+addUnits('ap-bio', [
+{
+id:'u5', title:'Unit 5 · Heredity',
+guide:[
+ {h:'Meiosis and variation', points:[
+  '<b>Meiosis</b> makes four genetically unique haploid gametes through two divisions; mitosis makes two identical diploid cells.',
+  '<b>Crossing over</b> in prophase I swaps segments between homologous chromosomes.',
+  '<b>Independent assortment</b> in metaphase I lines up homologous pairs randomly, giving 2ⁿ combinations.',
+  'Random fertilization adds a third source of variation.',
+  '<b>Nondisjunction</b> is a failure to separate, producing gametes with extra or missing chromosomes, as in trisomy 21.'
+ ]},
+ {h:'Mendelian and non-Mendelian inheritance', points:[
+  '<b>Law of segregation</b>: the two alleles for a trait separate into different gametes.',
+  '<b>Law of independent assortment</b>: genes on different chromosomes sort independently. <b>Linked genes</b> do not.',
+  'Recombination frequency between linked genes reveals how far apart they sit on a chromosome.',
+  '<b>Incomplete dominance</b> blends; <b>codominance</b> expresses both alleles fully, as in AB blood type.',
+  '<b>Polygenic</b> traits show continuous variation; <b>epistasis</b> means one gene masks another; <b>pleiotropy</b> means one gene affects several traits.',
+  '<b>Sex-linked</b> recessive traits appear more often in males, who have only one X.',
+  'Environment influences phenotype — hydrangea colour shifts with soil pH.'
+ ]}
+],
+cards:[
+ ['Meiosis vs. mitosis','Meiosis: four unique haploid gametes after two divisions. Mitosis: two identical diploid cells.'],
+ ['Crossing over','Exchange of segments between homologous chromosomes during prophase I.'],
+ ['Independent assortment','Homologous pairs align randomly in metaphase I, producing 2ⁿ gamete combinations.'],
+ ['Nondisjunction','Failure of chromosomes to separate, giving gametes an abnormal chromosome number.'],
+ ['Law of segregation','The two alleles of a gene separate into different gametes.'],
+ ['Linked genes','Genes on the same chromosome that tend to be inherited together.'],
+ ['Recombination frequency','Percentage of offspring showing crossover; higher frequency means genes are farther apart.'],
+ ['Incomplete dominance','Heterozygote shows a blended intermediate phenotype.'],
+ ['Codominance','Both alleles fully and separately expressed, as in AB blood type.'],
+ ['Epistasis','One gene masks or modifies the expression of another gene.'],
+ ['Pleiotropy','A single gene influencing multiple unrelated traits.'],
+ ['Why sex-linked traits favour males','Males have one X, so a single recessive allele is expressed.']
+],
+quiz:[
+ {q:'A colour-blind mother and a father with normal vision have children. Their sons will:',
+  c:['All have normal vision','All be colour blind','Be colour blind half the time','All be carriers'],
+  a:1, why:'Sons receive their only X from the mother, and both of her X chromosomes carry the recessive allele.'},
+ {q:'Two genes show a recombination frequency of 2%. This means they are:',
+  c:['On different chromosomes','Very close together on the same chromosome','Far apart on the same chromosome','Identical genes'],
+  a:1, why:'Low recombination means crossing over rarely separates them, so they must be near each other.'},
+ {q:'Crossing a red and a white flower gives all pink offspring. This is:',
+  c:['Codominance','Incomplete dominance','Epistasis','Pleiotropy'],
+  a:1, why:'A blended intermediate indicates incomplete dominance; codominance would show both colours distinctly.'},
+ {q:'The primary source of genetic variation produced during metaphase I is:',
+  c:['Nondisjunction','Independent assortment of homologous pairs','DNA replication errors','Cytokinesis'],
+  a:1, why:'Random orientation of each homologous pair generates 2ⁿ possible gamete combinations.'},
+ {q:'One gene affecting both eye pigment and hearing illustrates:',
+  c:['Epistasis','Pleiotropy','Codominance','Linkage'],
+  a:1, why:'Pleiotropy is a single gene producing multiple, seemingly unrelated phenotypic effects.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Gene Expression and Regulation',
+guide:[
+ {h:'From DNA to protein', points:[
+  'DNA replication is <b>semiconservative</b>: helicase unwinds, polymerase builds 5′→3′, giving a leading strand and a lagging strand of Okazaki fragments joined by ligase.',
+  '<b>Transcription</b>: RNA polymerase reads the template strand to build mRNA.',
+  'Eukaryotic <b>RNA processing</b> removes introns, splices exons, and adds a 5′ cap and poly-A tail.',
+  '<b>Alternative splicing</b> lets one gene produce several different proteins.',
+  '<b>Translation</b>: ribosomes read codons while tRNA anticodons deliver amino acids until a stop codon.',
+  'The genetic code is nearly universal, which is why bacteria can express human genes.'
+ ]},
+ {h:'Regulation and biotechnology', points:[
+  'Mutations: <b>silent</b>, <b>missense</b>, <b>nonsense</b>, and <b>frameshift</b> from insertions or deletions.',
+  'Frameshift mutations are usually the most damaging because every downstream codon changes.',
+  'Prokaryotes regulate with <b>operons</b>: the <i>lac</i> operon is inducible, the <i>trp</i> operon is repressible.',
+  'Eukaryotes use transcription factors, promoters, and distant <b>enhancers</b>.',
+  '<b>Epigenetic</b> changes — DNA methylation and histone modification — alter expression without changing sequence.',
+  'Tools: <b>PCR</b> amplifies DNA, <b>gel electrophoresis</b> separates fragments by size, bacterial <b>transformation</b> inserts plasmids, and <b>CRISPR</b> edits sequences directly.'
+ ]}
+],
+cards:[
+ ['Semiconservative replication','Each new DNA molecule keeps one original strand and one new strand.'],
+ ['Okazaki fragments','Short segments made discontinuously on the lagging strand and joined by ligase.'],
+ ['RNA processing','Introns removed, exons spliced, plus a 5′ cap and poly-A tail added.'],
+ ['Alternative splicing','Producing multiple different proteins from a single gene.'],
+ ['Codon','A three-nucleotide mRNA sequence specifying one amino acid or a stop signal.'],
+ ['Frameshift mutation','Insertion or deletion shifting the reading frame and altering every downstream codon.'],
+ ['Missense vs. nonsense mutation','Missense changes one amino acid; nonsense creates a premature stop codon.'],
+ ['lac operon','Inducible operon switched on when lactose inactivates the repressor.'],
+ ['trp operon','Repressible operon switched off when tryptophan activates the repressor.'],
+ ['Epigenetics','Heritable expression changes from methylation or histone modification, not sequence changes.'],
+ ['PCR','Amplifies a specific DNA sequence into millions of copies using cycles of heating and cooling.'],
+ ['Gel electrophoresis','Separates DNA fragments by size, with smaller fragments travelling farther.']
+],
+quiz:[
+ {q:'A single nucleotide is deleted near the start of a gene. The most likely result is:',
+  c:['A silent mutation','A frameshift altering every downstream codon','A codominant phenotype','Faster transcription'],
+  a:1, why:'Deleting one base shifts the reading frame, so nearly all subsequent amino acids change.'},
+ {q:'In the lac operon, lactose acts to:',
+  c:['Bind the promoter directly','Inactivate the repressor so transcription can proceed','Block RNA polymerase','Methylate the operator'],
+  a:1, why:'The inducer changes the repressor shape so it releases the operator, allowing transcription.'},
+ {q:'Why can bacteria be engineered to produce human insulin?',
+  c:['Bacteria naturally make insulin','The genetic code is nearly universal','Bacteria have a nucleus','Human DNA is prokaryotic'],
+  a:1, why:'The same codons specify the same amino acids across nearly all life, so the gene translates correctly.'},
+ {q:'In gel electrophoresis, smaller DNA fragments:',
+  c:['Travel farther from the well','Stay closest to the well','Do not move','Move toward the negative electrode'],
+  a:0, why:'Smaller fragments navigate the gel matrix more easily and migrate farther in the same time.'},
+ {q:'Alternative splicing explains how:',
+  c:['Bacteria regulate operons','One gene can produce several distinct proteins','DNA replicates semiconservatively','Mutations are repaired'],
+  a:1, why:'Different combinations of exons can be retained, yielding different mRNAs from one gene.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Natural Selection',
+guide:[
+ {h:'Selection and evolution', points:[
+  'Natural selection requires variation, heritability, overproduction, and differential reproductive success.',
+  '<b>Fitness</b> means reproductive success, not strength or size.',
+  'Selection types: <b>directional</b> (favours one extreme), <b>stabilizing</b> (favours the middle), <b>disruptive</b> (favours both extremes).',
+  '<b>Sexual selection</b> favours traits that improve mating success even when they hurt survival.',
+  'Other mechanisms: <b>genetic drift</b> (bottleneck and founder effects), <b>gene flow</b>, and mutation as the ultimate source of new alleles.'
+ ]},
+ {h:'Evidence and speciation', points:[
+  'Evidence: fossils, <b>homologous</b> structures (common ancestry), <b>analogous</b> structures (convergent evolution), vestigial traits, embryology, and molecular similarity.',
+  '<b>Hardy-Weinberg</b>: p + q = 1 and p² + 2pq + q² = 1, valid only with no selection, no mutation, no migration, random mating, and a large population.',
+  'Deviation from Hardy-Weinberg is evidence that evolution is occurring.',
+  '<b>Allopatric speciation</b> follows geographic isolation; <b>sympatric</b> occurs without it, often via polyploidy in plants.',
+  'Reproductive barriers may be <b>prezygotic</b> (habitat, timing, behaviour) or <b>postzygotic</b> (hybrid sterility).',
+  '<b>Phylogenetic trees</b> and <b>cladograms</b> map relationships using shared derived characters.'
+ ]}
+],
+cards:[
+ ['Fitness','An organism\u2019s relative contribution of offspring to the next generation.'],
+ ['Directional selection','Favours one extreme phenotype, shifting the population mean.'],
+ ['Stabilizing selection','Favours intermediate phenotypes and reduces variation.'],
+ ['Disruptive selection','Favours both extremes over intermediates.'],
+ ['Genetic drift','Random change in allele frequency, strongest in small populations.'],
+ ['Bottleneck effect','A sharp population reduction that randomly alters allele frequencies.'],
+ ['Founder effect','A small group starting a new population with a nonrepresentative allele sample.'],
+ ['Homologous vs. analogous structures','Homologous share ancestry; analogous share function from convergent evolution.'],
+ ['Hardy-Weinberg equilibrium','p² + 2pq + q² = 1; holds only when no evolutionary forces act.'],
+ ['Allopatric speciation','New species arising after geographic separation.'],
+ ['Prezygotic barrier','Prevents mating or fertilization, such as differing habitats or timing.'],
+ ['Cladogram','Diagram grouping organisms by shared derived characteristics.']
+],
+quiz:[
+ {q:'In a population at Hardy-Weinberg equilibrium, q² = 0.09. The heterozygote frequency is:',
+  c:['0.09','0.21','0.42','0.49'],
+  a:2, why:'q = 0.3 so p = 0.7, and 2pq = 2(0.7)(0.3) = 0.42.'},
+ {q:'Bat wings and insect wings are:',
+  c:['Homologous structures','Analogous structures','Vestigial structures','Evidence of shared ancestry'],
+  a:1, why:'Same function evolved independently, which is convergent evolution.'},
+ {q:'A hurricane randomly kills most of an island lizard population. This is:',
+  c:['Directional selection','The bottleneck effect','Gene flow','Sexual selection'],
+  a:1, why:'Non-selective random loss changes allele frequencies, which is genetic drift.'},
+ {q:'Two frog species living in the same pond breed in different months. This is a:',
+  c:['Postzygotic barrier','Prezygotic temporal barrier','Hybrid sterility','Founder effect'],
+  a:1, why:'Mating never occurs, so the barrier acts before any zygote could form.'},
+ {q:'A peacock\u2019s enormous tail persists despite hindering escape because of:',
+  c:['Stabilizing selection','Sexual selection','Genetic drift','Gene flow'],
+  a:1, why:'Improved mating success outweighs the survival cost in terms of overall reproductive fitness.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Ecology',
+guide:[
+ {h:'Populations and communities', points:[
+  '<b>Exponential growth</b> is J-shaped; <b>logistic growth</b> is S-shaped and levels at carrying capacity (K).',
+  '<b>r-selected</b> species produce many low-investment offspring; <b>K-selected</b> produce few with high investment.',
+  'Interactions: competition, predation, and symbiosis (<b>mutualism</b>, <b>commensalism</b>, <b>parasitism</b>).',
+  'The <b>competitive exclusion principle</b> forbids identical niches; <b>resource partitioning</b> resolves it.',
+  '<b>Keystone species</b> shape communities far beyond their abundance.',
+  '<b>Succession</b> rebuilds communities after disturbance, from pioneer species to a stable community.'
+ ]},
+ {h:'Ecosystems and human impact', points:[
+  'Energy flows one way; about <b>10%</b> transfers between trophic levels, which limits food chain length.',
+  'Matter cycles rather than flowing: carbon, nitrogen, and phosphorus all return through decomposition.',
+  '<b>Nitrogen fixation</b> by bacteria converts N₂ into usable ammonia.',
+  'Organisms maintain <b>homeostasis</b>; disruptions cascade through connected populations.',
+  'Human impacts: habitat loss, invasive species, pollution, and climate change reduce biodiversity.',
+  'Greater biodiversity generally increases ecosystem stability and resilience.'
+ ]}
+],
+cards:[
+ ['Exponential vs. logistic growth','Exponential is J-shaped and unlimited; logistic is S-shaped and levels at carrying capacity.'],
+ ['Carrying capacity (K)','The maximum population an environment can sustain over time.'],
+ ['r-selected vs. K-selected','r: many offspring, little care. K: few offspring, heavy investment.'],
+ ['Mutualism','A relationship benefiting both species.'],
+ ['Commensalism','One species benefits while the other is unaffected.'],
+ ['Competitive exclusion principle','Two species cannot occupy the identical niche indefinitely.'],
+ ['Resource partitioning','Species divide a shared resource by time, space, or method to coexist.'],
+ ['Keystone species','A species whose removal dramatically restructures its community.'],
+ ['10% rule','Roughly 10% of energy passes from one trophic level to the next.'],
+ ['Nitrogen fixation','Bacterial conversion of atmospheric N₂ into usable ammonia.'],
+ ['Energy vs. matter in ecosystems','Energy flows one way and is lost as heat; matter cycles and is reused.'],
+ ['Biodiversity and stability','Greater diversity generally increases ecosystem resilience to disturbance.']
+],
+quiz:[
+ {q:'Producers capture 20,000 kcal. Roughly how much reaches tertiary consumers?',
+  c:['2,000 kcal','200 kcal','20 kcal','2 kcal'],
+  a:2, why:'Three transfers at about 10% each: 20,000 → 2,000 → 200 → 20 kcal.'},
+ {q:'Two warbler species feed in different parts of the same tree. This is:',
+  c:['Competitive exclusion','Resource partitioning','Parasitism','Commensalism'],
+  a:1, why:'Dividing the resource by spatial niche allows both species to coexist.'},
+ {q:'A logistic growth curve levels off because:',
+  c:['Mutation rates fall','Density-dependent factors intensify near carrying capacity','Predators go extinct','Energy transfer improves'],
+  a:1, why:'Competition, disease, and limited resources increase as N approaches K.'},
+ {q:'Which best describes energy and matter in an ecosystem?',
+  c:['Both cycle continuously','Both flow one way','Energy flows one way while matter cycles','Matter flows one way while energy cycles'],
+  a:2, why:'Energy is ultimately lost as heat, whereas atoms are reused indefinitely through decomposition.'},
+ {q:'Barnacles attached to a whale, feeding on passing plankton without affecting it, is:',
+  c:['Mutualism','Commensalism','Parasitism','Competition'],
+  a:1, why:'The barnacle gains transport and feeding opportunity while the whale is essentially unaffected.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
+/* ============================================================
    StudyBuddy app
    ============================================================ */
 
@@ -7641,6 +7863,12 @@ function vSettings() {
       <div class="row"><button class="btn red sm" onclick="if(confirm('Erase all progress and saved decks?')){store.wipe();location.reload()}">Erase everything</button></div>
     </div>
     <div class="card">
+      <span class="eyebrow">Install</span>
+      <h3 style="margin-bottom:6px">Put StudyBuddy on your home screen</h3>
+      <p style="font-size:.88rem;color:var(--ink-soft)">Runs full screen with its own icon and keeps working with no connection.</p>
+      <a class="btn" href="#/install" style="margin-top:12px">Install as an app</a>
+    </div>
+    <div class="card">
       <span class="eyebrow">Backup and restore</span>
       <h3 style="margin-bottom:6px">Move your progress between devices</h3>
       <p style="font-size:.88rem;color:var(--ink-soft)">Studying on a school Chromebook and a computer at home? Export a file on one, import it on the other. This covers your mistake book, review schedule, quiz scores, streak, and saved decks.</p>
@@ -7715,6 +7943,7 @@ function render() {
   else if (parts[0] === 'assign') html = vAssign();
   else if (parts[0] === 'import') html = vImport();
   else if (parts[0] === 'account') html = vAccount();
+  else if (parts[0] === 'install') html = vInstall();
   else if (parts[0] === 'group') html = vGroup();
   else if (parts[0] === 'print') html = vPrint(parts[1], parts[2], parts[3]);
   else if (parts[0] === 'exam') html = vMasterReview(parts[1]);
@@ -7835,6 +8064,7 @@ ${material}`);
 function afterRender() {
   document.getElementById('askfab')?.remove();
   document.getElementById('askpanel')?.remove();
+  if (typeof mountInstallFab === 'function') mountInstallFab();
   const ctx = currentUnit();
   if (!ctx) { ASK.open = false; ASK.ctx = null; return; }
   if (!ASK.ctx || ASK.ctx.u !== ctx.u) { ASK.msgs = []; ASK.ctx = ctx; }
@@ -8591,12 +8821,21 @@ function saveImport(raw) {
    (sb_secret_...) must never appear in this file.
    ============================================================ */
 CONFIG.supabase = {
-  /* Paste your project URL from Supabase → Project Settings → API.
-     It looks like https://abcdefghijk.supabase.co
-     Sign-in and group study stay switched off until this is filled in. */
-  url: '',
+  /* Base project URL only — no /rest/v1 on the end. Paths like
+     /rest/v1/ or /auth/v1/ are stripped automatically below, since
+     the Supabase dashboard shows the REST URL in several places. */
+  url: 'https://xknuowthtkgrzwedklfu.supabase.co',
   publishableKey: 'sb_publishable_UE8ZBYXw6oO1L1h_1ZKNzQ_34Ys_6DF'
 };
+
+/* accept a REST or auth endpoint and reduce it to the project origin */
+(function normalizeSupabaseUrl() {
+  let u = (CONFIG.supabase.url || '').trim();
+  if (!u) return;
+  if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+  try { u = new URL(u).origin; } catch (e) { u = u.replace(/\/(rest|auth|realtime|storage)\/v\d.*$/i, '').replace(/\/+$/, ''); }
+  CONFIG.supabase.url = u;
+})();
 
 const SB = { client: null, user: null, ready: false, error: null };
 function sbConfigured() { return !!(CONFIG.supabase.url && CONFIG.supabase.publishableKey); }
@@ -8623,6 +8862,43 @@ async function sbInit() {
     });
     if (SB.user) pullCloud();
   } catch (e) { SB.error = e.message; }
+}
+
+/* ---------------- connection test ----------------
+   Runs without the JS client so it still reports usefully when the
+   CDN is blocked. Checks the URL, the key, whether the progress
+   table exists, and whether Row Level Security is actually on. */
+async function testSupabase() {
+  const box = $('#sbtest');
+  const line = (txt, kind) => `<p style="font-size:.85rem;margin:6px 0 0;color:${kind === 'ok' ? 'var(--green)' : kind === 'warn' ? 'var(--margin)' : 'var(--ink-soft)'}">${txt}</p>`;
+  box.innerHTML = `<p style="font-size:.85rem;margin:10px 0 0"><span class="spin"></span> Checking…</p>`;
+  const base = CONFIG.supabase.url, key = CONFIG.supabase.publishableKey;
+  const out = [];
+  out.push(line('Project URL: <span class="mono">' + esc(base) + '</span>'));
+  try {
+    const r = await fetch(base + '/rest/v1/progress?select=user_id&limit=1', {
+      headers: { apikey: key, Authorization: 'Bearer ' + key }
+    });
+    if (r.status === 401 || r.status === 403) {
+      out.push(line('✕ The key was rejected. Check the publishable key in CONFIG.supabase.', 'warn'));
+    } else if (r.status === 404) {
+      out.push(line('✕ No <b>progress</b> table. Run the SQL from the README in the Supabase SQL editor.', 'warn'));
+    } else if (r.ok) {
+      const rows = await r.json();
+      out.push(line('✓ Connected, and the <b>progress</b> table exists.', 'ok'));
+      if (Array.isArray(rows) && rows.length) {
+        out.push(line('⚠ <b>Row Level Security looks off.</b> A signed-out request just read a row. Anyone could read every student\u2019s data. Run the policy SQL before letting anyone sign in.', 'warn'));
+      } else {
+        out.push(line('✓ Signed-out reads return nothing, which is what Row Level Security should do.', 'ok'));
+      }
+    } else {
+      const body = await r.text();
+      out.push(line('✕ Unexpected response ' + r.status + ': ' + esc(body.slice(0, 160)), 'warn'));
+    }
+  } catch (e) {
+    out.push(line('✕ Could not reach the project: ' + esc(e.message) + '. Check the URL and that you are online.', 'warn'));
+  }
+  box.innerHTML = out.join('');
 }
 
 /* ---------------- account ---------------- */
@@ -8656,7 +8932,9 @@ function vAccount() {
         </div>
         <div id="syncmsg"></div>
         <hr class="divide">
-        <button class="btn ghost sm" onclick="sbSignOut()">Sign out</button>
+        <div class="row"><button class="chip" onclick="testSupabase()">Test the connection</button>
+        <button class="btn ghost sm" onclick="sbSignOut()">Sign out</button></div>
+        <div id="sbtest"></div>
       </div>
       <div class="card">
         <span class="eyebrow">Live group study</span>
@@ -8677,6 +8955,9 @@ function vAccount() {
       <button class="btn ghost" onclick="sbSignUp()">Create account</button>
     </div>
     <div id="authmsg"></div>
+    <hr class="divide">
+    <button class="chip" onclick="testSupabase()">Test the connection</button>
+    <div id="sbtest"></div>
     <hr class="divide">
     <p style="font-size:.83rem;color:var(--ink-faint)">Prefer no account? <a href="#/settings" style="color:var(--ink)">Back up to a file</a> instead — same result, no server.</p>
   </div>`;
@@ -8885,6 +9166,206 @@ function groupRoomHTML() {
     <hr class="divide">
     <button class="btn ghost sm" onclick="leaveRoom()">Leave room</button>
   </div>`;
+}
+</script>
+<script>
+/* ============================================================
+   COVERAGE COUNTING
+   A written unit titled "Units 5-6 - ..." covers two catalog
+   units. Counting raw units made finished courses look unfinished,
+   so counts are computed from what is actually covered.
+   ============================================================ */
+function unitKeys(title) {
+  const m = String(title).match(/^\s*(units?|periods?|big idea|content area)\s+([\d\s,\u2013\u2014-]+)/i);
+  if (!m) return new Set();
+  const kind = m[1].toLowerCase().replace(/s$/, '');
+  const out = new Set();
+  m[2].split(',').forEach(part => {
+    const r = part.trim().match(/^(\d+)\s*[\u2013\u2014-]\s*(\d+)$/);
+    if (r) { for (let i = +r[1]; i <= +r[2]; i++) out.add(kind + ':' + i); }
+    else { const n = part.trim().match(/\d+/); if (n) out.add(kind + ':' + n[0]); }
+  });
+  return out;
+}
+function coverage(c) {
+  const outline = c.outline || [];
+  if (!outline.length) return { done: c.units.length, total: c.units.length, complete: !!c.units.length };
+  const written = new Set(), titles = c.units.map(u => u.title.toLowerCase());
+  c.units.forEach(u => unitKeys(u.title).forEach(k => written.add(k)));
+  let done = 0;
+  outline.forEach(t => {
+    if (titles.some(w => w === t.toLowerCase())) { done++; return; }
+    const ks = unitKeys(t);
+    if (ks.size && [...ks].every(k => written.has(k))) done++;
+  });
+  return { done, total: outline.length, complete: done >= outline.length };
+}
+
+/* course tiles and headers now report coverage */
+const _courseTile = courseTile;
+courseTile = function (c) {
+  const html = _courseTile(c);
+  if (c.outlineOnly) return html;
+  const cv = coverage(c);
+  return html.replace(/<span>\d+ of \d+ units written<\/span>/,
+    `<span>${cv.complete ? 'all ' + cv.total + ' units' : cv.done + ' of ' + cv.total + ' units'}</span>`);
+};
+const _vCourse = vCourse;
+vCourse = function (cid) {
+  const c = findCourse(cid);
+  const html = _vCourse(cid);
+  if (!c || c.outlineOnly) return html;
+  const cv = coverage(c);
+  return html.replace(/<span class="eyebrow">([^<]*?) · \d+ units written(?: of \d+)?<\/span>/,
+    `<span class="eyebrow">$1 · ${cv.complete ? 'complete · all ' + cv.total + ' units' : cv.done + ' of ' + cv.total + ' units written'}</span>`);
+};
+
+/* ============================================================
+   INSTALL AS AN APP  (PWA)
+   ============================================================ */
+const PWA = { prompt: null, installed: false, swOK: false };
+
+(function pwaInit() {
+  /* only meaningful when served over http(s) — not from a local file */
+  const servable = location.protocol === 'https:' ||
+    ['localhost', '127.0.0.1'].includes(location.hostname);
+
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const l = document.createElement('link');
+    l.rel = 'manifest';
+    l.href = './manifest.webmanifest';
+    document.head.appendChild(l);
+  }
+  const meta = document.createElement('meta');
+  meta.name = 'theme-color';
+  meta.content = S.cfg.theme === 'night' ? '#12181C' : '#16232B';
+  document.head.appendChild(meta);
+  const cap = document.createElement('meta');
+  cap.name = 'apple-mobile-web-app-capable';
+  cap.content = 'yes';
+  document.head.appendChild(cap);
+  const ttl = document.createElement('meta');
+  ttl.name = 'apple-mobile-web-app-title';
+  ttl.content = 'StudyBuddy';
+  document.head.appendChild(ttl);
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    PWA.prompt = e;
+    if (location.hash.startsWith('#/install')) render();
+    const btn = document.getElementById('installfab');
+    if (btn) btn.classList.remove('hidden');
+  });
+  window.addEventListener('appinstalled', () => {
+    PWA.prompt = null; PWA.installed = true;
+    store.set('sb.installed', true);
+    if (location.hash.startsWith('#/install')) render();
+  });
+
+  if (servable && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => { PWA.swOK = true; })
+      .catch(() => { PWA.swOK = false; });
+  }
+})();
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+}
+function platform() {
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  return 'desktop';
+}
+async function doInstall() {
+  if (!PWA.prompt) return;
+  PWA.prompt.prompt();
+  try { await PWA.prompt.userChoice; } catch (e) {}
+  PWA.prompt = null;
+  render();
+}
+
+const INSTALL_STEPS = {
+  ios: ['Open this page in <b>Safari</b> — Chrome on iPhone cannot install apps.',
+    'Tap the <b>Share</b> button at the bottom of the screen (a square with an arrow going up).',
+    'Scroll down and tap <b>Add to Home Screen</b>.',
+    'Tap <b>Add</b>. StudyBuddy now sits on your home screen like any other app.'],
+  android: ['Tap the <b>three-dot menu</b> in the top right of Chrome.',
+    'Tap <b>Add to Home screen</b> or <b>Install app</b>.',
+    'Confirm. It opens full screen with no browser bar.'],
+  desktop: ['Look for the <b>install icon</b> in the address bar — a small screen with a downward arrow.',
+    'Or open the <b>three-dot menu</b> → <b>Cast, save and share</b> → <b>Install page as app</b>.',
+    'It gets its own window and a shortcut, and works offline.']
+};
+
+function vInstall() {
+  const plat = platform();
+  const already = isStandalone() || store.get('sb.installed', false);
+  const local = location.protocol === 'file:';
+  const names = { ios: 'iPhone or iPad', android: 'Android', desktop: 'this computer' };
+
+  if (already) {
+    return topbar() + `
+    <div class="page-head fade"><span class="eyebrow">Installed</span><h1>You are running the app</h1>
+    <p>StudyBuddy is installed on this device. It opens without a browser bar and works with no connection once you have visited each page.</p></div>
+    <div class="card" style="max-width:560px">
+      <span class="eyebrow">Offline</span>
+      <h3 style="margin-bottom:6px">${PWA.swOK ? 'Offline mode is on' : 'Offline mode is not active'}</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem">${PWA.swOK
+        ? 'Study guides, flashcards and quizzes all work with no signal. The AI tutor and sign-in need a connection.'
+        : 'The offline worker did not register. Check that <b>sw.js</b> sits beside index.html in your repo.'}</p>
+    </div>`;
+  }
+
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Take it with you</span>
+    <h1>Install StudyBuddy as an <span class="hl">app</span></h1>
+    <p>Add it to your home screen or desktop. It opens full screen with no browser bar, loads instantly, and keeps working with no connection — useful on a school bus, a plane, or anywhere the wifi is bad.</p>
+  </div>
+  <div class="grid g2" style="align-items:start">
+    <div class="card">
+      <span class="eyebrow">On ${esc(names[plat])}</span>
+      ${PWA.prompt ? `
+        <h3 style="margin-bottom:8px">One tap and it is done</h3>
+        <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">Your browser supports installing directly.</p>
+        <button class="btn mark" onclick="doInstall()">Install StudyBuddy</button>`
+      : `
+        <h3 style="margin-bottom:10px">How to add it</h3>
+        <ol style="padding-left:20px;font-size:.92rem;line-height:1.7;margin:0 0 10px">
+          ${INSTALL_STEPS[plat].map(s => `<li style="margin-bottom:7px">${s}</li>`).join('')}
+        </ol>
+        ${plat === 'ios' ? `<div class="note">iOS never shows an automatic install button — Apple requires the Share menu. The steps above are the only route.</div>` : ''}`}
+      ${local ? `<div class="note" style="margin-top:14px"><b>You are opening this from a file on your computer.</b> Installing needs the site to be published — put it on GitHub Pages first, then open the live URL.</div>` : ''}
+    </div>
+    <div class="card">
+      <span class="eyebrow">What you get</span>
+      <ul style="padding-left:19px;font-size:.92rem;line-height:1.75;margin:8px 0 0;color:var(--ink-soft)">
+        <li><b style="color:var(--ink)">Works offline.</b> Guides, flashcards, quizzes and your mistake book all run with no signal.</li>
+        <li><b style="color:var(--ink)">Own icon.</b> The owl on your home screen, no browser bar.</li>
+        <li><b style="color:var(--ink)">Shortcuts.</b> Long-press the icon for Due today, Mistake book, or a practice test.</li>
+        <li><b style="color:var(--ink)">Same data.</b> Progress carries over from the browser on that device.</li>
+      </ul>
+      <hr class="divide">
+      <p style="font-size:.84rem;color:var(--ink-faint);margin:0">The AI tutor, sign-in and group study still need a connection. Everything else does not.</p>
+    </div>
+  </div>
+  <div class="note" style="max-width:720px;margin-top:16px">
+    <b>Publishing this yourself?</b> Installing needs four files sitting together in the repo root: <b>index.html</b>, <b>manifest.webmanifest</b>, <b>sw.js</b>, and both icon PNGs. If any are missing the site still works — it just cannot be installed.
+  </div>`;
+}
+
+/* a quiet prompt in the corner once the browser says installing is possible */
+function mountInstallFab() {
+  if (document.getElementById('installfab')) return;
+  if (isStandalone() || store.get('sb.installed', false)) return;
+  document.body.insertAdjacentHTML('beforeend',
+    `<a class="ask-fab hidden" id="installfab" href="#/install"
+        style="left:22px;right:auto;background:var(--paper);color:var(--ink);border-color:var(--line)">
+       <span style="font-size:1.05rem">⤓</span><span>Install app</span></a>`);
+  if (PWA.prompt) document.getElementById('installfab').classList.remove('hidden');
 }
 </script>
 <script>
@@ -9154,6 +9635,7 @@ vDashboard = function () {
 NAV.splice(4, 0, { h: '#/mistakes', t: 'Mistakes', i: '◔', m: 'Fix' });
 NAV.push({ h: '#/assign', t: 'Tutor tools', i: '✎', m: 'Tutor' });
 NAV.push({ h: '#/account', t: 'Account', i: '◐', m: 'Me' });
+NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App' });
 
 /* ---------------- boot ---------------- */
 applyTheme();

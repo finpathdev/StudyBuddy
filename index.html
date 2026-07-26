@@ -370,6 +370,41 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* ==================== INSTALL PAGE ========================= */
+.big-install{
+  display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
+  padding:20px 24px;border-radius:14px;border:1px solid var(--ink);
+  background:var(--ink);color:var(--paper);font-weight:700;font-size:1.08rem;
+  cursor:pointer;box-shadow:0 3px 0 rgba(22,35,43,.28);transition:transform .12s ease;
+}
+.big-install:hover{transform:translateY(-2px)}
+.big-install:active{transform:translateY(1px);box-shadow:none}
+.big-install svg{width:24px;height:24px;flex:0 0 24px}
+.big-install[disabled]{opacity:.5;pointer-events:none}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+.steps li{
+  counter-increment:s;position:relative;padding:0 0 20px 52px;
+  font-size:1rem;line-height:1.55;
+}
+.steps li:not(:last-child)::after{
+  content:'';position:absolute;left:17px;top:38px;bottom:6px;width:2px;
+  background:var(--line);border-radius:2px;
+}
+.steps li::before{
+  content:counter(s);position:absolute;left:0;top:-2px;
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;
+  font-weight:600;font-size:.95rem;
+}
+.steps li b{font-weight:700}
+.tapicon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:9px;border:1.5px solid var(--ink);
+  background:var(--paper);vertical-align:-11px;margin:0 4px;
+}
+.tapicon svg{width:19px;height:19px;color:var(--ink)}
+.devicetabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+
 /* ==================== MATH RENDERING ======================= */
 .math{
   font-family:'IBM Plex Mono',ui-monospace,monospace;
@@ -9320,74 +9355,140 @@ async function doInstall() {
   render();
 }
 
-const INSTALL_STEPS = {
-  ios: ['Open this page in <b>Safari</b> — Chrome on iPhone cannot install apps.',
-    'Tap the <b>Share</b> button at the bottom of the screen (a square with an arrow going up).',
-    'Scroll down and tap <b>Add to Home Screen</b>.',
-    'Tap <b>Add</b>. StudyBuddy now sits on your home screen like any other app.'],
-  android: ['Tap the <b>three-dot menu</b> in the top right of Chrome.',
-    'Tap <b>Add to Home screen</b> or <b>Install app</b>.',
-    'Confirm. It opens full screen with no browser bar.'],
-  desktop: ['Look for the <b>install icon</b> in the address bar — a small screen with a downward arrow.',
-    'Or open the <b>three-dot menu</b> → <b>Cast, save and share</b> → <b>Install page as app</b>.',
-    'It gets its own window and a shortcut, and works offline.']
+/* small SVGs of the buttons a student actually has to tap */
+const TAP = {
+  share: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M6 12H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>`,
+  dots: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>`,
+  plus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>`,
+  down: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M12 8v5m0 0-2.5-2.5M12 13l2.5-2.5"/><path d="M8 21h8"/></svg>`
 };
+const tapIcon = k => `<span class="tapicon">${TAP[k]}</span>`;
+
+function isChromium() {
+  return /Chrome|Chromium|Edg|Brave|OPR/.test(navigator.userAgent) && !/Firefox/.test(navigator.userAgent);
+}
+
+/* One primary action per device. Where the browser can install directly,
+   that button is the entire answer; elsewhere, numbered steps with pictures
+   of the buttons to press. */
+function installBody(plat) {
+  if (PWA.prompt) {
+    return `
+      <p style="color:var(--ink-soft);margin-bottom:16px">Your browser can install it directly. One click and it is done.</p>
+      <button class="big-install" onclick="doInstall()">${TAP.down}<span>Install StudyBuddy</span></button>
+      <p style="font-size:.83rem;color:var(--ink-faint);margin:12px 0 0;text-align:center">Takes about a second. Nothing to download, no account.</p>`;
+  }
+  if (plat === 'ios') {
+    return `
+      <p style="color:var(--ink-soft);margin-bottom:20px">iPhone and iPad have no install button — Apple requires the Share menu. Three taps.</p>
+      <ol class="steps">
+        <li>Make sure you are in <b>Safari</b>. Chrome and other browsers on iPhone cannot install apps.</li>
+        <li>Tap <b>Share</b> ${tapIcon('share')} at the bottom of the screen.</li>
+        <li>Scroll down, tap <b>Add to Home Screen</b> ${tapIcon('plus')}, then tap <b>Add</b>.</li>
+      </ol>
+      <div class="note">The owl appears on your home screen. Open it from there and it runs full screen.</div>`;
+  }
+  if (plat === 'android') {
+    return `
+      <p style="color:var(--ink-soft);margin-bottom:20px">Three taps in Chrome.</p>
+      <ol class="steps">
+        <li>Tap the <b>three-dot menu</b> ${tapIcon('dots')} at the top right of Chrome.</li>
+        <li>Tap <b>Install app</b> — older versions say <b>Add to Home screen</b>.</li>
+        <li>Tap <b>Install</b> to confirm.</li>
+      </ol>
+      <div class="note">No option showing? Reload once — Chrome needs a moment to register the app.</div>`;
+  }
+  if (isChromium()) {
+    return `
+      <p style="color:var(--ink-soft);margin-bottom:18px">Chrome has not offered the shortcut yet. A reload almost always fixes it.</p>
+      <button class="big-install" onclick="location.reload()">${TAP.down}<span>Reload and install</span></button>
+      <ol class="steps" style="margin-top:24px">
+        <li>Or click the <b>install icon</b> ${tapIcon('down')} at the right-hand end of the address bar.</li>
+        <li>Or open the <b>three-dot menu</b> ${tapIcon('dots')} → <b>Cast, save and share</b> → <b>Install page as app</b>.</li>
+      </ol>`;
+  }
+  if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) {
+    return `
+      <p style="color:var(--ink-soft);margin-bottom:20px">Safari on macOS can add StudyBuddy to your Dock.</p>
+      <ol class="steps">
+        <li>Open the <b>File</b> menu in the Safari menu bar.</li>
+        <li>Choose <b>Add to Dock…</b> and confirm the name.</li>
+        <li>Launch it from the Dock and it opens in its own window.</li>
+      </ol>
+      <div class="note">Older macOS versions have no Add to Dock. Use Chrome or Edge instead.</div>`;
+  }
+  return `
+    <div class="note" style="margin-bottom:18px"><b>${/Firefox/.test(navigator.userAgent) ? 'Firefox on desktop cannot install web apps.' : 'This browser cannot install web apps.'}</b> Everything still works as a normal tab — you just miss the separate window and offline mode.</div>
+    <ol class="steps">
+      <li>Open this page in <b>Chrome</b> or <b>Edge</b>.</li>
+      <li>Click the <b>install icon</b> ${tapIcon('down')} in the address bar.</li>
+    </ol>`;
+}
 
 function vInstall() {
-  const plat = platform();
+  const forced = ROUTE_Q.get('d');
+  const plat = forced || platform();
   const already = isStandalone() || store.get('sb.installed', false);
   const local = location.protocol === 'file:';
-  const names = { ios: 'iPhone or iPad', android: 'Android', desktop: 'this computer' };
+  const label = { desktop: 'Laptop', ios: 'iPhone / iPad', android: 'Android' };
 
   if (already) {
     return topbar() + `
     <div class="page-head fade"><span class="eyebrow">Installed</span><h1>You are running the app</h1>
-    <p>StudyBuddy is installed on this device. It opens without a browser bar and works with no connection once you have visited each page.</p></div>
+    <p>StudyBuddy is installed on this device. No browser bar, and it keeps working with no connection.</p></div>
     <div class="card" style="max-width:560px">
       <span class="eyebrow">Offline</span>
       <h3 style="margin-bottom:6px">${PWA.swOK ? 'Offline mode is on' : 'Offline mode is not active'}</h3>
       <p style="color:var(--ink-soft);font-size:.9rem">${PWA.swOK
-        ? 'Study guides, flashcards and quizzes all work with no signal. The AI tutor and sign-in need a connection.'
+        ? 'Guides, flashcards, quizzes and your mistake book all work with no signal. The AI tutor and sign-in still need a connection.'
         : 'The offline worker did not register. Check that <b>sw.js</b> sits beside index.html in your repo.'}</p>
     </div>`;
+  }
+  if (local) {
+    return topbar() + `
+    <div class="page-head fade"><span class="eyebrow">Install</span><h1>Publish it first</h1>
+    <p>You are opening this from a file on your computer. Browsers only allow installing from a real web address, so put it on GitHub Pages and open the live URL.</p></div>
+    <div class="card" style="max-width:560px"><div class="note">Once it is live at <span class="mono">https://…github.io/…</span> this page shows a one-click install button.</div></div>`;
   }
 
   return topbar() + `
   <div class="page-head fade">
     <span class="eyebrow">Take it with you</span>
     <h1>Install StudyBuddy as an <span class="hl">app</span></h1>
-    <p>Add it to your home screen or desktop. It opens full screen with no browser bar, loads instantly, and keeps working with no connection — useful on a school bus, a plane, or anywhere the wifi is bad.</p>
+    <p>Own icon, no browser bar, opens instantly, and keeps working with no connection.</p>
   </div>
   <div class="grid g2" style="align-items:start">
     <div class="card">
-      <span class="eyebrow">On ${esc(names[plat])}</span>
-      ${PWA.prompt ? `
-        <h3 style="margin-bottom:8px">One tap and it is done</h3>
-        <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">Your browser supports installing directly.</p>
-        <button class="btn mark" onclick="doInstall()">Install StudyBuddy</button>`
-      : `
-        <h3 style="margin-bottom:10px">How to add it</h3>
-        <ol style="padding-left:20px;font-size:.92rem;line-height:1.7;margin:0 0 10px">
-          ${INSTALL_STEPS[plat].map(s => `<li style="margin-bottom:7px">${s}</li>`).join('')}
-        </ol>
-        ${plat === 'ios' ? `<div class="note">iOS never shows an automatic install button — Apple requires the Share menu. The steps above are the only route.</div>` : ''}`}
-      ${local ? `<div class="note" style="margin-top:14px"><b>You are opening this from a file on your computer.</b> Installing needs the site to be published — put it on GitHub Pages first, then open the live URL.</div>` : ''}
+      <div class="devicetabs">
+        ${['desktop', 'ios', 'android'].map(k =>
+          `<a class="chip ${plat === k ? 'on' : ''}" href="#/install?d=${k}">${esc(label[k])}</a>`).join('')}
+      </div>
+      ${installBody(plat)}
     </div>
     <div class="card">
       <span class="eyebrow">What you get</span>
-      <ul style="padding-left:19px;font-size:.92rem;line-height:1.75;margin:8px 0 0;color:var(--ink-soft)">
-        <li><b style="color:var(--ink)">Works offline.</b> Guides, flashcards, quizzes and your mistake book all run with no signal.</li>
-        <li><b style="color:var(--ink)">Own icon.</b> The owl on your home screen, no browser bar.</li>
+      <ul style="padding-left:19px;font-size:.93rem;line-height:1.75;margin:8px 0 0;color:var(--ink-soft)">
+        <li><b style="color:var(--ink)">Works offline.</b> Guides, flashcards, quizzes and your mistake book run with no signal.</li>
+        <li><b style="color:var(--ink)">Own icon.</b> The owl on your home screen or dock.</li>
         <li><b style="color:var(--ink)">Shortcuts.</b> Long-press the icon for Due today, Mistake book, or a practice test.</li>
-        <li><b style="color:var(--ink)">Same data.</b> Progress carries over from the browser on that device.</li>
+        <li><b style="color:var(--ink)">Same progress.</b> Everything carries over from the browser on that device.</li>
       </ul>
       <hr class="divide">
-      <p style="font-size:.84rem;color:var(--ink-faint);margin:0">The AI tutor, sign-in and group study still need a connection. Everything else does not.</p>
+      <span class="eyebrow">Installing on your phone?</span>
+      <p style="font-size:.88rem;color:var(--ink-soft);margin:0 0 8px">Open this address on the phone, then pick its tab above.</p>
+      <div class="row" style="flex-wrap:nowrap">
+        <input type="text" id="pageurl" readonly value="${esc(location.href.split('#')[0])}" style="font-family:'IBM Plex Mono',monospace;font-size:.78rem">
+        <button class="btn sm" onclick="copyPageUrl()">Copy</button>
+      </div>
+      <div id="urlcopied"></div>
     </div>
-  </div>
-  <div class="note" style="max-width:720px;margin-top:16px">
-    <b>Publishing this yourself?</b> Installing needs four files sitting together in the repo root: <b>index.html</b>, <b>manifest.webmanifest</b>, <b>sw.js</b>, and both icon PNGs. If any are missing the site still works — it just cannot be installed.
   </div>`;
+}
+function copyPageUrl() {
+  const t = $('#pageurl'); t.select();
+  const done = () => { $('#urlcopied').innerHTML = `<p style="color:var(--green);font-size:.83rem;margin:8px 0 0">Copied — send it to your phone.</p>`; };
+  if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(done).catch(() => { document.execCommand('copy'); done(); });
+  else { document.execCommand('copy'); done(); }
 }
 
 /* a quiet prompt in the corner once the browser says installing is possible */

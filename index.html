@@ -370,6 +370,44 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* ============ RICH STUDY GUIDE BLOCKS ====================== */
+.g-intro{
+  font-family:'Newsreader',Georgia,serif;font-size:1.1rem;line-height:1.68;
+  color:var(--ink);margin:0 0 14px;max-width:68ch;
+}
+.g-table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:.9rem}
+.g-table th{
+  text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+  padding:0 12px 7px 0;border-bottom:1.5px solid var(--ink);white-space:nowrap;
+}
+.g-table td{padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+.g-table tr:last-child td{border-bottom:0}
+.g-table td:first-child{font-weight:600;white-space:nowrap}
+@media (max-width:640px){.g-table{font-size:.84rem}.g-table td:first-child{white-space:normal}}
+.g-ex{
+  background:var(--canvas-2);border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;margin:16px 0 18px;
+}
+.g-ex .exq{font-weight:600;margin:0 0 12px;line-height:1.5}
+.g-ex ol{margin:0;padding-left:20px}
+.g-ex ol li{margin-bottom:7px;line-height:1.6;font-size:.94rem}
+.g-ex .exa{
+  margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line);
+  font-weight:700;font-size:.95rem;
+}
+.g-trap,.g-tip{
+  border-left:3px solid var(--margin);padding:2px 0 2px 14px;
+  margin:14px 0 18px;font-size:.93rem;line-height:1.6;color:var(--ink-soft);max-width:66ch;
+}
+.g-tip{border-left-color:var(--highlight)}
+.g-trap b,.g-tip b{
+  display:block;font-family:'IBM Plex Mono',monospace;font-size:.64rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:3px;
+}
+.guide-sec ul+.g-table,.guide-sec ul+.g-ex{margin-top:6px}
+@media print{.g-ex,.g-trap,.g-tip,.g-table{break-inside:avoid}}
+
 /* ==================== INSTALL PAGE ========================= */
 .big-install{
   display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
@@ -1929,7 +1967,7 @@ quiz:[
 /* ------------------------------------------------ SAT */
 COURSES.push({
 id:'sat', name:'SAT', short:'SAT', color:'#5B4A9E', exam:'Test',
-blurb:'Digital SAT strategy plus Reading, Writing, and Math practice.',
+blurb:'Every domain of the digital SAT, with worked examples and the traps that cost points.',
 units:[
 {
 id:'rw', title:'Reading and Writing',
@@ -2054,7 +2092,7 @@ quiz:[
 /* ------------------------------------------------ ACT */
 COURSES.push({
 id:'act', name:'ACT', short:'ACT', color:'#B03A4E', exam:'Test',
-blurb:'Pacing, grammar, math, and the Science section decoded.',
+blurb:'The Enhanced ACT: new timings, optional Science, and section-by-section method.',
 units:[
 {
 id:'eng', title:'English and Reading',
@@ -6780,7 +6818,15 @@ const FORMAL = {
   COURSES.forEach(c => {
     if (c.exam === 'Test') {
       c.group = 'College entrance exams';
-      c.fmt = c.id === 'sat' ? { q: 54, min: 64 } : { q: 75, min: 45 };
+      /* SAT: 54 R&W questions in 64 min. ACT: 131 core questions in ~125 min. */
+      c.fmt = c.id === 'sat' ? { q: 54, min: 64 } : { q: 50, min: 35 };
+      c.outline = c.id === 'sat'
+        ? ['Unit 1 · How the Digital SAT Works','Unit 2 · Reading: Craft and Structure',
+           'Unit 3 · Reading: Information and Ideas','Unit 4 · Standard English Conventions',
+           'Unit 5 · Expression of Ideas','Unit 6 · Math: Algebra','Unit 7 · Math: Advanced Math',
+           'Unit 8 · Math: Data, Geometry and Trigonometry']
+        : ['Unit 1 · How the Enhanced ACT Works','Unit 2 · English','Unit 3 · Reading',
+           'Unit 4 · Math','Unit 5 · Science (optional)'];
     }
     if (!c.group) c.group = 'Other';
   });
@@ -7120,6 +7166,1943 @@ clearOutlineFlags();
 </script>
 <script>
 /* ============================================================
+   SAT — rebuilt as eight full units with worked examples,
+   reference tables, and the traps that actually cost points.
+   ============================================================ */
+(function clearSAT() {
+  const c = COURSES.find(x => x.id === 'sat');
+  if (c) c.units = [];
+})();
+
+addUnits('sat', [
+{
+id:'u1', title:'Unit 1 · How the Digital SAT Works',
+guide:[
+ {h:'The shape of the test',
+  intro:'The SAT is adaptive at the module level. You sit two modules per section, and how you do on the first decides which version of the second you get. That single fact drives almost every strategic decision worth making.',
+  table:{head:['Section','Modules','Questions','Time'],rows:[
+    ['Reading and Writing','2','27 each','32 min each'],
+    ['Math','2','22 each','35 min each'],
+    ['Total','4','98','2 hr 14 min']]},
+  points:[
+   'Module 2 is harder or easier depending on module 1. The harder version has a higher score ceiling, so <b>module 1 matters more than any other part of the test</b>.',
+   'Scores run 400–1600, split into two 200–800 section scores.',
+   'There is <b>no penalty for a wrong answer</b>. Never leave anything blank.',
+   'Everything runs in the Bluebook app, with a built-in Desmos graphing calculator available for the whole Math section.'
+  ],
+  tip:'Because module 1 sets your ceiling, spend your first pass there getting easy questions right rather than fighting the hardest one. A careless error early costs more than a missed hard question late.'},
+
+ {h:'Reading and Writing: what to expect',
+  intro:'This is not the old SAT. Every question has its own short passage of 25 to 150 words. There are no long passages with five questions attached, so you never have to hold a whole essay in your head.',
+  points:[
+   'Questions appear grouped by type, in a fixed order, and get harder within each group.',
+   'The four domains always come in this sequence, which means you can predict what is next.',
+   'Roughly 71 seconds per question. That is enough time to read carefully once.'
+  ],
+  table:{head:['Domain','Share','What it asks'],rows:[
+    ['Craft and Structure','~28%','Vocabulary in context, purpose, structure, connecting two texts'],
+    ['Information and Ideas','~26%','Central ideas, supporting evidence, data, inference'],
+    ['Standard English Conventions','~26%','Grammar, punctuation, sentence structure'],
+    ['Expression of Ideas','~20%','Transitions and combining notes into one sentence']]}},
+
+ {h:'Math: what to expect',
+  intro:'About three quarters of Math questions are multiple choice; the rest are student-produced responses where you type the answer. Desmos is available throughout, which changes what counts as a hard question.',
+  table:{head:['Domain','Share','Roughly'],rows:[
+    ['Algebra','~35%','13–15 questions'],
+    ['Advanced Math','~35%','13–15 questions'],
+    ['Problem-Solving and Data Analysis','~15%','5–7 questions'],
+    ['Geometry and Trigonometry','~15%','5–7 questions']]},
+  points:[
+   'Grid-in answers accept fractions or decimals. Never round unless told to; enter the full value or an exact fraction.',
+   'Negative answers are impossible on some question types — if you get one, check your work.',
+   'A reference sheet with area and volume formulas is provided, but memorising them is faster.'
+  ],
+  trap:'Students lose more Math points to misreading than to not knowing the maths. Underline what the question actually asks for — often the value of <b>x + 3</b>, not <b>x</b>.'}
+],
+cards:[
+ ['Adaptive module structure','Performance on module 1 determines whether module 2 is the harder or easier version.'],
+ ['Why module 1 matters most','Only the harder second module unlocks the top of the score range.'],
+ ['SAT scoring range','400–1600 total, from two 200–800 section scores.'],
+ ['Wrong-answer penalty','None. Always guess rather than leave a blank.'],
+ ['Reading and Writing timing','27 questions in 32 minutes per module, about 71 seconds each.'],
+ ['Math timing','22 questions in 35 minutes per module, about 95 seconds each.'],
+ ['Question order in Reading and Writing','Craft and Structure, Information and Ideas, Conventions, then Expression of Ideas.'],
+ ['Desmos availability','The built-in graphing calculator is available for the entire Math section.'],
+ ['Grid-in rules','Type the exact value or a fraction; do not round unless instructed.']
+],
+quiz:[
+ {q:'Why does the first Reading and Writing module matter more than the second?',
+  c:['It contains more questions','It determines whether you get the higher-scoring second module','It is scored twice','It has no time limit'],
+  a:1, why:'The adaptive design routes strong performers to a harder module 2, which is the only path to the top of the score range.'},
+ {q:'You have 90 seconds left and three Math questions unanswered. You should:',
+  c:['Leave them blank to avoid losing points','Guess on all three','Answer only the one you understand','Leave them and re-check earlier work'],
+  a:1, why:'There is no penalty for a wrong answer, so three guesses have positive expected value and a blank has none.'},
+ {q:'Which domain makes up the largest share of the Math section?',
+  c:['Geometry and Trigonometry','Problem-Solving and Data Analysis','Algebra and Advanced Math, roughly equally','Statistics'],
+  a:2, why:'Algebra and Advanced Math each account for about 35%, together making up around 70% of the section.'},
+ {q:'A grid-in answer works out to 2/3. You should enter:',
+  c:['0.66','.667 or 2/3','0.7','Round to 1'],
+  a:1, why:'Enter the exact fraction or a decimal filling the available spaces. Rounding to 0.66 or 0.7 is marked wrong.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Reading: Craft and Structure',
+guide:[
+ {h:'Vocabulary in context',
+  intro:'These questions give you a blank in a short passage and four word choices. The tested words are rarely obscure — the difficulty is that two or three choices are plausible synonyms and only one fits the specific job the sentence needs done.',
+  points:[
+   '<b>Cover the choices first.</b> Predict your own word from the sentence, then find the closest match.',
+   'Look for the signal: a contrast word (<i>however</i>, <i>although</i>) means the blank opposes what came before; a continuation word (<i>moreover</i>, <i>indeed</i>) means it agrees.',
+   'Watch the <b>connotation</b>. "Thrifty" and "stingy" mean the same thing but carry opposite judgements.',
+   'The correct word must fit <i>grammatically and logically</i>, not just feel sophisticated.'
+  ],
+  ex:{q:'Although the results were widely publicised, the researchers themselves remained ______ about their significance, cautioning that the sample was small.',
+      steps:['"Although" signals contrast: publicity versus the researchers\u2019 own attitude.',
+             '"Cautioning that the sample was small" tells you they were holding back.',
+             'Predict: <i>cautious</i>, <i>reserved</i>, <i>doubtful</i>.',
+             'Now check the options against that prediction rather than against each other.'],
+      a:'Answer: a word meaning restrained or doubtful — for example "circumspect." A word like "emphatic" or "adamant" reverses the meaning.'},
+  trap:'Choosing the hardest-sounding word. The SAT tests precision, not vocabulary size. If you cannot justify the word from the sentence, it is wrong.'},
+
+ {h:'Purpose and structure',
+  intro:'Purpose questions ask what a sentence or passage is doing, not what it says. The answer is a verb: it introduces, it qualifies, it illustrates, it refutes.',
+  points:[
+   'Ask yourself: if this sentence vanished, what would the passage lose?',
+   'Common functions: <b>introduce</b> a claim, <b>support</b> with an example, <b>qualify</b> or limit a claim, <b>contrast</b> with an alternative, <b>conclude</b>.',
+   'Wrong answers usually describe something the text does <i>somewhere</i>, just not in the part you were asked about.',
+   'For "overall structure" questions, summarise each portion in three words before reading the choices.'
+  ],
+  tip:'Answer purpose questions in your own words before you look. Once you read four polished options, all four start to sound reasonable.'},
+
+ {h:'Text connections',
+  intro:'These give you two short passages and ask how the second author would respond to the first. They are the most predictable questions on the section once you know the pattern.',
+  points:[
+   'Identify each author\u2019s <b>claim</b> in one sentence before comparing anything.',
+   'Then ask precisely: do they disagree about facts, about interpretation, or about what should be done?',
+   'The answer is almost always partial. Authors rarely agree completely or reject each other outright.',
+   'Beware choices that make Author 2 dismiss Author 1 entirely — real disagreement is usually narrower.'
+  ],
+  ex:{q:'Text 1 argues urban green space improves residents\u2019 mental health. Text 2 reports that the effect disappears once household income is controlled for. How would Text 2\u2019s author most likely respond?',
+      steps:['Text 1 claim: green space causes better mental health.',
+             'Text 2 claim: the correlation is explained by income, not green space.',
+             'This is a disagreement about <i>causation</i>, not about whether the correlation exists.'],
+      a:'Answer: by suggesting the relationship Text 1 describes may be explained by a third factor. Not "by rejecting the data" — Text 2 accepts the data and disputes the interpretation.'}}
+],
+cards:[
+ ['Vocabulary in context method','Cover the choices, predict your own word from context, then match.'],
+ ['Contrast signal words','However, although, yet, despite, nonetheless — the blank opposes what precedes it.'],
+ ['Continuation signal words','Moreover, indeed, furthermore, likewise — the blank agrees with what precedes it.'],
+ ['Connotation','The judgement a word carries: thrifty and stingy share a meaning but not a tone.'],
+ ['Purpose questions','Ask what a sentence does, not what it says; the answer is a verb.'],
+ ['Common sentence functions','Introduce, support, illustrate, qualify, contrast, conclude.'],
+ ['Text connection method','State each author\u2019s claim in one sentence before comparing.'],
+ ['Partial disagreement','Paired-text answers are usually narrow; total rejection is nearly always wrong.'],
+ ['Why sophisticated words are traps','The SAT tests precision of fit, not vocabulary difficulty.']
+],
+quiz:[
+ {q:'"The mayor\u2019s plan was praised publicly, but privately officials were ______ about its cost." The blank most likely means:',
+  c:['enthusiastic','apprehensive','indifferent','celebratory'],
+  a:1, why:'"But privately" signals contrast with public praise, so the blank must be negative. Apprehensive fits; the others either match the praise or ignore the contrast.'},
+ {q:'A purpose question asks what a sentence "primarily serves to" do. The best first step is:',
+  c:['Read all four choices carefully','Describe the sentence\u2019s job in your own words','Look up the hardest vocabulary word','Reread the whole passage'],
+  a:1, why:'Predicting first prevents four well-written distractors from all sounding plausible.'},
+ {q:'In a paired-text question, an answer saying Author 2 "completely refutes" Author 1 is:',
+  c:['Usually correct, since the texts are paired for contrast','Usually wrong, because real disagreements are narrower','Correct only in science passages','Impossible to evaluate'],
+  a:1, why:'Paired texts typically differ on one specific point while agreeing on much else.'},
+ {q:'Which is the strongest reason to reject a vocabulary answer choice?',
+  c:['You have never seen the word before','You cannot justify it from the sentence','It is shorter than the others','It appears in the passage already'],
+  a:1, why:'Every correct answer is provable from context. If you cannot point to the words that require it, it is not the answer.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Reading: Information and Ideas',
+guide:[
+ {h:'Central ideas and details',
+  intro:'A main-idea answer must cover the whole passage. Most wrong choices are true statements about one sentence, which makes them tempting and still wrong.',
+  points:[
+   'Correct main-idea answers are usually <b>moderately worded</b>: they describe, qualify, or suggest.',
+   'Reject choices containing <b>always, never, all, proves, only</b> unless the passage really says so.',
+   'A detail question is open-book. Find the line, read the sentence before and after, then answer.',
+   'If two choices seem right, one of them adds a claim the passage never makes. Find that word.'
+  ],
+  trap:'A choice that is accurate but too narrow. Ask "does this cover the last sentence too?" before accepting a main-idea answer.'},
+
+ {h:'Command of evidence: textual',
+  intro:'You are given a claim or hypothesis and asked which finding would most support or weaken it. These are logic questions wearing a reading costume.',
+  points:[
+   'State the claim precisely, including what it says about <b>cause</b>.',
+   'Ask: what would have to be true for this claim to hold? That is the support answer.',
+   'To weaken, look for the choice offering an <b>alternative explanation</b>.',
+   'Choices that are merely related to the topic without touching the specific claim are the most common trap.'
+  ],
+  ex:{q:'A researcher hypothesises that a plant species evolved thicker leaves in response to drought. Which finding would most support this?',
+      steps:['The claim links thick leaves specifically to drought conditions.',
+             'Support must connect the trait to that pressure, not just describe the plant.',
+             'Compare populations: same species, different rainfall.'],
+      a:'Answer: populations in drier regions have measurably thicker leaves than populations of the same species in wetter regions. "The species is found on three continents" is true but irrelevant to drought.'}},
+
+ {h:'Command of evidence: quantitative',
+  intro:'A graph or table appears with a claim, and you must pick the data point that completes or supports it. The maths is trivial; the errors come from reading the chart wrong.',
+  points:[
+   'Read the <b>axis labels and units</b> before looking at any answer choice. Thousands versus millions ends more attempts than anything else.',
+   'Check whether the claim is about a <b>value</b>, a <b>change</b>, or a <b>rate</b>. They need different numbers.',
+   'The answer must both be accurate <i>and</i> support the specific claim. Some choices are accurate but support nothing.',
+   'Watch for a second y-axis on the right side of the chart.'
+  ],
+  tip:'Cover the choices, look at the figure, and say aloud what it shows. Then find the option matching your sentence.'},
+
+ {h:'Inference',
+  intro:'The SAT means something narrow by inference: the conclusion the passage forces, not one it merely permits. If you needed outside knowledge, you chose wrong.',
+  points:[
+   'Most inference questions end with a blank to complete logically.',
+   'Look at the sentence right before the blank — the answer usually follows directly from it.',
+   'The correct answer takes <b>one small step</b> beyond the text, never two.',
+   'Ask: "must this be true given only the passage?" Not "could this be true?"'
+  ],
+  trap:'Choosing the most interesting or intelligent-sounding conclusion. The right answer often feels obvious and slightly boring — that is what makes it provable.'}
+],
+cards:[
+ ['Main-idea answers','Must cover the whole passage, and are usually moderately worded.'],
+ ['Extreme-language trap','Always, never, all, proves, only — nearly always overstate the passage.'],
+ ['Command of evidence method','Identify the claim, then ask what would have to be true for it to hold.'],
+ ['Weakening a claim','Look for the choice offering an alternative explanation.'],
+ ['Reading a figure','Check axis labels and units before reading any answer choice.'],
+ ['Value vs. change vs. rate','Decide which the claim needs before picking a number from the chart.'],
+ ['SAT definition of inference','The conclusion the passage forces, taking one small step beyond the text.'],
+ ['Outside knowledge','Never required, and using it is the most common inference error.'],
+ ['Two plausible choices','One of them adds a claim the passage never makes — find that word.']
+],
+quiz:[
+ {q:'A main-idea choice accurately describes the passage\u2019s second sentence only. It is:',
+  c:['Correct, since it is accurate','Wrong, because it is too narrow','Correct if no other choice is accurate','Impossible to judge'],
+  a:1, why:'Accuracy is necessary but not sufficient — a main idea must account for the entire passage.'},
+ {q:'Which finding would most WEAKEN the claim that a tutoring programme raised test scores?',
+  c:['Participants scored higher than non-participants','Participants had also received extra classroom time','The programme ran for six months','Attendance was voluntary'],
+  a:1, why:'An alternative explanation for the gain undercuts the causal claim. Voluntary attendance hints at selection bias but does not directly explain the rise.'},
+ {q:'A chart\u2019s y-axis reads "Population (thousands)" and shows a bar at 45. The population is:',
+  c:['45','450','45,000','4,500'],
+  a:2, why:'The unit is thousands, so 45 means 45,000. Ignoring the unit label is the single most common quantitative error.'},
+ {q:'An SAT inference answer should be:',
+  c:['The most surprising conclusion','A conclusion requiring outside knowledge','The conclusion the passage forces','Any conclusion the passage permits'],
+  a:2, why:'The test rewards what must follow from the text alone, which usually feels straightforward rather than clever.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Standard English Conventions',
+guide:[
+ {h:'Sentence boundaries',
+  intro:'About a third of grammar questions are boundary questions in disguise. Learn to spot two independent clauses and most of them collapse into one rule.',
+  points:[
+   'An <b>independent clause</b> has a subject and a verb and could stand alone as a sentence.',
+   'Two independent clauses may be joined by: a period, a semicolon, a colon, a dash, or a comma <i>plus</i> a FANBOYS conjunction (for, and, nor, but, or, yet, so).',
+   'A comma alone between two independent clauses is a <b>comma splice</b> and is always wrong.',
+   'Conjunctive adverbs — however, therefore, moreover, nevertheless — are <b>not</b> conjunctions. They need a semicolon before and a comma after.'
+  ],
+  table:{head:['Correct','Why'],rows:[
+    ['She trained hard. She won.','Period between two independent clauses'],
+    ['She trained hard; she won.','Semicolon between two independent clauses'],
+    ['She trained hard, so she won.','Comma + FANBOYS'],
+    ['She trained hard; however, she lost.','Semicolon before a conjunctive adverb'],
+    ['<s>She trained hard, she won.</s>','Comma splice — never correct'],
+    ['<s>She trained hard, however, she lost.</s>','However is not a conjunction']]},
+  tip:'Read only the words before the underlined punctuation and only the words after. If each half is a full sentence, you need a period, semicolon, colon, dash, or comma+FANBOYS. Nothing else.'},
+
+ {h:'Punctuation within a sentence',
+  points:[
+   'A <b>colon</b> requires a complete sentence before it. What follows can be a list, a phrase, or a clause.',
+   'A <b>dash</b> can replace a colon or work in pairs like commas around extra information.',
+   'Never mix: if you open with a dash you must close with a dash, not a comma.',
+   '<b>Nonessential information</b> takes commas on both sides. Delete it — if the sentence still works and still means the same thing, it was nonessential.',
+   'Do not separate a subject from its verb with a single comma.',
+   'The SAT never tests the Oxford comma as a right-or-wrong issue.'
+  ],
+  ex:{q:'Choose the correct version: "The novel ______ published in 1958 ______ remains her best-known work."',
+      steps:['Delete the middle phrase: "The novel remains her best-known work." Still works.',
+             'So "published in 1958" is nonessential.',
+             'Nonessential phrases need matching punctuation on both sides.'],
+      a:'Answer: commas on both sides — "The novel, published in 1958, remains her best-known work." A comma on one side only is wrong.'},
+  trap:'A comma before a phrase and nothing after it. Punctuation around nonessential information must match.'},
+
+ {h:'Agreement and verbs',
+  points:[
+   '<b>Subject-verb agreement</b>: cross out prepositional phrases to find the real subject. "The box <s>of old letters</s> <b>is</b> heavy."',
+   'Subjects after "there is/are" come <i>after</i> the verb.',
+   'Collective nouns — team, committee, jury — are singular in American usage.',
+   '<b>Verb tense</b> should match the surrounding sentences unless the passage signals a shift in time.',
+   '<b>Pronoun agreement</b>: a singular antecedent takes a singular pronoun. Watch <i>each</i>, <i>every</i>, <i>anyone</i> — all singular.',
+   'Its = possessive. It\u2019s = it is. Their = possessive. They\u2019re = they are. There = place.'
+  ],
+  table:{head:['Confusion','Rule'],rows:[
+    ['its / it\u2019s','its = belonging to it; it\u2019s = it is'],
+    ['whose / who\u2019s','whose = possession; who\u2019s = who is'],
+    ['their / they\u2019re / there','possession / they are / place'],
+    ['your / you\u2019re','possession / you are'],
+    ['affect / effect','affect = verb, to influence; effect = noun, a result']]}},
+
+ {h:'Modifiers and parallel structure',
+  points:[
+   'An opening descriptive phrase modifies <b>the noun immediately after the comma</b>. If that noun cannot do the action, the modifier dangles.',
+   '"Walking through the museum, the paintings impressed us" is wrong — paintings cannot walk.',
+   'Items in a list must share grammatical form: <i>running, swimming, and cycling</i>, not <i>running, swimming, and to cycle</i>.',
+   'Comparisons must compare like things: "Her score was higher than <b>his</b>," not "higher than <b>him</b>."',
+   'Apostrophes: singular possessive adds \u2019s, plural possessive adds s\u2019, and possessive pronouns never take one.'
+  ],
+  ex:{q:'"Having studied all night, ______" Which continuation is correct?',
+      steps:['Who did the studying? A person must follow the comma.',
+             'Check each option for whether its first noun can study.'],
+      a:'Answer: "Having studied all night, Maria felt prepared." Not "the exam seemed easier" — an exam cannot study.'}}
+],
+cards:[
+ ['Independent clause','A subject and verb that could stand alone as a sentence.'],
+ ['Comma splice','Two independent clauses joined by only a comma. Always wrong.'],
+ ['FANBOYS','For, and, nor, but, or, yet, so — the coordinating conjunctions.'],
+ ['Conjunctive adverbs','However, therefore, moreover — need a semicolon before, comma after.'],
+ ['Colon rule','Requires a complete sentence before it.'],
+ ['Nonessential information','Delete it; if the sentence still works, it needs commas on both sides.'],
+ ['Subject-verb agreement trick','Cross out prepositional phrases to find the true subject.'],
+ ['Collective nouns','Team, committee, jury — singular in American English.'],
+ ['Each / every / anyone','Always singular, and take singular verbs and pronouns.'],
+ ['Dangling modifier','The noun after the comma must be able to perform the opening action.'],
+ ['Parallel structure','Items in a list or comparison must share grammatical form.'],
+ ['Apostrophe rules','Singular adds \u2019s, plural adds s\u2019, possessive pronouns take none.'],
+ ['its vs. it\u2019s','its = possession; it\u2019s = it is.'],
+ ['affect vs. effect','Affect is the verb, effect is the noun.']
+],
+quiz:[
+ {q:'"The experiment failed ______ the data was still useful." Which is correct?',
+  c:[', however,','; however,','however,','and however,'],
+  a:1, why:'Both halves are independent clauses, and "however" is not a conjunction, so it needs a semicolon before and a comma after.'},
+ {q:'"The report, which was published last year ______ changed the debate." The blank needs:',
+  c:['no punctuation','a comma','a semicolon','a colon'],
+  a:1, why:'"Which was published last year" is nonessential and already has a comma opening it, so it needs a closing comma to match.'},
+ {q:'"The collection of rare stamps ______ worth thousands." Choose the verb.',
+  c:['are','is','were','have been'],
+  a:1, why:'The subject is "collection," which is singular. "Of rare stamps" is a prepositional phrase and cannot be the subject.'},
+ {q:'Which sentence is correct?',
+  c:['Running, swimming, and to cycle are her hobbies.','She likes running, swimming, and cycling.','She likes to run, swimming, and cycling.','Running, to swim, and cycling are fun.'],
+  a:1, why:'All three items share the same -ing form, satisfying parallel structure.'},
+ {q:'"Exhausted after the long hike, ______" Which avoids a dangling modifier?',
+  c:['the tent was quickly assembled','the campsite looked welcoming','we set up camp immediately','it was time to rest'],
+  a:2, why:'"We" were exhausted. A tent, a campsite, and "it" cannot be exhausted after a hike.'},
+ {q:'Which uses the colon correctly?',
+  c:['The recipe needs: flour, eggs, and milk.','She had one goal: winning.','He wanted to: leave early.','They brought: nothing.'],
+  a:1, why:'"She had one goal" is a complete sentence, so a colon may follow. The others break the sentence mid-structure.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Expression of Ideas',
+guide:[
+ {h:'Transitions',
+  intro:'Transition questions are the most reliably winnable questions on the section, because the answer is determined entirely by logic you can work out before reading any choice.',
+  points:[
+   'Cover the options. Read the sentence before and the sentence after. Name the relationship out loud.',
+   'Then find the transition matching that relationship.',
+   'Two choices from the same category are both wrong — the SAT will not offer two correct answers.'
+  ],
+  table:{head:['Relationship','Transitions'],rows:[
+    ['Adding','Moreover, furthermore, in addition, also'],
+    ['Contrasting','However, nevertheless, on the other hand, conversely'],
+    ['Cause and effect','Therefore, thus, consequently, as a result'],
+    ['Example','For example, for instance, specifically'],
+    ['Concession','Admittedly, granted, to be sure'],
+    ['Sequence','First, subsequently, finally'],
+    ['Restating','In other words, that is']]},
+  trap:'"However" is not a general-purpose transition. If the two sentences agree, it is wrong no matter how natural it sounds.'},
+
+ {h:'Rhetorical synthesis',
+  intro:'You are given four or five bullet points of notes and a stated goal, then asked which sentence best achieves it. The goal sentence is the whole question — the notes are just raw material.',
+  points:[
+   '<b>Read the goal twice before reading the notes.</b> Underline exactly what it asks for.',
+   'Common goals: emphasise a similarity, emphasise a difference, explain a method, present a result to someone unfamiliar with the topic.',
+   'The right answer uses the notes that serve the goal and ignores the rest.',
+   'Wrong answers are usually accurate summaries of the notes that do not do the requested job.',
+   'If the goal says "compare," the answer must mention <b>both</b> things.'
+  ],
+  ex:{q:'Goal: emphasise a difference between the two materials. Notes include melting points, discovery dates, and both being used in aerospace.',
+      steps:['The goal is difference, so shared aerospace use is irrelevant.',
+             'Discovery dates differ but are not a property comparison.',
+             'Melting points are directly comparable properties.'],
+      a:'Answer: the sentence contrasting the two melting points. A sentence saying both are used in aerospace is accurate and fails the goal.'},
+  tip:'Cross out any note that does not serve the stated goal before you read the answer choices. The remaining notes point straight at the answer.'}
+],
+cards:[
+ ['Transition method','Name the relationship between the two sentences before reading any choice.'],
+ ['Two same-category transitions','Both are wrong; the SAT never offers two correct answers.'],
+ ['Addition transitions','Moreover, furthermore, in addition, also.'],
+ ['Contrast transitions','However, nevertheless, on the other hand, conversely.'],
+ ['Cause-and-effect transitions','Therefore, thus, consequently, as a result.'],
+ ['Concession transitions','Admittedly, granted, to be sure.'],
+ ['Rhetorical synthesis','Choose the sentence that achieves a stated goal using the given notes.'],
+ ['First step in synthesis','Read the goal twice and underline exactly what it asks for.'],
+ ['Synthesis trap','An accurate summary of the notes that does not perform the requested job.']
+],
+quiz:[
+ {q:'"The trial showed no benefit. ______ the researchers recommended further study." Which fits?',
+  c:['For example,','Nevertheless,','In other words,','Similarly,'],
+  a:1, why:'Recommending more study despite a null result is a contrast, which calls for a concessive or contrasting transition.'},
+ {q:'Two answer choices are "moreover" and "furthermore." You can conclude:',
+  c:['One of them must be correct','Both are wrong','The question is flawed','You should pick the shorter one'],
+  a:1, why:'They are interchangeable, so if either worked the question would have two answers. The relationship must be something else.'},
+ {q:'The goal is "to emphasise a similarity between the two studies." The best answer will:',
+  c:['Describe the first study in detail','Mention both studies and what they share','List every finding from the notes','Explain why one study was better'],
+  a:1, why:'A similarity requires both items and the shared feature. Detail about one study cannot establish a similarity.'},
+ {q:'The most common reason a rhetorical synthesis answer is wrong is that it:',
+  c:['Contains a grammar error','Is accurate but does not achieve the stated goal','Uses too few notes','Is too short'],
+  a:1, why:'Every choice is usually factually consistent with the notes. Only one performs the specific rhetorical task.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Math: Algebra',
+guide:[
+ {h:'Linear equations and lines',
+  intro:'Roughly a third of the Math section is linear. If you can move fluently between slope-intercept form, standard form, a table, and a graph, you have secured a large block of points.',
+  table:{head:['Form','Equation','Gives you'],rows:[
+    ['Slope-intercept','y = mx + b','Slope m and y-intercept b immediately'],
+    ['Point-slope','y − y₁ = m(x − x₁)','A line through a known point'],
+    ['Standard','Ax + By = C','Intercepts fast: set x = 0, then y = 0']]},
+  points:[
+   'Slope @@m = \\frac{y_{2}-y_{1}}{x_{2}-x_{1}}@@ — rise over run.',
+   'Parallel lines have <b>equal slopes</b>. Perpendicular slopes are <b>negative reciprocals</b> whose product is −1.',
+   'In a word problem, the slope is the <b>rate</b> ("per hour", "each") and the intercept is the <b>starting value</b>.',
+   'A horizontal line is y = c with slope 0; a vertical line is x = c with undefined slope.'
+  ],
+  ex:{q:'A gym charges a $40 joining fee plus $25 per month. Write the cost after m months, and find when the cost reaches $240.',
+      steps:['Starting value 40 is the intercept; 25 per month is the slope.',
+             'C = 25m + 40.',
+             'Set 240 = 25m + 40, so 200 = 25m.',
+             'm = 8.'],
+      a:'Answer: C = 25m + 40, and the cost reaches $240 after 8 months.'}},
+
+ {h:'Systems of equations',
+  intro:'The SAT loves asking how many solutions a system has, without asking you to find them. That question is answered entirely by comparing slopes.',
+  table:{head:['Situation','Solutions','How to spot it'],rows:[
+    ['Different slopes','Exactly one','Lines cross once'],
+    ['Same slope, different intercept','None','Parallel lines'],
+    ['Same slope, same intercept','Infinitely many','Same line written twice']]},
+  points:[
+   'Solve by <b>substitution</b> when one variable is already isolated, by <b>elimination</b> when coefficients line up.',
+   'For "no solution", set the coefficient ratios equal but the constant ratio different.',
+   'For "infinitely many", every ratio must match — one equation is a multiple of the other.',
+   'Desmos solves any system instantly: graph both and read the intersection.'
+  ],
+  ex:{q:'For what value of k does 3x + ky = 7 have no solution with 6x + 4y = 9?',
+      steps:['No solution means parallel: coefficient ratios equal.',
+             '3/6 = k/4.',
+             'Cross-multiply: 12 = 6k, so k = 2.',
+             'Check the constants differ: 7/9 ≠ 1/2. They do, so there is genuinely no solution.'],
+      a:'Answer: k = 2.'},
+  trap:'Finding the k that makes the coefficients proportional and stopping there. If the constants are also proportional, you get infinitely many solutions, not none.'},
+
+ {h:'Inequalities and absolute value',
+  points:[
+   'Multiplying or dividing an inequality by a <b>negative number flips the sign</b>. This single rule accounts for most inequality errors.',
+   'For systems of inequalities, the solution is the overlapping shaded region.',
+   '@@|x - a| < b@@ means x is within b of a, giving @@a - b < x < a + b@@.',
+   '@@|x - a| > b@@ splits into two separate inequalities joined by "or".',
+   'In word problems, "at least" means ≥, "at most" means ≤, "more than" means >.'
+  ],
+  ex:{q:'Solve @@|2x - 6| \\le 4@@.',
+      steps:['Rewrite as a compound inequality: −4 ≤ 2x − 6 ≤ 4.',
+             'Add 6 throughout: 2 ≤ 2x ≤ 10.',
+             'Divide by 2: 1 ≤ x ≤ 5.'],
+      a:'Answer: 1 ≤ x ≤ 5.'}}
+],
+cards:[
+ ['Slope formula','@@m = \\frac{y_{2}-y_{1}}{x_{2}-x_{1}}@@'],
+ ['Slope-intercept form','y = mx + b, where m is slope and b the y-intercept.'],
+ ['Parallel vs. perpendicular slopes','Parallel are equal; perpendicular are negative reciprocals multiplying to −1.'],
+ ['Slope in a word problem','The rate — the "per" quantity.'],
+ ['Intercept in a word problem','The starting value before anything changes.'],
+ ['System with no solution','Same slope, different y-intercept — parallel lines.'],
+ ['System with infinite solutions','One equation is a multiple of the other.'],
+ ['Inequality sign flip','Multiplying or dividing by a negative reverses the inequality.'],
+ ['|x − a| < b','x lies within b of a: a − b < x < a + b.'],
+ ['|x − a| > b','Splits into two inequalities joined by "or".'],
+ ['"At least" and "at most"','At least means ≥; at most means ≤.']
+],
+quiz:[
+ {q:'A line passes through (2, 5) and (6, 13). Its slope is:',
+  c:['1/2','2','4','8'],
+  a:1, why:'(13 − 5) ÷ (6 − 2) = 8 ÷ 4 = 2.'},
+ {q:'A line perpendicular to y = −3x + 1 has slope:',
+  c:['−3','3','1/3','−1/3'],
+  a:2, why:'The negative reciprocal of −3 is 1/3, and (−3)(1/3) = −1.'},
+ {q:'Solving −2x > 8 gives:',
+  c:['x > −4','x < −4','x > 4','x < 4'],
+  a:1, why:'Dividing by −2 flips the inequality, giving x < −4.'},
+ {q:'A phone plan costs $30 plus $0.10 per text. Which models the cost of t texts?',
+  c:['C = 30t + 0.10','C = 0.10t + 30','C = 30.10t','C = 0.10(t + 30)'],
+  a:1, why:'The per-text charge is the slope and the flat fee is the intercept.'},
+ {q:'@@|x - 3| = 7@@ has which solutions?',
+  c:['x = 10 only','x = 10 or x = −4','x = 4 or x = −10','No solution'],
+  a:1, why:'x − 3 = 7 gives 10, and x − 3 = −7 gives −4. Absolute value equations produce two cases.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Math: Advanced Math',
+guide:[
+ {h:'Quadratics',
+  intro:'Each of the three forms of a quadratic hands you a different piece of information for free. Recognising which form answers the question is faster than any algebra.',
+  table:{head:['Form','Equation','Reveals'],rows:[
+    ['Standard','y = ax² + bx + c','y-intercept c; axis of symmetry x = −b/2a'],
+    ['Vertex','y = a(x − h)² + k','Vertex (h, k) — the max or min'],
+    ['Factored','y = a(x − r₁)(x − r₂)','x-intercepts r₁ and r₂']]},
+  points:[
+   'Quadratic formula: @@x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}@@',
+   'The <b>discriminant</b> @@b^{2}-4ac@@ counts real solutions: positive gives 2, zero gives 1, negative gives none.',
+   'If a > 0 the parabola opens upward and the vertex is a minimum; if a < 0 it opens downward and the vertex is a maximum.',
+   'The vertex sits halfway between the two x-intercepts.',
+   'Completing the square converts standard form to vertex form.'
+  ],
+  ex:{q:'For what value of c does @@x^{2} + 6x + c = 0@@ have exactly one real solution?',
+      steps:['One real solution means the discriminant equals zero.',
+             '@@b^{2} - 4ac = 0@@ with a = 1 and b = 6.',
+             '36 − 4c = 0.',
+             'c = 9.'],
+      a:'Answer: c = 9, which makes the expression the perfect square (x + 3)².'},
+  trap:'Reading the vertex sign wrong. In y = (x − 3)² + 4 the vertex is (3, 4), not (−3, 4). The sign inside the parentheses flips.'},
+
+ {h:'Exponents, radicals, and exponential change',
+  points:[
+   'Rules: @@x^{a} \\cdot x^{b} = x^{a+b}@@, @@\\frac{x^{a}}{x^{b}} = x^{a-b}@@, @@(x^{a})^{b} = x^{ab}@@',
+   '@@x^{0} = 1@@ for any nonzero x, and @@x^{-a} = \\frac{1}{x^{a}}@@',
+   'A fractional exponent is a root: @@x^{1/2} = \\sqrt{x}@@ and @@x^{m/n} = \\sqrt[n]{x^{m}}@@',
+   '<b>Exponential growth</b>: @@y = a(1+r)^{t}@@. <b>Decay</b>: @@y = a(1-r)^{t}@@.',
+   'Linear means adding the same amount each period; exponential means multiplying by the same factor.',
+   'For growth n times per year, use @@y = a\\left(1 + \\frac{r}{n}\\right)^{nt}@@'
+  ],
+  ex:{q:'A population of 500 grows 6% per year. What is it after 10 years?',
+      steps:['Growth multiplies by (1 + 0.06) each year.',
+             '@@y = 500(1.06)^{10}@@',
+             '1.06¹⁰ ≈ 1.7908.',
+             '500 × 1.7908 ≈ 895.'],
+      a:'Answer: about 895. Note this is not 500 + 60×10 = 1100 — that would be linear growth.'}},
+
+ {h:'Functions and polynomials',
+  points:[
+   'f(x) is a machine: f(3) means substitute 3 for every x.',
+   'For nested functions, work <b>inside out</b>: f(g(2)) means evaluate g(2) first.',
+   '<b>Transformations</b>: f(x) + k shifts up, f(x) − k shifts down, f(x + k) shifts <b>left</b>, f(x − k) shifts <b>right</b>. Changes inside the parentheses behave opposite to expectation.',
+   '−f(x) reflects across the x-axis; f(−x) reflects across the y-axis.',
+   'A polynomial has a zero at x = r exactly when (x − r) is a factor and the graph crosses or touches there.',
+   'If a polynomial is divided by (x − r) with remainder 0, then r is a root.'
+  ],
+  table:{head:['Change','Effect'],rows:[
+    ['f(x) + 3','Up 3'],
+    ['f(x + 3)','Left 3'],
+    ['f(x − 3)','Right 3'],
+    ['2f(x)','Stretched vertically by 2'],
+    ['−f(x)','Flipped over the x-axis']]}}
+],
+cards:[
+ ['Quadratic formula','@@x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}@@'],
+ ['Discriminant','@@b^{2}-4ac@@: positive gives 2 real roots, zero gives 1, negative gives none.'],
+ ['Vertex form','y = a(x − h)² + k with vertex (h, k); the sign inside flips.'],
+ ['Factored form','y = a(x − r₁)(x − r₂) gives the x-intercepts directly.'],
+ ['Axis of symmetry','x = −b ÷ 2a, halfway between the roots.'],
+ ['Exponent product rule','@@x^{a} \\cdot x^{b} = x^{a+b}@@'],
+ ['Negative exponent','@@x^{-a} = \\frac{1}{x^{a}}@@'],
+ ['Fractional exponent','@@x^{m/n} = \\sqrt[n]{x^{m}}@@'],
+ ['Exponential growth model','@@y = a(1+r)^{t}@@'],
+ ['Linear vs. exponential','Linear adds a constant each period; exponential multiplies by a constant factor.'],
+ ['Horizontal shift rule','f(x + k) moves left, f(x − k) moves right — opposite to the sign.'],
+ ['Nested functions','Evaluate the inner function first.'],
+ ['Polynomial zeros','x = r is a zero exactly when (x − r) is a factor.']
+],
+quiz:[
+ {q:'The graph of @@y = (x-4)^{2} - 5@@ has its vertex at:',
+  c:['(−4, −5)','(4, −5)','(4, 5)','(−4, 5)'],
+  a:1, why:'In vertex form the sign inside the parentheses flips, so h = 4, and k = −5 is unchanged.'},
+ {q:'@@x^{2} + 4x + 9 = 0@@ has how many real solutions?',
+  c:['Two','One','None','Infinitely many'],
+  a:2, why:'The discriminant is 16 − 36 = −20. A negative discriminant means no real solutions.'},
+ {q:'A bacteria count of 200 doubles every hour. After t hours the count is:',
+  c:['200 + 2t','200(2)^t','200t²','2(200)^t'],
+  a:1, why:'Doubling multiplies by 2 each period, so the base is 2 and the starting amount is the coefficient.'},
+ {q:'The graph of f(x + 2) compared with f(x) is shifted:',
+  c:['Right 2','Left 2','Up 2','Down 2'],
+  a:1, why:'Changes inside the parentheses shift horizontally and in the opposite direction to the sign.'},
+ {q:'@@\\frac{x^{7}}{x^{3}}@@ simplifies to:',
+  c:['@@x^{4}@@','@@x^{10}@@','@@x^{21}@@','@@x^{2}@@'],
+  a:0, why:'Dividing like bases subtracts exponents: 7 − 3 = 4.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Math: Data, Geometry and Trigonometry',
+guide:[
+ {h:'Ratios, percentages, and rates',
+  points:[
+   'Percent change @@= \\frac{\\text{new} - \\text{old}}{\\text{old}} \\times 100@@ — always divide by the <b>original</b>.',
+   'A 20% increase multiplies by 1.20; a 20% decrease multiplies by 0.80.',
+   'An increase of x% followed by a decrease of x% never returns to the original.',
+   'Unit rates: divide to get "per one", then multiply.',
+   'For proportions, set up equal fractions and cross-multiply.'
+  ],
+  ex:{q:'A jacket costs $60 after a 25% discount. What was the original price?',
+      steps:['A 25% discount means paying 75% of the original.',
+             '0.75x = 60.',
+             'x = 60 ÷ 0.75 = 80.'],
+      a:'Answer: $80. Adding 25% to $60 gives $75, which is the trap answer.'},
+  trap:'Applying the percentage to the wrong number. If the question gives you the price <i>after</i> a discount, that number is not the base.'},
+
+ {h:'Statistics',
+  points:[
+   '<b>Mean</b> is pulled by outliers; <b>median</b> is not. In skewed data the median describes the typical value better.',
+   'Skewed <b>right</b> means the mean exceeds the median; skewed left means the reverse.',
+   '<b>Standard deviation</b> measures spread. Adding the same value to every data point leaves it unchanged.',
+   'Only a <b>random sample</b> allows generalising to the population.',
+   'Only a <b>randomised experiment</b> allows a causal conclusion.',
+   'A larger sample narrows the margin of error but never fixes a biased sampling method.'
+  ],
+  table:{head:['Study feature','What it permits'],rows:[
+    ['Random selection from a population','Generalising to that population'],
+    ['Random assignment to treatments','Concluding cause and effect'],
+    ['Neither','Describing the sample only']]}},
+
+ {h:'Geometry',
+  points:[
+   'Angles in a triangle sum to 180°; in any quadrilateral, 360°.',
+   'Vertical angles are equal. A transversal across parallel lines makes corresponding and alternate angles equal.',
+   '<b>Similar triangles</b> have equal angles and proportional sides — the workhorse of SAT geometry.',
+   'Pythagoras: @@a^{2}+b^{2}=c^{2}@@. Memorise the triples 3-4-5, 5-12-13, 8-15-17.',
+   'Special right triangles: 45-45-90 has sides x, x, x√2; 30-60-90 has x, x√3, 2x.',
+   'Circle: area @@\\pi r^{2}@@, circumference @@2\\pi r@@, equation @@(x-h)^{2}+(y-k)^{2}=r^{2}@@.',
+   'Arc length and sector area are the fraction @@\\frac{\\theta}{360}@@ of the whole.'
+  ],
+  ex:{q:'A circle has equation @@x^{2}+y^{2}-6x+4y=12@@. Find its centre and radius.',
+      steps:['Group and complete the square: (x² − 6x) + (y² + 4y) = 12.',
+             'Half of −6 is −3, squared is 9. Half of 4 is 2, squared is 4.',
+             'Add both to each side: (x − 3)² + (y + 2)² = 12 + 9 + 4 = 25.',
+             'Compare with the standard form.'],
+      a:'Answer: centre (3, −2), radius 5.'}},
+
+ {h:'Trigonometry',
+  points:[
+   '<b>SOHCAHTOA</b>: sin = opposite/hypotenuse, cos = adjacent/hypotenuse, tan = opposite/adjacent.',
+   'Complementary identity: @@\\sin(x) = \\cos(90 - x)@@. This appears almost every test.',
+   'Radians: @@180° = \\pi@@ radians. Multiply degrees by @@\\frac{\\pi}{180}@@ to convert.',
+   'Common values: sin 30° = 1/2, sin 45° = √2/2, sin 60° = √3/2.',
+   'The Pythagorean identity @@\\sin^{2}x + \\cos^{2}x = 1@@ occasionally appears.'
+  ],
+  tip:'If a trig question gives you one ratio and asks for another, sketch the right triangle and label all three sides. Almost every SAT trig question falls apart once the triangle is drawn.'}
+],
+cards:[
+ ['Percent change','@@\\frac{\\text{new}-\\text{old}}{\\text{old}} \\times 100@@ — divide by the original.'],
+ ['20% increase then 20% decrease','Does not return to the original; you end below it.'],
+ ['Mean vs. median','The mean is pulled by outliers; the median is resistant.'],
+ ['Skewed right','The mean is greater than the median.'],
+ ['Random selection vs. random assignment','Selection permits generalising; assignment permits causal claims.'],
+ ['Effect of adding a constant to data','Center shifts; standard deviation is unchanged.'],
+ ['Pythagorean triples','3-4-5, 5-12-13, 8-15-17.'],
+ ['45-45-90 triangle','Sides x, x, x√2.'],
+ ['30-60-90 triangle','Sides x, x√3, 2x.'],
+ ['Circle equation','@@(x-h)^{2}+(y-k)^{2}=r^{2}@@ with centre (h, k).'],
+ ['Completing the square for a circle','Halve the linear coefficient, square it, add to both sides.'],
+ ['SOHCAHTOA','sin = opp/hyp, cos = adj/hyp, tan = opp/adj.'],
+ ['Complementary identity','@@\\sin(x) = \\cos(90-x)@@'],
+ ['Degrees to radians','Multiply by @@\\frac{\\pi}{180}@@; 180° equals π radians.'],
+ ['Arc length and sector area','Take @@\\frac{\\theta}{360}@@ of the circumference or area.']
+],
+quiz:[
+ {q:'A price rises 20%, then falls 20%. Compared with the start, it is now:',
+  c:['The same','4% lower','4% higher','20% lower'],
+  a:1, why:'1.20 × 0.80 = 0.96, so the final price is 96% of the original.'},
+ {q:'A dataset of salaries includes one executive earning far more than everyone else. The better measure of a typical salary is:',
+  c:['Mean','Median','Range','Standard deviation'],
+  a:1, why:'The outlier drags the mean upward, while the median stays near the bulk of the data.'},
+ {q:'A right triangle has legs 5 and 12. The hypotenuse is:',
+  c:['13','15','17','60'],
+  a:0, why:'5-12-13 is a Pythagorean triple: 25 + 144 = 169 = 13².'},
+ {q:'If @@\\sin(x) = 0.8@@, then @@\\cos(90 - x)@@ equals:',
+  c:['0.2','0.6','0.8','Cannot be determined'],
+  a:2, why:'Sine and cosine of complementary angles are equal.'},
+ {q:'Researchers randomly assign volunteers to a drug or placebo and find the drug group improves. They may conclude:',
+  c:['Nothing, since volunteers are not random','The drug caused the improvement in this group','The drug works for everyone','The study is invalid'],
+  a:1, why:'Random assignment supports a causal claim. Volunteer recruitment limits generalisation but not causation within the study.'},
+ {q:'A circle has equation @@(x+2)^{2}+(y-5)^{2}=49@@. Its centre and radius are:',
+  c:['(2, −5) and 7','(−2, 5) and 7','(−2, 5) and 49','(2, 5) and 49'],
+  a:1, why:'The signs inside the parentheses flip, and the radius is the square root of 49.'}
+]
+}
+]);
+</script>
+<script>
+/* ============================================================
+   ACT — rebuilt for the Enhanced format. The previous content
+   described the retired 215-question test, which gave wrong
+   pacing advice for every section.
+   ============================================================ */
+(function clearACT() {
+  const c = COURSES.find(x => x.id === 'act');
+  if (c) c.units = [];
+})();
+
+addUnits('act', [
+{
+id:'u1', title:'Unit 1 · How the Enhanced ACT Works',
+guide:[
+ {h:'The current format',
+  intro:'The ACT was redesigned and the old 215-question version is retired. The test is shorter, Science is now optional, and — the change that matters most for how you prepare — the Composite score no longer includes Science.',
+  table:{head:['Section','Questions','Time','Per question'],rows:[
+    ['English','50','35 min','~42 sec'],
+    ['Math','45','50 min','~67 sec'],
+    ['Reading','36','40 min','~67 sec'],
+    ['Science (optional)','40','40 min','~60 sec'],
+    ['Writing (optional)','1 essay','40 min','—']]},
+  points:[
+   '<b>Composite = the average of English, Math, and Reading only</b>, rounded to the nearest whole number, on the 1–36 scale.',
+   'If you take Science, it is reported separately and does not affect the Composite.',
+   'Core testing time is about 2 hours 5 minutes; adding Science makes it roughly 2 hours 45.',
+   'Math answer choices dropped from five to four, which makes elimination and guessing meaningfully better.',
+   'English and Reading passages are shorter than on the old test.',
+   'No penalty for wrong answers. Answer every question.'
+  ],
+  trap:'Practising with old prep books. Legacy materials use the retired timings — 75 English questions in 45 minutes, 60 Math questions in 60 minutes — and will train you to rush at the wrong speed. Make sure any practice test you take says Enhanced.'},
+
+ {h:'Should you take Science?',
+  intro:'Since Science no longer counts toward the Composite, this is now a real decision rather than an obligation.',
+  table:{head:['Take Science if','Skip Science if'],rows:[
+    ['You are applying to STEM or pre-med programmes','You are applying to humanities or undecided'],
+    ['A target college asks for it — check directly','No target college requires it'],
+    ['You score well on data interpretation','Your practice Science score sits below your Composite'],
+    ['You want an extra data point for scholarships','You want a shorter, less tiring test day']]},
+  points:[
+   'Decide when you register — you opt in at sign-up, not on the day.',
+   'Colleges are still updating superscore policies for the new format. If you are mixing old and new scores, contact admissions directly.',
+   'A strong Science score can help a STEM application even though it is outside the Composite.'
+  ],
+  tip:'Take one full Enhanced practice test with Science included. If your Science score would drag down the impression your Composite gives, and no target school requires it, skip it and use the energy on the three sections that count.'},
+
+ {h:'Pacing on the new test',
+  intro:'The redesign added roughly 22% more time per question. Content difficulty did not change. This shifts the optimal strategy from speed toward accuracy.',
+  points:[
+   'On the old ACT, finishing was the main challenge. On this one, most students can finish — so careless errors become the limiting factor.',
+   'Slow down enough to read what the question actually asks.',
+   'English still moves fastest at about 42 seconds a question, but the passages are shorter.',
+   'Reading gained time and lost questions, so you have noticeably longer per passage than students had a year ago.',
+   'Bubble or click as you go rather than saving it for the end.'
+  ]}
+],
+cards:[
+ ['Enhanced ACT core sections','English, Math, and Reading. Science and Writing are optional.'],
+ ['English format','50 questions in 35 minutes.'],
+ ['Math format','45 questions in 50 minutes, with four answer choices.'],
+ ['Reading format','36 questions in 40 minutes.'],
+ ['Science format','40 questions in 40 minutes, optional, not in the Composite.'],
+ ['Composite calculation','Average of English, Math, and Reading only, on the 1–36 scale.'],
+ ['Score scale','1–36, unchanged from the legacy test.'],
+ ['Wrong-answer penalty','None. Never leave a blank.'],
+ ['Math answer choices','Four, not five — guessing odds improved to 25%.'],
+ ['Biggest prep mistake','Using legacy practice tests with retired timings.'],
+ ['Strategy shift','More time per question means accuracy now matters more than speed.']
+],
+quiz:[
+ {q:'On the Enhanced ACT, the Composite score is the average of:',
+  c:['All four sections','English, Math, Reading, and Science','English, Math, and Reading','English and Math only'],
+  a:2, why:'Science was moved out of the Composite when it became optional. It is reported separately.'},
+ {q:'A student applying to English literature programmes is deciding about Science. The strongest reason to skip it is:',
+  c:['Science is the hardest section','It does not affect the Composite and no target school requires it','It is not offered on all dates','It lowers the Writing score'],
+  a:1, why:'With no Composite impact and no requirement, the section costs 40 minutes of fatigue for no admissions benefit.'},
+ {q:'You find a practice test with 75 English questions in 45 minutes. You should:',
+  c:['Use it, since the content is the same','Discard it — that is the retired format','Use it but stop at question 50','Use it only for grammar rules'],
+  a:1, why:'Practising at the wrong pace trains the wrong instincts. The content is similar but the timing is not.'},
+ {q:'The most important consequence of the extra time per question is that:',
+  c:['The test is easier','Careless errors now cost more than slow reading','You can skip more questions','Guessing is discouraged'],
+  a:1, why:'When finishing is no longer the bottleneck, accuracy becomes the limiting factor on your score.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · English',
+guide:[
+ {h:'How the section is built',
+  intro:'ACT English gives you passages with underlined portions and asks you to correct or improve them. Roughly half the questions are mechanics and half are rhetoric — whether a sentence belongs, where it goes, and what it accomplishes.',
+  points:[
+   '50 questions in 35 minutes across several shorter passages.',
+   'Mechanics questions have no question stem — just an underlined portion and four options.',
+   'Rhetorical questions ask something explicit: "which choice best…", "should the writer add…".',
+   '<b>NO CHANGE</b> is correct roughly a quarter of the time. Do not avoid it out of nerves.',
+   'The Enhanced version adds an argumentative essay option to the Writing test.'
+  ],
+  tip:'When the four options differ only in length and all are grammatical, the shortest one is almost always right. The ACT consistently rewards concision.'},
+
+ {h:'The rules that repeat',
+  table:{head:['Rule','What to check'],rows:[
+    ['Comma splice','Two full sentences joined by a comma is always wrong'],
+    ['Semicolon','Needs a complete sentence on both sides'],
+    ['Colon','Needs a complete sentence before it'],
+    ['Nonessential phrase','Commas on both sides, or neither'],
+    ['Subject-verb agreement','Cross out prepositional phrases to find the subject'],
+    ['Pronoun case','Substitute he/him — if "him" works, use "whom"'],
+    ['Apostrophes','Singular \u2019s, plural s\u2019, possessive pronouns take none'],
+    ['Dangling modifier','The noun after the comma must perform the opening action'],
+    ['Parallel structure','Items in a list share grammatical form'],
+    ['Verb tense','Match the surrounding sentences unless time shifts']]},
+  points:[
+   '<b>Redundancy</b> is heavily tested: "annual yearly", "returned back", "each and every", "the reason is because".',
+   'If two options mean the same thing, both are wrong — the answer must be somewhere else.',
+   'Read the full sentence with your choice inserted before moving on.'
+  ],
+  ex:{q:'"The committee met to discuss ______ the annual budget." Which is best?',
+      steps:['Option A: "and talk about" — talk about repeats discuss.',
+             'Option B: "and consider" — consider repeats discuss.',
+             'Option C: DELETE the underlined portion.',
+             'Discuss already carries the meaning, so anything added is redundant.'],
+      a:'Answer: delete it. When "OMIT the underlined portion" is offered, it is right more often than students expect.'},
+  trap:'Adding a comma because the sentence feels like it needs a pause. The ACT tests rules, not breathing.'},
+
+ {h:'Rhetorical skills',
+  intro:'These questions decide your score more than commas do, because they are where careless readers lose points fastest.',
+  points:[
+   'For "which choice best accomplishes X", <b>reread X before evaluating anything</b>. The answer must do that specific job.',
+   'For "should the writer add this sentence?", first decide yes or no, then find the reason that matches. Half the options give the right verdict with the wrong reason.',
+   'Added sentences should be <b>relevant to the paragraph</b>, not merely true or interesting.',
+   'For placement questions, follow the pronouns and transitions — a sentence beginning "This approach" must follow the approach.',
+   'Transition questions work exactly as on the SAT: name the relationship first, then pick.'
+  ],
+  ex:{q:'"Should the writer add the sentence about the author\u2019s childhood home?"',
+      steps:['Ask first: does the paragraph discuss her upbringing or her later career?',
+             'If the paragraph is about her career, the sentence is off topic regardless of interest.',
+             'Now find the option that says "No" for the reason "it is not relevant to the paragraph\u2019s focus."'],
+      a:'Answer: No, because it distracts from the paragraph\u2019s focus. Beware options saying "No, because the information is untrue" — that is a different reason.'}}
+],
+cards:[
+ ['ACT English format','50 questions in 35 minutes across several short passages.'],
+ ['NO CHANGE frequency','Correct roughly a quarter of the time.'],
+ ['Conciseness rule','When several options are grammatical, the shortest clear one usually wins.'],
+ ['Redundancy examples','Annual yearly, returned back, each and every, the reason is because.'],
+ ['Two options meaning the same thing','Both are wrong — the answer lies elsewhere.'],
+ ['Who vs. whom','Substitute he/him; if "him" fits, use "whom".'],
+ ['Nonessential phrase punctuation','Commas on both sides or neither, never one.'],
+ ['"Which choice best accomplishes X"','Reread the stated goal before evaluating options.'],
+ ['"Should the writer add"','Decide yes or no first, then match the reason.'],
+ ['Relevance test for an added sentence','It must serve the paragraph, not merely be true or interesting.'],
+ ['Sentence placement clue','Follow pronouns and transitions — "this approach" must follow the approach.']
+],
+quiz:[
+ {q:'Which is best? "She finished the project ______ ahead of schedule."',
+  c:['early and','quickly and','','in advance and'],
+  a:2, why:'"Ahead of schedule" already conveys earliness, so any addition is redundant. Delete it.'},
+ {q:'"The scientist ______ research changed the field won an award." Choose correctly.',
+  c:['who\u2019s','whose','whos','that\u2019s'],
+  a:1, why:'The blank shows possession of the research, which requires "whose". "Who\u2019s" means "who is".'},
+ {q:'A question asks whether to add a sentence. Two options say "No". This means:',
+  c:['One is right and you must compare the reasons','Both are wrong','The answer must be "Yes"','You should pick the shorter one'],
+  a:0, why:'The ACT routinely pairs a correct verdict with an incorrect justification, so the reason decides it.'},
+ {q:'Which sentence is punctuated correctly?',
+  c:['My sister, who lives in Denver visits often.','My sister who lives in Denver, visits often.','My sister, who lives in Denver, visits often.','My sister who lives in Denver visits, often.'],
+  a:2, why:'A nonessential clause needs commas on both sides. Remove it and the sentence must still work.'},
+ {q:'On a "which choice best introduces the paragraph" question, the answer must:',
+  c:['Be the longest option','Match what the paragraph actually goes on to discuss','Contain a transition word','Repeat the previous paragraph'],
+  a:1, why:'An introduction has to set up the content that follows, so read the paragraph before choosing.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Reading',
+guide:[
+ {h:'Format and pacing',
+  intro:'Reading gained time and lost questions in the redesign, so the old advice to sprint no longer applies. You now have roughly ten minutes per passage instead of under nine.',
+  table:{head:['','Questions','Time','Per passage'],rows:[
+    ['Enhanced ACT Reading','36','40 min','~10 min'],
+    ['Retired format','40','35 min','~8.75 min']]},
+  points:[
+   'Four passage types appear in a fixed order: <b>Literary Narrative, Social Science, Humanities, Natural Science</b>.',
+   'One passage set is <b>paired</b> — two shorter texts with comparison questions at the end.',
+   'Passages are shorter than on the legacy test.',
+   'Order is fixed, but you do not have to work in order. Do your strongest passage type first to bank points.'
+  ],
+  tip:'Save your weakest passage for last. If you run short, you would rather be rushing through the one you were least likely to get right anyway.'},
+
+ {h:'Answering from the text',
+  intro:'ACT Reading is more literal than SAT Reading. Almost every answer can be pointed at in a specific line. If you are reasoning from what seems plausible, you are already off track.',
+  points:[
+   'For a line-reference question, read the <b>sentence before and after</b>, not just the cited line.',
+   'Correct answers paraphrase the text. Wrong answers often reuse the passage\u2019s exact words in a changed context.',
+   'Eliminate anything requiring outside knowledge or a leap the text does not make.',
+   'Watch for <b>extreme words</b> — always, never, only, entirely — which usually overstate.',
+   '"Reasonably be inferred" still means supported by the text, not merely consistent with it.'
+  ],
+  trap:'Picking an answer because you recognise the words from the passage. Word-matching is the most common wrong-answer design on this section.'},
+
+ {h:'Question types and paired passages',
+  points:[
+   '<b>Detail</b>: find it. <b>Main idea</b>: cover the whole passage. <b>Vocabulary in context</b>: substitute your own word.',
+   '<b>Function</b> questions ask why the author included something.',
+   '<b>Author attitude</b> is usually moderate — measured approval or mild scepticism, rarely contempt or adoration.',
+   'For paired passages, answer all Passage A questions first, then Passage B, then the comparison questions. Do not read both at once.',
+   'Comparison answers are usually about a difference in emphasis, not flat contradiction.'
+  ],
+  ex:{q:'The author\u2019s attitude toward the new policy is best described as:',
+      steps:['Scan for evaluative words: "promising", "untested", "worth watching".',
+             'Mixed signals point to a qualified attitude rather than a strong one.',
+             'Eliminate extremes: "enthusiastic endorsement" and "outright dismissal".'],
+      a:'Answer: cautious optimism. On the ACT, the moderate option is right far more often than the strong one.'}}
+],
+cards:[
+ ['ACT Reading format','36 questions in 40 minutes, about 10 minutes per passage.'],
+ ['Passage order','Literary Narrative, Social Science, Humanities, Natural Science.'],
+ ['Paired passage strategy','Answer Passage A questions, then Passage B, then the comparisons.'],
+ ['Line-reference method','Read the sentence before and after the cited line.'],
+ ['Word-matching trap','Wrong answers reuse the passage\u2019s exact words in a changed context.'],
+ ['Extreme words','Always, never, only, entirely — usually overstate the passage.'],
+ ['Author attitude answers','Usually moderate; strong emotions are rarely correct.'],
+ ['Passage order strategy','You may work out of order — do your strongest type first.'],
+ ['ACT vs. SAT reading','ACT is more literal; nearly every answer is pointable to a line.']
+],
+quiz:[
+ {q:'An answer choice repeats a distinctive phrase from the passage. This is:',
+  c:['Strong evidence it is correct','A common wrong-answer design','Only relevant in science passages','Proof of a detail question'],
+  a:1, why:'Word-matching distractors reuse familiar language while changing the meaning or context.'},
+ {q:'On the Enhanced ACT you have roughly how long per Reading passage?',
+  c:['6 minutes','8 minutes','10 minutes','15 minutes'],
+  a:2, why:'40 minutes across four passage sets gives about 10 minutes each — more than the retired format allowed.'},
+ {q:'For a paired-passage set, the most efficient approach is to:',
+  c:['Read both passages, then answer everything','Answer Passage A questions, then B, then comparisons','Answer comparison questions first','Read only Passage B'],
+  a:1, why:'Handling one text at a time avoids the memory load of holding both in mind simultaneously.'},
+ {q:'A question asks what can "reasonably be inferred". The answer must be:',
+  c:['Consistent with the passage','Supported by specific text','Something you know about the topic','The most interesting option'],
+  a:1, why:'ACT inference is narrow. If you cannot point at supporting text, the choice is wrong.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Math',
+guide:[
+ {h:'Format and content mix',
+  intro:'Math is 45 questions in 50 minutes with four answer choices, ordered roughly easiest to hardest. Unlike the SAT, no formula sheet is provided — anything you need, you memorise.',
+  table:{head:['Content area','Roughly'],rows:[
+    ['Pre-algebra and elementary algebra','~30%'],
+    ['Intermediate algebra and coordinate geometry','~30%'],
+    ['Plane geometry','~25%'],
+    ['Trigonometry','~10%']]},
+  points:[
+   'A calculator is permitted for the whole section.',
+   'Questions are ordered by difficulty, so the early ones are your reliable points — protect them from careless errors.',
+   'The final third carries logs, matrices, imaginary numbers, conics, and trigonometry.',
+   'With four choices instead of five, a blind guess is now worth 25%. Never leave a blank.',
+   'Word counts in problems were reduced in the redesign, so questions are more direct.'
+  ],
+  trap:'Rushing questions 1–15 to save time for the hard ones. Those early questions are worth exactly the same as the hard ones and are far more likely to be right.'},
+
+ {h:'Formulas to memorise',
+  intro:'The ACT gives you nothing. These are the ones that actually appear.',
+  table:{head:['Concept','Formula'],rows:[
+    ['Slope','@@m = \\frac{y_{2}-y_{1}}{x_{2}-x_{1}}@@'],
+    ['Distance','@@d = \\sqrt{(x_{2}-x_{1})^{2}+(y_{2}-y_{1})^{2}}@@'],
+    ['Midpoint','@@\\left(\\frac{x_{1}+x_{2}}{2}, \\frac{y_{1}+y_{2}}{2}\\right)@@'],
+    ['Quadratic formula','@@x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}@@'],
+    ['Circle','Area @@\\pi r^{2}@@, circumference @@2\\pi r@@'],
+    ['Circle equation','@@(x-h)^{2}+(y-k)^{2}=r^{2}@@'],
+    ['Triangle area','@@\\frac{1}{2}bh@@'],
+    ['Pythagorean theorem','@@a^{2}+b^{2}=c^{2}@@'],
+    ['Cylinder volume','@@\\pi r^{2}h@@'],
+    ['SOHCAHTOA','sin = opp/hyp, cos = adj/hyp, tan = opp/adj'],
+    ['Average','sum ÷ number of items'],
+    ['Arithmetic sequence','@@a_{n} = a_{1} + (n-1)d@@']]},
+  points:[
+   'Special right triangles: 45-45-90 gives x, x, x√2; 30-60-90 gives x, x√3, 2x.',
+   'Logs: @@\\log_{b}(xy) = \\log_{b}x + \\log_{b}y@@, and @@\\log_{b}(x^{n}) = n\\log_{b}x@@.',
+   'Imaginary numbers: @@i^{2} = -1@@, and powers of i cycle every four.'
+  ]},
+
+ {h:'Tactics that save time',
+  points:[
+   '<b>Backsolve</b>: when the choices are numbers, try the middle one and adjust. Often faster than algebra.',
+   '<b>Plug in numbers</b>: when a problem is entirely variables, substitute convenient values like 2 or 100.',
+   '<b>Draw it</b>: geometry problems without a figure become far easier once you sketch one.',
+   'If a question is taking more than about 90 seconds, mark it, guess, and move on. Come back if time allows.',
+   'When an answer requires heavy arithmetic, you probably missed the shortcut.'
+  ],
+  ex:{q:'If @@\\frac{x}{4} + 3 = 10@@, what is the value of @@2x + 5@@?',
+      steps:['Solve for x first: x/4 = 7, so x = 28.',
+             'The question asks for 2x + 5, not x.',
+             '2(28) + 5 = 61.'],
+      a:'Answer: 61. The trap answer is 28 — the value of x, which is not what was asked.'},
+  tip:'Underline what the question asks for. The most common ACT Math error is solving correctly and then answering a different question.'}
+],
+cards:[
+ ['ACT Math format','45 questions in 50 minutes with four answer choices.'],
+ ['Formula sheet','None provided — everything must be memorised.'],
+ ['Question ordering','Roughly easiest to hardest, so early questions are the reliable points.'],
+ ['Distance formula','@@d = \\sqrt{(x_{2}-x_{1})^{2}+(y_{2}-y_{1})^{2}}@@'],
+ ['Midpoint formula','@@\\left(\\frac{x_{1}+x_{2}}{2}, \\frac{y_{1}+y_{2}}{2}\\right)@@'],
+ ['Quadratic formula','@@x = \\frac{-b \\pm \\sqrt{b^{2}-4ac}}{2a}@@'],
+ ['Arithmetic sequence','@@a_{n} = a_{1} + (n-1)d@@'],
+ ['45-45-90 triangle','Sides x, x, x√2.'],
+ ['30-60-90 triangle','Sides x, x√3, 2x.'],
+ ['Powers of i','@@i^{2} = -1@@ and the powers cycle every four.'],
+ ['Log product rule','@@\\log_{b}(xy) = \\log_{b}x + \\log_{b}y@@'],
+ ['Backsolving','Try the middle numeric choice and adjust up or down.'],
+ ['Plugging in numbers','Substitute convenient values when a problem is all variables.'],
+ ['Most common ACT Math error','Solving correctly, then answering a different question than the one asked.']
+],
+quiz:[
+ {q:'What is the distance between (1, 2) and (4, 6)?',
+  c:['3','4','5','7'],
+  a:2, why:'@@\\sqrt{3^{2}+4^{2}} = \\sqrt{25} = 5@@ — the 3-4-5 triangle.'},
+ {q:'If @@\\frac{x}{3} - 2 = 4@@, what is @@x + 1@@?',
+  c:['18','19','6','7'],
+  a:1, why:'x/3 = 6 so x = 18, and the question asks for x + 1 = 19. Choosing 18 answers the wrong question.'},
+ {q:'On ACT Math, a blind guess is now worth:',
+  c:['20%','25%','33%','It carries a penalty'],
+  a:1, why:'Four answer choices replaced five in the redesign, and there is no wrong-answer penalty.'},
+ {q:'A 30-60-90 triangle has a shorter leg of 5. The hypotenuse is:',
+  c:['5√2','5√3','10','10√3'],
+  a:2, why:'The sides are x, x√3, 2x, so the hypotenuse is twice the shorter leg.'},
+ {q:'You are 20 seconds into question 3 and unsure. The best move is:',
+  c:['Skip it to save time for harder questions','Work it carefully — early questions are the most winnable','Guess immediately','Leave it blank'],
+  a:1, why:'Early questions carry equal weight and the highest probability of a correct answer, so they deserve care.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Science (optional)',
+guide:[
+ {h:'What this section actually tests',
+  intro:'ACT Science is a data-reading test wearing a lab coat. Roughly 90% of the answers are visible in the figures, and outside knowledge is needed for only a handful of questions. It is now optional and does not count toward your Composite.',
+  points:[
+   '40 questions in 40 minutes.',
+   'Three passage types, and knowing which one you are looking at determines how to attack it.',
+   'You are not expected to understand the experiment. You are expected to read the graph.',
+   'At least one passage now features engineering and design content.'
+  ],
+  table:{head:['Passage type','What it looks like','How to attack it'],rows:[
+    ['Data Representation','Graphs and tables, little text','Go straight to the figures'],
+    ['Research Summaries','Several related experiments','Note what changed between them'],
+    ['Conflicting Viewpoints','Two or more scientists arguing, heavy text','Read properly — this is the only one that needs it']]}},
+
+ {h:'Method',
+  points:[
+   '<b>Go to the figures first.</b> Read axis labels, units, and the direction of each trend before you read a single question.',
+   'For trend questions, describe the relationship in words — "as X increases, Y decreases" — before looking at the choices.',
+   'Watch for a <b>second y-axis</b> on the right side of a graph. Mixing up the two axes is the most common error on this section.',
+   'Check units carefully. A switch from grams to milligrams between tables is a deliberate trap.',
+   'For Research Summaries, ask what was <b>held constant</b> and what was <b>varied</b>. Most questions come straight from that.',
+   'Save <b>Conflicting Viewpoints</b> for last. It takes the most reading time per point.'
+  ],
+  ex:{q:'A table shows reaction rate rising from 10°C to 40°C, then falling from 40°C to 60°C. Describe the relationship.',
+      steps:['Do not force it into a single direction.',
+             'Name the turning point: rate increases to a maximum near 40°C.',
+             'Then describe the second half: it declines above that.'],
+      a:'Answer: rate increases with temperature up to about 40°C, then decreases. Choices saying simply "rate increases with temperature" ignore half the data.'},
+  trap:'Answering a trend question from what you expect to happen scientifically rather than what the figure shows. The data on the page wins every time.'},
+
+ {h:'The few knowledge questions',
+  intro:'A small number of questions assume basic science you should already have. They are worth knowing because they are quick points.',
+  points:[
+   'Cell basics: photosynthesis versus respiration, DNA and cells.',
+   'The pH scale: below 7 acidic, above 7 basic, and each unit is a tenfold change.',
+   'States of matter, density, and the fact that objects float when less dense than the fluid.',
+   'Basic physics: speed, force, energy conservation.',
+   'Reading the periodic table for atomic number and mass.'
+  ],
+  tip:'If a question gives you no figure reference and no line number, it is probably one of the outside-knowledge questions. If you do not know it, guess immediately and spend the time on data questions instead.'}
+],
+cards:[
+ ['ACT Science format','40 questions in 40 minutes, optional, excluded from the Composite.'],
+ ['What Science actually tests','Data interpretation — around 90% of answers are in the figures.'],
+ ['Data Representation','Graphs and tables with minimal text; go straight to the figures.'],
+ ['Research Summaries','Related experiments; note what was varied and what was held constant.'],
+ ['Conflicting Viewpoints','Competing hypotheses in heavy text; the only passage needing careful reading.'],
+ ['First move on any figure','Read axis labels and units before reading the questions.'],
+ ['Second y-axis','A right-hand axis on a graph is a frequent source of errors.'],
+ ['Describing a trend','State it in words, including any turning point, before checking the options.'],
+ ['pH scale','Below 7 acidic, above 7 basic; each unit is a tenfold change.'],
+ ['Timing strategy','Leave Conflicting Viewpoints until last.']
+],
+quiz:[
+ {q:'The most efficient way to start an ACT Science passage is to:',
+  c:['Read all the text carefully','Go to the figures and check axis labels and units','Read the questions first, then all the text','Start with Conflicting Viewpoints'],
+  a:1, why:'Most answers come directly from the data, so reading the full text first spends time you need elsewhere.'},
+ {q:'A graph shows two data series with different right-hand and left-hand axes. The main risk is:',
+  c:['The data are unreliable','Reading a value against the wrong axis','The units are always identical','The trend must be linear'],
+  a:1, why:'Dual-axis graphs are a standard ACT Science trap; check which axis each series belongs to.'},
+ {q:'Since Science no longer counts toward the Composite, a humanities applicant should:',
+  c:['Always take it anyway','Skip it unless a target college asks for it','Take it only with the Writing test','Take it to raise the Composite'],
+  a:1, why:'It cannot raise the Composite, so it is only worth the time if a specific school or programme wants it.'},
+ {q:'A question asks about pH with no reference to any figure. This is most likely:',
+  c:['A misprint','One of the few outside-knowledge questions','A Conflicting Viewpoints question','A trend question'],
+  a:1, why:'Questions with no data reference are the small set assuming prior science knowledge.'}
+]
+}
+]);
+</script>
+<script>
+/* ============================================================
+   EXPANDED STUDY GUIDES
+   Replaces the guide field only. Flashcards, quizzes and
+   progress keys are untouched.
+   ============================================================ */
+function setGuide(cid, uid, guide) {
+  const c = COURSES.find(x => x.id === cid);
+  if (!c) return;
+  const u = c.units.find(x => x.id === uid);
+  if (u) u.guide = guide;
+}
+
+/* ------------------------------------------ AP PSYCHOLOGY */
+setGuide('ap-psych', 'u1', [
+{h:'The perspectives, and why they conflict',
+ intro:'Psychology has never had one theory of behaviour. It has seven, each answering a different question about the same act. When a free-response question asks you to explain a behaviour "from the X perspective", it is testing whether you can hold them apart.',
+ table:{head:['Perspective','Explains behaviour through','Would say aggression is'],rows:[
+   ['Biological','Genes, neurotransmitters, brain structures','Amygdala activity and testosterone'],
+   ['Cognitive','How we encode and interpret information','A hostile interpretation of an ambiguous act'],
+   ['Behavioural','Conditioning and observable consequences','A response that was reinforced'],
+   ['Humanistic','Free will, self-concept, growth','A blocked drive toward self-actualisation'],
+   ['Psychodynamic','Unconscious conflict, early experience','Displaced hostility from childhood'],
+   ['Evolutionary','Traits that aided survival and reproduction','An adaptive competitive strategy'],
+   ['Sociocultural','Norms, culture, group membership','Learned from cultural models of masculinity']]},
+ points:[
+  'The <b>biopsychosocial model</b> combines biological, psychological, and sociocultural levels rather than choosing between them.',
+  '<b>Nature versus nurture</b> is no longer treated as a choice. The modern question is how heredity and environment interact.',
+  'Structuralism (Wundt, Titchener) used introspection; functionalism (James) asked what mental processes are <i>for</i>.'
+ ],
+ tip:'On the exam, a perspective question is answered by naming the mechanism, not the label. Writing "the biological perspective explains it biologically" earns nothing.'},
+
+{h:'Research methods: what each one can and cannot tell you',
+ intro:'Every method trades something away. Knowing what each one forfeits is more useful than memorising definitions, because the exam almost always asks what conclusion a study does not support.',
+ table:{head:['Method','Strength','What it cannot do'],rows:[
+   ['Case study','Rich detail on rare conditions','Generalise to anyone else'],
+   ['Naturalistic observation','Real behaviour, high realism','Establish cause; no control'],
+   ['Survey','Cheap, large samples','Escape social desirability and wording bias'],
+   ['Correlational','Shows relationships, ethical for risky variables','Establish causation'],
+   ['Experiment','Establishes cause','Always be realistic or ethical']]},
+ points:[
+  'A <b>correlation coefficient</b> runs from −1.00 to +1.00. The <b>sign</b> is direction; the <b>absolute value</b> is strength.',
+  '−0.72 is a stronger relationship than +0.45. Students lose points to this constantly.',
+  'Correlation fails to prove causation for two reasons: the <b>directionality problem</b> and the <b>third variable problem</b>.',
+  '<b>Illusory correlation</b> is perceiving a relationship that is not there, usually because confirming cases are memorable.'
+ ],
+ trap:'Treating a negative correlation as a weak one. Sign and strength are independent.'},
+
+{h:'Designing an experiment',
+ intro:'Two words sound alike and mean different things, and the difference is worth several points on any free-response question about methodology.',
+ table:{head:['Term','What it does','What it buys you'],rows:[
+   ['Random sampling','Selects who is in the study','Generalisability to the population'],
+   ['Random assignment','Sorts participants into conditions','The right to claim cause and effect']]},
+ points:[
+  'The <b>independent variable</b> is manipulated; the <b>dependent variable</b> is measured.',
+  'An <b>operational definition</b> states exactly how a variable is measured so another lab can replicate it. "Measured aggression" is not one; "number of horn honks in 30 seconds" is.',
+  '<b>Confounding variables</b> differ between groups alongside the IV, making the result uninterpretable.',
+  '<b>Single-blind</b> hides condition from participants. <b>Double-blind</b> also hides it from the researchers interacting with them, controlling both placebo and experimenter bias.',
+  'The <b>Hawthorne effect</b> is behaviour changing simply because participants know they are observed.'
+ ],
+ ex:{q:'A researcher finds students who eat breakfast score higher on tests. What can and cannot be concluded?',
+     steps:['This is correlational — no variable was manipulated.',
+            'Directionality: perhaps higher-achieving students have more organised mornings.',
+            'Third variable: household income could produce both breakfast and higher scores.',
+            'To claim cause, you would randomly assign students to eat or skip breakfast.'],
+     a:'Conclusion: breakfast and scores are related. Not: breakfast improves scores.'}},
+
+{h:'Statistics and ethics',
+ points:[
+  'The <b>mean</b> is pulled toward outliers. In a <b>skewed</b> distribution the median describes the centre better.',
+  'Positively skewed means the tail points right and the mean sits above the median.',
+  '<b>Standard deviation</b> measures spread. In a normal curve about 68% falls within one SD, 95% within two, 99.7% within three.',
+  '<b>Statistical significance</b> at p &lt; .05 means the result was unlikely by chance. It does <b>not</b> mean the effect is large or important.',
+  '<b>Effect size</b> answers how big the difference actually is — significance only answers whether it is real.',
+  'Ethics: an <b>IRB</b> reviews risk beforehand; <b>informed consent</b> precedes participation; <b>debriefing</b> follows any deception; participants may withdraw at any time; data stay confidential.'
+ ],
+ trap:'Reading "statistically significant" as "big" or "important". A trivial difference becomes significant with a large enough sample.'}
+]);
+
+setGuide('ap-psych', 'u2', [
+{h:'The neuron and how signals travel',
+ intro:'Everything psychological is simultaneously biological. The neuron is where that becomes literal — and the exam expects you to trace a signal from dendrite to synapse without skipping a step.',
+ points:[
+  'Path of a signal: <b>dendrites</b> receive → <b>soma</b> integrates → <b>axon</b> transmits → <b>terminal buttons</b> release neurotransmitters into the <b>synapse</b>.',
+  'The <b>myelin sheath</b> insulates the axon and speeds transmission. Its breakdown causes multiple sclerosis.',
+  'The <b>action potential</b> is <b>all-or-none</b>: once threshold is reached the neuron fires at full strength, never partially.',
+  'A stronger stimulus therefore increases the <b>rate</b> of firing and the number of neurons firing, not the size of any single impulse.',
+  'During the <b>refractory period</b> the neuron restores its resting charge and cannot fire again.',
+  '<b>Reuptake</b> reabsorbs leftover neurotransmitter into the sending neuron. SSRIs treat depression by blocking serotonin reuptake, leaving more in the synapse.'
+ ],
+ trap:'Saying a strong stimulus causes a "bigger" action potential. All-or-none means intensity is coded by frequency, not amplitude.'},
+
+{h:'Neurotransmitters and drugs',
+ table:{head:['Neurotransmitter','Role','Disorder link'],rows:[
+   ['Acetylcholine','Muscle movement, memory','Depleted in Alzheimer\u2019s'],
+   ['Dopamine','Reward, movement','Excess → schizophrenia; deficit → Parkinson\u2019s'],
+   ['Serotonin','Mood, sleep, appetite','Low levels → depression'],
+   ['GABA','Main inhibitory transmitter','Low → anxiety, seizures'],
+   ['Glutamate','Main excitatory transmitter','Excess → migraines, seizures'],
+   ['Norepinephrine','Alertness, arousal','Low → depressed mood'],
+   ['Endorphins','Pain relief, pleasure','Mimicked by opiates']]},
+ points:[
+  '<b>Agonists</b> mimic or increase a neurotransmitter\u2019s effect. <b>Antagonists</b> block it.',
+  'Drug categories: <b>depressants</b> slow neural activity (alcohol, barbiturates); <b>stimulants</b> speed it (caffeine, cocaine, amphetamines); <b>hallucinogens</b> distort perception (LSD); <b>opiates</b> mimic endorphins.',
+  '<b>Tolerance</b> means needing more for the same effect. <b>Withdrawal</b> is the discomfort of stopping.'
+ ]},
+
+{h:'Nervous and endocrine systems',
+ table:{head:['Division','Contains','Controls'],rows:[
+   ['Central','Brain and spinal cord','Everything, ultimately'],
+   ['Peripheral → Somatic','Sensory and motor nerves','Voluntary skeletal muscles'],
+   ['Peripheral → Autonomic → Sympathetic','Arousal nerves','Fight or flight'],
+   ['Peripheral → Autonomic → Parasympathetic','Calming nerves','Rest and digest']]},
+ points:[
+  'The <b>sympathetic</b> branch raises heart rate, dilates pupils, and halts digestion. The <b>parasympathetic</b> reverses each of those.',
+  '<b>Reflex arcs</b> route through the spinal cord without waiting for the brain, which is why you pull back before feeling pain.',
+  'The <b>pituitary</b> is the master gland, directed by the hypothalamus. <b>Adrenal</b> glands release epinephrine during stress.',
+  'Hormones act more slowly than neural signals but their effects last much longer.'
+ ]},
+
+{h:'Brain structures',
+ intro:'Work upward. The oldest structures keep you alive, the middle ones handle emotion and memory, and the cortex does the thinking.',
+ table:{head:['Structure','Function','If damaged'],rows:[
+   ['Medulla','Heartbeat, breathing','Death'],
+   ['Cerebellum','Balance, coordination, procedural memory','Clumsiness, lost motor learning'],
+   ['Thalamus','Sensory relay for all senses except smell','Widespread sensory disruption'],
+   ['Hypothalamus','Hunger, thirst, temperature, pituitary control','Disrupted drives'],
+   ['Amygdala','Fear, aggression','Loss of fear response'],
+   ['Hippocampus','Forms new explicit memories','Anterograde amnesia'],
+   ['Frontal lobe','Judgement, planning, motor cortex, Broca\u2019s area','Impulsivity; halting speech'],
+   ['Parietal lobe','Touch, somatosensory cortex','Loss of body sensation'],
+   ['Temporal lobe','Hearing, Wernicke\u2019s area','Fluent but meaningless speech'],
+   ['Occipital lobe','Vision','Cortical blindness']]},
+ points:[
+  '<b>Broca\u2019s aphasia</b> impairs producing speech; comprehension survives. <b>Wernicke\u2019s aphasia</b> impairs understanding; speech remains fluent but empty.',
+  '<b>Plasticity</b> is the brain\u2019s capacity to reorganise, strongest in childhood.',
+  'Cutting the <b>corpus callosum</b> produces split-brain patients: an object shown to the left visual field reaches the right hemisphere, which can pick it up with the left hand but usually cannot name it.',
+  'Sleep cycles through NREM stages into <b>REM</b>, where the brain is active, dreams are vivid, and voluntary muscles are paralysed — hence "paradoxical sleep".'
+ ],
+ ex:{q:'A patient can describe a spoon in detail but cannot recall what happened this morning. Which structure is damaged?',
+     steps:['Old semantic knowledge is intact, so long-term storage survives.',
+            'New daily events are not being retained.',
+            'That is anterograde amnesia — a failure to form new explicit memories.'],
+     a:'Answer: the hippocampus. Note the cerebellum would be intact, so the patient could still learn new motor skills without remembering the practice.'}}
+]);
+
+setGuide('ap-psych', 'u3', [
+{h:'From energy to experience',
+ intro:'Sensation is the intake of physical energy. Perception is what your brain decides that energy means. Nearly every question in this unit turns on which of the two is being described.',
+ points:[
+  '<b>Transduction</b> converts physical energy into neural signals — light into vision, air pressure into hearing.',
+  '<b>Absolute threshold</b> is the minimum stimulation detected 50% of the time.',
+  '<b>Difference threshold</b> (just noticeable difference) is the smallest detectable change.',
+  '<b>Weber\u2019s law</b>: the JND is a constant <i>proportion</i>, not a fixed amount. If you can detect a 2 oz change in 20 oz, you need 4 oz at 40 oz.',
+  '<b>Sensory adaptation</b> is diminished sensitivity to an unchanging stimulus. You stop feeling your socks.',
+  '<b>Signal detection theory</b> says detection depends on expectations, motivation, and fatigue — not only on stimulus strength. A tired parent still hears the baby.'
+ ],
+ trap:'Confusing sensory adaptation with habituation. Adaptation is a change in the sensory receptors; habituation is a change in attention.'},
+
+{h:'Vision',
+ points:[
+  'Light passes the cornea, then the lens, which <b>accommodates</b> by changing shape, and lands on the retina.',
+  '<b>Rods</b> handle black-and-white and peripheral vision in dim light. <b>Cones</b> cluster in the fovea for colour and fine detail.',
+  '<b>Trichromatic theory</b> explains the retina: three cone types responding to red, green, and blue.',
+  '<b>Opponent-process theory</b> explains afterimages: cells fire in opposing pairs — red-green, blue-yellow, black-white.',
+  'Both are correct at different stages, which is exactly why the exam asks about them together.',
+  '<b>Feature detectors</b> in the visual cortex respond to specific edges, angles, and movements.',
+  '<b>Parallel processing</b> handles colour, motion, form, and depth simultaneously rather than in sequence.'
+ ],
+ ex:{q:'You stare at a green square for 30 seconds, then look at white paper and see red. Which theory explains this, and why?',
+     steps:['Trichromatic theory describes cone types but predicts no afterimage.',
+            'Opponent-process cells fire in red-green pairs.',
+            'Prolonged green firing fatigues that side of the pair.',
+            'Removing the stimulus lets the opposing red response dominate briefly.'],
+     a:'Answer: opponent-process theory, operating after the retinal stage described by trichromatic theory.'}},
+
+{h:'Hearing and the other senses',
+ table:{head:['Theory','Explains','Applies to'],rows:[
+   ['Place theory','Where on the basilar membrane hair cells vibrate','High pitches'],
+   ['Frequency theory','How fast the whole membrane fires','Low pitches'],
+   ['Volley principle','Neurons alternating firing','Middle pitches']]},
+ points:[
+  'Sound moves the eardrum, then the hammer-anvil-stirrup, then the cochlea, where hair cells transduce it.',
+  '<b>Conduction deafness</b> is mechanical damage to the eardrum or bones. <b>Sensorineural deafness</b> is hair cell or nerve damage, sometimes helped by a cochlear implant.',
+  '<b>Kinesthesis</b> senses the position of body parts. The <b>vestibular sense</b> in the inner ear tracks balance.',
+  '<b>Gate-control theory</b> holds that the spinal cord contains a neural gate that can block or allow pain signals, which is why rubbing an injury helps.',
+  '<b>Sensory interaction</b>: taste is mostly smell, which is why food is bland with a blocked nose.'
+ ]},
+
+{h:'Organising perception',
+ intro:'Your brain does not receive a picture. It builds one, and the rules it uses are predictable enough to be tested.',
+ points:[
+  '<b>Bottom-up</b> processing builds from raw sensory data. <b>Top-down</b> uses expectations, context, and schemas.',
+  '<b>Gestalt principles</b>: figure-ground, proximity, similarity, closure, continuity.',
+  'Binocular depth cues need two eyes: <b>retinal disparity</b> and <b>convergence</b>.',
+  'Monocular cues work with one: relative size, interposition, linear perspective, texture gradient, relative height.',
+  '<b>Perceptual constancy</b> keeps size, shape, and colour stable even as the retinal image changes.',
+  '<b>Perceptual set</b> is a predisposition to perceive one thing rather than another.',
+  '<b>Inattentional blindness</b> is failing to see a fully visible object because attention is elsewhere — the gorilla in the basketball video.'
+ ],
+ tip:'For any depth-cue question, ask whether the cue would still work with one eye closed. If yes, it is monocular.'}
+]);
+
+setGuide('ap-psych', 'u4', [
+{h:'Classical conditioning',
+ intro:'Pavlov did not train dogs to salivate. Salivating was already automatic — he changed what triggered it. Every classical conditioning question is about identifying which stimulus acquired that power.',
+ table:{head:['Term','Pavlov\u2019s dogs','Little Albert'],rows:[
+   ['Unconditioned stimulus (UCS)','Food','Loud noise'],
+   ['Unconditioned response (UCR)','Salivation to food','Fear of noise'],
+   ['Neutral stimulus','Bell before conditioning','White rat before conditioning'],
+   ['Conditioned stimulus (CS)','Bell after pairing','White rat after pairing'],
+   ['Conditioned response (CR)','Salivation to bell','Fear of the rat']]},
+ points:[
+  '<b>Acquisition</b> works best when the CS appears just <i>before</i> the UCS, not simultaneously.',
+  '<b>Extinction</b> occurs when the CS repeatedly appears without the UCS. <b>Spontaneous recovery</b> is the response reappearing after a rest.',
+  '<b>Generalization</b> is responding to similar stimuli; <b>discrimination</b> is learning to respond only to the CS.',
+  'Watson\u2019s Little Albert study conditioned fear of a white rat that generalised to other furry objects.',
+  '<b>Higher-order conditioning</b> pairs a new neutral stimulus with an established CS.'
+ ],
+ tip:'Find the UCS first — the thing that produced the response before any learning. Everything else falls into place from there.'},
+
+{h:'Operant conditioning',
+ intro:'Classical conditioning is about what happens <i>before</i> a behaviour. Operant conditioning is about what happens <i>after</i>. Two words decide every question: is something added or removed, and does the behaviour go up or down?',
+ table:{head:['','Adds something (positive)','Removes something (negative)'],rows:[
+   ['<b>Increases</b> behaviour','Positive reinforcement — praise for homework','Negative reinforcement — nagging stops when you comply'],
+   ['<b>Decreases</b> behaviour','Positive punishment — extra chores for lying','Negative punishment — phone confiscated']]},
+ points:[
+  '<b>Negative reinforcement is not punishment.</b> Removing something unpleasant makes a behaviour more likely, not less. This is the single most-missed distinction in the course.',
+  'Thorndike\u2019s <b>law of effect</b>: behaviours followed by good outcomes are repeated.',
+  '<b>Primary reinforcers</b> satisfy biological needs. <b>Secondary reinforcers</b> like money gain value by association.',
+  '<b>Shaping</b> reinforces successive approximations toward a target behaviour.',
+  'Punishment suppresses behaviour but teaches nothing about what to do instead, and can produce fear and aggression.'
+ ],
+ ex:{q:'A student puts on sunscreen to avoid sunburn. Classify this.',
+     steps:['Does the behaviour increase? Yes — she keeps applying it.',
+            'So it is reinforcement, not punishment.',
+            'Is something added or removed? An aversive outcome (burn) is avoided.',
+            'Removal or avoidance of something unpleasant = negative.'],
+     a:'Answer: negative reinforcement.'}},
+
+{h:'Reinforcement schedules',
+ table:{head:['Schedule','Reward after','Response pattern','Example'],rows:[
+   ['Fixed-ratio','Set number of responses','High rate, brief pause after reward','Paid per 10 items packed'],
+   ['Variable-ratio','Unpredictable number','Highest, steadiest, hardest to extinguish','Slot machines'],
+   ['Fixed-interval','First response after set time','Scalloped — activity spikes near the deadline','Weekly quiz'],
+   ['Variable-interval','Unpredictable time','Slow and steady','Checking for a text']]},
+ points:[
+  '<b>Continuous</b> reinforcement produces the fastest learning; <b>partial</b> reinforcement produces the greatest resistance to extinction.',
+  'That combination explains why the best training method is continuous first, then shifting to variable-ratio.',
+  'Ratio schedules depend on <b>how much</b> you do; interval schedules depend on <b>how long</b> you wait.'
+ ],
+ trap:'Mixing up fixed-interval and fixed-ratio. If the reward depends on the clock it is interval; if it depends on your output it is ratio.'},
+
+{h:'Cognitive and biological limits on learning',
+ points:[
+  'Tolman showed <b>latent learning</b>: rats formed <b>cognitive maps</b> without reinforcement and revealed them only once rewarded. Learning and performance are not the same thing.',
+  '<b>Overjustification effect</b>: rewarding an activity someone already enjoys can reduce intrinsic motivation.',
+  'Bandura\u2019s Bobo doll study demonstrated <b>observational learning</b> — children reproduced specific aggressive acts they had watched.',
+  '<b>Mirror neurons</b> are proposed to fire both when acting and when observing the same action.',
+  'Seligman\u2019s <b>learned helplessness</b>: after inescapable aversive events, organisms stop trying even when escape becomes possible. This became a model for depression.',
+  '<b>Taste aversion</b> forms after a single pairing across hours of delay, violating normal conditioning rules. <b>Biological preparedness</b> explains why: organisms readily learn associations that aided survival.'
+ ],
+ tip:'Taste aversion and phobias both show that conditioning is not equally easy for all pairings. Nature constrains what can be learned.'}
+]);
+
+setGuide('ap-psych', 'u5', [
+{h:'Encoding: getting information in',
+ table:{head:['Stage','Capacity','Duration'],rows:[
+   ['Sensory memory','Large','Iconic ~0.3 sec; echoic 3–4 sec'],
+   ['Short-term / working','7 ± 2 items','~20 sec without rehearsal'],
+   ['Long-term','Effectively unlimited','Potentially permanent']]},
+ points:[
+  '<b>Chunking</b> groups items into meaningful units, which is why a phone number is easier than ten digits.',
+  '<b>Mnemonics</b> add structure and imagery — the method of loci, acronyms, the peg-word system.',
+  '<b>Automatic processing</b> handles space, time, and frequency without effort. <b>Effortful processing</b> requires attention.',
+  '<b>Levels of processing</b>: semantic encoding (meaning) beats acoustic (sound) which beats visual (appearance).',
+  'The <b>spacing effect</b>: distributed practice produces far better long-term retention than cramming. This is the single most useful finding in the unit for your own studying.',
+  '<b>Testing effect</b>: retrieving information strengthens memory more than rereading it.'
+ ],
+ tip:'The spacing effect and testing effect are why flashcards and quizzes beat rereading notes. StudyBuddy\u2019s Leitner boxes exist because of this research.'},
+
+{h:'Storage and retrieval',
+ points:[
+  '<b>Explicit (declarative)</b> memory covers facts and events, handled by the <b>hippocampus</b>.',
+  '<b>Implicit (procedural)</b> memory covers skills and conditioned responses, handled by the <b>cerebellum</b> and basal ganglia.',
+  'That split explains amnesia patients who can learn a new motor skill while denying they ever practised.',
+  '<b>Recall</b> retrieves without cues; <b>recognition</b> only requires identifying — which is why multiple choice feels easier than an essay.',
+  '<b>Priming</b>, <b>context-dependent</b>, and <b>state-dependent</b> memory all show retrieval depends on cues matching the encoding conditions.',
+  'The <b>serial position effect</b> produces better memory for the first items (<b>primacy</b>, rehearsed into long-term memory) and the last (<b>recency</b>, still in short-term memory).'
+ ],
+ ex:{q:'A student revises in the same room where the exam will be held and scores better. Which effect is this?',
+     steps:['Nothing changed about the material or the student\u2019s internal state.',
+            'The external environment matched between encoding and retrieval.',
+            'That is an environmental retrieval cue.'],
+     a:'Answer: context-dependent memory. If the match had been an internal state such as mood, it would be state-dependent.'}},
+
+{h:'Forgetting and memory errors',
+ points:[
+  'Ebbinghaus\u2019s <b>forgetting curve</b> drops sharply at first and then levels off — which is why review works best soon after learning.',
+  '<b>Proactive interference</b>: old learning disrupts new. <b>Retroactive interference</b>: new learning disrupts old.',
+  'Remember the direction by the prefix: <i>pro</i> means forward, so old material interferes forward onto new.',
+  '<b>Anterograde amnesia</b> blocks new memories; <b>retrograde amnesia</b> erases old ones.',
+  'Loftus\u2019s <b>misinformation effect</b> showed that post-event information reshapes eyewitness memory — asking how fast cars "smashed" produced higher estimates than "hit".',
+  '<b>Source amnesia</b> is remembering information but misattributing where it came from.',
+  'Memory is <b>reconstructive</b>, not a recording. Every recall slightly rewrites the trace.'
+ ],
+ trap:'Mixing up the two interference types. Ask which learning came first, then which one is being disrupted.'},
+
+{h:'Thinking, problem solving, and bias',
+ table:{head:['Bias or heuristic','What it does','Example'],rows:[
+   ['Availability heuristic','Judges frequency by how easily examples come to mind','Fearing plane crashes over car crashes'],
+   ['Representativeness heuristic','Judges by resemblance to a prototype, ignoring base rates','Assuming a quiet reader is a librarian, not a salesperson'],
+   ['Confirmation bias','Seeks evidence supporting existing beliefs','Reading only agreeable news'],
+   ['Belief perseverance','Clings to beliefs after they are discredited','Holding a view after the study is retracted'],
+   ['Overconfidence','Overestimates the accuracy of your judgements','Underestimating how long revision takes'],
+   ['Framing','Wording changes the decision','"90% survival" beats "10% mortality"']]},
+ points:[
+  '<b>Algorithms</b> guarantee a solution but are slow. <b>Heuristics</b> are fast shortcuts that usually work and sometimes fail.',
+  '<b>Functional fixedness</b> limits an object to its usual use. <b>Mental set</b> repeats a strategy that worked before even when a better one exists.',
+  '<b>Insight</b> is a sudden realisation of a solution, distinct from step-by-step problem solving.',
+  'Language: phonemes are sounds, morphemes are the smallest meaningful units, grammar governs combination.',
+  '<b>Linguistic relativity</b> proposes that language shapes thought — now accepted in a weakened form.'
+ ]}
+]);
+
+setGuide('ap-psych', 'u6', [
+{h:'Explaining other people',
+ intro:'Social psychology\u2019s central finding is that we badly underestimate how much situations drive behaviour — including our own.',
+ points:[
+  '<b>Fundamental attribution error</b>: overweighting personality and underweighting situation when explaining someone else\u2019s behaviour.',
+  '<b>Actor-observer bias</b>: we explain our own behaviour situationally ("I was late because of traffic") and others\u2019 dispositionally ("he is unreliable").',
+  '<b>Self-serving bias</b>: crediting success to ourselves and blaming failure on circumstances.',
+  '<b>Just-world hypothesis</b>: believing people generally get what they deserve, which fuels victim blaming.',
+  '<b>Cognitive dissonance</b> (Festinger): when attitudes and actions conflict, we usually change the attitude, because the action has already happened.'
+ ],
+ ex:{q:'A student who cheated on a test comes to believe "everyone cheats, it is not a big deal." Explain using dissonance theory.',
+     steps:['Action: cheating. Attitude: cheating is wrong. These conflict.',
+            'The action cannot be undone.',
+            'Discomfort is reduced by adjusting the attitude to fit the behaviour.'],
+     a:'Answer: dissonance was resolved by changing the attitude rather than the behaviour — the direction dissonance theory predicts.'}},
+
+{h:'Conformity and obedience',
+ table:{head:['Study','Finding','Key variable'],rows:[
+   ['Asch (lines)','About a third of responses conformed to an obviously wrong majority','Unanimity — one dissenter collapses conformity'],
+   ['Milgram (shocks)','65% delivered the maximum shock','Proximity of authority and of the victim'],
+   ['Zimbardo (prison)','Assigned roles shaped behaviour rapidly','Methods now heavily criticised']]},
+ points:[
+  '<b>Normative</b> social influence is conforming to be liked or accepted.',
+  '<b>Informational</b> social influence is conforming because others seem to know better.',
+  'Asch is mostly normative — participants knew the answer was wrong and said it anyway.',
+  'Milgram\u2019s obedience <b>rose</b> with a close, legitimate authority and a distant victim; it <b>fell</b> when the victim was in the room or when other participants rebelled.',
+  '<b>Foot-in-the-door</b> starts with a small request; <b>door-in-the-face</b> starts with an extreme one that is refused.'
+ ],
+ trap:'Calling Asch a study of obedience. Asch is conformity to peers; Milgram is obedience to authority.'},
+
+{h:'Behaviour in groups',
+ points:[
+  '<b>Social facilitation</b>: the presence of others improves performance on easy or well-learned tasks and worsens it on difficult ones.',
+  '<b>Social loafing</b>: individuals exert less effort when contributions are pooled and individual output is invisible.',
+  '<b>Deindividuation</b>: anonymity within a group loosens self-restraint.',
+  '<b>Group polarization</b>: discussion among like-minded people strengthens their shared position rather than moderating it.',
+  '<b>Groupthink</b>: the desire for harmony overrides realistic appraisal of alternatives.',
+  '<b>Bystander effect</b>: the more witnesses present, the less likely any one person helps, through <b>diffusion of responsibility</b> and <b>pluralistic ignorance</b>.'
+ ],
+ tip:'Facilitation and loafing sound contradictory but are not. Facilitation is about being watched individually; loafing is about being hidden in a group total.'},
+
+{h:'Prejudice, aggression, and attraction',
+ points:[
+  '<b>Ingroup bias</b> favours one\u2019s own group. <b>Outgroup homogeneity</b> is seeing members of other groups as all alike.',
+  '<b>Scapegoat theory</b>: frustration seeks a target to blame.',
+  '<b>Stereotype threat</b>: anxiety about confirming a negative stereotype about your group depresses performance on the very task being measured.',
+  '<b>Self-fulfilling prophecy</b>: expectations shape behaviour until the expectation comes true.',
+  'Attraction rises with <b>proximity</b>, the <b>mere exposure effect</b>, physical attractiveness, and similarity — not with opposites attracting.',
+  'Sherif\u2019s Robbers Cave study reduced intergroup hostility only through <b>superordinate goals</b> that neither group could achieve alone. Simple contact was not enough.'
+ ]}
+]);
+
+/* ------------------------------------------ AP US GOVERNMENT */
+setGuide('ap-gov', 'u1', [
+{h:'The ideas behind the Constitution',
+ intro:'The founders were arguing with each other, and the required documents preserve both sides of that argument. Knowing who said what — and against whom — is what these questions test.',
+ table:{head:['Document','Author','Core argument'],rows:[
+   ['Federalist 10','Madison','A large republic controls faction better than a small one'],
+   ['Brutus 1','Anti-Federalist','A large republic will be too distant; the elastic clause invites tyranny'],
+   ['Federalist 51','Madison','Separation of powers makes ambition counteract ambition'],
+   ['Federalist 70','Hamilton','A single energetic executive is safer than a plural one'],
+   ['Federalist 78','Hamilton','The judiciary is least dangerous and needs independence'],
+   ['Declaration of Independence','Jefferson','Natural rights and government by consent']]},
+ points:[
+  'Enlightenment roots: <b>natural rights</b> and the <b>social contract</b> from Locke; <b>popular sovereignty</b> from Rousseau; <b>separation of powers</b> from Montesquieu.',
+  'Models of democracy: <b>participatory</b> (broad direct involvement), <b>pluralist</b> (competing interest groups), <b>elite</b> (a small influential minority decides).',
+  'The <b>Articles of Confederation</b> gave no power to tax or regulate trade and no executive. Shays\u2019 Rebellion exposed the weakness.',
+  'Convention compromises: the <b>Great Compromise</b> on representation, the <b>Three-Fifths Compromise</b>, and the Electoral College as a compromise on selecting the president.'
+ ],
+ trap:'Attributing Federalist 10 to Hamilton. Madison wrote 10 and 51; Hamilton wrote 70 and 78.'},
+
+{h:'Federalism in practice',
+ table:{head:['Power type','Belongs to','Examples'],rows:[
+   ['Enumerated','National government','Coin money, declare war, regulate interstate commerce'],
+   ['Implied','National government','National bank, via the necessary and proper clause'],
+   ['Reserved','States (10th Amendment)','Education, licensing, most criminal law'],
+   ['Concurrent','Both','Taxing, building roads, establishing courts']]},
+ points:[
+  'The <b>supremacy clause</b> makes federal law prevail where the two conflict.',
+  '<i>McCulloch v. Maryland</i> upheld <b>implied powers</b> through the necessary and proper clause and blocked states from taxing federal institutions.',
+  '<i>United States v. Lopez</i> limited the commerce clause, marking a shift back toward state authority.',
+  '<b>Categorical grants</b> come with strict conditions; <b>block grants</b> allow flexibility; <b>mandates</b> require action, and unfunded ones require it without money.',
+  'Federalism has shifted over time: dual ("layer cake") federalism gave way to cooperative ("marble cake") federalism, then to devolution.'
+ ],
+ ex:{q:'Congress threatens to withhold highway funds from states that do not raise the drinking age to 21. Is this constitutional?',
+     steps:['Congress cannot directly set a state drinking age — that is a reserved power.',
+            'But Congress controls federal spending and may attach conditions.',
+            'States remain technically free to refuse the money.'],
+     a:'Answer: yes. This is fiscal federalism — using conditions on grants to achieve indirectly what Congress cannot mandate directly.'}}
+]);
+
+setGuide('ap-gov', 'u2', [
+{h:'Congress',
+ table:{head:['','House','Senate'],rows:[
+   ['Size','435 members','100 members'],
+   ['Term','2 years','6 years, staggered'],
+   ['Distinct powers','Originates revenue bills, impeaches','Confirms appointments, ratifies treaties, tries impeachments'],
+   ['Debate','Limited by the Rules Committee','Unlimited — filibuster possible'],
+   ['Character','More formal, majority-driven','More individualistic, minority has leverage']]},
+ points:[
+  'A <b>filibuster</b> extends debate indefinitely; <b>cloture</b> ends it with 60 votes, which is why a Senate majority often is not enough.',
+  'The <b>House Rules Committee</b> sets terms of debate, making it a powerful gatekeeper.',
+  'Committees do most real work. <b>Standing</b> committees are permanent; conference committees reconcile House and Senate versions.',
+  '<b>Pork barrel</b> spending and <b>logrolling</b> (vote trading) shape what passes.',
+  'Models of representation: <b>trustee</b> (own judgement), <b>delegate</b> (constituent wishes), <b>politico</b> (a mix).',
+  '<b>Divided government</b> and increasing polarisation slow legislation and increase reliance on executive action.'
+ ]},
+
+{h:'The presidency and the bureaucracy',
+ points:[
+  'Formal powers: veto, appointments, commander in chief, treaties (with Senate consent), pardons.',
+  'Informal powers: <b>executive orders</b>, <b>executive agreements</b>, <b>signing statements</b>, and the <b>bully pulpit</b>.',
+  'A <b>pocket veto</b> occurs when the president does not sign and Congress adjourns within ten days.',
+  'Congress can override a veto with two-thirds of both chambers — rare in practice.',
+  'The bureaucracy implements law through <b>rulemaking</b>, <b>enforcement</b>, and <b>adjudication</b>. It has real discretion.',
+  'Congress checks it through oversight hearings, the power of the purse, and confirmation of appointees.',
+  '<b>Iron triangles</b> bind an agency, a congressional committee, and an interest group; <b>issue networks</b> are looser and shift with the issue.'
+ ],
+ tip:'When a question asks how the president expands power without Congress, the answer is nearly always executive orders or executive agreements.'},
+
+{h:'The courts',
+ points:[
+  '<i>Marbury v. Madison</i> established <b>judicial review</b>, the power to strike down unconstitutional acts.',
+  '<b>Stare decisis</b> means deciding according to precedent, which produces stability — but precedent can be overturned.',
+  '<b>Judicial activism</b> is more willing to strike down laws or depart from precedent; <b>judicial restraint</b> defers to elected branches.',
+  'These are not the same as liberal and conservative. Either ideology can be activist.',
+  'Checks on the courts: appointments and confirmation, constitutional amendment, jurisdiction changes, and reliance on the executive for enforcement.',
+  'Federalist 78 argued the judiciary controls neither sword nor purse, so its power rests on legitimacy.'
+ ]}
+]);
+
+setGuide('ap-gov', 'u3', [
+{h:'Civil liberties: religion and expression',
+ intro:'Civil liberties protect you <i>from</i> government. Civil rights protect you from discrimination. Nearly every question in this unit depends on keeping those apart.',
+ table:{head:['Case','Clause or right','Holding'],rows:[
+   ['Engel v. Vitale','Establishment','School-sponsored prayer is unconstitutional'],
+   ['Wisconsin v. Yoder','Free exercise','Amish families exempt from compulsory schooling after 8th grade'],
+   ['Tinker v. Des Moines','Symbolic speech','Non-disruptive student speech is protected'],
+   ['Schenck v. US','Speech limits','Clear and present danger permits restriction'],
+   ['New York Times v. US','Press','Prior restraint carries a heavy burden'],
+   ['McDonald v. Chicago','2nd Amendment','Incorporated against the states']]},
+ points:[
+  '<b>Selective incorporation</b> applies Bill of Rights protections to the states through the 14th Amendment\u2019s due process clause, case by case.',
+  'The <b>establishment clause</b> bars government endorsement of religion; the <b>free exercise clause</b> protects practice.',
+  'Unprotected speech includes obscenity, defamation, and incitement to imminent lawless action.',
+  '<b>Prior restraint</b> — blocking publication in advance — is presumptively unconstitutional.'
+ ]},
+
+{h:'Rights of the accused and privacy',
+ points:[
+  '<i>Gideon v. Wainwright</i> guaranteed an attorney in state criminal cases through the 6th Amendment.',
+  '<i>Miranda v. Arizona</i> required warning suspects of their rights before custodial interrogation.',
+  'The <b>exclusionary rule</b> bars illegally obtained evidence from trial.',
+  '<i>Roe v. Wade</i> grounded abortion rights in a right to privacy; <i>Dobbs</i> (2022) overturned it and returned the question to the states.',
+  'The <b>PATRIOT Act</b> debate is the standard example of the tension between security and liberty.'
+ ]},
+
+{h:'Civil rights',
+ points:[
+  'The <b>14th Amendment\u2019s equal protection clause</b> is the foundation of modern civil rights law.',
+  '<i>Brown v. Board of Education</i> overturned <i>Plessy v. Ferguson</i>, holding separate is inherently unequal.',
+  'King\u2019s <b>Letter from Birmingham Jail</b> defended civil disobedience against unjust laws and is a required document.',
+  'The <b>Civil Rights Act of 1964</b> banned discrimination in public accommodations and employment; the <b>Voting Rights Act of 1965</b> attacked barriers to voting.',
+  '<b>Title IX</b> barred sex discrimination in federally funded education.',
+  'Affirmative action has been repeatedly narrowed by the Court, most recently in the 2023 admissions cases.'
+ ],
+ trap:'Describing Brown as ending segregation. It ended <i>legal</i> school segregation; enforcement took decades and de facto segregation persists.'}
+]);
+
+setGuide('ap-gov', 'u4', [
+{h:'Where political beliefs come from',
+ points:[
+  '<b>Political socialization</b> works through family (strongest early influence), school, peers, religion, media, and major events.',
+  '<b>Generational effects</b> mark a cohort permanently — the Depression, Vietnam, 9/11, the 2008 crash.',
+  '<b>Life-cycle effects</b> change predictably with age, such as rising turnout as people acquire property and children.',
+  'Core American values: <b>individualism</b>, <b>equality of opportunity</b>, <b>free enterprise</b>, <b>rule of law</b>, <b>limited government</b>.',
+  'These values conflict with each other, which is the source of most political disagreement — expanding opportunity usually requires expanding government.'
+ ]},
+
+{h:'Ideology and policy',
+ table:{head:['','Economic policy','Social policy'],rows:[
+   ['Liberal','More regulation, more spending on social programmes','More individual freedom, expanded rights'],
+   ['Conservative','Less regulation, lower taxes, less spending','More traditional social arrangements'],
+   ['Libertarian','Minimal government','Minimal government']]},
+ points:[
+  '<b>Keynesian</b> economics uses government spending to boost demand in a downturn.',
+  '<b>Supply-side</b> economics cuts taxes and regulation to stimulate production.',
+  'Monetary policy is set by the <b>Federal Reserve</b>, deliberately insulated from electoral pressure.',
+  'Party coalitions correlate with race, religion, education, gender, and region — but correlation is not determinism.'
+ ]},
+
+{h:'Measuring public opinion',
+ points:[
+  '<b>Random sampling</b> is what makes a poll representative. Sample size affects precision, not bias.',
+  '<b>Sampling error</b> gives the margin of uncertainty. A 3-point lead with a ±4 margin is a statistical tie.',
+  'Poll types: <b>benchmark</b> (baseline), <b>tracking</b> (change over time), <b>entrance and exit</b> (on election day).',
+  'Poll quality suffers from question wording, low response rates, and timing.',
+  'Self-selected online surveys are not scientific polls and cannot be generalised.',
+  'Polls influence candidate strategy, media coverage, and sometimes voter behaviour itself through bandwagon effects.'
+ ],
+ ex:{q:'A poll shows Candidate A at 48% and Candidate B at 45%, margin of error ±4. What can you conclude?',
+     steps:['A\u2019s range is 44–52%. B\u2019s range is 41–49%.',
+            'The ranges overlap substantially.',
+            'Either candidate could genuinely be ahead.'],
+     a:'Answer: the race is a statistical tie. Reporting A as "leading" overstates what the data supports.'}}
+]);
+
+setGuide('ap-gov', 'u5', [
+{h:'Voting and turnout',
+ intro:'The franchise expanded through six amendments and one landmark statute, each responding to a specific exclusion. Knowing which barrier each removed is more useful than memorising the numbers in order.',
+ table:{head:['Amendment','Expanded the vote to'],rows:[
+   ['15th','Men regardless of race (widely evaded until 1965)'],
+   ['17th','Direct election of senators'],
+   ['19th','Women'],
+   ['23rd','Washington, D.C. in presidential elections'],
+   ['24th','Abolished poll taxes'],
+   ['26th','Citizens aged 18 and over']]},
+ points:[
+  'The <b>Voting Rights Act of 1965</b> enforced the 15th Amendment by suspending literacy tests and adding federal oversight.',
+  'Turnout rises with <b>education</b>, income, and age. Education is the single strongest predictor.',
+  'Structural factors matter: registration deadlines, voter ID laws, early and mail voting, and weekday elections all measurably shift turnout.',
+  'Models of voting behaviour: <b>rational choice</b> (self-interest), <b>retrospective</b> (incumbent\u2019s record), <b>prospective</b> (future promises), <b>party-line</b>.',
+  '<b>Political efficacy</b> — believing your vote matters — strongly predicts whether someone votes.'
+ ]},
+
+{h:'Parties and interest groups',
+ intro:'Parties and interest groups are both linkage institutions — they connect citizens to government — but they want different things. Parties want to win offices; interest groups want specific policies and will work with whoever delivers them.',
+ points:[
+  'Parties recruit candidates, mobilise voters, organise government, and simplify choices through the party label.',
+  '<b>Critical elections</b> produce <b>realignment</b>, shifting long-term coalitions.',
+  '<b>Winner-take-all single-member districts</b> are the structural reason third parties rarely win. Votes that do not come first produce no seats.',
+  'Third parties still matter by raising issues the major parties later adopt, and by acting as spoilers.',
+  'Interest groups lobby, litigate, mobilise members, and fund campaigns.',
+  'The <b>free rider problem</b> weakens groups pursuing broadly shared benefits, since you get clean air whether or not you join.'
+ ],
+ trap:'Explaining third-party weakness by saying voters dislike their ideas. The structural explanation — winner-take-all districts — is what the exam wants.'},
+
+{h:'Elections, money, and media',
+ intro:'The rules of an election shape its outcome as much as public opinion does. Ballot access, district lines, the Electoral College, and campaign finance law all decide which votes are worth chasing.',
+ points:[
+  'Nomination runs through <b>primaries</b> and <b>caucuses</b>, then a national convention.',
+  'The <b>Electoral College</b> awards votes by state, which is why campaigns concentrate on a handful of swing states and ignore safe ones.',
+  '<b>Incumbency advantage</b> comes from name recognition, fundraising, constituent service, and franking privileges.',
+  'Campaign finance: <b>FECA</b> created disclosure and limits; <b>BCRA</b> restricted soft money; <i>Citizens United v. FEC</i> allowed unlimited independent spending, producing <b>super PACs</b>.',
+  'Media act as gatekeeper, scorekeeper, and watchdog.',
+  '<b>Horse-race journalism</b> focuses on who is winning rather than policy, and audience fragmentation lets voters select sources that confirm existing views.'
+ ],
+ ex:{q:'Why do presidential campaigns spend heavily in Pennsylvania but almost nothing in California or Wyoming?',
+     steps:['The Electoral College is winner-take-all in nearly every state.',
+            'California reliably goes one way; Wyoming reliably the other.',
+            'Additional spending in a safe state changes no electoral votes.',
+            'Pennsylvania is competitive, so marginal effort can flip its entire bloc.'],
+     a:'Answer: winner-take-all allocation makes only competitive states worth contesting.'}}
+]);
+</script>
+<script>
+/* ------------------------------------------ AP US HISTORY */
+setGuide('apush', 'p1', [
+{h:'Native societies before contact',
+ intro:'There was no single Native American culture. Societies differed because they adapted to radically different environments, and the exam rewards you for naming the environmental cause alongside the cultural effect.',
+ table:{head:['Region','Environment','Society'],rows:[
+   ['Southwest (Pueblo)','Arid, limited water','Irrigation, permanent adobe settlements'],
+   ['Great Plains','Grassland, buffalo herds','Largely nomadic, portable dwellings'],
+   ['Northeast (Iroquois)','Woodland, mixed resources','Maize agriculture plus hunting, confederations'],
+   ['Pacific Northwest','Abundant fish and timber','Dense permanent villages without farming'],
+   ['Mississippi River Valley','Fertile floodplain','Large chiefdoms such as Cahokia']]},
+ points:[
+  '<b>Maize cultivation</b> spread north from Mexico and enabled permanent settlement, population growth, and social complexity.',
+  'Abundance did not require agriculture — the Pacific Northwest built dense societies on fishing alone.',
+  'Most societies had established trade networks, political structures, and religious systems long before Europeans arrived.'
+ ],
+ tip:'For any comparison question, anchor each society to its environment first. The causal chain — environment shapes subsistence shapes social structure — is what earns the point.'},
+
+{h:'Contact and the Columbian Exchange',
+ table:{head:['To the Americas','To Europe and Africa'],rows:[
+   ['Wheat, sugar, rice','Maize, potatoes, tomatoes, cacao'],
+   ['Horses, cattle, pigs','Turkeys'],
+   ['Smallpox, measles, influenza','Syphilis (disputed)'],
+   ['Enslaved Africans','American silver']]},
+ points:[
+  'Disease was the decisive factor. Smallpox and measles killed an estimated <b>80–90%</b> of Indigenous populations who had no acquired immunity.',
+  'That collapse, not military superiority, explains the scale of European conquest.',
+  'American crops caused population growth in Europe, Africa, and China — the exchange reshaped the world, not just the Americas.',
+  'Horses transformed Plains societies, making mounted buffalo hunting and mobile warfare possible.',
+  'Silver from Potosí flowed to China and tied the first genuinely global economy together.'
+ ],
+ trap:'Describing the Columbian Exchange as one-directional. It moved in both directions and the European population boom from American crops is frequently tested.'},
+
+{h:'Spanish colonisation and the debate over conquest',
+ points:[
+  'The <b>encomienda system</b> granted colonists Indigenous labour in exchange for nominal protection and religious instruction. In practice it was coerced labour.',
+  'As Indigenous populations collapsed, the Spanish turned increasingly to enslaved African labour.',
+  'The <b>casta system</b> ranked people by ancestry, with Spanish-born peninsulares at the top.',
+  '<b>Bartolomé de Las Casas</b> condemned the treatment of Native peoples and argued for their humanity and rights.',
+  '<b>Juan Ginés de Sepúlveda</b> argued conquest and subjugation were naturally justified.',
+  'Their Valladolid debate is the standard example of Europeans disagreeing among themselves about the morality of empire.',
+  '<b>Syncretism</b> emerged as Indigenous and Catholic practices blended.'
+ ],
+ ex:{q:'Explain why Spanish colonisation relied increasingly on enslaved Africans over the sixteenth century.',
+     steps:['Encomienda depended on a large Indigenous labour force.',
+            'Epidemic disease destroyed that population.',
+            'Plantation agriculture and silver mining still demanded enormous labour.',
+            'Africans had greater resistance to Old World diseases and no local kinship networks to escape into.'],
+     a:'Answer: demographic collapse removed the original labour supply, and the Atlantic slave trade replaced it.'}}
+]);
+
+setGuide('apush', 'p2', [
+{h:'Three colonial regions, three economies',
+ intro:'The regions differed because their land and their settlers differed, and almost every Period 2 comparison question comes back to that.',
+ table:{head:['','Chesapeake / South','New England','Middle Colonies'],rows:[
+   ['Settlers','Young single men seeking profit','Families seeking religious community','Diverse, many nationalities'],
+   ['Economy','Tobacco, rice, plantation','Mixed farming, shipping, fishing','Grain — the "breadbasket"'],
+   ['Labour','Indentured servants, then enslaved Africans','Family labour','Family labour and some slavery'],
+   ['Society','Dispersed, high mortality, unequal','Towns, town meetings, long life expectancy','Tolerant, commercial'],
+   ['Religion','Anglican, loosely enforced','Puritan, central to public life','Quaker and many others']]},
+ points:[
+  'The <b>headright system</b> granted land for each servant transported, concentrating land among wealthy planters.',
+  'New England migrated as families, which produced towns, schools, and the longest life expectancy in the colonies.',
+  'Pennsylvania under the Quakers offered the broadest religious tolerance and fair dealing with Native peoples early on.'
+ ]},
+
+{h:'Slavery, resistance, and Bacon\u2019s Rebellion',
+ points:[
+  '<b>Bacon\u2019s Rebellion</b> (1676) united poor whites and Black labourers against Governor Berkeley over western land and Native policy.',
+  'The rebellion terrified planters. Their response was to shift decisively from indentured servitude toward <b>hereditary racial slavery</b>, which divided the labouring class along colour lines.',
+  'This is the causal chain the exam wants: Bacon\u2019s Rebellion → fear of cross-racial alliance → racialised chattel slavery.',
+  'Chattel slavery became hereditary, lifelong, and racially defined — unlike earlier servitude, which ended.',
+  'Enslaved people resisted through work slowdowns, escape, preserving language and religion, and revolt.',
+  'The <b>Stono Rebellion</b> (1739) was the largest colonial slave revolt and produced far harsher slave codes.'
+ ],
+ trap:'Treating slavery as static across the colonial period. Its legal character hardened over time, and Bacon\u2019s Rebellion is the usual turning point.'},
+
+{h:'Empire, ideas, and conflict',
+ points:[
+  '<b>Mercantilism</b> treated colonies as sources of raw materials and captive markets. The <b>Navigation Acts</b> enforced it.',
+  '<b>Triangular trade</b> linked New England, West Africa, and the West Indies. The <b>Middle Passage</b> was its human cost.',
+  '<b>Salutary neglect</b> — loose British enforcement — let colonial assemblies gain real control over taxation and spending. This is why later British tightening felt like a violation of established rights.',
+  'The <b>First Great Awakening</b> emphasised personal conversion and challenged established clergy, creating the first genuinely intercolonial shared experience.',
+  '<b>Enlightenment</b> ideas about natural rights and reason spread among colonial elites.',
+  '<b>Metacom\u2019s War</b> (1675) devastated New England and broke Native power there. The <b>Pueblo Revolt</b> (1680) expelled the Spanish from New Mexico for over a decade.'
+ ],
+ ex:{q:'Explain how salutary neglect contributed to the Revolution.',
+     steps:['Decades of loose enforcement let colonial assemblies control their own taxation and spending.',
+            'Colonists came to see self-government as a right, not a privilege.',
+            'After 1763 Britain began enforcing and taxing directly.',
+            'Colonists experienced this not as new policy but as the removal of established rights.'],
+     a:'Answer: salutary neglect created expectations of self-government that later British policy appeared to violate.'}}
+]);
+
+setGuide('apush', 'p8', [
+{h:'The Cold War abroad',
+ intro:'Containment was the organising idea of forty years of policy. Every conflict in this period is easier to remember as an application of it.',
+ table:{head:['Policy or event','Year','What it did'],rows:[
+   ['Truman Doctrine','1947','Aid to Greece and Turkey; committed the US to resisting communism'],
+   ['Marshall Plan','1948','Rebuilt Western Europe to blunt communist appeal'],
+   ['Berlin Airlift','1948–49','Supplied West Berlin during the Soviet blockade'],
+   ['NATO','1949','Formalised Western military alliance'],
+   ['Korean War','1950–53','Made containment global and military; ended near the original border'],
+   ['Cuban Missile Crisis','1962','Closest approach to nuclear war'],
+   ['Gulf of Tonkin Resolution','1964','Gave Johnson broad war powers in Vietnam'],
+   ['Tet Offensive','1968','Military failure for the North, political turning point in the US']]},
+ points:[
+  'The <b>domino theory</b> held that one country falling to communism would topple its neighbours, and justified escalation in Vietnam.',
+  'Tet is the key example of a battle lost militarily and won politically. It contradicted official claims that victory was near and widened the <b>credibility gap</b>.',
+  'At home the <b>Second Red Scare</b> and <b>McCarthyism</b> produced loyalty oaths, blacklists, and HUAC hearings.',
+  'Fear of subversion shaped domestic politics as much as foreign policy.'
+ ]},
+
+{h:'The civil rights movement',
+ table:{head:['Event','Year','Significance'],rows:[
+   ['Brown v. Board','1954','Overturned Plessy; separate is inherently unequal'],
+   ['Montgomery Bus Boycott','1955–56','Launched mass nonviolent protest and King\u2019s leadership'],
+   ['Sit-ins and SNCC','1960','Student-led direct action'],
+   ['Birmingham campaign','1963','Televised violence forced federal response'],
+   ['March on Washington','1963','Built pressure for federal legislation'],
+   ['Civil Rights Act','1964','Banned discrimination in public accommodations and employment'],
+   ['Voting Rights Act','1965','Suspended literacy tests, added federal oversight']]},
+ points:[
+  'The movement combined litigation, mass protest, and federal legislation. No single tactic explains its success.',
+  'Televised violence in Birmingham and Selma was strategically important — it made Northern indifference untenable.',
+  '<b>Black Power</b> and Malcolm X offered an alternative emphasising self-determination and self-defence, growing from frustration that legal equality had not delivered economic equality.',
+  'Northern segregation was de facto rather than legal, which made it harder to attack through the courts.'
+ ],
+ trap:'Presenting the movement as unified. Disagreements over nonviolence, integration, and pace were constant and are frequently tested.'},
+
+{h:'The Great Society, counterculture, and the 1970s',
+ points:[
+  'Johnson\u2019s <b>Great Society</b> created Medicare, Medicaid, Head Start, and the War on Poverty — the largest expansion of federal responsibility since the New Deal.',
+  'The <b>Immigration Act of 1965</b> ended national-origins quotas and reshaped American demographics toward Asia and Latin America.',
+  'Second-wave feminism grew from Friedan\u2019s <i>The Feminine Mystique</i>, producing NOW, Title IX, and <i>Roe v. Wade</i>.',
+  'Carson\u2019s <i>Silent Spring</i> helped launch environmentalism, leading to the EPA and the Clean Air and Water Acts.',
+  'Nixon pursued <b>détente</b> with China and the USSR while <b>Watergate</b> ended his presidency and deepened distrust of government.',
+  'The 1970s brought <b>stagflation</b> and the OPEC embargo, ending postwar economic confidence and discrediting Keynesian remedies.'
+ ],
+ ex:{q:'Why was stagflation so difficult for policymakers to address?',
+     steps:['Keynesian tools fight unemployment by increasing demand.',
+            'But increasing demand worsens inflation.',
+            'Fighting inflation by contracting demand worsens unemployment.',
+            'The two problems appeared simultaneously, so each remedy aggravated the other.'],
+     a:'Answer: standard policy assumed inflation and unemployment moved in opposite directions, so their simultaneous rise left no orthodox solution.'}}
+]);
+
+setGuide('apush', 'p9', [
+{h:'The conservative resurgence',
+ intro:'The New Deal order dominated American politics for roughly fifty years. Period 9 is largely the story of its challenge.',
+ points:[
+  'Reagan\u2019s <b>supply-side economics</b> cut taxes and regulation on the theory that growth would follow and broaden the tax base.',
+  'Defence spending rose sharply while domestic programmes were cut. Deficits grew substantially — the predicted revenue did not materialise as forecast.',
+  'The <b>Moral Majority</b> and evangelical organising brought social issues to the centre of national politics.',
+  'Deregulation reshaped finance, airlines, and telecommunications.',
+  'The debate over the size of government, taxation, and the safety net has structured American politics ever since.'
+ ],
+ trap:'Treating "conservative resurgence" as a single movement. Economic conservatives, social conservatives, and foreign-policy hawks had distinct and sometimes conflicting priorities.'},
+
+{h:'The end of the Cold War and globalisation',
+ points:[
+  '<b>Gorbachev\u2019s</b> reforms — <i>glasnost</i> (openness) and <i>perestroika</i> (restructuring) — loosened Soviet control rather than saving the system.',
+  'The <b>Berlin Wall</b> fell in 1989 and the Soviet Union dissolved in 1991, leaving the US as the sole superpower.',
+  '<b>NAFTA</b> and the WTO accelerated economic integration. Manufacturing moved abroad, hollowing out industrial regions.',
+  'The personal computer and internet drove a productivity and investment boom in the 1990s.',
+  'Continued migration from Latin America and Asia reshaped American society, and immigration became a durable political fault line.'
+ ]},
+
+{h:'A new century',
+ points:[
+  'The <b>September 11 attacks</b> (2001) led to war in Afghanistan, the <b>PATRIOT Act</b>, and the 2003 invasion of Iraq.',
+  'Debates intensified over the balance between national security and civil liberties — a recurring theme since the Alien and Sedition Acts.',
+  'The <b>2008 financial crisis</b>, triggered by subprime mortgage lending packaged into complex securities, caused the deepest downturn since the Depression and prompted large federal intervention.',
+  '<b>Political polarisation</b> deepened, aided by fragmented and partisan media.',
+  'Climate change, healthcare, immigration, and economic inequality became the era\u2019s defining domestic arguments.'
+ ],
+ tip:'For long-essay questions on continuity and change, the security-versus-liberty tension connects Period 9 back to Periods 3, 7, and 8 — a strong contextualisation move.'}
+]);
+
+/* ------------------------------------------ AP WORLD HISTORY */
+setGuide('ap-world', 'u1', [
+{h:'States around 1200',
+ intro:'Unit 1 asks you to compare state-building across regions. The useful move is to ask of every state: how does it legitimate its rule, and how does it extract resources?',
+ table:{head:['State','Legitimation','Notable feature'],rows:[
+   ['Song China','Confucianism, the civil service exam','Commercialised economy, paper money, Champa rice'],
+   ['Abbasid / Turkic states','Islam, sharia','Trade, scholarship, Sufi missionaries'],
+   ['Delhi Sultanate','Islamic rule over a Hindu majority','Jizya tax; Vijayanagara emerged in the south'],
+   ['Mali','Islam plus local tradition','Gold and salt wealth; Mansa Musa\u2019s hajj'],
+   ['European feudal states','Christianity, personal oaths','Decentralised power, manorialism'],
+   ['Aztec / Inca','State religion, tribute','Mit\u2019a labour (Inca), tribute lists (Aztec)']]},
+ points:[
+  'The <b>civil service exam</b> staffed the Chinese bureaucracy by merit and reinforced Confucian values, giving China the most centralised administration of the era.',
+  '<b>Neo-Confucianism</b> blended Confucian ethics with Buddhist and Daoist ideas.',
+  '<b>Dar al-Islam</b> expanded through trade and Sufi missionaries as much as conquest.',
+  'European feudalism was distinctive for how <i>decentralised</i> it was compared with contemporaries.'
+ ],
+ trap:'Calling European feudalism typical. Compared with Song China or the Islamic world, it was unusually fragmented and technologically behind.'},
+
+{h:'Networks of exchange',
+ table:{head:['Network','Technology','Carried'],rows:[
+   ['Silk Roads','Caravanserai, credit, camel saddles','Silk, porcelain, Buddhism, plague'],
+   ['Indian Ocean','Dhow, lateen sail, monsoon winds','Bulk goods, Islam, Swahili culture'],
+   ['Trans-Saharan','Camel caravans','Gold, salt, Islam, enslaved people']]},
+ points:[
+  'The <b>Pax Mongolica</b> made overland Eurasian travel safer, dramatically increasing the flow of goods, people, ideas — and disease.',
+  'Indian Ocean trade could carry <b>bulk goods</b> because sea transport is cheap, while the Silk Roads carried mostly luxuries.',
+  '<b>Monsoon winds</b> made Indian Ocean voyages predictable and shaped merchant communities who wintered abroad.',
+  'The <b>Black Death</b> travelled these same routes, killing a third or more of affected populations and reshaping labour and society.',
+  'Financial innovations — bills of exchange, banking houses, credit — grew from the demands of long-distance trade.'
+ ],
+ ex:{q:'Explain why Islam spread more extensively along the Indian Ocean network than Christianity did.',
+     steps:['Muslim merchants dominated Indian Ocean commerce.',
+            'Conversion offered practical commercial advantages: shared law, trust networks, credit.',
+            'Sufi missionaries adapted flexibly to local practice, easing syncretism.',
+            'No comparable Christian merchant network operated in the region before 1500.'],
+     a:'Answer: religion travelled with the merchants who dominated the route, and Islamic commercial law made conversion practically useful.'}}
+]);
+
+setGuide('ap-world', 'u2', [
+{h:'Land-based empires, 1450–1750',
+ intro:'The gunpowder empires all faced the same problem: how do you hold together a large, religiously diverse territory? Comparing their answers is the core skill of this unit.',
+ table:{head:['Empire','Religion','How it managed diversity'],rows:[
+   ['Ottoman','Sunni Islam','Millet system; devshirme recruited Christian boys for state service'],
+   ['Safavid','Shia Islam','Enforced Shiism, driving conflict with the Ottomans'],
+   ['Mughal','Islam over a Hindu majority','Akbar\u2019s tolerance and abolition of jizya; Aurangzeb reimposed it'],
+   ['Qing','Confucian order','Manchu minority ruling Han majority; queue requirement'],
+   ['Russia','Orthodox Christianity','Expansion into Siberia; tsarist centralisation']]},
+ points:[
+  'All expanded using <b>gunpowder weapons</b> and artillery, which favoured centralised states able to fund them.',
+  'Legitimacy came from religion, monumental architecture, art patronage, and tax systems.',
+  'The <b>devshirme</b> created an elite loyal directly to the sultan rather than to noble families — a solution to the problem of aristocratic power.',
+  'Akbar and Aurangzeb are the standard contrast for how religious policy could stabilise or destabilise an empire.'
+ ]},
+
+{h:'Maritime empires and the first global economy',
+ points:[
+  'Enabling technology: the <b>caravel</b>, the <b>astrolabe</b>, improved cartography, and knowledge of wind patterns.',
+  'The <b>Columbian Exchange</b> moved crops, animals, people, and disease, with catastrophic demographic consequences in the Americas.',
+  'American <b>silver</b> financed European trade with China, whose silver-based tax system made it the world\u2019s great silver sink. This is what made the economy genuinely global.',
+  'Labour systems: <b>encomienda</b> and <b>hacienda</b> in Spanish America, the <b>mit\u2019a</b> adapted from the Inca, chattel slavery in plantation zones.',
+  'The <b>casta</b> system organised Spanish American society by ancestry.',
+  'The <b>Atlantic slave trade</b> forcibly moved over 12 million Africans and reshaped African states, some of which grew powerful through participation.',
+  '<b>Mercantilism</b> and <b>joint-stock companies</b> such as the VOC financed and directed expansion, spreading risk across investors.'
+ ],
+ ex:{q:'Explain how American silver connected economies across four continents.',
+     steps:['Silver was mined in Spanish America using coerced Indigenous labour.',
+            'It flowed to Spain, then across Europe to pay for goods and wars.',
+            'European traders carried it to Asia because China demanded silver for taxes.',
+            'Chinese goods flowed back to Europe and the Americas via the Manila galleons.'],
+     a:'Answer: silver linked the Americas, Europe, Africa, and Asia into a single circulating system — the first global economy.'},
+ tip:'Whenever a question asks what made 1450–1750 different from earlier eras, silver and the Atlantic connection are the strongest evidence.'}
+]);
+
+setGuide('ap-world', 'u3', [
+{h:'Revolutions and industrialisation, 1750–1900',
+ intro:'Two revolutions run in parallel here: political revolutions built on Enlightenment ideas, and an industrial revolution that reorganised how humans live and work. They interact constantly.',
+ table:{head:['Revolution','Distinctive feature'],rows:[
+   ['American','Colonial elites resisting imperial taxation'],
+   ['French','Internal social revolution; radical phase and Napoleon'],
+   ['Haitian','The only successful large-scale revolt by enslaved people creating a state'],
+   ['Latin American','Creole elites led independence; social hierarchy largely preserved']]},
+ points:[
+  'The <b>Industrial Revolution</b> began in Britain thanks to coal, capital, colonies, agricultural surplus, and stable institutions.',
+  'The factory system created an urban working class, new class conflict, and eventually labour movements.',
+  '<b>Marxism</b> and utopian socialism responded to industrial inequality; states answered with reform legislation.',
+  'Industrialisation spread through state direction in Japan (<b>Meiji Restoration</b>) and Russia, showing it did not require a British path.',
+  'The Haitian Revolution terrified slaveholding societies everywhere and shaped how other revolutions were received.'
+ ],
+ trap:'Treating the Latin American revolutions as socially transformative. They changed who ruled without substantially changing the underlying hierarchy.'},
+
+{h:'Imperialism and global conflict',
+ points:[
+  '<b>New imperialism</b> combined industrial technology, national prestige, Social Darwinism, and civilising rhetoric.',
+  'The <b>Berlin Conference</b> (1884–85) partitioned Africa without African participation, drawing borders that ignored existing realities.',
+  'Resistance ranged from the Sepoy Rebellion to Ethiopia\u2019s victory at Adwa — the standard counterexample to inevitability.',
+  '<b>World War I</b> combined nationalism, alliances, imperial rivalry, and militarism into total war.',
+  'The interwar Depression, unresolved settlements, and fascism produced <b>World War II</b> and the Holocaust.',
+  'Both wars drew on colonial troops and resources, which fed postwar independence movements.'
+ ]},
+
+{h:'Cold War, decolonisation, and globalisation',
+ points:[
+  'The Cold War split the world into blocs with proxy wars in Korea, Vietnam, Afghanistan, and across Africa and Latin America.',
+  '<b>Decolonisation</b> came through negotiation in India and Ghana and through prolonged war in Algeria and Vietnam.',
+  'The <b>Nonaligned Movement</b> offered a third path for newly independent states.',
+  'The UN and Bretton Woods institutions structured the postwar order.',
+  'The Soviet collapse in 1991 ended the bipolar system and accelerated market integration.',
+  'Globalisation brought multinational corporations, migration, environmental strain, and resistance movements.',
+  'The <b>Green Revolution</b> raised food production sharply while increasing chemical dependence and inequality between large and small farms.'
+ ],
+ ex:{q:'Compare decolonisation in India and Algeria.',
+     steps:['India: mass nonviolent movement under Gandhi and Congress; British withdrawal negotiated in 1947; partition caused enormous violence.',
+            'Algeria: large French settler population refused to leave; independence came after a brutal war, 1954–62.',
+            'The key variable is settler population — where settlers were numerous, withdrawal was violently resisted.'],
+     a:'Answer: both achieved independence, but the presence of a substantial settler colonial population made negotiated withdrawal impossible in Algeria.'}}
+]);
+</script>
+<script>
+/* ============================================================
    StudyBuddy app
    ============================================================ */
 
@@ -7391,8 +9374,11 @@ function vGuide(cid, uid) {
   store.set('sb.last', { c: cid, u: uid });
   if (!(u.guide || []).length) return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a><div class="empty"><div class="big">▤</div>No written guide for this deck yet — try the flashcards.</div>`;
   const terms = (u.cards || []).slice(0, 6);
-  const bullets = u.guide.reduce((n, sec) => n + sec.points.length, 0);
-  const mins = Math.max(2, Math.round(bullets * 0.28));
+  const bullets = u.guide.reduce((n, sec) =>
+    n + (sec.points || []).length + (sec.intro ? 2 : 0) +
+    (sec.table ? sec.table.rows.length : 0) +
+    (sec.ex ? [].concat(sec.ex).length * 3 : 0), 0);
+  const mins = Math.max(2, Math.round(bullets * 0.3));
   setTimeout(initGuideScroll, 0);
   return topbar() + `
   <div class="readprog" id="readprog"></div>
@@ -7414,7 +9400,12 @@ function vGuide(cid, uid) {
       <p class="lede">${u.guide.length} sections, ${bullets} points, about ${mins} minutes of reading. Anything unclear, press <b>Ask about this</b> in the corner — the tutor answers from this page.</p>
       ${u.guide.map((sec, i) => `<section class="guide-sec" id="sec${i}">
         <h3><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${esc(sec.h)}</span></h3>
-        <ul>${sec.points.map(pt => `<li>${pt}</li>`).join('')}</ul>
+        ${sec.intro ? `<p class="g-intro">${sec.intro}</p>` : ''}
+        ${(sec.points || []).length ? `<ul>${sec.points.map(pt => `<li>${pt}</li>`).join('')}</ul>` : ''}
+        ${sec.table ? guideTable(sec.table) : ''}
+        ${(sec.ex ? [].concat(sec.ex) : []).map(guideExample).join('')}
+        ${sec.trap ? `<div class="g-trap"><b>Common trap</b>${sec.trap}</div>` : ''}
+        ${sec.tip ? `<div class="g-tip"><b>Strategy</b>${sec.tip}</div>` : ''}
       </section>`).join('')}
       ${terms.length ? `<hr class="divide">
         <span class="eyebrow">Key terms to have cold</span>
@@ -7423,6 +9414,19 @@ function vGuide(cid, uid) {
         </div>
         <p style="margin-top:14px"><a class="btn ghost sm" href="#/study/${cid}/${uid}/cards">All ${u.cards.length} flashcards →</a></p>` : ''}
     </article>
+  </div>`;
+}
+function guideTable(t) {
+  return `<table class="g-table">
+    ${t.head ? `<thead><tr>${t.head.map(h => `<th>${h}</th>`).join('')}</tr></thead>` : ''}
+    <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table>`;
+}
+function guideExample(e) {
+  return `<div class="g-ex">
+    <p class="exq">${e.q}</p>
+    ${(e.steps || []).length ? `<ol>${e.steps.map(s => `<li>${s}</li>`).join('')}</ol>` : ''}
+    ${e.a ? `<p class="exa">${e.a}</p>` : ''}
   </div>`;
 }
 function jumpSec(e, i) {

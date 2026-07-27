@@ -12713,6 +12713,1751 @@ quiz:[
 clearOutlineFlags();
 </script>
 <script>
+/* ---------------------------------------- AP PHYSICS 2 */
+addUnits('ap-phys2', [
+{
+id:'u1', title:'Unit 1 · Thermodynamics',
+guide:[
+{h:'Kinetic theory and gas laws',
+ intro:'Thermodynamics connects the invisible motion of molecules to measurable temperature and pressure. Every relationship in this unit follows from that link.',
+ points:[
+  '<b>Temperature</b> measures average kinetic energy per molecule. Two gases at the same temperature have the same average KE regardless of mass — so lighter molecules move faster.',
+  '<b>Ideal gas law</b>: PV = nRT, or PV = NkT using the number of molecules.',
+  'Real gases deviate at high pressure and low temperature, where molecular volume and attractions stop being negligible.',
+  '<b>Internal energy</b> of an ideal monatomic gas is @@U = \\frac{3}{2}nRT@@ — it depends only on temperature.',
+  'Heat transfer occurs by conduction, convection, and radiation.'
+ ]},
+{h:'The laws of thermodynamics',
+ table:{head:['Process','Constant','Key result'],rows:[
+   ['Isothermal','Temperature','ΔU = 0, so Q = W'],
+   ['Isobaric','Pressure','W = PΔV'],
+   ['Isochoric','Volume','W = 0, so ΔU = Q'],
+   ['Adiabatic','No heat exchange','Q = 0, so ΔU = −W']]},
+ points:[
+  '<b>First law</b>: ΔU = Q − W. Energy is conserved; heat added raises internal energy or does work.',
+  'On a PV diagram, the <b>area under the curve is the work done</b>, and a closed cycle\u2019s enclosed area is the net work.',
+  '<b>Second law</b>: entropy of an isolated system never decreases. Heat flows spontaneously from hot to cold, never the reverse.',
+  'Efficiency of a heat engine is @@e = \\frac{W}{Q_{H}}@@, and no engine can reach 100%.',
+  'The <b>Carnot efficiency</b> @@e = 1 - \\frac{T_{C}}{T_{H}}@@ sets the theoretical maximum, using absolute temperatures.'
+ ],
+ ex:{q:'A gas expands isothermally, absorbing 500 J of heat. How much work does it do?',
+     steps:['Isothermal means temperature is constant.',
+            'For an ideal gas, internal energy depends only on temperature, so ΔU = 0.',
+            'First law: 0 = Q − W.'],
+     a:'Answer: W = 500 J. All the heat absorbed becomes work.'},
+ trap:'Using Celsius in the Carnot formula. Efficiency calculations require kelvin.'}
+],
+cards:[
+ ['Temperature','A measure of average kinetic energy per molecule.'],
+ ['Ideal gas law','PV = nRT, or PV = NkT.'],
+ ['Internal energy of a monatomic ideal gas','@@U = \\frac{3}{2}nRT@@ — depends only on temperature.'],
+ ['First law of thermodynamics','ΔU = Q − W.'],
+ ['Isothermal process','Constant temperature; ΔU = 0 so Q = W.'],
+ ['Adiabatic process','No heat exchange; Q = 0 so ΔU = −W.'],
+ ['Work on a PV diagram','The area under the curve.'],
+ ['Second law','Entropy of an isolated system never decreases.'],
+ ['Carnot efficiency','@@e = 1 - \\frac{T_{C}}{T_{H}}@@ using absolute temperatures.']
+],
+quiz:[
+ {q:'Two gases are at the same temperature. Compared with the heavier molecules, the lighter ones have:',
+  c:['More kinetic energy','The same kinetic energy and higher speed','Less kinetic energy','The same speed'],
+  a:1, why:'Temperature fixes average kinetic energy, so smaller mass requires greater speed.'},
+ {q:'In an isochoric process, the work done by the gas is:',
+  c:['PΔV','Zero','Q','Negative'],
+  a:1, why:'Constant volume means no displacement, so no work is done.'},
+ {q:'A heat engine operating between 600 K and 300 K has maximum efficiency:',
+  c:['25%','50%','75%','100%'],
+  a:1, why:'@@e = 1 - 300/600 = 0.5@@.'},
+ {q:'Heat flows spontaneously from cold to hot. This violates:',
+  c:['The first law','The second law','Conservation of momentum','Ohm\u2019s law'],
+  a:1, why:'Energy would still be conserved, but entropy would decrease, which the second law forbids.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Electric Force, Field, and Potential',
+guide:[
+{h:'Charge and Coulomb\u2019s law',
+ intro:'Electric force, field, and potential describe one situation three ways. Field is a vector, potential a scalar, and choosing the scalar route is almost always the faster path through a problem.',
+ points:[
+  'Charge is <b>conserved</b> and <b>quantised</b> in multiples of the elementary charge e = 1.6 × 10⁻¹⁹ C.',
+  'Like charges repel; opposite charges attract.',
+  '<b>Coulomb\u2019s law</b>: @@F = k\\frac{q_{1}q_{2}}{r^{2}}@@ — an inverse square law, exactly like gravity.',
+  'Objects can be charged by friction, conduction (contact), or <b>induction</b> (no contact, by polarising then grounding).',
+  '<b>Conductors</b> let charge move freely; excess charge resides on the outer surface.'
+ ]},
+{h:'Field and potential',
+ table:{head:['Quantity','Symbol','Type','Units'],rows:[
+   ['Electric field','E','Vector','N/C or V/m'],
+   ['Electric potential','V','<b>Scalar</b>','Volts'],
+   ['Potential energy','U','Scalar','Joules'],
+   ['Force','F','Vector','Newtons']]},
+ points:[
+  '<b>Electric field</b> @@E = \\frac{F}{q}@@ points away from positive charge and toward negative.',
+  '<b>Potential</b> from a point charge is @@V = k\\frac{q}{r}@@ — note the single r, not r².',
+  'Potential is a <b>scalar</b>, so contributions from several charges simply add. This makes potential far easier than field for multi-charge problems.',
+  'Work done moving charge q through potential difference ΔV is @@W = q\\Delta V@@.',
+  'Field lines point from high to low potential and are always perpendicular to <b>equipotential surfaces</b>.',
+  'Inside a conductor at equilibrium the field is zero and the whole conductor is at one potential.'
+ ],
+ ex:{q:'Two +2 μC charges sit 1 m apart. Find the electric field and potential midway between them.',
+     steps:['Field is a vector. Each charge pushes away from itself, so the two fields at the midpoint point in opposite directions.',
+            'Equal magnitudes in opposite directions cancel: E = 0.',
+            'Potential is a scalar with no direction, so contributions add.',
+            'Each contributes @@k(2\\times10^{-6})/0.5@@, and they sum.'],
+     a:'Answer: E = 0 but V ≠ 0. Field can vanish where potential does not — a favourite exam trap.'},
+ trap:'Treating potential as a vector. It has no direction, so you add values with signs, never with components.'}
+],
+cards:[
+ ['Coulomb\u2019s law','@@F = k\\frac{q_{1}q_{2}}{r^{2}}@@ — inverse square, like gravity.'],
+ ['Elementary charge','1.6 × 10⁻¹⁹ C; charge is quantised in multiples of it.'],
+ ['Charging by induction','Polarising a conductor and grounding it, without contact.'],
+ ['Electric field','@@E = \\frac{F}{q}@@; a vector pointing away from positive charge.'],
+ ['Electric potential','@@V = k\\frac{q}{r}@@; a scalar, so values add directly.'],
+ ['Work and potential difference','@@W = q\\Delta V@@'],
+ ['Equipotential surface','A surface of constant potential; field lines cross it perpendicularly.'],
+ ['Field inside a conductor','Zero at equilibrium, and the conductor is all at one potential.'],
+ ['Field zero but potential nonzero','Possible, because field is a vector and potential a scalar.']
+],
+quiz:[
+ {q:'The distance between two charges is doubled. The force becomes:',
+  c:['Half','One quarter','Double','Four times'],
+  a:1, why:'Inverse square: doubling r divides the force by four.'},
+ {q:'Electric potential differs from electric field in that potential is:',
+  c:['A vector','A scalar','Measured in newtons','Always zero'],
+  a:1, why:'Potential has magnitude only, which is why contributions add arithmetically.'},
+ {q:'At equilibrium, the electric field inside a solid conductor is:',
+  c:['Maximum','Zero','Equal to the surface field','Directed inward'],
+  a:1, why:'Charges redistribute until no net field remains inside, which is why conductors shield their interiors.'},
+ {q:'Moving a +3 C charge through a potential difference of 4 V requires work of:',
+  c:['0.75 J','7 J','12 J','1.33 J'],
+  a:2, why:'@@W = q\\Delta V = 3 \\times 4 = 12@@ J.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Electric Circuits',
+guide:[
+{h:'Current, resistance, and power',
+ intro:'Circuits reward pattern recognition over calculation. Once you know what stays constant in series and in parallel, most questions answer themselves.',
+ points:[
+  '<b>Current</b> is charge per unit time, @@I = \\frac{\\Delta q}{\\Delta t}@@, measured in amperes.',
+  'Conventional current flows from positive to negative, opposite to actual electron motion.',
+  '<b>Ohm\u2019s law</b>: V = IR.',
+  'Resistance depends on the material and geometry: @@R = \\frac{\\rho L}{A}@@ — longer wires resist more, thicker wires resist less.',
+  '<b>Power</b>: @@P = IV = I^{2}R = \\frac{V^{2}}{R}@@. Choose the form matching what you know.'
+ ]},
+{h:'Series and parallel',
+ table:{head:['','Series','Parallel'],rows:[
+   ['Current','Same through all','Divides among branches'],
+   ['Voltage','Divides across components','Same across all'],
+   ['Resistance','@@R = R_{1}+R_{2}@@','@@\\frac{1}{R} = \\frac{1}{R_{1}}+\\frac{1}{R_{2}}@@'],
+   ['Adding a resistor','Total resistance rises','Total resistance falls'],
+   ['If one fails open','Everything stops','Others keep working']]},
+ points:[
+  'Parallel resistance is always <b>less than the smallest individual resistor</b> — a useful check on your arithmetic.',
+  '<b>Kirchhoff\u2019s junction rule</b>: current in equals current out, which is charge conservation.',
+  '<b>Kirchhoff\u2019s loop rule</b>: potential changes around any closed loop sum to zero, which is energy conservation.',
+  '<b>Capacitors</b> store charge: Q = CV, with energy @@U = \\frac{1}{2}CV^{2}@@.',
+  'In an RC circuit, charging and discharging follow exponential curves with time constant @@\\tau = RC@@.',
+  'A fully charged capacitor passes no steady current; it behaves like a break in the circuit.'
+ ],
+ ex:{q:'Two 6 Ω resistors are connected in parallel across a 12 V battery. Find the total current.',
+     steps:['Parallel: @@\\frac{1}{R} = \\frac{1}{6}+\\frac{1}{6} = \\frac{1}{3}@@, so R = 3 Ω.',
+            'Check: 3 Ω is less than the smallest resistor, as expected.',
+            'I = V/R = 12/3.'],
+     a:'Answer: 4 A. Each branch carries 2 A.'},
+ trap:'Adding parallel resistances directly. The reciprocal sum is required, and the answer must come out smaller than any single resistor.'}
+],
+cards:[
+ ['Current','@@I = \\frac{\\Delta q}{\\Delta t}@@, measured in amperes.'],
+ ['Ohm\u2019s law','V = IR.'],
+ ['Resistance of a wire','@@R = \\frac{\\rho L}{A}@@ — longer resists more, thicker resists less.'],
+ ['Electrical power','@@P = IV = I^{2}R = \\frac{V^{2}}{R}@@'],
+ ['Series resistance','Adds directly; current is the same through all components.'],
+ ['Parallel resistance','Reciprocals add; total is less than the smallest resistor.'],
+ ['Kirchhoff\u2019s junction rule','Current in equals current out — charge conservation.'],
+ ['Kirchhoff\u2019s loop rule','Potential changes around a closed loop sum to zero — energy conservation.'],
+ ['Capacitor','Q = CV with stored energy @@U = \\frac{1}{2}CV^{2}@@.'],
+ ['RC time constant','@@\\tau = RC@@; sets how fast a capacitor charges or discharges.']
+],
+quiz:[
+ {q:'Three 9 Ω resistors are connected in parallel. The total resistance is:',
+  c:['27 Ω','9 Ω','3 Ω','1 Ω'],
+  a:2, why:'Identical resistors in parallel give R divided by the number of branches: 9/3 = 3 Ω.'},
+ {q:'One bulb in a series string burns out. The others:',
+  c:['Get brighter','Stay the same','All go out','Get dimmer but stay lit'],
+  a:2, why:'Series provides only one path, so an open anywhere stops all current.'},
+ {q:'A capacitor in a DC circuit becomes fully charged. It then:',
+  c:['Passes maximum current','Blocks steady current like a break','Doubles the voltage','Discharges continuously'],
+  a:1, why:'Once charged, no further charge flows, so it acts as an open circuit for DC.'},
+ {q:'Doubling the length of a wire while keeping everything else fixed:',
+  c:['Halves resistance','Doubles resistance','Leaves resistance unchanged','Quadruples resistance'],
+  a:1, why:'@@R = \\frac{\\rho L}{A}@@, so resistance is proportional to length.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Magnetism and Electromagnetic Induction',
+guide:[
+{h:'Magnetic force and fields',
+ intro:'Magnetism is produced by moving charge and acts only on moving charge. That single sentence resolves most confusion in this unit.',
+ points:[
+  'Magnetic force on a moving charge: @@F = qvB\\sin\\theta@@. A charge at rest, or moving parallel to the field, feels <b>no force</b>.',
+  'The force is <b>perpendicular to both</b> velocity and field, given by the right-hand rule. Reverse your answer for a negative charge.',
+  'Because the force is always perpendicular to motion, magnetic fields <b>do no work</b> and cannot change a particle\u2019s speed — only its direction.',
+  'A charge moving perpendicular to a uniform field travels in a circle of radius @@r = \\frac{mv}{qB}@@.',
+  'Force on a current-carrying wire: @@F = BIL\\sin\\theta@@.',
+  'A long straight wire produces a field circling it, with magnitude @@B = \\frac{\\mu_{0}I}{2\\pi r}@@.'
+ ]},
+{h:'Electromagnetic induction',
+ points:[
+  '<b>Magnetic flux</b> @@\\Phi = BA\\cos\\theta@@ measures field passing through a loop.',
+  '<b>Faraday\u2019s law</b>: a <i>changing</i> flux induces an EMF, @@\\varepsilon = -N\\frac{\\Delta\\Phi}{\\Delta t}@@. A constant field through a stationary loop induces nothing.',
+  'Flux can change three ways: change B, change the area, or rotate the loop.',
+  '<b>Lenz\u2019s law</b>: the induced current opposes the change that produced it. The minus sign in Faraday\u2019s law is Lenz\u2019s law.',
+  'Lenz\u2019s law is energy conservation — if the induced current reinforced the change, you would get free energy.',
+  'A conducting rod of length L moving at speed v across a field generates motional EMF @@\\varepsilon = BLv@@.'
+ ],
+ ex:{q:'A magnet is pushed north-pole-first toward a coil. What does the induced current do?',
+     steps:['Flux through the coil increases as the magnet approaches.',
+            'Lenz\u2019s law: the induced current opposes that increase.',
+            'It must create a north pole facing the incoming magnet.',
+            'That repels the magnet, so you must do work to keep pushing.'],
+     a:'Answer: current flows so as to oppose the magnet\u2019s approach. The work you do against that repulsion is the source of the electrical energy.'},
+ trap:'Thinking a strong magnetic field alone induces current. Only a <i>changing</i> flux does.'}
+],
+cards:[
+ ['Magnetic force on a charge','@@F = qvB\\sin\\theta@@; zero if the charge is at rest or moves parallel to B.'],
+ ['Direction of magnetic force','Perpendicular to both v and B, from the right-hand rule; reversed for negative charge.'],
+ ['Why magnetic fields do no work','The force is always perpendicular to motion, so speed cannot change.'],
+ ['Radius of circular motion in a field','@@r = \\frac{mv}{qB}@@'],
+ ['Force on a current-carrying wire','@@F = BIL\\sin\\theta@@'],
+ ['Field around a straight wire','@@B = \\frac{\\mu_{0}I}{2\\pi r}@@'],
+ ['Magnetic flux','@@\\Phi = BA\\cos\\theta@@'],
+ ['Faraday\u2019s law','A changing flux induces EMF: @@\\varepsilon = -N\\frac{\\Delta\\Phi}{\\Delta t}@@'],
+ ['Lenz\u2019s law','The induced current opposes the change that created it — energy conservation.'],
+ ['Motional EMF','@@\\varepsilon = BLv@@ for a rod moving across a field.']
+],
+quiz:[
+ {q:'A proton moves parallel to a magnetic field. The magnetic force on it is:',
+  c:['Maximum','Zero','Perpendicular to the field','Equal to qvB'],
+  a:1, why:'@@F = qvB\\sin\\theta@@ and sin 0° = 0, so parallel motion produces no force.'},
+ {q:'A magnetic field cannot change a charged particle\u2019s speed because the force is:',
+  c:['Too weak','Always perpendicular to velocity','Always zero','Directed backward'],
+  a:1, why:'A perpendicular force does no work, so kinetic energy and speed are unchanged.'},
+ {q:'A loop sits in a strong but constant magnetic field. The induced EMF is:',
+  c:['Large','Zero','Equal to BA','Increasing'],
+  a:1, why:'Induction requires a changing flux. A constant field through a stationary loop induces nothing.'},
+ {q:'Lenz\u2019s law is fundamentally a statement of:',
+  c:['Charge conservation','Energy conservation','Momentum conservation','Ohm\u2019s law'],
+  a:1, why:'If the induced current reinforced the change, energy would be created from nothing.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Geometric Optics',
+guide:[
+{h:'Reflection and refraction',
+ intro:'Geometric optics treats light as rays. One equation handles both mirrors and lenses, so the real difficulty is keeping the sign conventions straight.',
+ points:[
+  '<b>Law of reflection</b>: angle of incidence equals angle of reflection, measured from the normal.',
+  '<b>Index of refraction</b> @@n = \\frac{c}{v}@@ — how much slower light travels in a medium.',
+  '<b>Snell\u2019s law</b>: @@n_{1}\\sin\\theta_{1} = n_{2}\\sin\\theta_{2}@@.',
+  'Light entering a denser medium slows and bends <b>toward</b> the normal; entering a less dense medium it bends away.',
+  '<b>Total internal reflection</b> occurs when light travels from a denser to a less dense medium beyond the <b>critical angle</b>, @@\\sin\\theta_{c} = \\frac{n_{2}}{n_{1}}@@. This is how fibre optics work.',
+  'Frequency does not change when light enters a new medium; wavelength and speed do.'
+ ]},
+{h:'Mirrors and lenses',
+ table:{head:['Type','Focal length','Image when object is far'],rows:[
+   ['Concave mirror','Positive','Real, inverted'],
+   ['Convex mirror','Negative','Virtual, upright, reduced'],
+   ['Converging lens','Positive','Real, inverted'],
+   ['Diverging lens','Negative','Virtual, upright, reduced']]},
+ points:[
+  '<b>Thin lens and mirror equation</b>: @@\\frac{1}{f} = \\frac{1}{d_{o}} + \\frac{1}{d_{i}}@@.',
+  '<b>Magnification</b>: @@M = -\\frac{d_{i}}{d_{o}}@@. Negative M means an inverted image.',
+  'A <b>positive</b> image distance means a real image on the far side, which can be projected on a screen.',
+  'A <b>negative</b> image distance means a virtual image, which cannot be projected.',
+  'Diverging lenses and convex mirrors always produce virtual, upright, reduced images.',
+  'Ray diagrams check your algebra: draw the parallel ray, the focal ray, and the centre ray.'
+ ],
+ ex:{q:'An object sits 30 cm from a converging lens of focal length 10 cm. Describe the image.',
+     steps:['@@\\frac{1}{10} = \\frac{1}{30} + \\frac{1}{d_{i}}@@',
+            '@@\\frac{1}{d_{i}} = \\frac{1}{10}-\\frac{1}{30} = \\frac{2}{30}@@, so @@d_{i} = 15@@ cm.',
+            'Positive, so the image is real.',
+            '@@M = -15/30 = -0.5@@'],
+     a:'Answer: real, inverted, half size, 15 cm on the far side of the lens.'},
+ trap:'Ignoring signs. A negative image distance is not an error — it is telling you the image is virtual.'}
+],
+cards:[
+ ['Law of reflection','Angle of incidence equals angle of reflection, measured from the normal.'],
+ ['Index of refraction','@@n = \\frac{c}{v}@@'],
+ ['Snell\u2019s law','@@n_{1}\\sin\\theta_{1} = n_{2}\\sin\\theta_{2}@@'],
+ ['Bending direction','Into a denser medium bends toward the normal; into a rarer medium, away.'],
+ ['Total internal reflection','Occurs past the critical angle going from dense to less dense; enables fibre optics.'],
+ ['What stays constant across a boundary','Frequency. Speed and wavelength change.'],
+ ['Thin lens equation','@@\\frac{1}{f} = \\frac{1}{d_{o}} + \\frac{1}{d_{i}}@@'],
+ ['Magnification','@@M = -\\frac{d_{i}}{d_{o}}@@; negative means inverted.'],
+ ['Real vs virtual image','Positive image distance is real and projectable; negative is virtual.'],
+ ['Diverging lens image','Always virtual, upright, and reduced.']
+],
+quiz:[
+ {q:'Light passes from air into glass. Compared with air, in the glass it:',
+  c:['Speeds up and bends away from the normal','Slows and bends toward the normal','Keeps the same speed','Changes frequency'],
+  a:1, why:'Higher index means lower speed, and Snell\u2019s law then requires a smaller angle from the normal.'},
+ {q:'A converging lens produces an image with @@d_{i} = -20@@ cm. The image is:',
+  c:['Real and inverted','Virtual and upright','Real and upright','Impossible'],
+  a:1, why:'A negative image distance signals a virtual image, which for a converging lens is upright and enlarged.'},
+ {q:'Total internal reflection requires light travelling:',
+  c:['From less dense to more dense','From more dense to less dense beyond the critical angle','Through a vacuum','Perpendicular to the surface'],
+  a:1, why:'Only going into a rarer medium can the refracted ray reach 90° and vanish.'},
+ {q:'A magnification of −2 means the image is:',
+  c:['Upright and half size','Inverted and double size','Upright and double size','Inverted and half size'],
+  a:1, why:'The negative sign indicates inversion; the magnitude 2 indicates doubled size.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Waves, Sound, and Physical Optics',
+guide:[
+{h:'Wave behaviour and sound',
+ points:[
+  'Wave equation: @@v = f\\lambda@@. Speed is set by the <b>medium</b>; frequency is set by the <b>source</b>.',
+  '<b>Transverse</b> waves oscillate perpendicular to travel (light); <b>longitudinal</b> waves oscillate along it (sound).',
+  'Sound requires a medium and travels faster in solids than liquids, and faster in liquids than gases.',
+  '<b>Standing waves</b> form when a wave interferes with its reflection. Nodes stay still; antinodes oscillate maximally.',
+  'A string fixed at both ends supports wavelengths @@\\lambda_{n} = \\frac{2L}{n}@@.',
+  '<b>Beats</b> occur when two close frequencies interfere, at a beat frequency equal to their difference.',
+  '<b>Doppler effect</b>: approaching sources sound higher, receding sources lower, because wavefronts bunch up or spread out.'
+ ]},
+{h:'Interference and diffraction',
+ intro:'Physical optics treats light as a wave. Interference patterns are the direct evidence that it is one.',
+ points:[
+  '<b>Constructive interference</b> occurs when the path difference is a whole number of wavelengths; <b>destructive</b> when it is a half-integer number.',
+  '<b>Double slit</b>: bright fringes where @@d\\sin\\theta = m\\lambda@@.',
+  'Narrower slit spacing spreads the pattern out; longer wavelength also spreads it.',
+  '<b>Diffraction</b> is the bending of waves around obstacles, and is most noticeable when the opening is comparable to the wavelength.',
+  '<b>Thin film interference</b> produces the colours in soap bubbles and oil slicks, with a half-wavelength phase shift on reflection from a denser medium.',
+  'Light\u2019s interference behaviour cannot be explained by a particle model, which is why the double-slit experiment mattered historically.'
+ ],
+ ex:{q:'In a double-slit experiment, the slit spacing is halved. What happens to the fringe spacing?',
+     steps:['Bright fringes satisfy @@d\\sin\\theta = m\\lambda@@.',
+            'Halving d requires sin θ to double for the same m.',
+            'The fringes move further apart.'],
+     a:'Answer: the fringe spacing doubles. Smaller slit separation gives a wider pattern — an inverse relationship.'}}
+],
+cards:[
+ ['Wave equation','@@v = f\\lambda@@; speed set by the medium, frequency by the source.'],
+ ['Transverse vs longitudinal','Transverse oscillates perpendicular to travel; longitudinal along it.'],
+ ['Speed of sound by medium','Fastest in solids, slowest in gases.'],
+ ['Standing wave','Formed by interference with a reflection; nodes stay still.'],
+ ['Wavelengths on a fixed string','@@\\lambda_{n} = \\frac{2L}{n}@@'],
+ ['Beat frequency','The difference between two nearby frequencies.'],
+ ['Doppler effect','Approaching sources sound higher pitched, receding ones lower.'],
+ ['Constructive interference','Path difference is a whole number of wavelengths.'],
+ ['Double-slit bright fringes','@@d\\sin\\theta = m\\lambda@@'],
+ ['Diffraction','Bending of waves around obstacles; strongest when the gap matches the wavelength.']
+],
+quiz:[
+ {q:'A sound wave passes from air into water. Which quantity stays the same?',
+  c:['Speed','Wavelength','Frequency','Intensity'],
+  a:2, why:'Frequency is fixed by the source; speed and wavelength change with the medium.'},
+ {q:'Two tuning forks at 440 Hz and 444 Hz are struck together. The beat frequency is:',
+  c:['4 Hz','442 Hz','884 Hz','0 Hz'],
+  a:0, why:'Beat frequency is the difference between the two frequencies.'},
+ {q:'Increasing the wavelength in a double-slit experiment causes the fringes to:',
+  c:['Move closer together','Spread further apart','Disappear','Stay fixed'],
+  a:1, why:'@@d\\sin\\theta = m\\lambda@@, so larger λ requires a larger angle for each fringe.'},
+ {q:'The double-slit interference of light demonstrates that light:',
+  c:['Is purely a particle','Behaves as a wave','Has no speed limit','Cannot be polarised'],
+  a:1, why:'Interference patterns require superposition, which particles alone cannot produce.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Modern Physics',
+guide:[
+{h:'Quantum behaviour',
+ intro:'Modern physics begins where classical physics failed. Each idea here was forced on physicists by an experiment that classical theory could not explain.',
+ points:[
+  '<b>Photon energy</b>: @@E = hf = \\frac{hc}{\\lambda}@@.',
+  'The <b>photoelectric effect</b> shows light behaving as particles: electrons are ejected only above a <b>threshold frequency</b>, no matter how intense the light.',
+  'Brighter light of too low a frequency ejects nothing. That is impossible on a wave model and was Einstein\u2019s key evidence.',
+  'Maximum kinetic energy of an ejected electron is @@KE = hf - \\phi@@, where φ is the work function.',
+  '<b>Wave-particle duality</b>: light and matter both show wave and particle behaviour depending on the experiment.',
+  '<b>de Broglie wavelength</b>: @@\\lambda = \\frac{h}{p}@@ — everything has a wavelength, but it is negligible for macroscopic objects.'
+ ]},
+{h:'Atomic and nuclear physics',
+ table:{head:['Decay','Emits','Effect on nucleus'],rows:[
+   ['Alpha','Helium nucleus','Mass −4, charge −2'],
+   ['Beta minus','Electron','Charge +1, mass unchanged'],
+   ['Beta plus','Positron','Charge −1, mass unchanged'],
+   ['Gamma','Photon','No change in mass or charge']]},
+ points:[
+  'Electrons occupy <b>discrete energy levels</b>. Emission and absorption spectra show sharp lines, not continuous bands, because only specific transitions are allowed.',
+  'The photon emitted in a transition has energy exactly equal to the level difference.',
+  '<b>Mass-energy equivalence</b>: @@E = mc^{2}@@.',
+  '<b>Mass defect</b>: a nucleus weighs less than its separate parts, and the missing mass is the binding energy.',
+  '<b>Fission</b> splits heavy nuclei; <b>fusion</b> joins light ones. Both release energy because both move toward iron, the peak of binding energy per nucleon.',
+  'Nuclear reactions conserve charge and nucleon number.'
+ ],
+ ex:{q:'Light below the threshold frequency shines very brightly on a metal. Are electrons ejected?',
+     steps:['On a wave model, more intensity means more energy, so electrons should eventually escape.',
+            'Experiment shows none are ejected at any intensity.',
+            'Each photon carries energy hf, and one photon ejects at most one electron.',
+            'If hf is below the work function, no single photon has enough energy.'],
+     a:'Answer: no electrons at all. Intensity increases the number of photons, not the energy of each one.'},
+ trap:'Assuming brighter light gives ejected electrons more energy. It ejects more electrons; only higher frequency gives each one more energy.'}
+],
+cards:[
+ ['Photon energy','@@E = hf = \\frac{hc}{\\lambda}@@'],
+ ['Photoelectric effect','Electrons ejected only above a threshold frequency, regardless of intensity.'],
+ ['Work function','The minimum energy needed to eject an electron; @@KE = hf - \\phi@@.'],
+ ['Why intensity does not help','More photons, not more energy per photon.'],
+ ['Wave-particle duality','Light and matter show wave or particle behaviour depending on the experiment.'],
+ ['de Broglie wavelength','@@\\lambda = \\frac{h}{p}@@'],
+ ['Discrete energy levels','Why atomic spectra show sharp lines rather than continuous bands.'],
+ ['Alpha decay','Emits a helium nucleus: mass −4, charge −2.'],
+ ['Beta minus decay','Emits an electron; nuclear charge increases by one.'],
+ ['Mass defect','Missing mass in a nucleus, equal to its binding energy via @@E = mc^{2}@@.'],
+ ['Fission vs fusion','Splitting heavy nuclei vs joining light ones; both move toward iron.']
+],
+quiz:[
+ {q:'Doubling the intensity of light above the threshold frequency:',
+  c:['Doubles each electron\u2019s kinetic energy','Ejects more electrons at the same maximum energy','Ejects no electrons','Halves the current'],
+  a:1, why:'Intensity means more photons. Energy per electron depends only on frequency.'},
+ {q:'Atomic emission spectra consist of sharp lines because:',
+  c:['Atoms are small','Electron energy levels are discrete','Photons have mass','Light is a particle only'],
+  a:1, why:'Only specific transitions are allowed, so only specific photon energies are emitted.'},
+ {q:'In alpha decay, the mass number of the nucleus:',
+  c:['Increases by 4','Decreases by 4','Stays the same','Decreases by 2'],
+  a:1, why:'An alpha particle is a helium nucleus with mass number 4.'},
+ {q:'Both fission and fusion release energy because they:',
+  c:['Create mass','Move nuclei toward iron, the peak of binding energy per nucleon','Violate conservation laws','Always produce gamma rays'],
+  a:1, why:'Binding energy per nucleon peaks near iron, so heavy nuclei splitting and light nuclei joining both release energy.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
+/* ------------------------------- AP PHYSICS C: MECHANICS */
+addUnits('ap-physc-m', [
+{
+id:'u1', title:'Unit 1 · Kinematics',
+guide:[
+{h:'Calculus definitions of motion',
+ intro:'Physics C is Physics 1 with calculus. Where the algebra course gives you three kinematic equations, this course gives you derivatives and integrals that work even when acceleration changes.',
+ table:{head:['Going down','Operation','Going up'],rows:[
+   ['Position x(t)','Differentiate','Integrate'],
+   ['Velocity v = dx/dt','Differentiate','Integrate'],
+   ['Acceleration a = dv/dt','—','Integrate']]},
+ points:[
+  '@@v = \\frac{dx}{dt}@@ and @@a = \\frac{dv}{dt} = \\frac{d^{2}x}{dt^{2}}@@.',
+  'Going the other way: @@x = \\int v\\,dt@@ and @@v = \\int a\\,dt@@, with initial conditions fixing the constants.',
+  'The standard kinematic equations are just the integrals of <b>constant</b> acceleration. When a varies with time, you must integrate.',
+  'A useful chain rule form: @@a = v\\frac{dv}{dx}@@, which is essential when acceleration depends on position rather than time.',
+  'Projectile motion still separates into independent horizontal and vertical components.'
+ ],
+ ex:{q:'A particle has @@a(t) = 6t@@ with v(0) = 2 m/s and x(0) = 0. Find x(t).',
+     steps:['@@v = \\int 6t\\,dt = 3t^{2} + C@@',
+            'v(0) = 2 gives C = 2, so @@v = 3t^{2}+2@@.',
+            '@@x = \\int (3t^{2}+2)\\,dt = t^{3}+2t + C@@',
+            'x(0) = 0 gives C = 0.'],
+     a:'Answer: @@x(t) = t^{3} + 2t@@. The constant kinematic equations would give a wrong answer here because a is not constant.'},
+ trap:'Using @@x = x_{0}+v_{0}t+\\frac{1}{2}at^{2}@@ when acceleration varies. Those equations assume constant a and are invalid otherwise.'}
+],
+cards:[
+ ['Velocity as a derivative','@@v = \\frac{dx}{dt}@@'],
+ ['Acceleration as a derivative','@@a = \\frac{dv}{dt} = \\frac{d^{2}x}{dt^{2}}@@'],
+ ['Position from velocity','@@x = \\int v\\,dt@@ with an initial condition.'],
+ ['When kinematic equations apply','Only when acceleration is constant.'],
+ ['Chain rule form','@@a = v\\frac{dv}{dx}@@ — used when a depends on position.'],
+ ['Area under a v-t graph','Displacement.'],
+ ['Slope of a v-t graph','Acceleration.'],
+ ['Projectile independence','Horizontal and vertical motion do not affect each other.']
+],
+quiz:[
+ {q:'A particle has @@a(t) = 4t@@. Its velocity is:',
+  c:['@@4t^{2}@@','@@2t^{2} + C@@','4','@@4t + C@@'],
+  a:1, why:'Integrating 4t gives 2t², plus a constant fixed by the initial velocity.'},
+ {q:'@@x = x_{0}+v_{0}t+\\frac{1}{2}at^{2}@@ may be used only when:',
+  c:['Motion is horizontal','Acceleration is constant','Velocity is zero','Time is small'],
+  a:1, why:'That equation is the integral of a constant acceleration and fails if a varies.'},
+ {q:'When acceleration is given as a function of position, the most useful relation is:',
+  c:['@@a = \\frac{dv}{dt}@@','@@a = v\\frac{dv}{dx}@@','@@v = f\\lambda@@','@@a = \\frac{v^{2}}{r}@@'],
+  a:1, why:'This chain rule form eliminates time and lets you integrate with respect to x.'},
+ {q:'The area under an acceleration-time graph gives:',
+  c:['Displacement','Change in velocity','Change in position','Jerk'],
+  a:1, why:'Integrating acceleration with respect to time yields change in velocity.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Force and Translational Dynamics',
+guide:[
+{h:'Newton\u2019s laws with calculus',
+ points:[
+  'Newton\u2019s second law in its general form is @@F = \\frac{dp}{dt}@@, which reduces to F = ma only when mass is constant.',
+  '<b>Free-body diagrams</b> remain the essential first step. Draw only forces acting on the object.',
+  'Third-law pairs act on <b>different objects</b> and never cancel on one body.',
+  'On an incline, gravity resolves into mg sin θ along the surface and mg cos θ into it.',
+  'Friction: @@f_{s} \\le \\mu_{s}N@@ and @@f_{k} = \\mu_{k}N@@, always opposing relative sliding.'
+ ]},
+{h:'Resistive forces and differential equations',
+ intro:'The calculus content in this unit is drag. When resistance depends on speed, the equation of motion becomes a differential equation rather than an algebra problem.',
+ points:[
+  'A drag force proportional to velocity gives @@m\\frac{dv}{dt} = mg - bv@@.',
+  '<b>Terminal velocity</b> occurs when acceleration reaches zero, so @@v_{t} = \\frac{mg}{b}@@.',
+  'The solution approaches terminal velocity exponentially; it is never exactly reached.',
+  'Separate variables and integrate to solve these; the constant comes from the initial condition.',
+  'For circular motion, the net inward force is @@F = \\frac{mv^{2}}{r}@@ — a role played by tension, friction, gravity, or a normal force.'
+ ],
+ ex:{q:'An object falls with drag @@F_{d} = bv@@. Find the terminal velocity.',
+     steps:['Write the equation of motion: @@m\\frac{dv}{dt} = mg - bv@@.',
+            'At terminal velocity the speed stops changing, so dv/dt = 0.',
+            '0 = mg − bv.'],
+     a:'Answer: @@v_{t} = \\frac{mg}{b}@@. Note you never need to solve the differential equation to find it.'},
+ trap:'Writing F = ma when mass changes, as with a rocket. The general form @@F = \\frac{dp}{dt}@@ is required.'}
+],
+cards:[
+ ['Newton\u2019s second law, general form','@@F = \\frac{dp}{dt}@@; reduces to F = ma for constant mass.'],
+ ['Free-body diagram','Shows only the forces acting on the chosen object.'],
+ ['Third-law pairs','Act on different objects and never cancel on one body.'],
+ ['Forces on an incline','mg sin θ along the surface, mg cos θ into it.'],
+ ['Static vs kinetic friction','Static has a maximum; kinetic is constant while sliding.'],
+ ['Velocity-dependent drag','@@m\\frac{dv}{dt} = mg - bv@@'],
+ ['Terminal velocity','Where acceleration reaches zero: @@v_{t} = \\frac{mg}{b}@@.'],
+ ['Centripetal force','@@F = \\frac{mv^{2}}{r}@@, a role rather than a new kind of force.']
+],
+quiz:[
+ {q:'An object falling with drag proportional to v reaches terminal velocity when:',
+  c:['Velocity is zero','Net force is zero','Drag exceeds weight','Position stops changing'],
+  a:1, why:'Terminal velocity means acceleration has fallen to zero, so drag exactly balances weight.'},
+ {q:'For a rocket losing mass, the correct form of Newton\u2019s second law is:',
+  c:['F = ma','@@F = \\frac{dp}{dt}@@','@@F = \\frac{mv^{2}}{r}@@','F = μN'],
+  a:1, why:'F = ma assumes constant mass; the momentum form handles changing mass.'},
+ {q:'A block on a frictionless incline of angle θ accelerates at:',
+  c:['g','g sin θ','g cos θ','g tan θ'],
+  a:1, why:'Only the component of gravity along the surface drives the motion, independent of mass.'},
+ {q:'Centripetal force is best described as:',
+  c:['A new fundamental force','The role played by whatever real force points inward','Always friction','Always equal to weight'],
+  a:1, why:'It names a function, not a source. Identify which real force is providing it.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Work, Energy, and Power',
+guide:[
+{h:'Work as an integral',
+ intro:'In Physics 1, work is Fd cos θ. Here, work is an integral — which is what lets you handle forces that change with position, such as springs.',
+ points:[
+  '<b>Work</b> is @@W = \\int \\vec{F} \\cdot d\\vec{r}@@, reducing to Fd cos θ only for a constant force.',
+  'For a spring, @@W = \\int kx\\,dx = \\frac{1}{2}kx^{2}@@ — the integral is exactly why the half appears.',
+  '<b>Work-energy theorem</b>: net work equals change in kinetic energy.',
+  '<b>Power</b> is @@P = \\frac{dW}{dt} = \\vec{F}\\cdot\\vec{v}@@.',
+  'On a force-position graph, the area under the curve is the work done.'
+ ]},
+{h:'Conservative forces and potential energy',
+ points:[
+  'A force is <b>conservative</b> when the work it does around any closed path is zero. Gravity and spring forces qualify; friction does not.',
+  'Only conservative forces have an associated potential energy function.',
+  'The relationship is @@F = -\\frac{dU}{dx}@@ — force is the negative gradient of potential energy.',
+  'On a U-versus-x graph, force is the negative slope. Equilibrium occurs where the slope is zero.',
+  '<b>Stable equilibrium</b> sits at a minimum of U; <b>unstable equilibrium</b> at a maximum.',
+  'Total mechanical energy is conserved when only conservative forces act.'
+ ],
+ ex:{q:'A potential energy function is @@U(x) = 3x^{2} - 12x@@. Find the equilibrium position and its stability.',
+     steps:['@@F = -\\frac{dU}{dx} = -(6x - 12)@@',
+            'Equilibrium where F = 0: 6x = 12, so x = 2.',
+            'Check the second derivative: @@\\frac{d^{2}U}{dx^{2}} = 6 > 0@@.',
+            'A positive second derivative means U has a minimum.'],
+     a:'Answer: equilibrium at x = 2, and it is stable because U is at a minimum there.'},
+ tip:'Whenever a question gives you a potential energy function, differentiate it. Force, equilibrium, and stability all follow immediately.'}
+],
+cards:[
+ ['Work as an integral','@@W = \\int \\vec{F} \\cdot d\\vec{r}@@'],
+ ['Spring work','@@W = \\frac{1}{2}kx^{2}@@, obtained by integrating kx.'],
+ ['Work-energy theorem','Net work equals the change in kinetic energy.'],
+ ['Power','@@P = \\frac{dW}{dt} = \\vec{F}\\cdot\\vec{v}@@'],
+ ['Conservative force','Does zero net work around any closed path; gravity and springs qualify.'],
+ ['Force from potential energy','@@F = -\\frac{dU}{dx}@@'],
+ ['Stable equilibrium','A minimum of the potential energy function.'],
+ ['Unstable equilibrium','A maximum of the potential energy function.'],
+ ['Area under a force-position graph','The work done.']
+],
+quiz:[
+ {q:'@@F = -\\frac{dU}{dx}@@ means force is:',
+  c:['The integral of U','The negative slope of the U-versus-x graph','Always positive','Independent of position'],
+  a:1, why:'Force points toward decreasing potential energy, which is the negative gradient.'},
+ {q:'A particle sits where U has a local maximum. This equilibrium is:',
+  c:['Stable','Unstable','Neutral','Impossible'],
+  a:1, why:'Any displacement lowers U, so the force pushes the particle further away.'},
+ {q:'The factor of one half in @@\\frac{1}{2}kx^{2}@@ arises from:',
+  c:['An empirical measurement','Integrating the linearly increasing spring force','Averaging two springs','A unit conversion'],
+  a:1, why:'@@\\int_{0}^{x} kx\\,dx = \\frac{1}{2}kx^{2}@@ — the half comes from the integral.'},
+ {q:'Friction is not a conservative force because:',
+  c:['It is always small','Work around a closed path is nonzero','It has no direction','It acts only on solids'],
+  a:1, why:'Returning to the start still leaves energy dissipated, so no potential energy function exists.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Linear Momentum',
+guide:[
+{h:'Impulse and momentum',
+ intro:'Momentum is conserved in every collision with no external force, whether or not energy is. That distinction decides most problems in this unit.',
+ points:[
+  '<b>Momentum</b> @@\\vec{p} = m\\vec{v}@@ is a vector.',
+  '<b>Impulse</b> is @@J = \\int F\\,dt = \\Delta p@@ — an integral when the force varies with time.',
+  'On a force-time graph, the area under the curve is the impulse.',
+  'Extending collision time reduces peak force for the same momentum change, which is how airbags and crumple zones work.',
+  'Momentum is conserved in any collision with no net external force.'
+ ]},
+{h:'Centre of mass and collisions',
+ table:{head:['Collision','Momentum','Kinetic energy'],rows:[
+   ['Elastic','Conserved','Conserved'],
+   ['Inelastic','Conserved','Lost'],
+   ['Perfectly inelastic','Conserved','Maximum loss; objects stick']]},
+ points:[
+  '<b>Centre of mass</b>: @@x_{cm} = \\frac{\\sum m_{i}x_{i}}{\\sum m_{i}}@@, or an integral for a continuous body.',
+  'The centre of mass moves as though all external force acted on the total mass at that point.',
+  'In an explosion or collision with no external force, the centre of mass velocity is <b>unchanged</b>.',
+  'Working in the centre-of-mass frame often simplifies collision problems dramatically.',
+  'For a two-body elastic collision in one dimension, relative velocity reverses: @@v_{1}-v_{2} = -(v_{1}\u2032-v_{2}\u2032)@@.'
+ ],
+ ex:{q:'A 2 kg object at 5 m/s collides elastically with a stationary 3 kg object. Set up the solution.',
+     steps:['Momentum: @@(2)(5) = 2v_{1}\u2032 + 3v_{2}\u2032@@',
+            'Elastic collisions also conserve kinetic energy.',
+            'Rather than the messy energy equation, use relative velocity reversal: @@5 - 0 = -(v_{1}\u2032 - v_{2}\u2032)@@.',
+            'Two linear equations, two unknowns.'],
+     a:'Answer: the relative velocity shortcut turns a quadratic system into a linear one. This is the standard exam technique.'},
+ trap:'Assuming an explosion increases total momentum. If it started at zero, it stays zero — the fragments must have equal and opposite momenta.'}
+],
+cards:[
+ ['Momentum','@@\\vec{p} = m\\vec{v}@@, a vector quantity.'],
+ ['Impulse as an integral','@@J = \\int F\\,dt = \\Delta p@@'],
+ ['Area under a force-time graph','The impulse delivered.'],
+ ['Centre of mass','@@x_{cm} = \\frac{\\sum m_{i}x_{i}}{\\sum m_{i}}@@'],
+ ['Motion of the centre of mass','Moves as if all external force acted on the total mass there.'],
+ ['Centre of mass in an explosion','Its velocity is unchanged if no external force acts.'],
+ ['Elastic collision shortcut','Relative velocity reverses in a one-dimensional elastic collision.'],
+ ['Perfectly inelastic collision','Objects stick together; maximum kinetic energy loss.']
+],
+quiz:[
+ {q:'A firework explodes in mid-air with no external force. Its centre of mass:',
+  c:['Stops','Continues along its original path','Accelerates upward','Splits in two'],
+  a:1, why:'Internal forces cannot change the motion of the centre of mass.'},
+ {q:'Impulse is found from a force-time graph by taking the:',
+  c:['Slope','Area under the curve','Maximum value','Y-intercept'],
+  a:1, why:'@@J = \\int F\\,dt@@, which is the area.'},
+ {q:'In a one-dimensional elastic collision, the relative velocity of approach:',
+  c:['Is unchanged','Reverses','Doubles','Goes to zero'],
+  a:1, why:'This equivalent of energy conservation converts a quadratic problem into a linear one.'},
+ {q:'Which is conserved in every collision with no external force?',
+  c:['Kinetic energy','Momentum','Speed','Mechanical energy'],
+  a:1, why:'Only elastic collisions also conserve kinetic energy; momentum is always conserved.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Torque and Rotational Dynamics',
+guide:[
+{h:'Rotational inertia by integration',
+ intro:'The calculus content here is computing rotational inertia for continuous bodies rather than looking it up.',
+ table:{head:['Object (axis through centre)','Rotational inertia'],rows:[
+   ['Hoop about its axis','@@MR^{2}@@'],
+   ['Solid disc or cylinder','@@\\frac{1}{2}MR^{2}@@'],
+   ['Solid sphere','@@\\frac{2}{5}MR^{2}@@'],
+   ['Hollow sphere','@@\\frac{2}{3}MR^{2}@@'],
+   ['Rod about its centre','@@\\frac{1}{12}ML^{2}@@'],
+   ['Rod about one end','@@\\frac{1}{3}ML^{2}@@']]},
+ points:[
+  '<b>Rotational inertia</b> is @@I = \\int r^{2}\\,dm@@ for a continuous body, or @@\\sum m_{i}r_{i}^{2}@@ for point masses.',
+  'The r² weighting is why mass far from the axis matters disproportionately.',
+  '<b>Parallel axis theorem</b>: @@I = I_{cm} + Md^{2}@@ shifts a known result to a parallel axis.',
+  'That theorem explains why a rod about its end has four times the inertia of one about its centre.'
+ ]},
+{h:'Torque and rotational dynamics',
+ points:[
+  '<b>Torque</b> @@\\vec{\\tau} = \\vec{r}\\times\\vec{F}@@, with magnitude @@rF\\sin\\theta@@.',
+  'Newton\u2019s second law for rotation: @@\\tau_{net} = I\\alpha@@.',
+  'Angular kinematics mirrors linear kinematics with θ, ω, α replacing x, v, a, and the same calculus relations apply.',
+  '<b>Rolling without slipping</b> requires @@v = R\\omega@@ and @@a = R\\alpha@@ — the constraint that links translation to rotation.',
+  'For a rolling object, static friction provides the torque and does no work.',
+  'Static equilibrium requires both net force and net torque to vanish.'
+ ],
+ ex:{q:'Derive the rotational inertia of a uniform rod of mass M and length L about its centre.',
+     steps:['Linear density is @@\\lambda = M/L@@, so @@dm = \\lambda\\,dx@@.',
+            '@@I = \\int_{-L/2}^{L/2} x^{2}\\lambda\\,dx@@',
+            '@@= \\lambda\\left[\\frac{x^{3}}{3}\\right]_{-L/2}^{L/2} = \\lambda \\cdot \\frac{L^{3}}{12}@@',
+            'Substitute λ = M/L.'],
+     a:'Answer: @@I = \\frac{1}{12}ML^{2}@@. About one end, the parallel axis theorem adds @@M(L/2)^{2}@@ to give @@\\frac{1}{3}ML^{2}@@.'}}
+],
+cards:[
+ ['Rotational inertia integral','@@I = \\int r^{2}\\,dm@@'],
+ ['Why distance matters so much','The r² weighting makes distant mass count disproportionately.'],
+ ['Parallel axis theorem','@@I = I_{cm} + Md^{2}@@'],
+ ['Solid sphere inertia','@@\\frac{2}{5}MR^{2}@@'],
+ ['Rod about its centre','@@\\frac{1}{12}ML^{2}@@'],
+ ['Rod about one end','@@\\frac{1}{3}ML^{2}@@'],
+ ['Torque as a cross product','@@\\vec{\\tau} = \\vec{r}\\times\\vec{F}@@, magnitude @@rF\\sin\\theta@@.'],
+ ['Newton\u2019s second law for rotation','@@\\tau_{net} = I\\alpha@@'],
+ ['Rolling without slipping','@@v = R\\omega@@ and @@a = R\\alpha@@.']
+],
+quiz:[
+ {q:'A rod about one end has four times the rotational inertia of the same rod about its centre because of:',
+  c:['Higher density','The parallel axis theorem','A larger radius','Friction'],
+  a:1, why:'@@I = \\frac{1}{12}ML^{2} + M(L/2)^{2} = \\frac{1}{3}ML^{2}@@.'},
+ {q:'Rotational inertia depends on mass and:',
+  c:['Speed','How far the mass sits from the axis','Applied torque','Angular velocity'],
+  a:1, why:'The @@r^{2}@@ term in the integral makes distribution decisive.'},
+ {q:'For an object rolling without slipping, the constraint linking motion is:',
+  c:['@@v = R\\omega@@','@@v = \\omega/R@@','@@a = R^{2}\\alpha@@','@@F = ma@@'],
+  a:0, why:'The contact point is instantaneously at rest, which forces this relationship.'},
+ {q:'Torque is maximised when the force is applied:',
+  c:['Along the lever arm','Perpendicular to the lever arm, far from the pivot','At the pivot','Toward the pivot'],
+  a:1, why:'@@\\tau = rF\\sin\\theta@@ is largest at θ = 90° and large r.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Energy and Momentum of Rotating Systems',
+guide:[
+{h:'Rotational energy and rolling',
+ intro:'Rotational energy and angular momentum mirror their linear counterparts exactly. Learn the analogies and this unit becomes familiar territory.',
+ points:[
+  '<b>Rotational kinetic energy</b> is @@\\frac{1}{2}I\\omega^{2}@@.',
+  'A rolling object has both translational and rotational kinetic energy: @@KE = \\frac{1}{2}mv^{2} + \\frac{1}{2}I\\omega^{2}@@.',
+  'Using @@v = R\\omega@@, the total becomes @@\\frac{1}{2}mv^{2}\\left(1 + \\frac{I}{mR^{2}}\\right)@@.',
+  'The quantity @@\\frac{I}{mR^{2}}@@ decides rolling races: smaller means faster, independent of mass and radius.',
+  'A solid sphere (2/5) beats a solid cylinder (1/2), which beats a hoop (1).',
+  '<b>Work-energy theorem for rotation</b>: @@W = \\int \\tau\\,d\\theta@@, and rotational power is @@P = \\tau\\omega@@.'
+ ]},
+{h:'Angular momentum',
+ points:[
+  '<b>Angular momentum</b> is @@\\vec{L} = \\vec{r}\\times\\vec{p}@@ for a particle, or @@L = I\\omega@@ for a rigid body.',
+  '@@\\tau_{net} = \\frac{dL}{dt}@@ — the rotational analogue of @@F = \\frac{dp}{dt}@@.',
+  '<b>Conservation of angular momentum</b>: with no net external torque, L is constant.',
+  'Reducing I increases ω proportionally, which is the spinning skater and also why planets speed up near the sun.',
+  'Angular momentum, linear momentum, and energy are conserved <b>independently</b>. A collision can conserve angular momentum while losing kinetic energy.',
+  'A particle moving in a straight line still has angular momentum about a point not on its path.'
+ ],
+ ex:{q:'A solid sphere and a hoop roll from rest down the same ramp. Which arrives first, and does mass matter?',
+     steps:['Energy conservation: @@mgh = \\frac{1}{2}mv^{2}\\left(1+\\frac{I}{mR^{2}}\\right)@@.',
+            'Mass and radius cancel from the bracket.',
+            'For the sphere @@\\frac{I}{mR^{2}} = \\frac{2}{5}@@; for the hoop it is 1.',
+            'Smaller bracket means larger v.'],
+     a:'Answer: the sphere arrives first, and mass and radius are irrelevant — only shape matters.'},
+ tip:'Whenever a question compares rolling objects, compute @@\\frac{I}{mR^{2}}@@ for each. Everything else cancels.'}
+],
+cards:[
+ ['Rotational kinetic energy','@@\\frac{1}{2}I\\omega^{2}@@'],
+ ['Total energy of a rolling object','@@\\frac{1}{2}mv^{2} + \\frac{1}{2}I\\omega^{2}@@'],
+ ['What decides a rolling race','@@\\frac{I}{mR^{2}}@@; smaller wins, independent of mass and radius.'],
+ ['Rotational work','@@W = \\int \\tau\\,d\\theta@@'],
+ ['Rotational power','@@P = \\tau\\omega@@'],
+ ['Angular momentum','@@\\vec{L} = \\vec{r}\\times\\vec{p}@@, or @@L = I\\omega@@ for a rigid body.'],
+ ['Torque and angular momentum','@@\\tau_{net} = \\frac{dL}{dt}@@'],
+ ['Conservation of angular momentum','Holds when net external torque is zero.'],
+ ['Angular momentum of a straight-line particle','Nonzero about any point off its path.']
+],
+quiz:[
+ {q:'A skater pulls in her arms while spinning. Her angular velocity:',
+  c:['Decreases','Increases, because L is conserved','Stays the same','Drops to zero'],
+  a:1, why:'With L fixed and I reduced, ω must rise proportionally.'},
+ {q:'Which quantity determines the winner of a rolling race?',
+  c:['Mass','Radius','@@\\frac{I}{mR^{2}}@@','Height of the ramp'],
+  a:2, why:'Mass and radius cancel from the energy equation, leaving only this shape factor.'},
+ {q:'Angular momentum is conserved when:',
+  c:['No net external force acts','No net external torque acts','Kinetic energy is conserved','The object is symmetric'],
+  a:1, why:'Torque is to rotation what force is to translation.'},
+ {q:'Rotational power is given by:',
+  c:['@@\\tau\\alpha@@','@@\\tau\\omega@@','@@I\\omega@@','@@\\frac{1}{2}I\\omega^{2}@@'],
+  a:1, why:'It parallels @@P = Fv@@ in translation.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Oscillations',
+guide:[
+{h:'Simple harmonic motion from the differential equation',
+ intro:'In Physics C, SHM is defined by a differential equation rather than by a formula. Recognising that equation is how you identify SHM in an unfamiliar system.',
+ points:[
+  'A system is in SHM when @@\\frac{d^{2}x}{dt^{2}} = -\\omega^{2}x@@ — acceleration proportional to displacement and oppositely directed.',
+  'The solution is @@x(t) = A\\cos(\\omega t + \\phi)@@, with A the amplitude and φ the phase.',
+  'Differentiating gives @@v = -A\\omega\\sin(\\omega t + \\phi)@@ and @@a = -A\\omega^{2}\\cos(\\omega t+\\phi)@@.',
+  'Maximum speed is Aω; maximum acceleration is Aω².',
+  'For a spring, @@\\omega = \\sqrt{\\frac{k}{m}}@@, giving @@T = 2\\pi\\sqrt{\\frac{m}{k}}@@.',
+  'For a simple pendulum at small angles, @@T = 2\\pi\\sqrt{\\frac{L}{g}}@@; for a physical pendulum, @@T = 2\\pi\\sqrt{\\frac{I}{mgd}}@@.'
+ ]},
+{h:'Energy and damping',
+ points:[
+  'Total energy is @@E = \\frac{1}{2}kA^{2}@@, constant in ideal SHM.',
+  'At maximum displacement: velocity zero, acceleration maximum, all energy potential.',
+  'At equilibrium: velocity maximum, acceleration zero, all energy kinetic.',
+  'Period is <b>independent of amplitude</b>, which is what makes oscillators useful as clocks.',
+  'The small-angle approximation @@\\sin\\theta \\approx \\theta@@ is what makes a pendulum simple harmonic; at large angles it is not.',
+  '<b>Damping</b> removes energy, reducing amplitude while barely changing the period.'
+ ],
+ ex:{q:'Show that a mass on a spring satisfies the SHM condition.',
+     steps:['Hooke\u2019s law gives F = −kx.',
+            'Newton\u2019s second law: @@m\\frac{d^{2}x}{dt^{2}} = -kx@@.',
+            'Rearranged: @@\\frac{d^{2}x}{dt^{2}} = -\\frac{k}{m}x@@.',
+            'Comparing with @@\\frac{d^{2}x}{dt^{2}} = -\\omega^{2}x@@ gives @@\\omega^{2} = k/m@@.'],
+     a:'Answer: it matches the SHM equation, and @@\\omega = \\sqrt{k/m}@@ follows immediately.'},
+ trap:'Assuming any oscillation is simple harmonic. It only qualifies if the restoring force is proportional to displacement.'}
+],
+cards:[
+ ['SHM differential equation','@@\\frac{d^{2}x}{dt^{2}} = -\\omega^{2}x@@'],
+ ['General SHM solution','@@x(t) = A\\cos(\\omega t + \\phi)@@'],
+ ['Maximum speed in SHM','Aω, at the equilibrium position.'],
+ ['Maximum acceleration in SHM','Aω², at maximum displacement.'],
+ ['Spring angular frequency','@@\\omega = \\sqrt{\\frac{k}{m}}@@'],
+ ['Simple pendulum period','@@T = 2\\pi\\sqrt{\\frac{L}{g}}@@ for small angles.'],
+ ['Physical pendulum period','@@T = 2\\pi\\sqrt{\\frac{I}{mgd}}@@'],
+ ['Total energy in SHM','@@E = \\frac{1}{2}kA^{2}@@'],
+ ['Small-angle approximation','@@\\sin\\theta \\approx \\theta@@; what makes a pendulum simple harmonic.']
+],
+quiz:[
+ {q:'A system is in simple harmonic motion when acceleration is:',
+  c:['Constant','Proportional to displacement and oppositely directed','Zero','Proportional to velocity'],
+  a:1, why:'That is precisely the condition @@\\frac{d^{2}x}{dt^{2}} = -\\omega^{2}x@@.'},
+ {q:'In SHM, maximum speed occurs:',
+  c:['At maximum displacement','At the equilibrium position','Never','At one quarter amplitude'],
+  a:1, why:'All the energy is kinetic at equilibrium, where potential energy is zero.'},
+ {q:'A pendulum is simple harmonic only at small angles because:',
+  c:['Air resistance matters at large angles','The restoring force is proportional to sin θ, not θ','Gravity changes','The string stretches'],
+  a:1, why:'Only for small θ does sin θ ≈ θ, making the restoring force proportional to displacement.'},
+ {q:'Doubling the amplitude of a spring oscillator changes the period by:',
+  c:['Doubling it','Halving it','Not at all','Quadrupling it'],
+  a:2, why:'@@T = 2\\pi\\sqrt{m/k}@@ contains no amplitude term.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Gravitation',
+guide:[
+{h:'Newton\u2019s law of gravitation',
+ intro:'Gravitation is the same inverse-square structure as electrostatics, applied to mass instead of charge. Orbits are just circular motion with gravity supplying the centripetal force.',
+ points:[
+  '@@F = G\\frac{m_{1}m_{2}}{r^{2}}@@ — inverse square, structurally identical to Coulomb\u2019s law.',
+  'Gravitational field @@g = \\frac{GM}{r^{2}}@@, which is the acceleration a mass would experience.',
+  '<b>Shell theorem</b>: a uniform sphere attracts external objects as though all its mass were at the centre.',
+  'Inside a uniform sphere, only the mass at smaller radius contributes, so g increases linearly from the centre.',
+  'Gravitational potential energy is @@U = -\\frac{GMm}{r}@@, taking zero at infinity.',
+  'The familiar mgh is only the near-surface approximation of that expression.'
+ ]},
+{h:'Orbits and Kepler\u2019s laws',
+ table:{head:['Kepler\u2019s law','Statement','Underlying principle'],rows:[
+   ['First','Orbits are ellipses with the sun at one focus','Inverse square force'],
+   ['Second','Equal areas swept in equal times','Conservation of angular momentum'],
+   ['Third','@@T^{2} \\propto a^{3}@@','Newtonian gravitation']]},
+ points:[
+  'For a circular orbit, gravity supplies the centripetal force: @@\\frac{GMm}{r^{2}} = \\frac{mv^{2}}{r}@@, giving @@v = \\sqrt{\\frac{GM}{r}}@@.',
+  'Orbital speed depends only on the central mass and radius — not on the orbiting object\u2019s mass.',
+  'Total orbital energy is @@E = -\\frac{GMm}{2r}@@, negative because the orbit is bound.',
+  '<b>Escape velocity</b> comes from setting total energy to zero: @@v_{esc} = \\sqrt{\\frac{2GM}{R}}@@.',
+  'Kepler\u2019s second law is angular momentum conservation, which is why planets move fastest at perihelion.'
+ ],
+ ex:{q:'Derive the orbital speed for a circular orbit of radius r around a mass M.',
+     steps:['Gravity provides the centripetal force.',
+            '@@\\frac{GMm}{r^{2}} = \\frac{mv^{2}}{r}@@',
+            'The orbiting mass m cancels from both sides.',
+            'Multiply by r and take the square root.'],
+     a:'Answer: @@v = \\sqrt{\\frac{GM}{r}}@@. The satellite\u2019s own mass is irrelevant — which is why astronauts and their spacecraft orbit together.'},
+ trap:'Using mgh far from a planet\u2019s surface. That approximation only holds where g is effectively constant.'}
+],
+cards:[
+ ['Newton\u2019s law of gravitation','@@F = G\\frac{m_{1}m_{2}}{r^{2}}@@'],
+ ['Gravitational field','@@g = \\frac{GM}{r^{2}}@@'],
+ ['Shell theorem','A uniform sphere attracts external objects as if all mass were at its centre.'],
+ ['Gravitational potential energy','@@U = -\\frac{GMm}{r}@@, zero at infinity.'],
+ ['Orbital speed','@@v = \\sqrt{\\frac{GM}{r}}@@, independent of the orbiting mass.'],
+ ['Total orbital energy','@@E = -\\frac{GMm}{2r}@@; negative means bound.'],
+ ['Escape velocity','@@v_{esc} = \\sqrt{\\frac{2GM}{R}}@@'],
+ ['Kepler\u2019s second law','Equal areas in equal times — conservation of angular momentum.'],
+ ['Kepler\u2019s third law','@@T^{2} \\propto a^{3}@@']
+],
+quiz:[
+ {q:'Two satellites of different mass orbit at the same radius. Their speeds are:',
+  c:['Different, heavier is faster','The same','Different, lighter is faster','Impossible to compare'],
+  a:1, why:'@@v = \\sqrt{GM/r}@@ contains no term for the orbiting mass.'},
+ {q:'Kepler\u2019s second law is a direct consequence of:',
+  c:['Conservation of energy','Conservation of angular momentum','Newton\u2019s third law','The shell theorem'],
+  a:1, why:'Constant angular momentum forces the area swept per unit time to be constant.'},
+ {q:'Gravitational potential energy is negative because:',
+  c:['Gravity repels','Zero is defined at infinite separation','Mass is negative','Of a sign error convention'],
+  a:1, why:'With U = 0 at infinity, any bound configuration has less energy, hence negative.'},
+ {q:'Inside a uniform solid sphere, the gravitational field:',
+  c:['Is constant','Increases linearly with distance from the centre','Follows an inverse square law','Is zero everywhere'],
+  a:1, why:'Only mass at smaller radius contributes, and that grows as r³ while the inverse square divides by r².'}
+]
+}
+]);
+
+/* ------------------------ AP PHYSICS C: ELECTRICITY AND MAGNETISM */
+addUnits('ap-physc-e', [
+{
+id:'u1', title:'Unit 1 · Electrostatics',
+guide:[
+{h:'Coulomb\u2019s law and the electric field',
+ intro:'E&M mirrors mechanics: force, field, potential energy, and potential are the electric analogues of force, gravitational field, potential energy, and potential. The mathematics is nearly identical.',
+ points:[
+  '<b>Coulomb\u2019s law</b>: @@F = \\frac{1}{4\\pi\\epsilon_{0}}\\frac{q_{1}q_{2}}{r^{2}}@@ — inverse square, like gravity, but it can repel.',
+  '<b>Electric field</b> @@\\vec{E} = \\frac{\\vec{F}}{q}@@, pointing away from positive and toward negative charge.',
+  'For a continuous charge distribution, integrate: @@\\vec{E} = \\int \\frac{k\\,dq}{r^{2}}\\hat{r}@@.',
+  'Exploit symmetry ruthlessly — components perpendicular to the axis of symmetry usually cancel, halving the work.',
+  'Charge densities: λ for a line, σ for a surface, ρ for a volume.'
+ ]},
+{h:'Gauss\u2019s law',
+ intro:'Gauss\u2019s law is the most powerful tool in this unit, but only for symmetric charge distributions. Choosing the right surface is the entire skill.',
+ table:{head:['Symmetry','Gaussian surface','Result'],rows:[
+   ['Point or sphere','Sphere','@@E = \\frac{kQ}{r^{2}}@@ outside'],
+   ['Infinite line','Cylinder','@@E = \\frac{\\lambda}{2\\pi\\epsilon_{0}r}@@'],
+   ['Infinite plane','Pillbox','@@E = \\frac{\\sigma}{2\\epsilon_{0}}@@, independent of distance']]},
+ points:[
+  '<b>Gauss\u2019s law</b>: @@\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{enc}}{\\epsilon_{0}}@@.',
+  'Only the charge <b>enclosed</b> matters. Charge outside the surface contributes zero net flux.',
+  'The field inside a conductor at electrostatic equilibrium is zero, and excess charge sits on the outer surface.',
+  'Inside a uniformly charged insulating sphere, E grows linearly with r; outside, it falls as 1/r².',
+  'Gauss\u2019s law is always true but only <i>useful</i> when symmetry lets you pull E outside the integral.'
+ ],
+ ex:{q:'Find the field inside a hollow conducting sphere carrying charge Q.',
+     steps:['Draw a spherical Gaussian surface inside the cavity.',
+            'No charge is enclosed, since all charge resides on the outer surface.',
+            '@@\\oint \\vec{E}\\cdot d\\vec{A} = 0@@.',
+            'By symmetry E is uniform on the surface, so E itself must be zero.'],
+     a:'Answer: zero everywhere inside. This is why a car shields you from lightning — a Faraday cage.'},
+ trap:'Applying Gauss\u2019s law to an asymmetric distribution. It remains true but cannot be solved, because E cannot be factored out of the integral.'}
+],
+cards:[
+ ['Coulomb\u2019s law','@@F = \\frac{1}{4\\pi\\epsilon_{0}}\\frac{q_{1}q_{2}}{r^{2}}@@'],
+ ['Electric field definition','@@\\vec{E} = \\frac{\\vec{F}}{q}@@'],
+ ['Field of a continuous distribution','@@\\vec{E} = \\int \\frac{k\\,dq}{r^{2}}\\hat{r}@@'],
+ ['Gauss\u2019s law','@@\\oint \\vec{E}\\cdot d\\vec{A} = \\frac{Q_{enc}}{\\epsilon_{0}}@@'],
+ ['What counts in Gauss\u2019s law','Only the enclosed charge; external charge gives zero net flux.'],
+ ['Field of an infinite plane','@@E = \\frac{\\sigma}{2\\epsilon_{0}}@@, independent of distance.'],
+ ['Field of an infinite line','@@E = \\frac{\\lambda}{2\\pi\\epsilon_{0}r}@@'],
+ ['Field inside a conductor','Zero at electrostatic equilibrium.'],
+ ['Faraday cage','A conducting shell shields its interior from external fields.']
+],
+quiz:[
+ {q:'The electric field due to an infinite charged plane:',
+  c:['Falls off as 1/r²','Falls off as 1/r','Is independent of distance','Is zero'],
+  a:2, why:'@@E = \\frac{\\sigma}{2\\epsilon_{0}}@@ contains no distance term.'},
+ {q:'A charge sits outside a closed Gaussian surface. Its contribution to the net flux is:',
+  c:['Large and positive','Zero','Negative','Depends on the shape'],
+  a:1, why:'Field lines entering also leave, so external charge contributes no net flux.'},
+ {q:'Gauss\u2019s law is most useful when the charge distribution has:',
+  c:['Large magnitude','High symmetry','Negative sign','Small radius'],
+  a:1, why:'Symmetry lets you factor E out of the integral, which is what makes it solvable.'},
+ {q:'Inside a uniformly charged insulating sphere, the field:',
+  c:['Is zero','Increases linearly with r','Falls as 1/r²','Is constant'],
+  a:1, why:'Enclosed charge grows as r³ while the area grows as r², leaving E proportional to r.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Conductors, Capacitors, and Dielectrics',
+guide:[
+{h:'Potential and potential energy',
+ intro:'A conductor at equilibrium has no internal field, and everything about capacitors follows from what happens when you place two conductors close together.',
+ points:[
+  '<b>Electric potential</b> is a <b>scalar</b>: @@V = \\frac{kq}{r}@@ for a point charge, and contributions simply add.',
+  'Relation to field: @@V = -\\int \\vec{E}\\cdot d\\vec{r}@@, and inversely @@\\vec{E} = -\\nabla V@@.',
+  'In one dimension, @@E_{x} = -\\frac{dV}{dx}@@ — field is the negative slope of the potential graph.',
+  '<b>Equipotential surfaces</b> are perpendicular to field lines. No work is done moving along one.',
+  'A conductor at equilibrium is an equipotential body throughout.',
+  'Work to move a charge: @@W = q\\Delta V@@.'
+ ]},
+{h:'Capacitance and dielectrics',
+ table:{head:['Quantity','Formula'],rows:[
+   ['Capacitance','@@C = \\frac{Q}{V}@@'],
+   ['Parallel plate','@@C = \\frac{\\epsilon_{0}A}{d}@@'],
+   ['Stored energy','@@U = \\frac{1}{2}CV^{2} = \\frac{Q^{2}}{2C}@@'],
+   ['Series','@@\\frac{1}{C} = \\frac{1}{C_{1}}+\\frac{1}{C_{2}}@@'],
+   ['Parallel','@@C = C_{1}+C_{2}@@']]},
+ points:[
+  'Capacitors combine <b>opposite</b> to resistors: they add in parallel and take reciprocals in series.',
+  'A <b>dielectric</b> of constant κ increases capacitance to κC by reducing the field between the plates.',
+  'If the capacitor stays connected to a battery, V is fixed and Q increases when a dielectric is inserted.',
+  'If it is disconnected, Q is fixed and V decreases instead — a very common exam distinction.',
+  'Energy can also be viewed as stored in the field, with density @@u = \\frac{1}{2}\\epsilon_{0}E^{2}@@.'
+ ],
+ ex:{q:'A charged capacitor is disconnected from its battery, then a dielectric is inserted. What happens to V and U?',
+     steps:['Disconnected means Q is fixed.',
+            'The dielectric raises C to κC.',
+            'Since V = Q/C, V falls by a factor of κ.',
+            '@@U = \\frac{Q^{2}}{2C}@@, so U also falls by κ.'],
+     a:'Answer: both voltage and stored energy decrease. The dielectric is pulled in, and that work accounts for the lost energy.'},
+ trap:'Applying the connected-battery result to a disconnected capacitor. Decide first which quantity is held fixed — Q or V.'}
+],
+cards:[
+ ['Electric potential','A scalar; @@V = \\frac{kq}{r}@@ and contributions add arithmetically.'],
+ ['Potential from field','@@V = -\\int \\vec{E}\\cdot d\\vec{r}@@'],
+ ['Field from potential','@@E_{x} = -\\frac{dV}{dx}@@'],
+ ['Equipotential surface','Perpendicular to field lines; no work done moving along it.'],
+ ['Capacitance','@@C = \\frac{Q}{V}@@'],
+ ['Parallel plate capacitance','@@C = \\frac{\\epsilon_{0}A}{d}@@'],
+ ['Capacitor energy','@@U = \\frac{1}{2}CV^{2} = \\frac{Q^{2}}{2C}@@'],
+ ['Capacitors in series and parallel','Opposite to resistors: reciprocals in series, direct sum in parallel.'],
+ ['Dielectric constant','Raises capacitance to κC by weakening the internal field.'],
+ ['Energy density of a field','@@u = \\frac{1}{2}\\epsilon_{0}E^{2}@@']
+],
+quiz:[
+ {q:'Two capacitors in parallel have total capacitance:',
+  c:['The reciprocal sum','The direct sum','The product','Always smaller than either'],
+  a:1, why:'Capacitors combine opposite to resistors — parallel adds directly.'},
+ {q:'A capacitor remains connected to a battery while a dielectric is inserted. Then:',
+  c:['V stays fixed and Q increases','Q stays fixed and V falls','Both stay the same','Both fall'],
+  a:0, why:'The battery holds V constant, so raising C must raise Q.'},
+ {q:'The electric field can be found from potential using:',
+  c:['@@E = qV@@','@@E_{x} = -\\frac{dV}{dx}@@','@@E = \\frac{V}{q}@@','@@E = \\int V\\,dx@@'],
+  a:1, why:'Field is the negative gradient of potential.'},
+ {q:'No work is required to move a charge along an equipotential surface because:',
+  c:['The field is zero there','The potential difference is zero','The charge is zero','The surface is flat'],
+  a:1, why:'@@W = q\\Delta V@@, and ΔV is zero along an equipotential.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Electric Circuits',
+guide:[
+{h:'Current, resistance, and Kirchhoff',
+ points:[
+  '<b>Current</b> @@I = \\frac{dq}{dt}@@, and microscopically @@I = nAqv_{d}@@ using drift velocity.',
+  '<b>Resistivity</b>: @@R = \\frac{\\rho L}{A}@@.',
+  'Power dissipated: @@P = IV = I^{2}R = \\frac{V^{2}}{R}@@.',
+  '<b>Junction rule</b>: current in equals current out — charge conservation.',
+  '<b>Loop rule</b>: potential changes around a closed loop sum to zero — energy conservation.',
+  'Real batteries have <b>internal resistance</b>, so terminal voltage is @@V = \\varepsilon - Ir@@ and falls as current rises.'
+ ]},
+{h:'RC circuits',
+ intro:'RC circuits are where calculus enters this unit. The differential equation governing charging is worth being able to write from scratch.',
+ points:[
+  'Charging: @@q(t) = C\\varepsilon\\left(1 - e^{-t/RC}\\right)@@ and @@I(t) = \\frac{\\varepsilon}{R}e^{-t/RC}@@.',
+  'Discharging: @@q(t) = Q_{0}e^{-t/RC}@@.',
+  'The <b>time constant</b> @@\\tau = RC@@ is the time to reach about 63% of the final charge.',
+  'After roughly 5τ the circuit is effectively at steady state.',
+  '<b>At t = 0</b> an uncharged capacitor behaves like a <b>wire</b> — current is maximum and it offers no opposition.',
+  '<b>At t = ∞</b> a fully charged capacitor behaves like a <b>break</b> — no current flows through that branch.'
+ ],
+ ex:{q:'In an RC charging circuit, compare the current immediately after closing the switch with the current long afterwards.',
+     steps:['At t = 0 the capacitor holds no charge, so it opposes nothing.',
+            'It acts as a plain wire, and current is @@\\varepsilon/R@@.',
+            'As charge accumulates, the capacitor voltage rises and opposes the battery.',
+            'At steady state the capacitor voltage equals the EMF and current stops.'],
+     a:'Answer: maximum at t = 0, zero at steady state. Remembering "wire at zero, break at infinity" solves most RC questions without any calculus.'}}
+],
+cards:[
+ ['Current as a derivative','@@I = \\frac{dq}{dt}@@'],
+ ['Drift velocity relation','@@I = nAqv_{d}@@'],
+ ['Resistance of a conductor','@@R = \\frac{\\rho L}{A}@@'],
+ ['Kirchhoff\u2019s junction rule','Charge conservation: current in equals current out.'],
+ ['Kirchhoff\u2019s loop rule','Energy conservation: loop potential changes sum to zero.'],
+ ['Terminal voltage','@@V = \\varepsilon - Ir@@ with internal resistance r.'],
+ ['RC charging','@@q(t) = C\\varepsilon(1 - e^{-t/RC})@@'],
+ ['RC discharging','@@q(t) = Q_{0}e^{-t/RC}@@'],
+ ['Time constant','@@\\tau = RC@@; about 63% charged after one τ.'],
+ ['Capacitor at t = 0 and t = ∞','Acts as a wire initially and as a break at steady state.']
+],
+quiz:[
+ {q:'Immediately after closing the switch in an RC charging circuit, an uncharged capacitor acts like:',
+  c:['A break in the circuit','A plain wire','A resistor of value R','A battery'],
+  a:1, why:'With no accumulated charge it opposes nothing, so current is at its maximum.'},
+ {q:'After one time constant, a charging capacitor has reached about:',
+  c:['37% of final charge','50%','63%','100%'],
+  a:2, why:'@@1 - e^{-1} \\approx 0.63@@.'},
+ {q:'A battery\u2019s terminal voltage drops as current increases because of:',
+  c:['Wire resistance only','Internal resistance','Capacitance','Inductance'],
+  a:1, why:'@@V = \\varepsilon - Ir@@, so larger current means a larger internal drop.'},
+ {q:'Kirchhoff\u2019s loop rule is a statement of:',
+  c:['Charge conservation','Energy conservation','Momentum conservation','Ohm\u2019s law'],
+  a:1, why:'Returning to the starting point must give zero net change in potential energy per charge.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Magnetic Fields',
+guide:[
+{h:'Magnetic force',
+ intro:'Magnetic fields are produced by moving charges and act only on moving charges. Every problem here reduces to a cross product and a right-hand rule.',
+ points:[
+  'Force on a moving charge: @@\\vec{F} = q\\vec{v}\\times\\vec{B}@@, magnitude @@qvB\\sin\\theta@@.',
+  'The cross product means the force is perpendicular to both v and B, so magnetic fields <b>do no work</b>.',
+  'A charge moving perpendicular to a uniform field moves in a circle of radius @@r = \\frac{mv}{qB}@@.',
+  'The <b>cyclotron period</b> @@T = \\frac{2\\pi m}{qB}@@ is independent of speed — the basis of the cyclotron.',
+  'Force on a current-carrying wire: @@\\vec{F} = I\\vec{L}\\times\\vec{B}@@.',
+  'A current loop in a field feels a torque @@\\vec{\\tau} = \\vec{\\mu}\\times\\vec{B}@@, which is how motors work.'
+ ]},
+{h:'Sources of magnetic field',
+ table:{head:['Source','Field'],rows:[
+   ['Long straight wire','@@B = \\frac{\\mu_{0}I}{2\\pi r}@@'],
+   ['Centre of a circular loop','@@B = \\frac{\\mu_{0}I}{2R}@@'],
+   ['Inside a long solenoid','@@B = \\mu_{0}nI@@'],
+   ['Inside a toroid','@@B = \\frac{\\mu_{0}NI}{2\\pi r}@@']]},
+ points:[
+  '<b>Biot-Savart law</b>: @@d\\vec{B} = \\frac{\\mu_{0}}{4\\pi}\\frac{I\\,d\\vec{l}\\times\\hat{r}}{r^{2}}@@ — the general tool, used by integration.',
+  '<b>Ampère\u2019s law</b>: @@\\oint \\vec{B}\\cdot d\\vec{l} = \\mu_{0}I_{enc}@@ — the magnetic analogue of Gauss\u2019s law, and equally dependent on symmetry.',
+  'Ampère\u2019s law is fast where symmetry allows; Biot-Savart works always but requires integration.',
+  'The field inside a long solenoid is uniform and independent of radius.',
+  'There are no magnetic monopoles, so magnetic flux through any closed surface is zero.'
+ ],
+ ex:{q:'Use Ampère\u2019s law to find the field inside a long solenoid.',
+     steps:['Choose a rectangular loop with one side inside, parallel to the axis, and one side outside.',
+            'The outside field is negligible and the perpendicular sides contribute nothing.',
+            '@@BL = \\mu_{0}(nL)I@@ where nL is the number of turns enclosed.',
+            'Divide by L.'],
+     a:'Answer: @@B = \\mu_{0}nI@@, uniform and independent of position inside.'},
+ trap:'Forgetting that magnetic force does no work. It changes direction only, never speed or kinetic energy.'}
+],
+cards:[
+ ['Magnetic force on a charge','@@\\vec{F} = q\\vec{v}\\times\\vec{B}@@'],
+ ['Why magnetic force does no work','It is always perpendicular to velocity.'],
+ ['Radius of circular motion','@@r = \\frac{mv}{qB}@@'],
+ ['Cyclotron period','@@T = \\frac{2\\pi m}{qB}@@, independent of speed.'],
+ ['Force on a wire','@@\\vec{F} = I\\vec{L}\\times\\vec{B}@@'],
+ ['Torque on a current loop','@@\\vec{\\tau} = \\vec{\\mu}\\times\\vec{B}@@; the principle of the motor.'],
+ ['Biot-Savart law','@@d\\vec{B} = \\frac{\\mu_{0}}{4\\pi}\\frac{I\\,d\\vec{l}\\times\\hat{r}}{r^{2}}@@'],
+ ['Ampère\u2019s law','@@\\oint \\vec{B}\\cdot d\\vec{l} = \\mu_{0}I_{enc}@@'],
+ ['Field in a solenoid','@@B = \\mu_{0}nI@@, uniform inside.'],
+ ['Field of a straight wire','@@B = \\frac{\\mu_{0}I}{2\\pi r}@@']
+],
+quiz:[
+ {q:'The cyclotron period of a charged particle in a uniform field is:',
+  c:['Proportional to speed','Independent of speed','Proportional to radius squared','Zero'],
+  a:1, why:'@@T = \\frac{2\\pi m}{qB}@@ has no velocity term, which is what makes cyclotrons work.'},
+ {q:'Ampère\u2019s law is most analogous to:',
+  c:['Newton\u2019s second law','Gauss\u2019s law','Ohm\u2019s law','Kepler\u2019s third law'],
+  a:1, why:'Both relate a closed-path or closed-surface integral to the enclosed source, and both need symmetry to be useful.'},
+ {q:'Magnetic flux through any closed surface is zero because:',
+  c:['Fields are weak','There are no magnetic monopoles','Charge is quantised','Of Lenz\u2019s law'],
+  a:1, why:'Field lines always close on themselves, so as much enters as leaves.'},
+ {q:'A proton moves antiparallel to a magnetic field. The force on it is:',
+  c:['Maximum','Zero','Perpendicular to B','Equal to qvB'],
+  a:1, why:'sin 180° = 0, so parallel or antiparallel motion produces no magnetic force.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Electromagnetism',
+guide:[
+{h:'Faraday and Lenz',
+ intro:'This unit is where electricity and magnetism become one subject. A changing magnetic field creates an electric field, and that single fact produces generators, transformers, and light itself.',
+ points:[
+  '<b>Magnetic flux</b>: @@\\Phi_{B} = \\int \\vec{B}\\cdot d\\vec{A}@@.',
+  '<b>Faraday\u2019s law</b>: @@\\varepsilon = -N\\frac{d\\Phi_{B}}{dt}@@. Only a <i>changing</i> flux induces EMF.',
+  'Flux changes three ways: changing B, changing area, or rotating the loop.',
+  '<b>Lenz\u2019s law</b> is the minus sign: the induced current opposes the change producing it, which is energy conservation.',
+  '<b>Motional EMF</b>: a rod of length L moving at v across field B generates @@\\varepsilon = BLv@@.',
+  'A rotating loop generates @@\\varepsilon = NBA\\omega\\sin(\\omega t)@@ — this is an AC generator.'
+ ]},
+{h:'Inductance and LC circuits',
+ table:{head:['Quantity','Formula'],rows:[
+   ['Self-inductance','@@\\varepsilon = -L\\frac{dI}{dt}@@'],
+   ['Solenoid inductance','@@L = \\mu_{0}n^{2}Al@@'],
+   ['Energy stored','@@U = \\frac{1}{2}LI^{2}@@'],
+   ['RL time constant','@@\\tau = \\frac{L}{R}@@'],
+   ['LC angular frequency','@@\\omega = \\frac{1}{\\sqrt{LC}}@@']]},
+ points:[
+  'An <b>inductor</b> opposes <i>changes</i> in current, not current itself.',
+  'At t = 0 an inductor behaves like a <b>break</b>; at steady state it behaves like a <b>wire</b> — exactly the reverse of a capacitor.',
+  'In an <b>LC circuit</b>, energy oscillates between the capacitor\u2019s electric field and the inductor\u2019s magnetic field, mathematically identical to a mass on a spring.',
+  '<b>Maxwell\u2019s equations</b> unify the subject: Gauss\u2019s law, Gauss\u2019s law for magnetism, Faraday\u2019s law, and Ampère-Maxwell.',
+  'Maxwell\u2019s addition of the displacement current predicted electromagnetic waves travelling at @@c = \\frac{1}{\\sqrt{\\mu_{0}\\epsilon_{0}}}@@ — which turned out to be light.'
+ ],
+ ex:{q:'Compare how a capacitor and an inductor behave at t = 0 and at steady state.',
+     steps:['A capacitor starts uncharged and opposes nothing, so it acts as a wire.',
+            'Once charged it blocks steady current, so it acts as a break.',
+            'An inductor opposes any change in current, so at t = 0 it blocks — a break.',
+            'Once current is steady there is nothing to oppose, so it acts as a wire.'],
+     a:'Answer: they are exact opposites. Capacitor: wire then break. Inductor: break then wire. This one line answers most circuit questions in the unit.'},
+ tip:'An LC circuit is the electrical twin of a mass on a spring. Charge maps to position, current to velocity, 1/C to the spring constant, and L to mass.'}
+],
+cards:[
+ ['Magnetic flux','@@\\Phi_{B} = \\int \\vec{B}\\cdot d\\vec{A}@@'],
+ ['Faraday\u2019s law','@@\\varepsilon = -N\\frac{d\\Phi_{B}}{dt}@@'],
+ ['Lenz\u2019s law','The induced current opposes the change producing it — energy conservation.'],
+ ['Motional EMF','@@\\varepsilon = BLv@@'],
+ ['AC generator output','@@\\varepsilon = NBA\\omega\\sin(\\omega t)@@'],
+ ['Self-inductance','@@\\varepsilon = -L\\frac{dI}{dt}@@; opposes changes in current.'],
+ ['Energy in an inductor','@@U = \\frac{1}{2}LI^{2}@@'],
+ ['RL time constant','@@\\tau = \\frac{L}{R}@@'],
+ ['Inductor at t = 0 and steady state','A break initially, then a wire — opposite to a capacitor.'],
+ ['LC oscillation frequency','@@\\omega = \\frac{1}{\\sqrt{LC}}@@'],
+ ['Maxwell\u2019s equations','Gauss, Gauss for magnetism, Faraday, and Ampère-Maxwell.'],
+ ['Speed of light from theory','@@c = \\frac{1}{\\sqrt{\\mu_{0}\\epsilon_{0}}}@@']
+],
+quiz:[
+ {q:'At the instant a switch closes in an RL circuit, the inductor behaves like:',
+  c:['A wire','A break in the circuit','A capacitor','A battery'],
+  a:1, why:'It maximally opposes the sudden change in current, so no current flows at first.'},
+ {q:'An LC circuit is mathematically identical to:',
+  c:['A falling object','A mass on a spring','A projectile','A rolling wheel'],
+  a:1, why:'Energy oscillates between two stores, giving the same differential equation as SHM.'},
+ {q:'A loop sits in a strong but unchanging magnetic field. The induced EMF is:',
+  c:['Large','Zero','Equal to BA','Growing'],
+  a:1, why:'Faraday\u2019s law depends on the rate of change of flux, not on flux itself.'},
+ {q:'Maxwell predicted electromagnetic waves travel at @@\\frac{1}{\\sqrt{\\mu_{0}\\epsilon_{0}}}@@, which matched:',
+  c:['The speed of sound','The measured speed of light','Orbital velocity','Terminal velocity'],
+  a:1, why:'That agreement revealed light itself to be an electromagnetic wave.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
+/* ------------------------------------ AP ENGLISH LITERATURE */
+addUnits('ap-lit', [
+{
+id:'u1', title:'Unit 1 · Short Fiction I: Character and Setting',
+guide:[
+{h:'Reading character',
+ intro:'AP Literature is not a knowledge test. You are assessed on whether you can build an interpretation from textual detail, and character is where that skill starts.',
+ points:[
+  '<b>Characters are constructed</b>, not real people. Ask what the author is doing by making a character behave this way.',
+  '<b>Direct characterisation</b> tells you a trait; <b>indirect</b> shows it through speech, action, thought, and others\u2019 reactions.',
+  'A <b>protagonist</b> drives the action; an <b>antagonist</b> opposes it. Neither term implies moral judgement.',
+  'Characters may be <b>round</b> (complex, contradictory) or <b>flat</b>, <b>dynamic</b> (they change) or <b>static</b>.',
+  '<b>Inconsistency in a character is usually deliberate</b> and worth analysing rather than smoothing over.',
+  'A <b>foil</b> exists to illuminate another character by contrast.'
+ ],
+ table:{head:['Instead of writing','Write'],rows:[
+   ['The character is sad','The character\u2019s clipped replies suggest a grief she will not name'],
+   ['This shows he is brave','His hesitation before acting complicates any simple reading of courage'],
+   ['The author uses imagery','The decaying garden imagery ties her situation to inherited neglect']]}},
+{h:'Setting and the exam essay',
+ points:[
+  '<b>Setting</b> is time, place, and social context, and it does work: it constrains characters, creates mood, and often carries symbolic weight.',
+  'Ask what would be impossible if the story were set elsewhere. That is the setting doing something.',
+  'The exam has three essays: <b>poetry analysis</b>, <b>prose fiction analysis</b>, and a <b>literary argument</b> on a work of your choice.',
+  'Each is scored out of 6: <b>1 thesis</b>, <b>4 evidence and commentary</b>, <b>1 sophistication</b>.',
+  'A defensible thesis makes an <b>interpretive claim</b>, not a summary. "The author uses imagery" is not a thesis.',
+  'The multiple-choice section is 55 questions in 60 minutes across five passages of poetry and prose.'
+ ],
+ ex:{q:'Turn "the setting is a run-down house" into an analytical claim.',
+     steps:['Ask what the detail does rather than what it is.',
+            'Connect it to character or theme.',
+            'Name the effect on the reader.'],
+     a:'Answer: "The peeling wallpaper and stopped clocks render the house a physical record of the family\u2019s refusal to move forward, so that setting becomes an argument about inheritance rather than a backdrop."'},
+ trap:'Summarising the plot. Graders can assume the text has been read; retelling it earns no evidence points at all.'}
+],
+cards:[
+ ['Direct vs indirect characterisation','Direct states a trait; indirect reveals it through speech, action, and reaction.'],
+ ['Round vs flat character','Round characters are complex and contradictory; flat ones serve one function.'],
+ ['Dynamic vs static character','Dynamic characters change over the work; static ones do not.'],
+ ['Foil','A character who illuminates another by contrast.'],
+ ['Why contradictions matter','Inconsistency is usually deliberate and is where interpretation begins.'],
+ ['Setting','Time, place, and social context — and what they make possible or impossible.'],
+ ['The three AP Lit essays','Poetry analysis, prose fiction analysis, and a literary argument.'],
+ ['Essay rubric','6 points: 1 thesis, 4 evidence and commentary, 1 sophistication.'],
+ ['Defensible thesis','An interpretive claim someone could reasonably dispute, not a summary.'],
+ ['Multiple-choice format','55 questions in 60 minutes across five passages.']
+],
+quiz:[
+ {q:'Which is a defensible thesis?',
+  c:['The author uses imagery and symbolism.','The story is about a family in decline.','The decaying house figures inheritance as a burden the family cannot set down.','There are three main characters.'],
+  a:2, why:'It makes an arguable interpretive claim about meaning rather than listing devices or summarising.'},
+ {q:'A character who exists mainly to highlight another by contrast is a:',
+  c:['Protagonist','Foil','Antagonist','Narrator'],
+  a:1, why:'A foil\u2019s function is comparative — the contrast reveals something about the other character.'},
+ {q:'On the AP Lit essay rubric, the largest number of points comes from:',
+  c:['Thesis','Evidence and commentary','Sophistication','Grammar'],
+  a:1, why:'Four of six points come from evidence paired with explanation of how it supports the claim.'},
+ {q:'A character behaves inconsistently across a story. The best response is to:',
+  c:['Ignore it as an error','Treat it as deliberate and analyse what it reveals','Assume the character is flat','Summarise both behaviours'],
+  a:1, why:'Contradiction is usually where an author has placed the interesting interpretive work.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Poetry I: Structure and Figurative Language',
+guide:[
+{h:'Reading a poem',
+ intro:'Poems reward slow reading. The single most useful habit is paraphrasing each sentence in plain prose before analysing anything, because you cannot interpret what you have not understood.',
+ points:[
+  'Identify the <b>speaker</b> — who is talking, to whom, and in what situation. The speaker is not the poet.',
+  'Track the <b>syntax</b>: find the main verb of each sentence, since poetic word order often delays it.',
+  '<b>Structure</b> matters: stanzas, line breaks, and where the poem turns.',
+  'A <b>volta</b> is a turn in argument or feeling, traditionally at line 9 of a Petrarchan sonnet or line 13 of a Shakespearean one.',
+  '<b>Enjambment</b> runs a sentence past the line break; an <b>end-stopped</b> line closes with punctuation. The difference controls pace.',
+  'Ask what changes between the beginning and the end. A poem that ends where it started is rare.'
+ ]},
+{h:'Figurative language',
+ table:{head:['Device','What it does'],rows:[
+   ['Metaphor','Asserts one thing <i>is</i> another, transferring qualities'],
+   ['Simile','Compares using like or as, keeping the terms separate'],
+   ['Personification','Grants human qualities to non-human things'],
+   ['Symbol','A concrete thing standing for an abstract idea'],
+   ['Imagery','Sensory detail that grounds abstraction in the body'],
+   ['Apostrophe','Direct address to someone absent, dead, or abstract'],
+   ['Paradox','An apparent contradiction that reveals a truth']]},
+ points:[
+  'Naming a device earns nothing. Explaining what it <b>does to the reader</b> earns the point.',
+  'For any metaphor, ask what qualities transfer from one term to the other and what that comparison implies.',
+  '<b>Tone</b> is the speaker\u2019s attitude. Look for evaluative words and shifts in them.',
+  'Choose two or three devices and analyse them properly rather than listing eight.',
+  'Diction, imagery, and syntax working together create tone — that is usually the strongest essay structure.'
+ ],
+ ex:{q:'A poem describes grief as "a house with all its windows shut." Analyse it.',
+     steps:['Identify the comparison: grief is a closed house.',
+            'Ask what transfers: enclosure, stillness, a barrier between inside and outside.',
+            'A house is normally a place of shelter, so the metaphor makes safety and imprisonment the same thing.',
+            'Note what it implies about the speaker\u2019s relation to others.'],
+     a:'Answer: the metaphor makes grief a structure the speaker inhabits rather than a feeling she has, converting mourning into a place with no exit.'},
+ trap:'Device-spotting. A list of terms with no explanation of effect scores at the bottom of the evidence range.'}
+],
+cards:[
+ ['Speaker','The voice of the poem, never assumed to be the poet.'],
+ ['Volta','A turn in argument or feeling within a poem.'],
+ ['Enjambment','A sentence running past the line break without pause.'],
+ ['End-stopped line','A line closing with punctuation, creating a pause.'],
+ ['Metaphor vs simile','Metaphor asserts identity; simile compares while keeping terms separate.'],
+ ['Symbol','A concrete object standing for an abstract idea.'],
+ ['Apostrophe','Direct address to someone absent, dead, or abstract.'],
+ ['Paradox','An apparent contradiction that discloses a truth.'],
+ ['Tone','The speaker\u2019s attitude toward the subject.'],
+ ['Analysing a device','Explain its effect on the reader, never just name it.']
+],
+quiz:[
+ {q:'"Death, be not proud" addresses death directly. This device is:',
+  c:['Metaphor','Apostrophe','Paradox','Enjambment'],
+  a:1, why:'Apostrophe addresses something absent or abstract as though it could respond.'},
+ {q:'Which sentence does genuine poetic analysis?',
+  c:['The poet uses a metaphor in line 4.','There is imagery of winter throughout.','By making memory a frozen river, the poem renders the past both visible and impassable.','The poem has four stanzas.'],
+  a:2, why:'It names the comparison and explains what the metaphor accomplishes.'},
+ {q:'A volta in a sonnet is:',
+  c:['The rhyme scheme','A turn in argument or feeling','The final couplet','A metrical foot'],
+  a:1, why:'The volta marks where the poem pivots, and is often where its meaning is decided.'},
+ {q:'The first thing to do with a difficult poem is:',
+  c:['Identify the meter','Paraphrase each sentence in plain prose','Count the stanzas','Look for alliteration'],
+  a:1, why:'Interpretation is impossible without literal comprehension, and poetic syntax often obscures it.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Longer Fiction and Drama I',
+guide:[
+{h:'Structure in long works',
+ intro:'Novels and plays reward attention to shape. Where a scene sits, and what it interrupts, often matters more than what happens in it.',
+ points:[
+  '<b>Exposition, rising action, climax, falling action, resolution</b> is a starting frame, not a rule. Many works refuse it deliberately.',
+  '<b>Conflict</b> may be between characters, within a character, or between a character and society or nature.',
+  'Internal conflict usually carries the theme; external conflict usually carries the plot.',
+  '<b>Subplots</b> exist to comment on the main plot, typically by parallel or contrast.',
+  'In drama, note <b>dramatic irony</b> — the audience knows what a character does not — and what it does to sympathy.',
+  '<b>Soliloquy</b> reveals interiority in drama the way free indirect discourse does in fiction.'
+ ]},
+{h:'The literary argument essay',
+ intro:'The third essay lets you choose the work. That freedom is the trap: students often pick a book they love rather than one that fits the prompt.',
+ points:[
+  'Prepare <b>three or four works</b> thoroughly rather than knowing many superficially.',
+  'Choose works with genuine complexity — ambiguous characters, contested endings, competing values.',
+  'For each prepared work, know: major characters and their arcs, central conflicts, structure, recurring images, and at least three quotable moments.',
+  'Read the prompt twice and choose the work that <b>fits it</b>, not your favourite.',
+  'No quotations are required for this essay, but specific detail is. "Near the end, when she burns the letters" is specific; "later in the book" is not.',
+  'The <b>sophistication point</b> comes from engaging tension or complexity, not from elevated vocabulary.'
+ ],
+ table:{head:['Prepare for each work','Because prompts ask about'],rows:[
+   ['Character arcs','Change, growth, self-deception'],
+   ['Central conflicts','Values in tension'],
+   ['Structure and endings','Resolution, ambiguity, framing'],
+   ['Recurring images','Symbol and motif'],
+   ['Social context','Power, class, gender, freedom']]},
+ ex:{q:'A prompt asks about a character whose actions are "morally ambiguous." How do you choose a work?',
+     steps:['Discard works with clearly heroic or villainous protagonists.',
+            'Look for a character whose motives can be read two ways.',
+            'Check that you can cite specific moments supporting both readings.',
+            'That double reading is also your route to the sophistication point.'],
+     a:'Answer: pick the work where ambiguity is genuinely arguable, then build the essay around defending one reading while acknowledging the other.'},
+ trap:'Choosing your favourite novel regardless of prompt. A brilliant essay about the wrong book cannot score well.'}
+],
+cards:[
+ ['Types of conflict','Between characters, within a character, or against society or nature.'],
+ ['Function of a subplot','To comment on the main plot by parallel or contrast.'],
+ ['Dramatic irony','The audience knows something a character does not.'],
+ ['Soliloquy','A speech revealing a character\u2019s interior thought to the audience alone.'],
+ ['Literary argument essay','Third essay, on a work of your own choosing.'],
+ ['How many works to prepare','Three or four, known thoroughly.'],
+ ['Choosing a work','Fit the prompt, not your preference.'],
+ ['Specificity without quotation','Name precise moments and details; vague reference earns nothing.'],
+ ['Sophistication point','Earned by engaging complexity, not by elevated vocabulary.']
+],
+quiz:[
+ {q:'For the literary argument essay, the best preparation is to:',
+  c:['Read as many novels as possible','Know three or four complex works thoroughly','Memorise plot summaries','Study only poetry'],
+  a:1, why:'Depth allows specific detail under time pressure; breadth without depth produces vague essays.'},
+ {q:'A subplot in a novel most often functions to:',
+  c:['Pad the length','Comment on the main plot through parallel or contrast','Confuse the reader','Introduce the setting'],
+  a:1, why:'Subplots typically echo or invert the central conflict, which is what makes them analysable.'},
+ {q:'Dramatic irony affects an audience primarily by:',
+  c:['Creating confusion','Producing tension and often sympathy for the unknowing character','Slowing the plot','Revealing the theme directly'],
+  a:1, why:'Knowing more than the character makes us watch their choices with dread or pity.'},
+ {q:'A prompt asks about a work in which the ending is ambiguous. You should choose:',
+  c:['Your favourite novel','A work whose ending genuinely resists a single reading','The longest work you know','Any tragedy'],
+  a:1, why:'Fit to the prompt determines the ceiling of your score more than familiarity does.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Short Fiction II: Narration and Point of View',
+guide:[
+{h:'Who is telling the story',
+ intro:'Point of view is the most consequential choice a fiction writer makes. It decides what you can know, and therefore what you can be misled about.',
+ table:{head:['Point of view','Access','Effect'],rows:[
+   ['First person','One character\u2019s mind','Intimacy; possible unreliability'],
+   ['Second person','Addresses "you"','Implicates the reader; rare'],
+   ['Third limited','One character\u2019s mind, told from outside','Closeness with some distance'],
+   ['Third omniscient','All characters\u2019 minds','Breadth; authorial judgement possible'],
+   ['Third objective','External actions only','Detachment; reader must infer']]},
+ points:[
+  'An <b>unreliable narrator</b> misrepresents events through ignorance, self-deception, or intent.',
+  'Signs of unreliability: contradictions, defensiveness, gaps, and other characters reacting oddly.',
+  '<b>Free indirect discourse</b> blends the narrator\u2019s voice with a character\u2019s thoughts without quotation marks.',
+  '<b>Narrative distance</b> can shift within a work, moving nearer to or further from a character.',
+  'Ask what this narrator <b>cannot</b> tell you. The limits of the perspective are often the point.'
+ ]},
+{h:'Time, structure, and symbol',
+ points:[
+  '<b>Chronology</b> is a choice. Flashback, foreshadowing, and in medias res openings all reorder experience for effect.',
+  'A <b>frame narrative</b> places one story inside another and raises questions about who is shaping the account.',
+  '<b>Pacing</b>: compressed time creates urgency, extended time creates significance. Notice which moments get the most pages.',
+  'A <b>symbol</b> earns its meaning through repetition and context, not through a fixed dictionary of meanings.',
+  '<b>Motif</b> is a recurring image or idea; <b>theme</b> is the claim the work makes about it.',
+  'State theme as a sentence, not a word. "Loss" is a topic; "grief isolates those who cannot narrate it" is a theme.'
+ ],
+ ex:{q:'A narrator insists repeatedly that he is "perfectly calm" while describing violent acts. What does this signal?',
+     steps:['The insistence is disproportionate to the claim.',
+            'Repetition suggests he is persuading himself.',
+            'His account of events may therefore be shaped by self-justification.',
+            'The reader is invited to read past the narration.'],
+     a:'Answer: unreliable narration through self-deception, and the gap between his account and the events becomes the story\u2019s real subject.'},
+ trap:'Treating symbols as having fixed meanings. A rose is not automatically love; the text has to earn the association.'}
+],
+cards:[
+ ['Third person limited','Told from outside but with access to one character\u2019s mind.'],
+ ['Third person omniscient','Access to multiple characters\u2019 thoughts.'],
+ ['Third person objective','External actions only; the reader must infer interiority.'],
+ ['Unreliable narrator','One whose account cannot be fully trusted through ignorance or self-deception.'],
+ ['Signs of unreliability','Contradictions, defensiveness, gaps, and odd reactions from others.'],
+ ['Free indirect discourse','Narration that blends the narrator\u2019s voice with a character\u2019s thoughts.'],
+ ['In medias res','Beginning in the middle of the action.'],
+ ['Frame narrative','A story told within another story.'],
+ ['Motif vs theme','Motif is a recurring element; theme is the claim made about it.'],
+ ['Stating a theme','Write a full sentence, not a single word.']
+],
+quiz:[
+ {q:'A narrator reports only what characters say and do, never their thoughts. This is:',
+  c:['First person','Third limited','Third omniscient','Third objective'],
+  a:3, why:'Objective narration stays entirely outside every mind, forcing the reader to infer.'},
+ {q:'Which is a properly stated theme?',
+  c:['Loneliness','The novel is about war','Ambition consumes those who cannot name what they actually want','The ending is sad'],
+  a:2, why:'A theme is a claim about the topic, expressed as a full sentence.'},
+ {q:'Free indirect discourse is recognisable because it:',
+  c:['Uses quotation marks','Blends narrator and character voice without quotation','Always uses first person','Occurs only in drama'],
+  a:1, why:'The narration slides into the character\u2019s idiom while remaining third person.'},
+ {q:'The strongest evidence of an unreliable narrator is:',
+  c:['The narrator is young','Other characters react in ways that contradict the account','The story is sad','There are flashbacks'],
+  a:1, why:'External contradiction is the clearest signal that the narration is being shaped.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Poetry II: Sound, Form, and Meter',
+guide:[
+{h:'Meter and sound',
+ intro:'Sound in poetry is not decoration. Rhythm creates expectation, and a poem\u2019s meaning often lives in where it breaks that expectation.',
+ table:{head:['Foot','Pattern','Example'],rows:[
+   ['Iamb','unstressed-STRESSED','a-BOVE'],
+   ['Trochee','STRESSED-unstressed','GAR-den'],
+   ['Anapest','un-un-STRESSED','in-ter-VENE'],
+   ['Dactyl','STRESSED-un-un','MER-ri-ly'],
+   ['Spondee','STRESSED-STRESSED','HEART-BREAK']]},
+ points:[
+  'Line length is named by feet: trimeter (3), tetrameter (4), <b>pentameter</b> (5), hexameter (6).',
+  '<b>Iambic pentameter</b> is the dominant English meter because it approximates natural speech rhythm.',
+  '<b>Blank verse</b> is unrhymed iambic pentameter; <b>free verse</b> has no regular meter or rhyme.',
+  'A <b>metrical substitution</b> — a trochee in an iambic line — draws attention to that word. This is where sound becomes meaning.',
+  'Sound devices: <b>alliteration</b>, <b>assonance</b> (vowel repetition), <b>consonance</b>, <b>onomatopoeia</b>.',
+  '<b>Caesura</b> is a pause within a line, often marking hesitation or division.'
+ ]},
+{h:'Form',
+ points:[
+  'A <b>Shakespearean sonnet</b> is 14 lines, ABAB CDCD EFEF GG, with the turn usually at line 9 or the couplet.',
+  'A <b>Petrarchan sonnet</b> divides into an octave posing a problem and a sestet answering it, turning at line 9.',
+  'Form creates expectation. A sonnet that refuses to resolve in its couplet is making a point by that refusal.',
+  '<b>Villanelle</b>, <b>ode</b>, <b>elegy</b>, and <b>ballad</b> each carry conventions a poet may honour or subvert.',
+  '<b>Free verse</b> is not formless — line breaks, spacing, and repetition do the work meter would otherwise do.',
+  'Always ask why <i>this</i> form for <i>this</i> subject.'
+ ],
+ ex:{q:'A love sonnet is written in strict form until the final couplet, which breaks the meter entirely. Analyse.',
+     steps:['The form has established an expectation of order and resolution.',
+            'The couplet is where a Shakespearean sonnet traditionally resolves.',
+            'Breaking meter exactly there denies the resolution the form promises.',
+            'Form and content align: the poem cannot contain what it describes.'],
+     a:'Answer: the metrical rupture enacts the failure of resolution, making form itself part of the argument.'},
+ tip:'You will rarely be asked to scan a whole poem. You will be asked what a departure from the pattern accomplishes — so notice the exceptions, not the rule.'}
+],
+cards:[
+ ['Iamb','Unstressed then stressed — the dominant English foot.'],
+ ['Trochee','Stressed then unstressed.'],
+ ['Iambic pentameter','Five iambs per line; closest to natural English speech.'],
+ ['Blank verse','Unrhymed iambic pentameter.'],
+ ['Free verse','No regular meter or rhyme scheme.'],
+ ['Metrical substitution','A different foot inserted into a regular line, drawing attention.'],
+ ['Assonance','Repetition of vowel sounds.'],
+ ['Caesura','A pause within a line of verse.'],
+ ['Shakespearean sonnet','14 lines, ABAB CDCD EFEF GG, turning at line 9 or the couplet.'],
+ ['Petrarchan sonnet','Octave poses a problem, sestet responds; turn at line 9.'],
+ ['Why form matters','It creates expectations a poet can satisfy or deliberately break.']
+],
+quiz:[
+ {q:'Unrhymed iambic pentameter is called:',
+  c:['Free verse','Blank verse','A sonnet','A ballad'],
+  a:1, why:'Blank verse keeps the meter but drops the rhyme; free verse drops both.'},
+ {q:'A trochee appearing in an otherwise iambic line most likely:',
+  c:['Is a mistake','Draws attention to that word','Ends the poem','Signals a rhyme'],
+  a:1, why:'Departure from an established pattern is how poets create emphasis through sound.'},
+ {q:'A Petrarchan sonnet typically turns at:',
+  c:['Line 5','Line 9','Line 13','The final word'],
+  a:1, why:'The octave poses a problem and the sestet begins the response at line 9.'},
+ {q:'Free verse achieves its effects primarily through:',
+  c:['Strict meter','Line breaks, spacing, and repetition','Rhyme scheme','Fixed stanza length'],
+  a:1, why:'Without meter, the visual and rhythmic choices of the line carry the structural work.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Longer Fiction and Drama II',
+guide:[
+{h:'Character development across a long work',
+ intro:'In a novel or play you can trace change over hundreds of pages. Essays that track a specific arc almost always outperform essays that describe a character in general.',
+ points:[
+  'Identify the character\u2019s <b>initial position</b> — what they want and what they believe.',
+  'Find the <b>pressure</b> that tests it, and the moment the position becomes untenable.',
+  'Note whether they change, refuse to change, or change and reverse.',
+  'A character\u2019s <b>self-understanding</b> may lag behind the reader\u2019s. That gap is fertile ground for analysis.',
+  '<b>Epiphany</b> is a moment of sudden recognition, and its absence in a novel that seems to promise one is meaningful.',
+  'Minor characters are rarely incidental. Ask what function each serves.'
+ ]},
+{h:'Setting, structure, and social context',
+ points:[
+  'In long works, <b>setting often functions as a system</b> — a household, a town, an institution with its own rules.',
+  'Characters who violate those rules reveal what the system enforces.',
+  '<b>Narrative structure</b>: framing, parallel plots, shifting narrators, and chronological disruption all shape interpretation.',
+  'Where a work <b>begins and ends</b> is a choice. Ask what is excluded.',
+  'Social context — class, gender, race, empire, money — is usually a source of conflict rather than background.',
+  'Avoid reducing a work to a single message. The best essays hold two readings in tension.'
+ ],
+ table:{head:['Weak approach','Strong approach'],rows:[
+   ['Describes the character overall','Traces a specific change and names its cause'],
+   ['Lists themes','Argues how one theme is developed and complicated'],
+   ['Treats setting as backdrop','Shows setting constraining what characters can do'],
+   ['Summarises the ending','Analyses what the ending refuses to resolve']]},
+ ex:{q:'A protagonist gets everything she pursued and is unhappy. How do you turn this into an argument?',
+     steps:['Identify what she believed the goal would provide.',
+            'Show where the text signals that belief was mistaken.',
+            'Ask whether she recognises the error, and when.',
+            'The gap between achievement and satisfaction is the interpretive claim.'],
+     a:'Answer: argue that the novel critiques the desire itself rather than her pursuit of it, using the ending to show the goal was never capable of delivering what she wanted.'}}
+],
+cards:[
+ ['Tracing a character arc','Identify initial position, the pressure on it, and whether it changes.'],
+ ['Gap in self-understanding','When the reader sees more than the character does — rich ground for analysis.'],
+ ['Epiphany','A moment of sudden recognition; its absence can also be meaningful.'],
+ ['Setting as system','In long works, setting often operates as a set of enforced social rules.'],
+ ['Function of minor characters','Rarely incidental; ask what purpose each serves.'],
+ ['Framing and structure','Where a work begins and ends is a deliberate choice.'],
+ ['Social context','Class, gender, race, and money are usually sources of conflict, not background.'],
+ ['Holding two readings','Strong essays sustain tension rather than reducing a work to one message.']
+],
+quiz:[
+ {q:'The strongest essay approach to a novel\u2019s protagonist is to:',
+  c:['Describe her personality','Trace a specific change and identify what caused it','Summarise her actions','List her relationships'],
+  a:1, why:'A traced arc supports argument; description supports only summary.'},
+ {q:'A character does not recognise something the reader clearly sees. This gap is:',
+  c:['An authorial error','A rich source of interpretation','Always dramatic irony','Irrelevant to theme'],
+  a:1, why:'The distance between character knowledge and reader knowledge is where meaning often sits.'},
+ {q:'Treating setting as a "system" means analysing it as:',
+  c:['Scenery','A set of rules constraining what characters can do','A symbol of nature','A time period only'],
+  a:1, why:'Households and institutions enforce norms, and violations reveal what is being enforced.'},
+ {q:'An essay that reduces a complex novel to one clear message is likely to:',
+  c:['Earn the sophistication point','Miss the sophistication point','Score highest on evidence','Be scored as off-topic'],
+  a:1, why:'Sophistication is awarded for engaging complexity, not for resolving it neatly.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · Short Fiction III: Interpretation and Nuance',
+guide:[
+{h:'Building a sustained interpretation',
+ intro:'The difference between a 4 and a 6 essay is rarely more evidence. It is whether the evidence accumulates into an argument that develops rather than repeats.',
+ points:[
+  'A strong essay <b>develops</b>: each paragraph should advance the claim, not restate it with a new quotation.',
+  'Order your evidence so the argument gets more complex, not just longer.',
+  'Address the <b>strongest counter-reading</b> rather than the weakest. Doing so is one reliable route to sophistication.',
+  'Use <b>verbs of analysis</b>: complicates, undercuts, concedes, reframes, resists. Avoid "shows" and "uses."',
+  'Quote briefly and comment at length. A ratio of roughly one line quoted to four lines of commentary is a good target.',
+  'Connect local detail to the whole work. An observation that stays local stays at the bottom of the range.'
+ ],
+ table:{head:['Instead of','Try'],rows:[
+   ['The author shows that…','The passage complicates the earlier claim that…'],
+   ['This quote proves…','This detail undercuts the reading suggested by…'],
+   ['The author uses irony','The irony here refuses the consolation the scene appears to offer']]}},
+{h:'Ambiguity and the sophistication point',
+ points:[
+  'Sophistication is earned by <b>engaging complexity</b>, not by vocabulary, length, or grandiose openings.',
+  'Ways to earn it: identify tension the work does not resolve; situate the work in a broader context; recognise that a device works in more than one direction.',
+  'Ambiguity is usually deliberate. A text that could be read two ways is often <i>about</i> the difficulty of reading.',
+  'Do not manufacture complexity where none exists. Forced nuance reads as evasion.',
+  'Avoid sweeping openings about "throughout human history." Start with the text.',
+  'A conclusion should extend the argument, not restate the introduction.'
+ ],
+ ex:{q:'A story ends without revealing whether the narrator is telling the truth. How do you handle it?',
+     steps:['Resist choosing arbitrarily — the text has withheld the answer deliberately.',
+            'Argue for the more defensible reading using specific evidence.',
+            'Acknowledge what the other reading would rest on.',
+            'Then argue why the withholding itself is meaningful.'],
+     a:'Answer: commit to a reading, acknowledge the alternative, and argue that the unresolvability is part of the story\u2019s subject. That last move is where sophistication lives.'},
+ trap:'Refusing to commit. "It could mean many things" is not sophistication; it is the absence of a thesis.'}
+],
+cards:[
+ ['Developing an argument','Each paragraph should advance the claim, not restate it.'],
+ ['Handling counter-readings','Address the strongest one, not the weakest.'],
+ ['Verbs of analysis','Complicates, undercuts, concedes, reframes, resists.'],
+ ['Quote-to-commentary ratio','Quote briefly and explain at length.'],
+ ['Sophistication point','Earned by engaging complexity, not by vocabulary or length.'],
+ ['Deliberate ambiguity','Often the subject of the work rather than a flaw in it.'],
+ ['Forced nuance','Manufacturing complexity reads as evasion and does not score.'],
+ ['Weak opening to avoid','Sweeping claims about human history; begin with the text.'],
+ ['Conclusion','Should extend the argument rather than restate the introduction.']
+],
+quiz:[
+ {q:'The most reliable route to the sophistication point is to:',
+  c:['Use advanced vocabulary','Write a longer essay','Engage a tension the work does not resolve','Quote more frequently'],
+  a:2, why:'The rubric rewards handling complexity, which vocabulary and length do not demonstrate.'},
+ {q:'An essay quotes heavily with little explanation. It will most likely score:',
+  c:['High on evidence and commentary','Low, because commentary carries the points','High on sophistication','Full marks on thesis'],
+  a:1, why:'Evidence without explanation does not demonstrate interpretation, which is what is being assessed.'},
+ {q:'Faced with a genuinely ambiguous ending, the best approach is to:',
+  c:['Say it could mean anything','Commit to a reading, acknowledge the alternative, and analyse the ambiguity','Ignore the ending','Choose the simplest reading'],
+  a:1, why:'Refusing to commit leaves you without a thesis; analysing the ambiguity itself earns credit.'},
+ {q:'Which verb best signals analysis rather than summary?',
+  c:['Shows','Uses','Undercuts','Includes'],
+  a:2, why:'"Undercuts" names a specific rhetorical effect; the others merely report presence.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · Poetry III: Ambiguity and Multiple Readings',
+guide:[
+{h:'When a poem resists a single reading',
+ intro:'Advanced poetry questions rarely have one clear answer. They test whether you can hold competing readings and choose between them on evidence.',
+ points:[
+  'Ambiguity may sit in a word with two meanings, a pronoun with an unclear referent, or syntax that permits two parsings.',
+  'When a word carries two senses that both fit, the poem is usually exploiting both.',
+  'Check the <b>pronouns</b>. An unclear "it" or "she" is frequently deliberate.',
+  '<b>Irony</b> in poetry creates distance between what is said and what is meant, and can be gentle or savage.',
+  '<b>Understatement</b> and <b>hyperbole</b> both distort scale to draw attention.',
+  'Tone can shift within a single poem. Mark where and ask what causes the shift.'
+ ]},
+{h:'Poetry on the exam',
+ points:[
+  'The poetry analysis essay gives an unfamiliar poem and asks you to analyse how poetic choices convey meaning.',
+  'Budget roughly 40 minutes: about 10 reading and planning, 28 writing, 2 checking.',
+  'Read the poem <b>twice</b> before writing anything. The first read is comprehension; the second is analysis.',
+  'The prompt names a focus. Your thesis must respond to <i>that</i> focus, not to the poem generally.',
+  'Structure by the poem\u2019s movement rather than by device — trace how the argument or feeling develops.',
+  'Multiple-choice poetry questions test syntax and reference as much as figurative language. Find the main verb.'
+ ],
+ table:{head:['Time','Task'],rows:[
+   ['0–5 min','Read for literal sense; paraphrase mentally'],
+   ['5–10 min','Reread for shifts, tone, and structure; draft a thesis'],
+   ['10–38 min','Write, moving through the poem\u2019s development'],
+   ['38–40 min','Check that each paragraph supports the thesis']]},
+ ex:{q:'A poem uses "close" where it could mean both near and shut. How do you handle it?',
+     steps:['Confirm both senses genuinely fit the syntax.',
+            'Ask what each reading implies about the speaker\u2019s situation.',
+            'Consider whether the poem elsewhere supports one sense more strongly.',
+            'Argue that the doubling is functional, not accidental.'],
+     a:'Answer: treat the ambiguity as deliberate and argue what the poem gains by holding both senses — intimacy and enclosure at once.'},
+ tip:'If a poem seems to say something obvious, reread it. On this exam, the obvious reading is usually the one the poem goes on to complicate.'}
+],
+cards:[
+ ['Sources of ambiguity','A double-meaning word, an unclear pronoun, or syntax permitting two parsings.'],
+ ['Unclear pronouns','Frequently deliberate; check every "it" and "she".'],
+ ['Irony in poetry','Distance between what is said and what is meant.'],
+ ['Understatement and hyperbole','Both distort scale to direct attention.'],
+ ['Tone shift','Mark where it happens and ask what caused it.'],
+ ['Poetry essay timing','About 10 minutes reading and planning, 28 writing.'],
+ ['Reading a poem twice','First for literal sense, second for analysis.'],
+ ['Responding to the prompt','The thesis must address the stated focus, not the poem in general.'],
+ ['Essay structure','Follow the poem\u2019s development rather than listing devices.']
+],
+quiz:[
+ {q:'A word in a poem carries two meanings that both fit the syntax. You should:',
+  c:['Choose the more common meaning','Argue that the poem exploits both','Ignore the ambiguity','Consult the dictionary definition only'],
+  a:1, why:'Deliberate doubling is a resource poets use, and analysing it is what the exam rewards.'},
+ {q:'On the poetry analysis essay, roughly how long should you spend before writing?',
+  c:['1 minute','10 minutes','20 minutes','None'],
+  a:1, why:'Two careful reads and a planned thesis prevent the aimless essays that time pressure produces.'},
+ {q:'The best essay structure for poetry analysis follows:',
+  c:['A list of devices','The poem\u2019s own development','Chronological order of publication','The rhyme scheme'],
+  a:1, why:'Tracing how the poem moves produces argument; listing devices produces a catalogue.'},
+ {q:'A poem appears to say something completely obvious. This usually means:',
+  c:['It is a simple poem','The poem will complicate that reading','You have misread it','The prompt is wrong'],
+  a:1, why:'Exam poems are selected for interpretive richness, so the surface reading is usually a setup.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Longer Fiction and Drama III: Exam Strategy',
+guide:[
+{h:'The whole exam',
+ intro:'You have three hours and a fixed set of tasks. Knowing exactly how the time and points are distributed removes most of the pressure.',
+ table:{head:['Section','Content','Time','Weight'],rows:[
+   ['I: Multiple choice','55 questions, 5 passages','60 min','45%'],
+   ['II: Free response','3 essays','120 min','55%'],
+   ['Essay 1','Poetry analysis','~40 min',''],
+   ['Essay 2','Prose fiction analysis','~40 min',''],
+   ['Essay 3','Literary argument','~40 min','']]},
+ points:[
+  'There is no penalty for a wrong answer. Answer every multiple-choice question.',
+  'The three essays are weighted equally, so never leave one unfinished to perfect another.',
+  'If you are short on time, write a clear thesis and one developed paragraph rather than an unfinished sprawl.',
+  'Essays are graded holistically on a 6-point rubric, not for length.',
+  'You may write the three essays in any order. Many students start with the literary argument because they know the work.'
+ ]},
+{h:'Writing under pressure',
+ points:[
+  'Spend the first five minutes planning. Unplanned essays drift and lose the thesis point.',
+  'Your <b>thesis</b> should appear early and make a claim someone could dispute.',
+  'Aim for three or four body paragraphs, each advancing the argument.',
+  'Handwriting is graded as written — no credit is lost for crossings out, so revise rather than recopy.',
+  'Do not write a formal conclusion if time is short. A strong final body paragraph beats a rushed summary.',
+  'The most common cause of a low score is <b>summary instead of analysis</b>. If a sentence tells what happened rather than what it means, cut it.'
+ ],
+ table:{head:['Score','What it looks like'],rows:[
+   ['1–2','Summary with little or no defensible claim'],
+   ['3','A claim with general evidence and thin commentary'],
+   ['4','A clear claim with specific evidence and adequate explanation'],
+   ['5–6','Sustained argument, well-chosen evidence, and engagement with complexity']]},
+ ex:{q:'You have 12 minutes left and have written only an introduction. What should you do?',
+     steps:['Do not attempt three paragraphs badly.',
+            'Choose your single strongest piece of evidence.',
+            'Write one fully developed paragraph connecting it to the thesis.',
+            'Add a second only if time genuinely allows.'],
+     a:'Answer: one developed paragraph earns more evidence-and-commentary credit than three undeveloped ones, because the rubric rewards depth of explanation.'},
+ tip:'Read all three prompts before starting. Knowing what is coming lets your mind work on the others while you write the first.'}
+],
+cards:[
+ ['Exam structure','55 multiple-choice questions in 60 minutes, then three essays in 120 minutes.'],
+ ['Section weighting','Multiple choice 45%, free response 55%.'],
+ ['Essay weighting','All three essays count equally.'],
+ ['Wrong-answer penalty','None; answer every question.'],
+ ['Time per essay','About 40 minutes each.'],
+ ['Planning time','Roughly five minutes before writing.'],
+ ['If time runs short','Write one developed paragraph rather than three thin ones.'],
+ ['Most common cause of low scores','Summary instead of analysis.'],
+ ['Score of 4 vs 6','A 4 explains adequately; a 6 sustains an argument and engages complexity.'],
+ ['Conclusions','Optional under time pressure; a strong body paragraph is worth more.']
+],
+quiz:[
+ {q:'With ten minutes left and no body paragraphs written, you should:',
+  c:['Write three brief paragraphs','Write one fully developed paragraph','Write a conclusion','Restate the thesis three ways'],
+  a:1, why:'Evidence and commentary points reward depth of explanation, which brief paragraphs cannot demonstrate.'},
+ {q:'The three free-response essays are weighted:',
+  c:['Poetry most heavily','The literary argument most heavily','Equally','Depending on length'],
+  a:2, why:'Each is scored out of 6 and contributes equally, so all three deserve equal time.'},
+ {q:'The most common reason AP Literature essays score below 4 is:',
+  c:['Poor handwriting','Summary rather than analysis','Essays that are too short','Too few quotations'],
+  a:1, why:'Retelling the text earns no credit for interpretation, which is the entire basis of the rubric.'},
+ {q:'On the multiple-choice section you should:',
+  c:['Leave hard questions blank','Answer every question','Skip poetry passages','Answer only what you are certain of'],
+  a:1, why:'There is no wrong-answer penalty, so a guess is strictly better than a blank.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
 /* ============================================================
    StudyBuddy app
    ============================================================ */
@@ -15372,88 +17117,42 @@ function sweepMath(root) {
 </script>
 <script>
 /* ============================================================
-   GUIDE DEPTH
-   "All units written" and "every unit has a full study guide"
-   are different things. This surfaces the second so a student
-   can see which courses are genuinely finished.
+   COURSE FILTERS
+   Two states only: courses that are ready to learn, and courses
+   that exist as a College Board outline for you to build from.
    ============================================================ */
-function guideDepth(c) {
-  const units = c.units || [];
-  if (!units.length) return 0;
-  const rich = units.filter(u =>
-    (u.guide || []).some(s => s.intro || s.table || s.ex || s.trap || s.tip)).length;
-  return rich / units.length;
-}
-function isFullyExpanded(c) { return !c.outlineOnly && guideDepth(c) === 1; }
+function isOutline(c) { return !!c.outlineOnly; }
 
-/* tiles show a marker when every unit has a full guide */
-const _tileDepth = courseTile;
-courseTile = function (c) {
-  const html = _tileDepth(c);
-  if (c.outlineOnly) return html;
-  const d = guideDepth(c);
-  if (d === 1) {
-    return html.replace('<div class="foot"',
-      '<div class="foot" style="color:var(--green)"><span title="Every unit has a full study guide with worked examples">◆ full guides</span><span>·</span')
-      .replace('<div class="foot" style="color:var(--green)"><span title="Every unit has a full study guide with worked examples">◆ full guides</span><span>·</span style="margin-top:8px">',
-               '<div class="foot" style="color:var(--green);margin-top:8px"><span title="Every unit has a full study guide with worked examples">◆ full guides</span><span>·</span>');
-  }
-  if (d > 0) {
-    return html.replace(/<span>(all \d+ units|\d+ of \d+ units)<\/span>/,
-      `<span>$1</span><span>·</span><span>${Math.round(d * 100)}% full guides</span>`);
-  }
-  return html;
-};
-
-/* a third filter so the finished courses can be seen on their own */
-const _vCoursesDepth = vCourses;
 vCourses = function () {
-  const html = _vCoursesDepth();
+  let filter = store.get('sb.filter', 'ready');
+  if (filter !== 'build') filter = 'ready';
   const all = COURSES.concat(customCourses());
-  const full = all.filter(isFullyExpanded).length;
-  const filter = store.get('sb.filter', 'ready');
-  const chip = `<button class="chip ${filter === 'full' ? 'on' : ''}" onclick="setFilter('full')">Full study guides (${full})</button>`;
-  return html.replace(/(<button class="chip[^>]*onclick="setFilter\('all'\)">[^<]*<\/button>)/, '$1' + chip);
-};
+  const ready = all.filter(c => !isOutline(c));
+  const build = all.filter(isOutline);
+  const shown = filter === 'build' ? build : ready;
 
-/* honour the new filter when rendering the groups */
-const _renderCourses = vCourses;
-vCourses = function () {
-  const filter = store.get('sb.filter', 'ready');
-  if (filter !== 'full') return _renderCourses();
-  const all = COURSES.concat(customCourses());
-  const shown = all.filter(isFullyExpanded);
-  const written = all.filter(c => !c.outlineOnly).length;
+  const intro = filter === 'build'
+    ? `These ${build.length} courses are not written yet. Each one lists its real College Board units, and every unit has a <b>Build it</b> button that opens the tutor ready to turn your own class notes into a deck and a quiz.`
+    : `${ready.length} courses with full study guides, flashcards, quizzes, timed practice, and spaced repetition. Everything here is ready to open and start.`;
+
   return topbar() + `
   <div class="page-head fade">
     <span class="eyebrow">Library · ${all.length} courses</span>
     <h1>Courses</h1>
-    <p>These ${shown.length} courses are finished end to end: every College Board unit written, and every study guide expanded with worked examples, reference tables, and the traps that cost points.</p>
+    <p>${intro}</p>
   </div>
   <div class="row" style="margin-bottom:18px">
-    <button class="chip" onclick="setFilter('ready')">Ready to study (${written})</button>
-    <button class="chip" onclick="setFilter('all')">Every course (${all.length})</button>
-    <button class="chip on" onclick="setFilter('full')">Full study guides (${shown.length})</button>
+    <button class="chip ${filter === 'ready' ? 'on' : ''}" onclick="setFilter('ready')">Ready to learn (${ready.length})</button>
+    <button class="chip ${filter === 'build' ? 'on' : ''}" onclick="setFilter('build')">Build your own (${build.length})</button>
   </div>
   ${GROUP_ORDER.map(g => {
     const list = shown.filter(c => c.group === g);
     if (!list.length) return '';
     return `<span class="eyebrow" style="margin-top:22px">${esc(g)}</span><div class="grid g3" style="margin-bottom:8px">${list.map(courseTile).join('')}</div>`;
-  }).join('')}`;
-};
-
-/* the course page says so too */
-const _vCourseDepth = vCourse;
-vCourse = function (cid) {
-  const c = findCourse(cid);
-  const html = _vCourseDepth(cid);
-  if (!c || c.outlineOnly || guideDepth(c) !== 1) return html;
-  return html.replace('</div>\n  ${masterReviewCard', '</div>\n  ${masterReviewCard')
-    .replace(/(<p>[^<]*<\/p>\s*)(\s*<div class="note")/, '$1$2')
-    .replace('</div>\n  <div class="grid g2">',
-      `<div class="note" style="margin-top:14px;max-width:64ch;border-color:var(--green)"><b>This course is complete.</b> Every unit has a full study guide with worked examples, reference tables, and flagged traps, plus flashcards and a quiz bank.</div>
-  </div>
-  <div class="grid g2">`);
+  }).join('')}
+  ${filter === 'build' ? `<div class="note" style="margin-top:20px;max-width:66ch">
+    <b>How this works.</b> Open any course, pick a unit, and press <b>Build it</b>. Paste your class notes, the textbook section, or your teacher\u2019s slides, and StudyBuddy turns them into flashcards and a quiz you can save alongside the finished courses. With a Claude API key in Settings, it can also draft the unit for you.
+  </div>` : ''}`;
 };
 </script>
 <script>

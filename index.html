@@ -5280,7 +5280,7 @@ quiz:[
   a:1, why:'Knowing A occurred guarantees B did not, which is maximal dependence.'},
  {q:'For 20 free throws with p = 0.8, the expected number made is:',
   c:['4','8','16','20'],
-  a:2, why:'μ = np = 20 × 0.8 = 16.'}
+  a:2, why:'For a binomial setting the mean is μ = np, so 20 × 0.8 = 16 free throws made on average.'}
 ]
 },
 {
@@ -5412,7 +5412,7 @@ quiz:[
   a:2, why:'The interval contains 0, so a difference of zero remains plausible.'},
  {q:'Degrees of freedom for a one-sample t procedure with n = 25 is:',
   c:['24','25','26','5'],
-  a:0, why:'df = n − 1 = 24.'}
+  a:0, why:'A one-sample t procedure uses df = n − 1, because estimating the mean from the data costs one degree of freedom.'}
 ]
 },
 {
@@ -5447,7 +5447,7 @@ cards:[
 quiz:[
  {q:'A 3 × 4 two-way table has how many degrees of freedom?',
   c:['3','6','7','12'],
-  a:1, why:'(3 − 1)(4 − 1) = 6.'},
+  a:1, why:'For a two-way table df = (rows − 1)(columns − 1), so (3 − 1)(4 − 1) = 6.'},
  {q:'The chi-square condition requires that:',
   c:['All observed counts are at least 5','All expected counts are at least 5','The sample size exceeds 30','The data are normally distributed'],
   a:1, why:'The approximation depends on expected counts; small observed counts are acceptable.'},
@@ -5849,7 +5849,7 @@ cards:[
 quiz:[
  {q:'How many distinct values can 6 bits represent?',
   c:['12','32','64','128'],
-  a:2, why:'2⁶ = 64.'},
+  a:2, why:'Each bit doubles the number of representable values, so n bits give 2ⁿ. Here 2⁶ = 64.'},
  {q:'Which compression type should be used for a program\u2019s source code?',
   c:['Lossy, for smaller files','Lossless, because every character matters','Either works equally well','Neither; code cannot be compressed'],
   a:1, why:'Discarding any character would break the code, so nothing can be lost.'},
@@ -5896,7 +5896,7 @@ cards:[
 quiz:[
  {q:'A task takes 90 seconds sequentially and 30 seconds in parallel. The speedup is:',
   c:['3','30','60','120'],
-  a:0, why:'Speedup = 90 ÷ 30 = 3.'},
+  a:0, why:'Speedup is sequential time divided by parallel time, so 90 ÷ 30 = 3. It falls short of the processor count because part of the task stays sequential.'},
  {q:'DNS is responsible for:',
   c:['Encrypting web traffic','Translating domain names into IP addresses','Splitting data into packets','Compressing images'],
   a:1, why:'Without DNS you would have to type numeric IP addresses for every site.'},
@@ -11782,7 +11782,7 @@ quiz:[
   a:2, why:'Period is 2π ÷ b = 2π ÷ 4 = π/2.'},
  {q:'135° in radians is:',
   c:['3π/4','2π/3','5π/6','4π/3'],
-  a:0, why:'135 × π/180 = 3π/4.'},
+  a:0, why:'Multiply degrees by π/180 to convert: 135 × π/180 = 3π/4 radians.'},
  {q:'A sinusoid oscillates between 5 and −1. Its midline and amplitude are:',
   c:['y = 2, amplitude 3','y = 3, amplitude 2','y = 2, amplitude 6','y = 0, amplitude 5'],
   a:0, why:'Midline is the average, 2. Amplitude is half the range, 3.'},
@@ -11836,7 +11836,7 @@ quiz:[
   a:1, why:'A zero determinant means no inverse exists, so a unique solution is impossible.'},
  {q:'The magnitude of @@\\langle 3, 4 \\rangle@@ is:',
   c:['5','7','12','25'],
-  a:0, why:'@@\\sqrt{9+16} = 5@@.'},
+  a:0, why:'Vector magnitude is @@\\sqrt{a^{2}+b^{2}}@@, so @@\\sqrt{9+16} = 5@@.'},
  {q:'Matrix multiplication differs from ordinary multiplication because it is:',
   c:['Not associative','Not commutative','Never defined','Always commutative'],
   a:1, why:'Order matters: AB and BA generally differ.'},
@@ -12776,7 +12776,7 @@ quiz:[
   a:1, why:'Constant volume means no displacement, so no work is done.'},
  {q:'A heat engine operating between 600 K and 300 K has maximum efficiency:',
   c:['25%','50%','75%','100%'],
-  a:1, why:'@@e = 1 - 300/600 = 0.5@@.'},
+  a:1, why:'Maximum efficiency is 1 − Tcold/Thot using absolute temperatures: @@1 - 300/600 = 0.5@@, or 50%. No real engine reaches even this ideal.'},
  {q:'Heat flows spontaneously from cold to hot. This violates:',
   c:['The first law','The second law','Conservation of momentum','Ohm\u2019s law'],
   a:1, why:'Energy would still be conserved, but entropy would decrease, which the second law forbids.'}
@@ -13239,7 +13239,7 @@ quiz:[
   a:1, why:'Terminal velocity means acceleration has fallen to zero, so drag exactly balances weight.'},
  {q:'For a rocket losing mass, the correct form of Newton\u2019s second law is:',
   c:['F = ma','@@F = \\frac{dp}{dt}@@','@@F = \\frac{mv^{2}}{r}@@','F = μN'],
-  a:1, why:'F = ma assumes constant mass; the momentum form handles changing mass.'},
+  a:1, why:'F = dp/dt is the general form. F = ma follows from it only when mass is constant, which fails for a rocket burning fuel.'},
  {q:'A block on a frictionless incline of angle θ accelerates at:',
   c:['g','g sin θ','g cos θ','g tan θ'],
   a:1, why:'Only the component of gravity along the surface drives the motion, independent of mass.'},
@@ -13467,7 +13467,7 @@ quiz:[
   a:1, why:'With L fixed and I reduced, ω must rise proportionally.'},
  {q:'Which quantity determines the winner of a rolling race?',
   c:['Mass','Radius','@@\\frac{I}{mR^{2}}@@','Height of the ramp'],
-  a:2, why:'Mass and radius cancel from the energy equation, leaving only this shape factor.'},
+  a:2, why:'Mass and radius cancel from the energy equation, leaving the dimensionless ratio I/(mR²). A smaller ratio means less energy diverted into rotation, so the object arrives first.'},
  {q:'Angular momentum is conserved when:',
   c:['No net external force acts','No net external torque acts','Kinetic energy is conserved','The object is symmetric'],
   a:1, why:'Torque is to rotation what force is to translation.'},
@@ -13763,7 +13763,7 @@ quiz:[
   a:1, why:'With no accumulated charge it opposes nothing, so current is at its maximum.'},
  {q:'After one time constant, a charging capacitor has reached about:',
   c:['37% of final charge','50%','63%','100%'],
-  a:2, why:'@@1 - e^{-1} \\approx 0.63@@.'},
+  a:2, why:'After one time constant the capacitor reaches @@1 - e^{-1}@@ of its final charge, about 63%. Five time constants takes it past 99%.'},
  {q:'A battery\u2019s terminal voltage drops as current increases because of:',
   c:['Wire resistance only','Internal resistance','Capacitance','Inductance'],
   a:1, why:'@@V = \\varepsilon - Ir@@, so larger current means a larger internal drop.'},
@@ -15333,7 +15333,7 @@ cards:[
 quiz:[
  {q:'The clearest sign of synthesis rather than summary is that the paper is organised by:',
   c:['Source','Idea','Date','Author surname'],
-  a:1, why:'Organising by claim forces sources into conversation; organising by source produces a list.'},
+  a:1, why:'Organising by idea forces sources into conversation on each claim. Organising by source produces one paragraph per author, which is a summary.'},
  {q:'Paraphrasing a source\u2019s idea without citing it is:',
   c:['Acceptable if reworded','Plagiarism','Acceptable if the source is well known','Only an issue for direct quotes'],
   a:1, why:'Attribution is owed to ideas, not merely to strings of words.'},
@@ -16770,6 +16770,7 @@ function render() {
   else if (parts[0] === 'exam') html = vMasterReview(parts[1]);
   else if (parts[0] === 'stats') html = vStats();
   else if (parts[0] === 'tests') html = vTests();
+  else if (parts[0] === 'examtest') html = vExamTest(parts[1]);
   else if (parts[0] === 'tutor') html = vTutor();
   else if (parts[0] === 'settings') html = vSettings();
   else html = notFound();
@@ -18787,6 +18788,741 @@ vDashboard = function () {
     </a>
   </div>`;
 };
+</script>
+<script>
+/* ============================================================
+   FULL PRACTICE TESTS — SAT and ACT
+   Curated, deliberately difficult sets. Written as compact
+   tuples [question, choices, answerIndex, explanation] and
+   expanded at load into the standard question shape.
+   ============================================================ */
+function expandTest(rows, tag) {
+  return rows.map(r => ({ q: r[0], c: r[1], a: r[2], why: r[3], tag: tag }));
+}
+
+const EXAM_TESTS = { sat: [], act: [] };
+
+/* ------------------------------------------------ SAT TEST 1 */
+EXAM_TESTS.sat.push({ id:'sat-1', name:'SAT Practice Test 1', mins:32, level:'Hard', qs: expandTest([
+['The committee\u2019s findings were hardly ______: nearly every recommendation had appeared in some form in earlier reports.',
+ ['unprecedented','contentious','exhaustive','provisional'],0,
+ 'The colon signals that what follows explains the blank. Recommendations appearing in earlier reports means the findings were not new. "Contentious" and "provisional" are plausible-sounding but unsupported by the explanation.'],
+['Which choice most logically completes the text? Researchers assumed the coral\u2019s bleaching was driven by temperature alone. But reefs at identical temperatures bleached at sharply different rates, suggesting that temperature ______',
+ ['is irrelevant to bleaching','is not the sole determinant of bleaching','causes bleaching only in shallow water','has been measured inaccurately'],1,
+ 'Different rates at identical temperatures rules out temperature as the *only* factor, not as a factor. Choice A overstates; the text never says temperature is irrelevant.'],
+['The novelist\u2019s early work was praised for its restraint ______ her later novels were criticised as overwrought.',
+ [', however,','; however,','however,','and however,'],1,
+ 'Both halves are independent clauses and "however" is not a conjunction, so it needs a semicolon before and a comma after. A comma alone creates a splice.'],
+['A study found that students who took handwritten notes scored higher on conceptual questions than students who typed. Which finding, if true, would most WEAKEN the conclusion that handwriting improves conceptual understanding?',
+ ['Typists recorded more words per minute','Students who chose to handwrite had higher prior grades','The test included some factual recall questions','Handwriting was slower overall'],1,
+ 'A pre-existing difference between the groups offers an alternative explanation for the score gap. The others describe the method without undermining the causal claim.'],
+['The archaeologist argued that the settlement was abandoned gradually ______ the uniform layer of ash suggests a single catastrophic event.',
+ ['because','so','yet','therefore'],2,
+ 'Gradual abandonment and a single catastrophe conflict, so a contrast word is required. "Because" and "therefore" both assert agreement.'],
+['Text 1 argues that urban trees reduce summer temperatures measurably. Text 2 reports that the cooling effect vanishes once building density is controlled for. The author of Text 2 would most likely respond to Text 1 by:',
+ ['denying that cities are warm','suggesting the observed cooling may reflect where trees are planted rather than the trees themselves','arguing that trees raise temperatures','claiming the measurements were fabricated'],1,
+ 'Text 2 accepts the correlation and disputes the causal interpretation, proposing a confounding variable. Answers that reject the data outright are too strong.'],
+['The researcher\u2019s methods, which drew on both archival records and oral testimony ______ widely imitated in the decade that followed.',
+ ['was','were','has been','being'],1,
+ 'The subject is "methods," which is plural. The intervening clause about records and testimony is not the subject.'],
+['Which choice best states the main idea? The passage describes a species of fig wasp that can pollinate only one fig species, and a fig species pollinated only by that wasp. Neither survives without the other, and both have persisted for millions of years.',
+ ['Fig wasps are unusual insects','Mutual dependence, though risky, has proven durable in this pairing','Figs cannot reproduce','Specialisation always leads to extinction'],1,
+ 'The main idea must cover both the dependence and its persistence. Choice D contradicts the passage; A and C are too narrow or false.'],
+['To emphasise a difference between the two alloys, which sentence best uses these notes: both used in aviation; alloy A melts at 660°C; alloy B melts at 1668°C; both discovered in the 20th century?',
+ ['Both alloys are used in aviation.','Alloy A melts at 660°C, while alloy B melts at 1668°C.','Both alloys were discovered in the 20th century.','Alloy A and alloy B are both metals.'],1,
+ 'The goal is difference, so shared traits fail regardless of accuracy. Only the melting points are directly contrasted.'],
+['Having reviewed the evidence for three months ______',
+ ['the verdict surprised no one','the jury returned a verdict within an hour','it was time for a verdict','a verdict was reached quickly'],1,
+ 'The opening phrase must modify whoever reviewed the evidence. A verdict cannot review evidence; the jury can.'],
+['If 3x + 2y = 18 and x − y = 1, what is the value of x + y?',
+ ['4','5','7','9'],2,
+ 'From the second equation x = y + 1. Substituting: 3(y+1) + 2y = 18, so 5y = 15 and y = 3, x = 4. Then x + y = 7. Answering 4 gives x alone.'],
+['For what value of k does the system 2x + ky = 5 and 6x + 12y = 9 have no solution?',
+ ['2','4','6','12'],1,
+ 'No solution means parallel lines, so 2/6 = k/12, giving k = 4. Check the constants differ: 5/9 ≠ 1/3, so it is genuinely inconsistent rather than identical.'],
+['The function f(x) = a(x − 3)² + k has a minimum value of −4 at x = 3 and passes through (5, 8). What is a?',
+ ['1','2','3','4'],2,
+ 'The vertex gives k = −4. Substituting (5, 8): 8 = a(2)² − 4, so 4a = 12 and a = 3.'],
+['A population of 8,000 decreases by 15% each year. Which expression gives the population after t years?',
+ ['8000(0.15)^t','8000(0.85)^t','8000(1.15)^t','8000 − 0.15t'],1,
+ 'A 15% decrease means retaining 85% each year, so the base is 0.85. Choice A would model retaining only 15%.'],
+['In the circle x² + y² − 10x + 6y = 2, what is the radius?',
+ ['4','6','8','36'],1,
+ 'Complete the square: (x−5)² + (y+3)² = 2 + 25 + 9 = 36, so the radius is 6. Answering 36 gives r² rather than r.'],
+['If f(x) = 2x − 1 and g(x) = x² + 3, what is f(g(2))?',
+ ['9','13','15','49'],1,
+ 'Work inside out: g(2) = 7, then f(7) = 13. Computing g(f(2)) instead gives 12, and squaring at the wrong stage gives 49.'],
+['A right triangle has legs of length x and x + 7, and hypotenuse 13. What is x?',
+ ['4','5','6','7'],1,
+ 'x² + (x+7)² = 169 gives 2x² + 14x − 120 = 0, so x² + 7x − 60 = 0 and (x+12)(x−5) = 0. Only x = 5 is positive.'],
+['The mean of five numbers is 12. If one number is removed, the mean of the remaining four is 13. What was the removed number?',
+ ['8','9','10','12'],0,
+ 'Original total is 60; remaining total is 52. The removed number is 8. Assuming it equals the mean is the trap.'],
+['If sin(x) = 0.6 and x is acute, what is cos(90° − x)?',
+ ['0.4','0.6','0.8','Cannot be determined'],1,
+ 'Sine and cosine of complementary angles are equal, so cos(90° − x) = sin(x) = 0.6. Answering 0.8 computes cos(x) instead.'],
+['A jacket is discounted 30%, then the sale price is discounted a further 20%. What single discount is equivalent?',
+ ['44%','46%','50%','56%'],0,
+ '0.70 × 0.80 = 0.56, so the customer pays 56% and the discount is 44%. Adding 30 + 20 = 50 is the trap.']
+], 'SAT 1') });
+
+/* ------------------------------------------------ SAT TEST 2 */
+EXAM_TESTS.sat.push({ id:'sat-2', name:'SAT Practice Test 2', mins:32, level:'Hard', qs: expandTest([
+['Far from being ______, the author\u2019s prose is dense with qualifications, each clause hedged against the last.',
+ ['ornate','laconic','archaic','deliberate'],1,
+ '"Far from being" reverses the blank. Dense, hedged prose is the opposite of laconic (terse). "Ornate" would agree rather than contrast.'],
+['Which most logically completes the text? Early theories held that the ruins were defensive. But the walls are low, unbroken by towers, and enclose no water source, indicating the structure was probably ______',
+ ['built hastily','not intended for defence','older than assumed','a religious site'],1,
+ 'The evidence rules out a defensive function but does not establish what it *was*. Choice D takes a second step the text does not support.'],
+['The report concluded that the drug reduced symptoms ______ it also noted that the trial lasted only six weeks.',
+ ['and','so','because','though'],3,
+ 'The second clause qualifies the first, which requires concession. "And" would present the limitation as a mere addition.'],
+['Neither the manager nor the assistants ______ aware of the discrepancy.',
+ ['was','were','is','has been'],1,
+ 'With "neither...nor," the verb agrees with the nearer subject, which is the plural "assistants."'],
+['A researcher claims that a plant\u2019s deep roots evolved in response to drought. Which finding would most SUPPORT this?',
+ ['The plant is found on three continents','Populations in drier regions have measurably deeper roots than the same species elsewhere','The plant flowers in spring','Deep roots occur in many unrelated species'],1,
+ 'Support must tie the trait to the specific pressure. Comparing populations of the same species across rainfall gradients does exactly that.'],
+['The scientist\u2019s conclusion, though widely cited ______ never independently replicated.',
+ ['was','has been','and was','it was'],0,
+ '"Though widely cited" is a nonessential phrase; the sentence needs its main verb. "Has been" would also require a comma structure that is not present.'],
+['A graph shows algae growth against nitrogen concentration, with the y-axis labelled "Growth (mg per litre, thousands)". A bar reaches 12. The growth is:',
+ ['12 mg/L','120 mg/L','1,200 mg/L','12,000 mg/L'],3,
+ 'The unit is thousands, so 12 means 12,000 mg per litre. Ignoring the axis unit is the most common quantitative error on the section.'],
+['Which choice best achieves the goal of introducing the study to readers unfamiliar with the topic?',
+ ['The 2019 replication used a within-subjects design with counterbalanced blocks.','A recent study asked whether the order in which people taste foods changes what they report enjoying.','Effect sizes exceeded d = 0.8 across all conditions.','The literature has long been contested.'],1,
+ 'An introduction for a non-specialist must state the question in plain terms. The others assume prior knowledge or supply detail without context.'],
+['Walking through the abandoned factory ______',
+ ['the machinery was rusted','rust covered everything','the researchers found the machinery intact','it was clear the roof had collapsed'],2,
+ 'Only people can walk. Machinery, rust, and "it" cannot perform the opening action.'],
+['The passage describes a policy as "ambitious but untested" and notes that similar programmes elsewhere produced mixed results. The author\u2019s attitude is best described as:',
+ ['enthusiastic endorsement','cautious scepticism','open hostility','complete indifference'],1,
+ 'Mixed signals point to a qualified attitude. Strong emotions are rarely the correct answer to attitude questions.'],
+['If 2^(x+3) = 32, what is the value of 2^x?',
+ ['2','4','8','16'],1,
+ '32 = 2⁵, so x + 3 = 5 and x = 2, making 2^x = 4. Answering 32 or 8 mishandles the exponent shift.'],
+['The line y = mx + 4 is perpendicular to the line through (1, 2) and (5, 10). What is m?',
+ ['2','−2','1/2','−1/2'],3,
+ 'The slope through the points is 8/4 = 2. The perpendicular slope is the negative reciprocal, −1/2.'],
+['A quadratic has roots at x = −2 and x = 5 and passes through (0, −20). What is its leading coefficient?',
+ ['1','2','−2','10'],1,
+ 'y = a(x+2)(x−5). At x = 0: a(2)(−5) = −20, so −10a = −20 and a = 2.'],
+['If x² − 6x + c = 0 has exactly one real solution, what is c?',
+ ['3','6','9','36'],2,
+ 'One solution means the discriminant is zero: 36 − 4c = 0, so c = 9. The expression becomes the perfect square (x−3)².'],
+['A cone and a cylinder have the same radius and height. The volume of the cone is what fraction of the cylinder\u2019s?',
+ ['1/2','1/3','2/3','1/4'],1,
+ 'Cone volume is (1/3)πr²h and cylinder volume is πr²h, so the ratio is exactly one third.'],
+['Data set A has standard deviation 4. Every value is increased by 10. The new standard deviation is:',
+ ['4','14','40','Cannot be determined'],0,
+ 'Adding a constant shifts the centre without changing the spread. Multiplying would scale it.'],
+['If f(x) = x² and g(x) = f(x − 3) + 2, the vertex of g is at:',
+ ['(3, 2)','(−3, 2)','(3, −2)','(−3, −2)'],0,
+ 'The sign inside the parentheses flips, giving a shift right by 3, and +2 shifts up. Reading (−3, 2) is the standard error.'],
+['A survey of 400 randomly selected students found 60% supported a policy, with a margin of error of 4%. Which is a valid conclusion?',
+ ['Exactly 60% of all students support it','Between 56% and 64% of all students plausibly support it','All students were surveyed','The result proves the policy is good'],1,
+ 'The margin of error defines a plausible range for the population, not an exact figure.'],
+['A car travels 60 km at 30 km/h and returns the same route at 60 km/h. What is the average speed for the whole trip?',
+ ['40 km/h','45 km/h','50 km/h','90 km/h'],0,
+ 'Total distance 120 km; time = 2 + 1 = 3 hours; average = 40 km/h. Averaging the two speeds to get 45 is the trap.'],
+['In triangle ABC, angle A = 90°, AB = 6, and AC = 8. What is the length of the altitude from A to BC?',
+ ['4.8','5','6.4','7'],0,
+ 'BC = 10 by Pythagoras. Area = (6)(8)/2 = 24, and also = (10)(h)/2, so h = 4.8.']
+], 'SAT 2') });
+
+/* ------------------------------------------------ SAT TEST 3 */
+EXAM_TESTS.sat.push({ id:'sat-3', name:'SAT Practice Test 3', mins:32, level:'Hard', qs: expandTest([
+['The senator\u2019s support was ______ at best: she endorsed the bill publicly while working to delay its passage.',
+ ['unequivocal','nominal','fervent','longstanding'],1,
+ 'Public endorsement paired with private obstruction is support in name only. The other choices all describe genuine support.'],
+['Which most logically completes the text? The fossil shows features of both groups. Rather than settling the debate, its discovery has ______',
+ ['confirmed the original classification','intensified disagreement about how the groups are defined','ended all further research','proven the fossil is a forgery'],1,
+ '"Rather than settling" signals the opposite of resolution. Intermediate features would naturally reopen definitional questions.'],
+['The findings were striking ______ the sample was small, the effect large, and the mechanism unclear.',
+ [':',';',',','and'],0,
+ 'A colon introduces the elaboration that follows a complete sentence. A semicolon would require an independent clause after it.'],
+['Each of the three proposals ______ merits that the committee found compelling.',
+ ['have','has','are having','were having'],1,
+ '"Each" is singular, so it takes a singular verb regardless of the plural phrase that follows.'],
+['Which finding, if true, would most WEAKEN the claim that a city\u2019s bike lanes caused cycling rates to rise?',
+ ['Cycling rose in the year the lanes opened','Neighbouring cities without new lanes saw identical increases','The lanes were well used','Cycling rose most among commuters'],1,
+ 'An identical rise where the intervention did not occur points to a common external cause rather than the lanes.'],
+['Text 1 claims that reading fiction improves empathy. Text 2 finds that people already high in empathy read more fiction. Text 2 most directly challenges Text 1\u2019s:',
+ ['data','direction of causation','sample size','terminology'],1,
+ 'Text 2 accepts the association but reverses which variable is the cause — the directionality problem.'],
+['To emphasise a similarity between the two authors, which sentence best uses these notes: A wrote in French; B wrote in Russian; both abandoned linear chronology; A died in 1922; B died in 1940?',
+ ['Author A wrote in French and author B in Russian.','Both authors abandoned linear chronology in their major works.','Author A died in 1922.','The authors wrote in different languages.'],1,
+ 'A similarity must name a shared feature. Language and death dates are differences or unrelated facts.'],
+['The theory, first proposed in 1912 and dismissed for decades ______ now central to the field.',
+ ['is','are','being','it is'],0,
+ 'The nonessential phrase is bracketed by commas; the sentence still needs its singular main verb for "theory."'],
+['A passage states that a policy "may, under certain conditions, reduce emissions." Which answer choice overstates it?',
+ ['The policy could reduce emissions in some circumstances','The policy will eliminate emissions','The policy has potential benefits','The effect depends on conditions'],1,
+ '"Will eliminate" replaces a hedged possibility with a certainty and an absolute — the classic extreme-language trap.'],
+['She spent the summer researching, drafting, and ______ her thesis.',
+ ['to revise','revised','revising','revision of'],2,
+ 'Parallel structure requires the third item to match the -ing form of the first two.'],
+['If (x + y)² = 49 and xy = 10, what is x² + y²?',
+ ['29','39','49','69'],0,
+ 'Expand: x² + 2xy + y² = 49, so x² + y² = 49 − 20 = 29.'],
+['A line passes through (2, 5) and is parallel to 4x − 2y = 7. What is its equation?',
+ ['y = 2x + 1','y = 2x − 1','y = −2x + 9','y = (1/2)x + 4'],0,
+ 'Rearranging gives y = 2x − 3.5, so the slope is 2. Through (2,5): 5 = 4 + b, b = 1.'],
+['If g(x) = 3x − 7 and g(a) = 11, what is g(2a)?',
+ ['22','29','36','41'],1,
+ '3a − 7 = 11 gives a = 6, so g(12) = 36 − 7 = 29. Doubling the output to 22 is the trap.'],
+['The expression (x² − 9)/(x² + x − 12) simplifies to:',
+ ['(x−3)/(x−4)','(x+3)/(x+4)','(x−3)/(x+4)','(x+3)/(x−4)'],1,
+ 'Factor both: (x+3)(x−3) over (x+4)(x−3). The (x−3) cancels, leaving (x+3)/(x+4). Mis-factoring the denominator is the usual error here.'],
+['A sphere has volume 36π. What is its surface area?',
+ ['18π','27π','36π','48π'],2,
+ '(4/3)πr³ = 36π gives r³ = 27, so r = 3. Surface area = 4πr² = 36π.'],
+['If 5^(2x) = 125, what is x?',
+ ['1','1.5','2','3'],1,
+ '125 = 5³, so 2x = 3 and x = 1.5. Answering 3 forgets the coefficient on x.'],
+['A dataset is strongly skewed right. Which is true?',
+ ['Mean is less than median','Mean is greater than median','Mean equals median','The median is unreliable'],1,
+ 'A long right tail pulls the mean upward, away from the bulk of the data.'],
+['Two similar triangles have areas in the ratio 9:25. What is the ratio of their perimeters?',
+ ['9:25','3:5','81:625','18:50'],1,
+ 'Area scales with the square of the linear ratio, so the linear ratio is √9:√25 = 3:5.'],
+['If the probability of an event is 0.3, what is the probability it occurs at least once in three independent trials?',
+ ['0.9','0.657','0.343','0.027'],1,
+ 'P(never) = 0.7³ = 0.343, so P(at least once) = 1 − 0.343 = 0.657. Multiplying 0.3 by 3 is the trap.'],
+['In a right triangle, tan θ = 3/4. What is sin θ?',
+ ['3/4','3/5','4/5','5/3'],1,
+ 'Opposite 3, adjacent 4, so hypotenuse 5. sin θ = opposite over hypotenuse = 3/5.']
+], 'SAT 3') });
+
+/* ------------------------------------------------ SAT TEST 4 */
+EXAM_TESTS.sat.push({ id:'sat-4', name:'SAT Practice Test 4', mins:32, level:'Hard', qs: expandTest([
+['The critic\u2019s praise was ______ by a persistent worry that the novel\u2019s ending betrayed its premise.',
+ ['amplified','tempered','vindicated','echoed'],1,
+ 'A persistent worry restrains praise. "Amplified" and "echoed" would strengthen rather than qualify it.'],
+['Which most logically completes the text? The alloy resists corrosion in seawater but fails rapidly in acidic soil, suggesting its durability ______',
+ ['is unmatched','depends on the surrounding chemistry','has been overstated entirely','cannot be measured'],1,
+ 'Performing well in one environment and poorly in another points to conditional durability, not to a blanket judgement.'],
+['The manuscript was believed lost ______ a librarian found it misfiled in 1987.',
+ ['and','until','because','so'],1,
+ '"Until" marks the point at which the belief ended. "Because" reverses the causal order.'],
+['Which sentence correctly punctuates the nonessential element?',
+ ['The report which was leaked last week, caused a scandal.','The report, which was leaked last week caused a scandal.','The report, which was leaked last week, caused a scandal.','The report which was leaked last week caused, a scandal.'],2,
+ 'Nonessential clauses take commas on both sides or neither. One comma alone is always wrong.'],
+['A study finds that people who meditate report lower stress. Which additional finding would most strengthen a causal claim?',
+ ['Meditators are also more likely to exercise','Randomly assigned meditators showed larger stress reductions than a control group','Meditation has ancient origins','Stress is difficult to measure'],1,
+ 'Random assignment removes self-selection, which is the main obstacle to a causal conclusion.'],
+['The author notes that the policy "achieved its stated aim" but "at a cost its designers never anticipated." This suggests the author regards it as:',
+ ['an unqualified success','effective but with unforeseen consequences','a complete failure','irrelevant'],1,
+ 'Both clauses must be honoured. The author grants the success and flags the cost.'],
+['The results of the experiment, along with the earlier survey data ______ presented at the conference.',
+ ['was','were','has been','is'],1,
+ 'The subject is "results," which is plural. "Along with" does not make a compound subject.'],
+['Which choice best achieves the goal of explaining the method to a general audience?',
+ ['Participants completed a 2×3 factorial task with randomised block assignment.','Participants sorted photographs into groups while researchers timed how long each decision took.','Reaction latencies were log-transformed prior to analysis.','The design followed established convention.'],1,
+ 'A general audience needs plain description of what people actually did, not statistical vocabulary.'],
+['Exhausted by weeks of revision ______',
+ ['the exam felt easier than expected','her notes were finally organised','she slept for eleven hours','it was time to rest'],2,
+ 'The opening modifier describes a person. An exam, notes, and "it" cannot be exhausted by revision.'],
+['Two answer choices for a transition are "moreover" and "in addition." You can conclude:',
+ ['One must be correct','Both are wrong','The passage is flawed','Either may be chosen'],1,
+ 'They are interchangeable, so if either worked the question would have two answers. The relationship must be something else.'],
+['If a² − b² = 40 and a + b = 8, what is a − b?',
+ ['4','5','8','10'],1,
+ 'a² − b² = (a+b)(a−b), so 8(a−b) = 40 and a − b = 5.'],
+['The system y = x² and y = 4x − 3 has how many real solutions?',
+ ['0','1','2','Infinitely many'],2,
+ 'x² = 4x − 3 gives x² − 4x + 3 = 0, factoring to (x−1)(x−3). Two distinct real solutions.'],
+['A rectangle\u2019s length is increased by 20% and its width decreased by 20%. The area changes by:',
+ ['0%','−4%','+4%','−20%'],1,
+ '1.20 × 0.80 = 0.96, so the area falls by 4%. Assuming the changes cancel is the trap.'],
+['If log₂(x) = 5, what is log₂(8x)?',
+ ['8','13','40','15'],0,
+ 'log₂(8x) = log₂8 + log₂x = 3 + 5 = 8. Multiplying inside a logarithm adds outside it. Answering 40 multiplies 8 by 5 instead.'],
+['A circle centred at (3, −1) passes through (7, 2). What is its equation?',
+ ['(x−3)²+(y+1)²=25','(x+3)²+(y−1)²=25','(x−3)²+(y+1)²=5','(x−3)²+(y−1)²=25'],0,
+ 'Radius = √(4² + 3²) = 5, so r² = 25. Centre signs flip inside the parentheses.'],
+['The average of x, y, and z is 20. If x is doubled and y is halved, the new average becomes 22. What is 2x − y?',
+ ['6','12','18','24'],1,
+ 'The original sum is 60 and the new sum is 66, so the change is +6. That change equals x − y/2, so x − y/2 = 6. Multiplying through by 2 gives 2x − y = 12.'],
+['A bag has 4 red and 6 blue marbles. Two are drawn without replacement. What is the probability both are red?',
+ ['4/25','2/15','6/45','1/5'],1,
+ '(4/10)(3/9) = 12/90 = 2/15. Using replacement gives 4/25, which is the trap.'],
+['If f(x) = |x − 4|, for how many values of x does f(x) = 3?',
+ ['0','1','2','Infinitely many'],2,
+ 'x − 4 = 3 gives 7, and x − 4 = −3 gives 1. Absolute value equations produce two cases.'],
+['A survey uses a voluntary online poll. Its main weakness is:',
+ ['Small sample size','Self-selection bias that a larger sample cannot fix','Too many questions','Poor arithmetic'],1,
+ 'Increasing sample size reduces variability but never removes bias from the selection method.'],
+['A 30-60-90 triangle has hypotenuse 12. What is the length of the shorter leg?',
+ ['6','6√3','12√3','4'],0,
+ 'The sides are x, x√3, 2x. With 2x = 12, the shorter leg x = 6.']
+], 'SAT 4') });
+
+/* ------------------------------------------------ SAT TEST 5 */
+EXAM_TESTS.sat.push({ id:'sat-5', name:'SAT Practice Test 5', mins:32, level:'Hard', qs: expandTest([
+['The proposal was ______ rejected: not one committee member spoke in its favour.',
+ ['narrowly','tentatively','unanimously','provisionally'],2,
+ 'No member speaking in favour indicates complete agreement against it. "Narrowly" and "tentatively" contradict the evidence.'],
+['Which most logically completes the text? Although the treatment reduced tumour size in mice, mice metabolise the compound far faster than humans do, so the results ______',
+ ['guarantee success in humans','may not transfer directly to human patients','prove the compound is unsafe','show the treatment failed'],1,
+ 'A metabolic difference limits generalisation without establishing failure or danger.'],
+['The building, completed in 1908 and abandoned by 1931 ______ demolished last year.',
+ ['was','were','being','which was'],0,
+ 'The nonessential phrase sits between commas; the singular subject "building" needs its main verb.'],
+['A researcher claims that a new curriculum improved reading scores. Which finding would most WEAKEN this?',
+ ['Scores improved by 5 points','The school also hired six additional reading specialists that year','The curriculum was used for a full year','Teachers reported liking it'],1,
+ 'A simultaneous intervention offers a competing explanation for the improvement.'],
+['Text 1 argues that remote work reduces productivity. Text 2 finds output unchanged but collaboration measurably slower. Text 2 suggests Text 1\u2019s conclusion is:',
+ ['entirely correct','too broad, since one measure fell while another held','entirely wrong','impossible to evaluate'],1,
+ 'Partial disagreement is almost always the correct register in paired-text questions. Total agreement or rejection is rarely right.'],
+['The data suggest a correlation ______ the researchers were careful not to claim causation.',
+ ['so',', and',', but',': '],2,
+ 'Two independent clauses in contrast need a comma plus a coordinating conjunction expressing that contrast.'],
+['Which best states the function of a sentence noting that a competing study used a different measurement method?',
+ ['To summarise the passage','To qualify the comparison being drawn','To introduce a new topic','To restate the thesis'],1,
+ 'Flagging a methodological difference limits how far the comparison can be pushed — that is qualification.'],
+['To emphasise the scale of the migration, which sentence best uses these notes: began 1916; involved six million people; ended around 1970; affected Chicago, Detroit, New York?',
+ ['The migration began in 1916.','Roughly six million people left the South between 1916 and 1970.','Chicago was one destination.','The migration lasted many years.'],1,
+ 'Scale requires the magnitude and the span. Individual dates and cities do not convey it.'],
+['Neither of the two hypotheses ______ fully consistent with the observations.',
+ ['are','were','is','have been'],2,
+ '"Neither" is singular. The plural "hypotheses" belongs to the prepositional phrase, not the subject.'],
+['Which is a defensible interpretation, given a passage stating only that a species declined after a dam was built?',
+ ['The dam caused the decline','The decline coincided with the dam\u2019s construction','The species is now extinct','Dams always harm fish'],1,
+ 'The text supports timing, not causation, extinction, or a general rule.'],
+['If 4^(x) = 8^(x−1), what is x?',
+ ['1','2','3','4'],2,
+ 'Rewrite in base 2: 2^(2x) = 2^(3x−3), so 2x = 3x − 3 and x = 3.'],
+['The parabola y = x² + bx + 9 is tangent to the x-axis. What are the possible values of b?',
+ ['±3','±6','±9','±18'],1,
+ 'Tangency means one root, so b² − 36 = 0 and b = ±6.'],
+['A cylinder\u2019s radius is doubled and its height halved. Its volume:',
+ ['Stays the same','Doubles','Halves','Quadruples'],1,
+ 'V = πr²h. Doubling r multiplies by 4; halving h divides by 2. Net effect is ×2.'],
+['If the median of 3, 7, x, 15, 21 is 11, and the values are in order, what is x?',
+ ['9','10','11','12'],2,
+ 'With five ordered values the median is the third, so x = 11.'],
+['A line with slope −3 passes through (2, 7). Where does it cross the x-axis?',
+ ['(13/3, 0)','(11/3, 0)','(7/3, 0)','(3, 0)'],0,
+ 'y − 7 = −3(x − 2), so y = −3x + 13. Setting y = 0 gives x = 13/3.'],
+['Two events are mutually exclusive with P(A) = 0.3 and P(B) = 0.5. What is P(A and B)?',
+ ['0','0.15','0.2','0.8'],0,
+ 'Mutually exclusive means they cannot both occur, so the joint probability is exactly zero. Multiplying assumes independence, which is a different condition.'],
+['In a right triangle, the legs are 1 and √3. What is the smallest angle?',
+ ['15°','30°','45°','60°'],1,
+ 'This is a 30-60-90 triangle with hypotenuse 2. The smallest angle faces the shortest side, so it is 30°.'],
+['If f(x) = 2ˣ, what is f(x+2) − f(x) in terms of f(x)?',
+ ['2f(x)','3f(x)','4f(x)','f(x)'],1,
+ 'f(x+2) = 4·2ˣ, so the difference is 4f(x) − f(x) = 3f(x).'],
+['A study randomly samples adults nationwide but assigns no treatment. It can support:',
+ ['A causal claim only','Generalisation to the population but not causation','Neither','Both equally'],1,
+ 'Random selection permits generalisation; only random assignment permits causal claims.'],
+['The area between two concentric circles of radii 5 and 3 is:',
+ ['4π','8π','16π','34π'],2,
+ '25π − 9π = 16π. Subtracting radii first and squaring gives 4π, which is the trap.']
+], 'SAT 5') });
+
+/* ------------------------------------------------ ACT TESTS */
+EXAM_TESTS.act.push({ id:'act-1', name:'ACT Practice Test 1', mins:30, level:'Hard', qs: expandTest([
+['Choose the best version: "The results, which surprised the team ______ published in March."',
+ ['was','were','were,','being'],1,
+ 'The nonessential clause needs a closing comma, but among these only the plural verb is offered; "results" is plural so "were" is correct.'],
+['"The team worked ______ through the night to finish the prototype."',
+ ['continuously and without stopping','continuously','without any stopping at all','on and on continuously'],1,
+ 'The other options are redundant. ACT English consistently rewards the most concise grammatical choice.'],
+['"She had three goals ______ finish the draft, secure funding, and hire an editor."',
+ [',',';',':','—and'],2,
+ 'A complete sentence precedes the list, so a colon is correct. A comma would create a splice.'],
+['Which sentence best introduces a paragraph that goes on to describe three failed attempts at restoration?',
+ ['The building is old.','Restoring the mill has defeated three separate teams over forty years.','Mills were common in the region.','The roof was replaced in 1998.'],1,
+ 'An introduction must set up what actually follows. Only this option previews repeated failure.'],
+['"Having studied the migration patterns for a decade ______"',
+ ['the data revealed a clear trend','the conclusions were surprising','the biologist noticed an anomaly','it became obvious'],2,
+ 'The opening modifier requires a person who studied. Data, conclusions, and "it" cannot study.'],
+['Should the writer add: "The author\u2019s childhood home is now a museum"? The paragraph discusses her late writing style.',
+ ['Yes, because it adds interest','Yes, because it provides background','No, because it distracts from the paragraph\u2019s focus','No, because the information is false'],2,
+ 'Decide yes or no first, then match the reason. The sentence is true but irrelevant to writing style.'],
+['"Neither the director nor the producers ______ willing to comment."',
+ ['was','were','is','has been'],1,
+ 'With neither/nor the verb agrees with the nearer subject, the plural "producers."'],
+['If log₃(x) = 4, what is x?',
+ ['12','64','81','243'],2,
+ '3⁴ = 81. Multiplying 3 by 4 gives the trap answer.'],
+['What is the value of i⁴⁷?',
+ ['1','i','−1','−i'],3,
+ 'Powers of i cycle every four. 47 divided by 4 leaves remainder 3, and i³ = −i.'],
+['The first term of an arithmetic sequence is 7 and the tenth term is 43. What is the common difference?',
+ ['3','4','5','6'],1,
+ 'aₙ = a₁ + (n−1)d gives 43 = 7 + 9d, so d = 4.'],
+['A circle has equation x² + y² + 4x − 6y = 12. What is its centre?',
+ ['(4, −6)','(−2, 3)','(2, −3)','(−4, 6)'],1,
+ 'Completing the square gives (x+2)² + (y−3)² = 25, so the centre is (−2, 3) with signs flipped.'],
+['If sin θ = 5/13 and θ is in the first quadrant, what is tan θ?',
+ ['5/12','12/13','13/5','12/5'],0,
+ 'The adjacent side is 12 by Pythagoras, so tan θ = 5/12.'],
+['The matrix determinant of [[3, 4],[2, 5]] is:',
+ ['7','15','23','−7'],0,
+ 'ad − bc = 15 − 8 = 7.'],
+['A passage states that a policy "has produced some measurable gains, though not the transformation its advocates promised." The author\u2019s tone is best described as:',
+ ['enthusiastic','measured and qualified','hostile','indifferent'],1,
+ 'Granting partial success while noting the shortfall is a qualified assessment, and moderate tone answers are usually correct on the ACT.'],
+['An ACT Reading answer choice repeats a distinctive phrase from the passage word for word. This is:',
+ ['Strong evidence it is correct','A common wrong-answer design','Only relevant in science passages','Proof it is a detail question'],1,
+ 'Word-matching distractors reuse familiar language while shifting the meaning or context.'],
+['A Science passage graph shows two series on left and right y-axes with different units. The main risk is:',
+ ['The data are unreliable','Reading a value against the wrong axis','The trend must be linear','The units are identical'],1,
+ 'Dual-axis graphs are a standard trap; always confirm which axis each series belongs to.'],
+['A table shows enzyme activity rising from 10°C to 37°C and falling from 37°C to 60°C. The best description is:',
+ ['Activity increases with temperature','Activity decreases with temperature','Activity peaks near 37°C then declines','Temperature has no effect'],2,
+ 'A single-direction description ignores half the data. Naming the turning point is required.'],
+['In a Conflicting Viewpoints passage, two scientists agree on the observations but disagree on the mechanism. A question asks what both would accept. You should look for:',
+ ['The mechanism one proposes','The shared observational data','The stronger argument','The most recent theory'],1,
+ 'What both accept must be common ground, which here is the data rather than the interpretation.'],
+['On the Enhanced ACT, the Composite score is the average of:',
+ ['All four sections','English, Math, Reading, and Science','English, Math, and Reading','English and Math'],2,
+ 'Science became optional in the redesign and is now reported separately, outside the Composite.'],
+['A right triangle has hypotenuse 17 and one leg 8. The other leg is:',
+ ['9','13','15','16'],2,
+ '8-15-17 is a Pythagorean triple: 64 + 225 = 289.']
+], 'ACT 1') });
+
+EXAM_TESTS.act.push({ id:'act-2', name:'ACT Practice Test 2', mins:30, level:'Hard', qs: expandTest([
+['"The findings, published last week and widely reported ______ already been challenged."',
+ ['has','have','having','is'],1,
+ 'The subject "findings" is plural, so the auxiliary must be "have."'],
+['"He returned back to the office to retrieve the file he had forgotten."',
+ ['returned back','returned back again','returned','went back and returned'],2,
+ '"Returned" already contains the sense of going back; anything added is redundant.'],
+['"The experiment failed ______ the researchers learned a great deal from it."',
+ [', and',', but','; and','so'],1,
+ 'The two clauses contrast, so "but" is required. "And" would present them as consistent.'],
+['Which choice best concludes a paragraph arguing that the technology is promising but unproven?',
+ ['The technology will transform medicine.','Larger trials will determine whether the early results hold.','The technology is a failure.','Researchers are optimistic.'],1,
+ 'A conclusion must match the paragraph\u2019s qualified position. Both certainty and dismissal overshoot.'],
+['"Walking to the podium, the applause grew louder."',
+ ['the applause grew louder','the audience applauded louder','she heard the applause grow louder','it grew louder'],2,
+ 'Applause cannot walk. Only a person can perform the opening action.'],
+['"The committee\u2019s decision, though controversial ______ ultimately upheld on appeal."',
+ ['was','were','being','it was'],0,
+ 'Singular subject "decision" needs "was," and the nonessential phrase does not change that.'],
+['Where should this sentence be placed: "This approach, however, requires far more computing power."?',
+ ['Before the approach is described','Immediately after the approach is described','At the start of the essay','In the conclusion only'],1,
+ '"This approach" is a backward reference, so the approach must already have been introduced.'],
+['If 2ˣ ⋅ 8 = 64, what is x?',
+ ['2','3','4','6'],1,
+ '2ˣ = 8, so x = 3. Reading 64 as 2⁶ and answering 6 forgets the factor of 8.'],
+['What is the sum of the first 20 positive even integers?',
+ ['200','380','420','440'],2,
+ 'The sum is 2(1+2+...+20) = 2(210) = 420.'],
+['If f(x) = 3x² − 2x, what is f(−2)?',
+ ['8','16','−8','−16'],1,
+ '3(4) − 2(−2) = 12 + 4 = 16. Mishandling the sign on the second term gives 8.'],
+['A line perpendicular to 3x + 4y = 12 has slope:',
+ ['−3/4','3/4','4/3','−4/3'],2,
+ 'The given slope is −3/4, so the negative reciprocal is 4/3.'],
+['cos²θ + sin²θ − 1 equals:',
+ ['1','0','−1','2'],1,
+ 'The Pythagorean identity makes the first two terms sum to 1, so the expression is 0.'],
+['A jar has 3 red, 5 green, and 2 blue marbles. What is the probability of drawing green then blue without replacement?',
+ ['1/10','1/9','5/45','1/18'],1,
+ '(5/10)(2/9) = 10/90 = 1/9.'],
+['The volume of a cone is 100π and its radius is 5. What is its height?',
+ ['4','8','12','15'],2,
+ '(1/3)π(25)h = 100π gives 25h = 300, so h = 12.'],
+['An ACT Reading question asks what can "reasonably be inferred." The answer must be:',
+ ['Consistent with the passage','Directly supported by specific text','Something you already know','The most interesting choice'],1,
+ 'ACT inference is narrow. If you cannot point at supporting text, the choice is wrong.'],
+['A Science passage describes an experiment where only the light intensity was varied. A question asks what was controlled. You should look for:',
+ ['What changed between trials','What was deliberately held constant','The final result','The hypothesis'],1,
+ 'Controlled variables are those kept the same so the manipulated variable can be isolated.'],
+['A study finds that plants given fertiliser A grow taller than those given fertiliser B, but the A group also received more water. The conclusion is:',
+ ['Fertiliser A is better','Confounded, since water also differed','Fertiliser B is harmful','Statistically significant'],1,
+ 'Two variables changed together, so the effect cannot be attributed to either alone.'],
+['On the Enhanced ACT Math section, a blind guess is worth:',
+ ['20%','25%','33%','Nothing'],1,
+ 'Answer choices dropped from five to four, and there is no wrong-answer penalty.'],
+['A 45-45-90 triangle has hypotenuse 10√2. Each leg is:',
+ ['5','10','10√2','20'],1,
+ 'The sides are x, x, x√2. With x√2 = 10√2, each leg is 10.'],
+['If the average of four numbers is 15 and three of them are 10, 14, and 20, what is the fourth?',
+ ['14','16','18','20'],1,
+ 'The total must be 60, and 10 + 14 + 20 = 44, so the fourth is 16.']
+], 'ACT 2') });
+
+EXAM_TESTS.act.push({ id:'act-3', name:'ACT Practice Test 3', mins:30, level:'Hard', qs: expandTest([
+['"Each of the proposals ______ been reviewed by the board."',
+ ['have','has','were','are'],1,
+ '"Each" is singular regardless of the plural noun in the prepositional phrase.'],
+['"The reason the project failed is because the funding was withdrawn."',
+ ['is because','is that','is due to because','was because of'],1,
+ '"The reason...is because" is redundant. "The reason...is that" is correct.'],
+['"She was determined to finish the marathon ______ she had injured her knee at mile eight."',
+ ['because','even though','so that','therefore'],1,
+ 'Finishing despite an injury is a concession, requiring a contrast conjunction.'],
+['Should the writer delete the underlined sentence describing the town\u2019s annual festival, in a paragraph about its declining industry?',
+ ['No, it adds colour','No, it is factually accurate','Yes, it is not relevant to the paragraph\u2019s focus','Yes, it is untrue'],2,
+ 'Relevance to the paragraph decides, not accuracy or interest.'],
+['"The scientist ______ research transformed the field died in obscurity."',
+ ['who\u2019s','whose','whos','that\u2019s'],1,
+ 'The blank shows possession of the research, requiring "whose."'],
+['"Not only did the storm damage the roof ______ it also flooded the basement."',
+ [', and',', but','; but',', so'],1,
+ '"Not only...but also" is a fixed correlative pair.'],
+['Which best achieves the goal of emphasising how quickly the change occurred?',
+ ['The transition happened over some time.','Within eighteen months, every plant had converted.','The plants converted eventually.','Conversion was a process.'],1,
+ 'Only this option supplies a specific short timeframe, which is what "quickly" requires.'],
+['If 3^(x+2) = 27^x, what is x?',
+ ['1','2','3','4'],0,
+ 'Rewrite: 3^(x+2) = 3^(3x), so x + 2 = 3x and x = 1.'],
+['The distance between (−3, 4) and (5, −2) is:',
+ ['8','10','12','14'],1,
+ '√(8² + 6²) = √100 = 10.'],
+['If f(x) = x³ − 4x, what is f(2) + f(−2)?',
+ ['0','8','16','−16'],0,
+ 'f(2) = 0 and f(−2) = 0, so the sum is 0. This function is odd, so the values cancel.'],
+['A geometric sequence has first term 5 and third term 45. What is the common ratio if it is positive?',
+ ['3','5','9','15'],0,
+ 'ar² = 45 with a = 5 gives r² = 9, so r = 3.'],
+['What is the period of y = 3sin(2x − π)?',
+ ['π','2π','π/2','4π'],0,
+ 'Period is 2π divided by the coefficient of x, which is 2, giving π. The phase shift does not affect period.'],
+['The sum of the interior angles of a regular octagon is:',
+ ['720°','900°','1080°','1440°'],2,
+ '(n − 2)(180) = 6 × 180 = 1080°.'],
+['If the probability of rain is 0.4 each day, what is the probability of no rain on three consecutive days?',
+ ['0.064','0.216','0.6','0.4'],1,
+ '0.6³ = 0.216. Using 0.4³ answers the opposite question.'],
+['An ACT Reading passage set is paired. The most efficient strategy is:',
+ ['Read both then answer everything','Answer Passage A questions, then B, then comparisons','Answer comparisons first','Read only the shorter passage'],1,
+ 'Handling one text at a time avoids holding both in working memory simultaneously.'],
+['A Science figure shows solubility increasing with temperature for one salt and decreasing for another. A question asks which is more soluble at 60°C. You should:',
+ ['Assume the increasing one','Read both curves at 60°C and compare directly','Use the 20°C values','Average the two'],1,
+ 'Trends do not answer point questions; you must read the specific value.'],
+['In a Research Summaries passage, Experiment 2 differs from Experiment 1 only in pH. This means pH is the:',
+ ['Control variable','Independent variable','Dependent variable','Constant'],1,
+ 'The variable deliberately changed between experiments is the independent variable.'],
+['A student scores 32 English, 28 Math, 30 Reading, and 26 Science on the Enhanced ACT. The Composite is:',
+ ['29','30','28','31'],1,
+ 'Science is excluded, so the average of 32, 28, and 30 is 30.'],
+['If x varies inversely with y and x = 6 when y = 4, what is x when y = 12?',
+ ['2','3','8','18'],0,
+ 'xy = 24 is constant, so x = 24/12 = 2.'],
+['A cube\u2019s surface area is 150. What is its volume?',
+ ['64','100','125','216'],2,
+ '6s² = 150 gives s² = 25 and s = 5, so the volume is 125.']
+], 'ACT 3') });
+
+EXAM_TESTS.act.push({ id:'act-4', name:'ACT Practice Test 4', mins:30, level:'Hard', qs: expandTest([
+['"The data ______ inconclusive, so the team repeated the trial."',
+ ['was','were','is','has been'],1,
+ '"Data" is treated as plural in formal usage, which the ACT follows.'],
+['"At this point in time, the committee has yet to decide."',
+ ['At this point in time','At this time in point','Currently','In the current point of time'],2,
+ 'The original is wordy. "Currently" conveys the same meaning concisely.'],
+['"The archive contains letters, photographs ______ and several unpublished manuscripts."',
+ [',','',';',':'],0,
+ 'Items in a series are separated by commas; the sentence already uses that pattern.'],
+['Which sentence best transitions from a paragraph on causes to one on consequences?',
+ ['Additionally, the causes were complex.','These pressures produced effects that outlasted the crisis itself.','In conclusion, the causes were many.','For example, the first cause was economic.'],1,
+ 'A transition must look backward and forward. Only this option closes causes and opens consequences.'],
+['"To qualify for the grant, ______"',
+ ['the application must be submitted by June','applicants must submit by June','June is the deadline','submission is required by June'],1,
+ 'The infinitive phrase modifies whoever qualifies, which must be the applicants, not the application.'],
+['"The novel was praised by critics ______ ignored by readers."',
+ ['and','but','so','for'],1,
+ 'Praise and neglect contrast, requiring "but."'],
+['Which choice best supports a paragraph claiming the method is inexpensive?',
+ ['The method has been used since 1975.','Total equipment costs under $200 and requires no specialist training.','The method is well documented.','Researchers find the method interesting.'],1,
+ 'Support must address cost specifically. The others are true but do not establish inexpensiveness.'],
+['If 5ˣ = 3, what is 5^(2x)?',
+ ['6','9','15','25'],1,
+ '5^(2x) = (5ˣ)² = 9. Doubling to get 6 is the trap.'],
+['The midpoint of a segment is (2, −1) and one endpoint is (6, 3). What is the other endpoint?',
+ ['(−2, −5)','(4, 2)','(10, 7)','(−2, 5)'],0,
+ 'The midpoint is the average, so the other endpoint is (2×2 − 6, 2×(−1) − 3) = (−2, −5).'],
+['If a bag contains marbles in the ratio 2:3:5 and there are 40 marbles total, how many are in the largest group?',
+ ['8','12','20','25'],2,
+ 'The parts total 10, so each part is 4 and the largest group has 5 × 4 = 20.'],
+['What is the slope of a line parallel to the y-axis?',
+ ['0','1','Undefined','−1'],2,
+ 'A vertical line has no horizontal run, so its slope is undefined rather than zero.'],
+['If tan θ = 1 and 0 &lt; θ &lt; 90°, what is θ?',
+ ['30°','45°','60°','90°'],1,
+ 'Opposite equals adjacent only at 45° in the first quadrant.'],
+['The expression (x + 3)(x − 3)(x² + 9) simplifies to:',
+ ['x⁴ − 81','x⁴ + 81','x⁴ − 18x² + 81','x⁴ − 9'],0,
+ 'The first two give x² − 9, and (x² − 9)(x² + 9) = x⁴ − 81.'],
+['A rectangle has perimeter 36 and area 72. What are its dimensions?',
+ ['6 and 12','8 and 10','4 and 18','9 and 8'],0,
+ 'l + w = 18 and lw = 72. Solving gives 6 and 12.'],
+['On ACT Reading, an answer using the word "always" is:',
+ ['Usually correct','Usually an overstatement to check carefully','Always correct','Irrelevant'],1,
+ 'Absolute language rarely matches the qualified claims passages actually make.'],
+['A Science passage presents two hypotheses about a fossil. A question asks which evidence would support Scientist 2 only. You should:',
+ ['Find evidence both accept','Find evidence consistent with 2 but inconsistent with 1','Choose the newest evidence','Choose the longest option'],1,
+ 'Evidence supporting only one view must discriminate between them.'],
+['A graph shows a variable rising steeply then levelling off. This pattern is best described as:',
+ ['Linear','Approaching a maximum or saturation point','Exponential without limit','Decreasing'],1,
+ 'Levelling off indicates a limiting factor, which is a saturation curve.'],
+['On the Enhanced ACT, the Reading section allows roughly how long per passage set?',
+ ['6 minutes','8 minutes','10 minutes','15 minutes'],2,
+ '36 questions in 40 minutes across four sets gives about 10 minutes each.'],
+['If f(x) = 1/(x − 2), what value of x is excluded from the domain?',
+ ['0','1','2','−2'],2,
+ 'x = 2 makes the denominator zero, which is undefined.'],
+['A circle has circumference 12π. What is its area?',
+ ['12π','36π','72π','144π'],1,
+ '2πr = 12π gives r = 6, so the area is 36π.']
+], 'ACT 4') });
+
+EXAM_TESTS.act.push({ id:'act-5', name:'ACT Practice Test 5', mins:30, level:'Hard', qs: expandTest([
+['"The collection of rare manuscripts ______ housed in a climate-controlled vault."',
+ ['are','is','were','have been'],1,
+ 'The subject is "collection," which is singular; "of rare manuscripts" is a prepositional phrase.'],
+['"She is a writer who is talented and who has skill."',
+ ['who is talented and who has skill','talented and skillful','who is talented','of talent and skill both'],2,
+ 'Talent and skill are redundant here, and the shortest grammatical option is preferred.'],
+['"The storm knocked out power for three days ______ residents relied on generators."',
+ [', so',', because','; because',', and so'],0,
+ 'The outage caused the reliance, so a result conjunction is needed.'],
+['Which best introduces a paragraph describing an unexpected experimental result?',
+ ['The experiment was conducted carefully.','What the team found contradicted every prediction they had made.','The equipment was standard.','Experiments often produce data.'],1,
+ 'An introduction should preview the paragraph\u2019s actual content, which here is contradiction of expectations.'],
+['"Buried for two thousand years, ______"',
+ ['archaeologists found the mosaic intact','the mosaic survived remarkably well','it was in good condition','the excavation revealed much'],1,
+ 'The mosaic was buried, not the archaeologists. The modifier must attach to the mosaic.'],
+['"The policy was intended to reduce congestion; ______, traffic volumes rose in the first year."',
+ ['therefore','however','moreover','similarly'],1,
+ 'The outcome contradicts the intention, requiring a contrast transition.'],
+['Which sentence should be deleted from a paragraph arguing the bridge is structurally unsound?',
+ ['Inspectors found corrosion on three support columns.','Load testing failed in 2021.','The bridge offers excellent views of the harbour.','Concrete samples showed significant degradation.'],2,
+ 'Scenic quality is irrelevant to structural soundness, however true it may be.'],
+['If 2ˣ⁺¹ = 3, what is 2^(2x)?',
+ ['9/4','3/2','9','4/9'],0,
+ '2ˣ = 3/2, so 2^(2x) = (3/2)² = 9/4.'],
+['The line through (1, 4) and (3, k) has slope 3. What is k?',
+ ['7','10','6','9'],1,
+ '(k − 4)/(3 − 1) = 3 gives k − 4 = 6, so k = 10.'],
+['What is the 15th term of an arithmetic sequence with first term −3 and common difference 4?',
+ ['53','57','49','60'],0,
+ 'a₁₅ = −3 + 14(4) = −3 + 56 = 53.'],
+['If a triangle has sides 7, 24, and 25, it is:',
+ ['Acute','Right','Obtuse','Impossible'],1,
+ '49 + 576 = 625, so it satisfies the Pythagorean theorem exactly.'],
+['The solution set of |2x − 5| &lt; 3 is:',
+ ['x &lt; 4','1 &lt; x &lt; 4','x &gt; 1','x &lt; 1 or x &gt; 4'],1,
+ 'Rewrite as −3 &lt; 2x − 5 &lt; 3, giving 2 &lt; 2x &lt; 8 and 1 &lt; x &lt; 4.'],
+['If log(x) + log(4) = log(20), what is x?',
+ ['5','16','24','80'],0,
+ 'Combining gives log(4x) = log(20), so 4x = 20 and x = 5.'],
+['A regular hexagon has side length 4. What is its perimeter?',
+ ['16','20','24','28'],2,
+ 'Six equal sides of 4 give a perimeter of 24.'],
+['A Conflicting Viewpoints passage should generally be attempted:',
+ ['First, while fresh','Last, since it takes the most reading time per point','Second','It should be skipped'],1,
+ 'It is the most text-heavy passage type, so it costs the most time per question.'],
+['A Science question gives no figure reference and no line number. It is most likely:',
+ ['A misprint','One of the few outside-knowledge questions','A trend question','About Conflicting Viewpoints'],1,
+ 'Questions with no data reference test the small set of assumed prior science knowledge.'],
+['A table lists mass in grams in one column and milligrams in another. The main risk is:',
+ ['The data are wrong','Comparing values without converting units','Too many rows','Missing headers'],1,
+ 'Unit switches between columns are a deliberate ACT Science trap.'],
+['On the Enhanced ACT, English allows roughly how long per question?',
+ ['30 seconds','42 seconds','60 seconds','90 seconds'],1,
+ '50 questions in 35 minutes gives about 42 seconds each.'],
+['If f(x) = 2x + 1 and f(g(x)) = 4x + 7, what is g(x)?',
+ ['2x + 3','2x + 6','4x + 6','x + 3'],0,
+ '2g(x) + 1 = 4x + 7 gives 2g(x) = 4x + 6, so g(x) = 2x + 3.'],
+['The average of five consecutive integers is 22. What is the largest?',
+ ['22','23','24','26'],2,
+ 'For consecutive integers the average is the middle value, so they are 20 to 24.']
+], 'ACT 5') });
+
+/* ------------------------------------------ practice test UI */
+function examTestCards(kind) {
+  const list = EXAM_TESTS[kind] || [];
+  const label = kind === 'sat' ? 'SAT' : 'ACT';
+  return list.map(t => {
+    const done = store.get('sb.exam.' + t.id, null);
+    return `<a class="card" href="#/examtest/${t.id}" style="text-decoration:none;color:inherit;display:block">
+      <div class="spread">
+        <div>
+          <span class="eyebrow">${label} · ${t.level}</span>
+          <h3 style="margin-bottom:3px">${esc(t.name)}</h3>
+          <p style="color:var(--ink-soft);font-size:.86rem;margin:0">${t.qs.length} questions · ${t.mins} minutes</p>
+        </div>
+        <span class="btn ${done ? 'ghost' : 'mark'} sm">${done ? `Retake · best ${done}%` : 'Start'}</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+const _vTestsExam = vTests;
+vTests = function () {
+  const base = _vTestsExam();
+  const block = `
+  <span class="eyebrow" style="margin-top:26px">Full practice tests</span>
+  <p style="color:var(--ink-soft);font-size:.9rem;max-width:62ch;margin:0 0 14px">
+    Ten curated tests written to sit at the hard end of what each exam asks. Every question has a worked explanation, and wrong answers go to your mistake book.
+  </p>
+  <span class="eyebrow">SAT</span>
+  <div class="grid g2" style="margin-bottom:18px">${examTestCards('sat')}</div>
+  <span class="eyebrow">ACT</span>
+  <div class="grid g2" style="margin-bottom:10px">${examTestCards('act')}</div>`;
+  return base + block;
+};
+
+function findExamTest(id) {
+  return EXAM_TESTS.sat.concat(EXAM_TESTS.act).find(t => t.id === id) || null;
+}
+function vExamTest(id) {
+  const t = findExamTest(id);
+  if (!t) return notFound();
+  const best = store.get('sb.exam.' + t.id, null);
+  return topbar() + `
+  <a class="crumb" href="#/tests">← Practice tests</a>
+  <div class="page-head fade">
+    <span class="eyebrow">${t.level} · timed</span>
+    <h1>${esc(t.name)}</h1>
+    <p>${t.qs.length} questions in ${t.mins} minutes. No feedback until the end, exactly like the real thing. Every explanation waits for you on the results screen.</p>
+  </div>
+  <div class="card" style="max-width:560px">
+    ${best !== null ? `<div class="note" style="margin-bottom:14px">Your best on this test so far: <b>${best}%</b></div>` : ''}
+    <div class="row" style="gap:26px;margin-bottom:16px">
+      <div class="stat"><b>${t.qs.length}</b><span>questions</span></div>
+      <div class="stat"><b>${t.mins}</b><span>minutes</span></div>
+      <div class="stat"><b>${Math.round(t.mins * 60 / t.qs.length)}s</b><span>per question</span></div>
+    </div>
+    <button class="btn mark" onclick="startExamTest('${t.id}')">Start the test</button>
+    <p style="color:var(--ink-faint);font-size:.8rem;margin:12px 0 0">The clock keeps running if you switch tabs. Answers lock in as you go.</p>
+  </div>`;
+}
+function startExamTest(id) {
+  const t = findExamTest(id);
+  if (!t) return;
+  /* mirrors startTest exactly so the timer, marks and results screen all work */
+  QZ = {
+    cid: null, uid: null, examId: t.id,
+    title: `${t.name} · ${t.mins} minutes`,
+    sub: t.name, qs: prepQuestions(t.qs), i: 0, right: 0, marks: [],
+    answered: false, test: true, timed: true,
+    endsAt: Date.now() + t.mins * 60000
+  };
+  view().innerHTML = topbar() + `<a class="crumb" href="#/tests">← Practice tests</a><div id="qwrap"></div>`;
+  paintQuiz();
+}
+
+/* record a best score for the exam tests */
+const _paintQuizResultExam = paintQuizResult;
+paintQuizResult = function () {
+  if (QZ && QZ.examId) {
+    const pct = Math.round((QZ.right / QZ.qs.length) * 100);
+    const k = 'sb.exam.' + QZ.examId;
+    store.set(k, Math.max(store.get(k, 0), pct));
+  }
+  return _paintQuizResultExam();
+};
+
 </script>
 <script>
 /* ============================================================

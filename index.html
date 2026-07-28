@@ -371,6 +371,15 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
 /* ============ RICH STUDY GUIDE BLOCKS ====================== */
+code{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.88em;
+  background:var(--canvas-2);border:1px solid var(--line);border-radius:4px;
+  padding:.08em .32em;white-space:nowrap;
+}
+.g-table code{font-size:.85em;white-space:normal}
+.g-ex code{background:var(--paper)}
+@media print{code{background:transparent;border-color:#ccc}}
+
 .g-intro{
   font-family:'Newsreader',Georgia,serif;font-size:1.1rem;line-height:1.68;
   color:var(--ink);margin:0 0 14px;max-width:68ch;
@@ -14458,6 +14467,1391 @@ quiz:[
 clearOutlineFlags();
 </script>
 <script>
+/* ------------------------------------ AP COMPUTER SCIENCE A */
+addUnits('ap-csa', [
+{
+id:'u1', title:'Unit 1 · Primitive Types',
+guide:[
+{h:'Types, variables, and arithmetic',
+ intro:'Java is statically typed: every variable declares what it holds, and the compiler enforces it. Most Unit 1 exam errors come from integer division and type mismatches rather than from anything conceptually hard.',
+ table:{head:['Type','Holds','Example'],rows:[
+   ['<code>int</code>','Whole numbers','<code>int age = 17;</code>'],
+   ['<code>double</code>','Decimal numbers','<code>double gpa = 3.85;</code>'],
+   ['<code>boolean</code>','true or false','<code>boolean passed = true;</code>'],
+   ['<code>char</code>','A single character','<code>char grade = \u2018A\u2019;</code>'],
+   ['<code>String</code>','Text (a class, not primitive)','<code>String name = "Ana";</code>']]},
+ points:[
+  '<b>Integer division truncates.</b> <code>7 / 2</code> is <code>3</code>, not 3.5. This is the single most common error in the course.',
+  'To get a decimal result, make one operand a double: <code>7 / 2.0</code> gives <code>3.5</code>.',
+  'The <b>modulus</b> operator <code>%</code> gives the remainder. <code>7 % 2</code> is <code>1</code>.',
+  '<code>%</code> is how you test divisibility: <code>n % 2 == 0</code> means n is even.',
+  'Operator precedence: <code>*</code>, <code>/</code>, <code>%</code> before <code>+</code> and <code>-</code>. Use parentheses when in doubt.',
+  'Compound assignment: <code>x += 3</code> means <code>x = x + 3</code>. <code>x++</code> adds one.'
+ ]},
+{h:'Casting and constants',
+ points:[
+  '<b>Widening</b> conversion happens automatically: an <code>int</code> becomes a <code>double</code> without a cast.',
+  '<b>Narrowing</b> requires an explicit cast and <b>truncates</b>: <code>(int) 3.9</code> gives <code>3</code>, never 4.',
+  'To round instead, add 0.5 before casting, or use <code>Math.round</code>.',
+  'A cast binds tightly: <code>(int) 5.9 / 2</code> casts 5.9 first, giving <code>5 / 2 = 2</code>.',
+  '<b>final</b> declares a constant that cannot be reassigned.',
+  'Integer overflow wraps around silently — Java does not warn you.'
+ ],
+ ex:{q:'What does <code>double avg = (3 + 4) / 2;</code> print?',
+     steps:['The expression on the right is evaluated first.',
+            'Both 3 and 4 are ints, so <code>7 / 2</code> is integer division.',
+            'That gives 3, not 3.5.',
+            'Assigning 3 to a double gives 3.0.'],
+     a:'Answer: 3.0. Declaring the variable as double does not fix the division — you must cast <i>inside</i> the expression: <code>(3 + 4) / 2.0</code>.'},
+ trap:'Assuming a <code>double</code> variable makes the arithmetic decimal. The type of the <i>operands</i> decides, not the type of the destination.'}
+],
+cards:[
+ ['Integer division','<code>7 / 2</code> is 3 — the decimal part is truncated, not rounded.'],
+ ['Getting a decimal result','Make at least one operand a double: <code>7 / 2.0</code>.'],
+ ['Modulus operator','<code>%</code> gives the remainder; <code>n % 2 == 0</code> tests for even.'],
+ ['Widening conversion','int to double happens automatically without a cast.'],
+ ['Narrowing conversion','double to int needs an explicit cast and truncates toward zero.'],
+ ['Casting precedence','A cast applies to the value immediately after it, before division.'],
+ ['final keyword','Declares a constant that cannot be reassigned.'],
+ ['Compound assignment','<code>x += 3</code> is shorthand for <code>x = x + 3</code>.'],
+ ['String type','A class, not a primitive, despite being used like one.']
+],
+quiz:[
+ {q:'What is the value of <code>17 / 5</code> in Java?',
+  c:['3.4','3','4','3.0'],
+  a:1, why:'Both operands are ints, so integer division truncates the result to 3.'},
+ {q:'What is <code>(int) 8.99</code>?',
+  c:['9','8','8.99','Error'],
+  a:1, why:'Casting a double to int truncates rather than rounds.'},
+ {q:'Which expression correctly tests whether <code>n</code> is odd?',
+  c:['<code>n / 2 == 1</code>','<code>n % 2 == 1</code>','<code>n % 2 == 0</code>','<code>n * 2 == 1</code>'],
+  a:1, why:'An odd number leaves a remainder of 1 when divided by 2.'},
+ {q:'<code>double x = 5 / 2;</code> assigns what value to x?',
+  c:['2.5','2.0','2','Compile error'],
+  a:1, why:'The division happens first as integer division giving 2, which is then widened to 2.0.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Using Objects',
+guide:[
+{h:'Objects, references, and methods',
+ intro:'A primitive variable holds a value. An object variable holds a <i>reference</i> — the address of an object elsewhere in memory. Nearly every surprising behaviour in this course traces back to that distinction.',
+ points:[
+  '<code>new</code> creates an object and returns a reference to it.',
+  'Two references can point to the <b>same</b> object, so changing it through one changes it for both.',
+  '<code>null</code> means a reference points to nothing. Calling a method on it throws a <b>NullPointerException</b>.',
+  'Use <code>.equals()</code> to compare object <i>contents</i>. <code>==</code> compares whether two references point to the same object.',
+  'For Strings, <code>==</code> may appear to work because of interning, but <code>.equals()</code> is always correct.',
+  'A <b>void</b> method returns nothing; other methods return a value you can use or ignore.'
+ ]},
+{h:'Strings and the Math class',
+ table:{head:['Method','Returns'],rows:[
+   ['<code>s.length()</code>','Number of characters'],
+   ['<code>s.substring(a, b)</code>','Characters from a up to <i>but not including</i> b'],
+   ['<code>s.indexOf("x")</code>','First index of x, or −1 if absent'],
+   ['<code>s.equals(t)</code>','true if contents match'],
+   ['<code>s.compareTo(t)</code>','Negative, zero, or positive'],
+   ['<code>Math.abs(x)</code>','Absolute value'],
+   ['<code>Math.pow(a, b)</code>','a to the power b, as a double'],
+   ['<code>Math.random()</code>','A double from 0 up to but excluding 1']]},
+ points:[
+  '<b>Strings are immutable.</b> Methods return a new String; they never modify the original.',
+  '<code>s.toUpperCase();</code> on its own does nothing useful — you must assign the result.',
+  'String indices start at 0, so the last character is at <code>length() - 1</code>.',
+  '<code>substring(a, b)</code> excludes index b. <code>"hello".substring(1, 3)</code> gives <code>"el"</code>.',
+  'Random integer from a to b inclusive: <code>(int)(Math.random() * (b - a + 1)) + a</code>.'
+ ],
+ ex:{q:'What does this print? <code>String s = "cat"; s.toUpperCase(); System.out.println(s);</code>',
+     steps:['Strings are immutable.',
+            '<code>toUpperCase()</code> creates and returns a new String.',
+            'The return value is discarded because it is not assigned.',
+            's still refers to the original object.'],
+     a:'Answer: <code>cat</code>. To change it you need <code>s = s.toUpperCase();</code>'},
+ trap:'Calling a String method without storing the result. Immutability means the original is never altered in place.'}
+],
+cards:[
+ ['Object reference','A variable holding the address of an object, not the object itself.'],
+ ['new keyword','Creates an object and returns a reference to it.'],
+ ['null','A reference pointing to nothing; using it throws NullPointerException.'],
+ ['== vs .equals()','== compares references; .equals() compares contents.'],
+ ['String immutability','String methods return new Strings and never modify the original.'],
+ ['substring(a, b)','Returns characters from index a up to but not including b.'],
+ ['indexOf','Returns the first index of a substring, or −1 if it is absent.'],
+ ['Math.random()','Returns a double from 0 up to but excluding 1.'],
+ ['Random int from a to b','<code>(int)(Math.random() * (b - a + 1)) + a</code>'],
+ ['void method','Performs an action but returns no value.']
+],
+quiz:[
+ {q:'<code>"programming".substring(3, 7)</code> returns:',
+  c:['"gram"','"gramm"','"ogra"','"ramm"'],
+  a:0, why:'Indices 3, 4, 5, 6 are g, r, a, m. Index 7 is excluded.'},
+ {q:'Calling a method on a null reference causes:',
+  c:['The method to return null','A NullPointerException','A compile error','Nothing to happen'],
+  a:1, why:'There is no object to run the method on, so the program throws at runtime.'},
+ {q:'To compare whether two Strings contain the same characters you should use:',
+  c:['<code>==</code>','<code>.equals()</code>','<code>.compareTo() == 1</code>','<code>.length()</code>'],
+  a:1, why:'== tests whether both variables reference the same object, which is a different question.'},
+ {q:'Which generates a random integer from 1 to 6 inclusive?',
+  c:['<code>(int)(Math.random() * 6)</code>','<code>(int)(Math.random() * 6) + 1</code>','<code>(int)(Math.random() * 7)</code>','<code>Math.random() * 6 + 1</code>'],
+  a:1, why:'Math.random() * 6 gives 0 up to 5.999, truncating to 0–5, so adding 1 shifts it to 1–6.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · Boolean Expressions and if Statements',
+guide:[
+{h:'Conditionals and logic',
+ intro:'Unit 3 is short but underpins everything after it. Nearly all of its exam difficulty comes from two places: short-circuit evaluation, and recognising when two boolean expressions are equivalent.',
+ points:[
+  'Relational operators: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>.',
+  '<code>=</code> assigns; <code>==</code> compares. Confusing them is a classic bug.',
+  'Logical operators: <code>&amp;&amp;</code> (and), <code>||</code> (or), <code>!</code> (not).',
+  '<b>Short-circuit evaluation</b>: with <code>&amp;&amp;</code>, if the left side is false Java never evaluates the right. This is what makes <code>if (s != null &amp;&amp; s.length() &gt; 0)</code> safe.',
+  '<code>else if</code> chains stop at the first true condition, so order matters.',
+  'A condition placed after a broader one that already covers it is unreachable.'
+ ],
+ table:{head:['De Morgan\u2019s law','Equivalent to'],rows:[
+   ['<code>!(a &amp;&amp; b)</code>','<code>!a || !b</code>'],
+   ['<code>!(a || b)</code>','<code>!a &amp;&amp; !b</code>'],
+   ['<code>!(x &gt; 5)</code>','<code>x &lt;= 5</code>']]}},
+{h:'Common patterns and errors',
+ points:[
+  'A method returning boolean should return the condition directly: <code>return x &gt; 0;</code> not <code>if (x &gt; 0) return true; else return false;</code>',
+  'Comparing doubles with <code>==</code> is unreliable because of rounding. Test whether the difference is small instead.',
+  '<b>Equivalent boolean expressions</b> are frequently tested. Build a truth table if unsure.',
+  'Nested <code>if</code> statements can usually be flattened with <code>&amp;&amp;</code>.',
+  'Every path through a non-void method must return a value, or the code will not compile.'
+ ],
+ ex:{q:'Why does <code>if (s != null &amp;&amp; s.length() &gt; 0)</code> work, but <code>if (s.length() &gt; 0 &amp;&amp; s != null)</code> crash?',
+     steps:['&amp;&amp; evaluates left to right and short-circuits.',
+            'In the first version, if s is null the left side is false and the right is never evaluated.',
+            'In the second, <code>s.length()</code> runs first.',
+            'Calling a method on null throws immediately.'],
+     a:'Answer: order matters with short-circuiting. Always test for null before using the reference.'},
+ trap:'Writing <code>if (x = 5)</code> instead of <code>if (x == 5)</code>. In Java this is a compile error for ints, which is a small mercy.'}
+],
+cards:[
+ ['= vs ==','= assigns a value; == compares two values.'],
+ ['Short-circuit evaluation','&amp;&amp; skips the right side if the left is false; || skips if the left is true.'],
+ ['Why short-circuiting matters','It makes null checks like <code>s != null &amp;&amp; s.length() &gt; 0</code> safe.'],
+ ['De Morgan\u2019s law','<code>!(a &amp;&amp; b)</code> equals <code>!a || !b</code>.'],
+ ['else if chains','Stop at the first true condition, so ordering changes behaviour.'],
+ ['Returning a boolean','Return the condition directly rather than using if/else with true and false.'],
+ ['Comparing doubles','Avoid ==; test whether the difference is very small.'],
+ ['Unreachable condition','A branch placed after a broader condition that already covers it.']
+],
+quiz:[
+ {q:'<code>!(a &amp;&amp; b)</code> is equivalent to:',
+  c:['<code>!a &amp;&amp; !b</code>','<code>!a || !b</code>','<code>a || b</code>','<code>a &amp;&amp; !b</code>'],
+  a:1, why:'De Morgan\u2019s law converts a negated AND into an OR of the negations.'},
+ {q:'In <code>if (x &gt; 0 &amp;&amp; y / x &gt; 2)</code>, short-circuiting prevents:',
+  c:['A syntax error','Division by zero','An infinite loop','A NullPointerException'],
+  a:1, why:'If x is 0 the left side is false, so the division is never evaluated.'},
+ {q:'Which is the cleanest way to write a method returning whether n is positive?',
+  c:['<code>if (n &gt; 0) return true; else return false;</code>','<code>return n &gt; 0;</code>','<code>return (n &gt; 0) == true;</code>','<code>if (n &gt; 0) return n;</code>'],
+  a:1, why:'The comparison already produces a boolean, so wrapping it in if/else is redundant.'},
+ {q:'An <code>else if</code> branch never executes. The most likely cause is:',
+  c:['A syntax error','An earlier condition already covers those cases','The variable is null','Missing braces'],
+  a:1, why:'Chains stop at the first true condition, so a broader earlier test makes later ones unreachable.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Iteration',
+guide:[
+{h:'Loops',
+ intro:'A <code>while</code> loop and a <code>for</code> loop do the same thing. Use <code>for</code> when you know how many iterations, <code>while</code> when you do not.',
+ table:{head:['Loop','Shape','Use when'],rows:[
+   ['<code>while</code>','<code>while (condition) { }</code>','Repetition count is unknown'],
+   ['<code>for</code>','<code>for (init; condition; update) { }</code>','Counting a known number of times'],
+   ['Enhanced <code>for</code>','<code>for (int x : arr) { }</code>','Reading every element in order']]},
+ points:[
+  'A <code>for</code> loop from <code>i = 0</code> while <code>i &lt; n</code> runs exactly <b>n</b> times.',
+  'Using <code>&lt;=</code> instead of <code>&lt;</code> is the classic <b>off-by-one</b> error.',
+  'An infinite loop happens when the condition never becomes false — usually a forgotten update.',
+  'Enhanced for loops <b>cannot modify</b> the array elements or access the index.',
+  'Nested loops multiply: an outer loop of n and inner loop of m run n × m times.',
+  'In a nested loop, the inner loop completes fully on every single pass of the outer loop.'
+ ]},
+{h:'Tracing and standard algorithms',
+ points:[
+  'To trace a loop, make a table of variable values after each iteration. Do not trace in your head.',
+  'Standard patterns worth memorising: sum, count matching, find maximum, find minimum, reverse a String, count occurrences.',
+  'A <b>running maximum</b> starts at the first element, not at zero — starting at zero fails for all-negative data.',
+  'String traversal: <code>for (int i = 0; i &lt; s.length(); i++)</code> then use <code>s.substring(i, i+1)</code>.',
+  'Loop <b>analysis questions</b> ask how many times a statement executes. Count carefully rather than estimating.'
+ ],
+ ex:{q:'How many times does the inner statement run? <code>for (int i = 0; i &lt; 4; i++) for (int j = i; j &lt; 4; j++) count++;</code>',
+     steps:['i = 0: j runs 0,1,2,3 which is 4 times.',
+            'i = 1: j runs 1,2,3 which is 3 times.',
+            'i = 2: 2 times. i = 3: 1 time.',
+            '4 + 3 + 2 + 1.'],
+     a:'Answer: 10. The inner loop starts at i, so it shortens each pass — a very common exam pattern.'},
+ trap:'Assuming nested loops always run n². When the inner loop depends on the outer variable, count the iterations individually.'}
+],
+cards:[
+ ['while vs for','Use while when the count is unknown, for when it is known.'],
+ ['Loop from 0 to n − 1','<code>for (int i = 0; i &lt; n; i++)</code> runs exactly n times.'],
+ ['Off-by-one error','Using &lt;= where &lt; is needed, running one iteration too many.'],
+ ['Infinite loop','The condition never becomes false, usually a missing update.'],
+ ['Enhanced for loop limits','Cannot modify elements or access the index.'],
+ ['Nested loop count','Outer times inner, unless the inner depends on the outer variable.'],
+ ['Running maximum','Start from the first element, not zero, so negative data works.'],
+ ['Tracing a loop','Write a table of variable values per iteration rather than tracing mentally.']
+],
+quiz:[
+ {q:'<code>for (int i = 1; i &lt;= 10; i++)</code> executes how many times?',
+  c:['9','10','11','Infinite'],
+  a:1, why:'It runs for i equal to 1 through 10 inclusive, which is 10 iterations.'},
+ {q:'An enhanced for loop cannot:',
+  c:['Read array elements','Modify the array elements','Traverse in order','Handle Strings'],
+  a:1, why:'The loop variable is a copy, so assigning to it does not change the array.'},
+ {q:'Initialising a running maximum to 0 fails when:',
+  c:['The array is empty','All values are negative','The array is sorted','The array has one element'],
+  a:1, why:'Zero would remain the maximum even though no element equals it. Start with the first element instead.'},
+ {q:'Nested loops where the inner runs 3 times for each of 5 outer passes execute the inner body:',
+  c:['8 times','15 times','5 times','3 times'],
+  a:1, why:'The inner loop completes fully on each outer pass, so 5 × 3 = 15.'}
+]
+},
+{
+id:'u5', title:'Unit 5 · Writing Classes',
+guide:[
+{h:'Class structure',
+ intro:'Unit 5 is where free-response questions concentrate. Almost every FRQ asks you to write a class or a method within one, so the structure must be automatic.',
+ table:{head:['Part','Purpose','Access'],rows:[
+   ['Instance variables','Store an object\u2019s state','<code>private</code>'],
+   ['Constructor','Initialise a new object','<code>public</code>'],
+   ['Accessor (getter)','Return a value','<code>public</code>'],
+   ['Mutator (setter)','Change a value','<code>public</code>'],
+   ['<code>toString</code>','Return a String description','<code>public</code>']]},
+ points:[
+  '<b>Instance variables should be private.</b> This is <b>encapsulation</b>, and the exam expects it every time.',
+  'A <b>constructor</b> has the same name as the class and no return type, not even void.',
+  'Use <code>this.name = name;</code> when a parameter shadows an instance variable.',
+  '<b>static</b> members belong to the class, not to any object. All objects share one copy.',
+  'A static method cannot use instance variables, because there is no particular object to read them from.',
+  '<b>Local variables</b> exist only inside their method and are not initialised automatically.'
+ ]},
+{h:'Scope, parameters, and design',
+ points:[
+  'Java passes <b>everything by value</b>. For objects, the <i>reference</i> is copied, so the method can change the object but cannot make your variable point elsewhere.',
+  'A <b>precondition</b> is what must be true when a method is called; a <b>postcondition</b> is what will be true afterwards.',
+  'Overloaded methods share a name but differ in parameter list. Return type alone is not enough.',
+  'Write <code>toString</code> for any class you expect to print — otherwise printing shows a memory address.',
+  'Keep methods short and single-purpose. FRQ rubrics reward correct decomposition.'
+ ],
+ ex:{q:'Write a constructor for a <code>Student</code> class with private <code>name</code> and <code>gpa</code>.',
+     steps:['Constructor name matches the class exactly.',
+            'No return type at all.',
+            'Parameters shadow the fields, so use <code>this</code>.'],
+     a:'<code>public Student(String name, double gpa) { this.name = name; this.gpa = gpa; }</code>'},
+ trap:'Giving a constructor a return type. <code>public void Student(...)</code> compiles as an ordinary method, and objects then get default values with no error message.'}
+],
+cards:[
+ ['Encapsulation','Keeping instance variables private and exposing controlled access through methods.'],
+ ['Constructor','Same name as the class, no return type; initialises a new object.'],
+ ['this keyword','Refers to the current object; needed when a parameter shadows a field.'],
+ ['Accessor vs mutator','An accessor returns a value; a mutator changes one.'],
+ ['static member','Belongs to the class, shared by all objects.'],
+ ['Why static methods cannot use instance variables','There is no particular object to read them from.'],
+ ['Pass by value','Java copies the value; for objects it copies the reference.'],
+ ['Overloading','Same method name with a different parameter list.'],
+ ['toString','Returns a String description; without it printing shows a memory address.'],
+ ['Precondition','What must be true when the method is called.']
+],
+quiz:[
+ {q:'A constructor differs from an ordinary method because it:',
+  c:['Must be private','Has no return type','Cannot take parameters','Must be static'],
+  a:1, why:'Writing a return type turns it into a regular method that never initialises the object.'},
+ {q:'Instance variables should normally be declared:',
+  c:['public','private','static','final'],
+  a:1, why:'Private fields with public methods is encapsulation, which the FRQ rubrics require.'},
+ {q:'A method receives an object parameter and reassigns it to a new object. The caller\u2019s variable:',
+  c:['Points to the new object','Still points to the original','Becomes null','Causes a compile error'],
+  a:1, why:'Java copies the reference, so reassigning the copy does not affect the caller\u2019s variable.'},
+ {q:'A static method cannot directly access instance variables because:',
+  c:['They are private','There is no specific object associated with the call','They are final','Static runs first'],
+  a:1, why:'Static methods belong to the class, so no particular object\u2019s state is available.'}
+]
+},
+{
+id:'u6', title:'Unit 6 · Arrays',
+guide:[
+{h:'Declaring and traversing',
+ intro:'An array is a fixed-size block of same-typed values. Most errors here are off-by-one mistakes at the boundaries, so be deliberate about where a loop starts and stops.',
+ points:[
+  'Declare with <code>int[] nums = new int[10];</code> — the size is fixed once created.',
+  'Elements are initialised automatically: 0 for numbers, <code>false</code> for boolean, <code>null</code> for objects.',
+  'Indices run from 0 to <code>length - 1</code>. Note <code>length</code> is a <b>field</b> for arrays, not a method — no parentheses.',
+  'Accessing an index outside that range throws <b>ArrayIndexOutOfBoundsException</b>.',
+  'Standard for loop: <code>for (int i = 0; i &lt; arr.length; i++)</code>.',
+  'Enhanced for loop reads elements but cannot modify them or reveal the index.'
+ ],
+ table:{head:['Need','Loop to use'],rows:[
+   ['Read every element','Enhanced for'],
+   ['Modify elements','Standard for'],
+   ['Know the position','Standard for'],
+   ['Compare neighbours','Standard for'],
+   ['Traverse part of the array','Standard for']]}},
+{h:'Standard array algorithms',
+ points:[
+  'Know these cold: sum, average, find maximum or minimum, count matching, search for a value, reverse, shift elements.',
+  'Finding a maximum: initialise to <code>arr[0]</code>, then compare from index 1.',
+  '<b>Sequential search</b> checks each element in turn and works on unsorted data.',
+  '<b>Binary search</b> halves a <b>sorted</b> array each step and is far faster, but requires sorting first.',
+  '<b>Selection sort</b> repeatedly finds the smallest remaining element and swaps it into place.',
+  '<b>Insertion sort</b> builds a sorted region one element at a time and is efficient on nearly sorted data.',
+  'Swapping needs a temporary variable: <code>int t = a[i]; a[i] = a[j]; a[j] = t;</code>'
+ ],
+ ex:{q:'Why does finding a maximum by initialising to 0 fail on <code>{-5, -2, -9}</code>?',
+     steps:['The loop compares each element against the current maximum.',
+            'Every element is less than 0.',
+            'So no element ever replaces the initial value.',
+            'The method returns 0, which is not in the array.'],
+     a:'Answer: initialise to <code>arr[0]</code> instead, which guarantees the result is an actual element.'},
+ trap:'Writing <code>arr.length()</code> for an array. Arrays use <code>arr.length</code> with no parentheses; Strings use <code>s.length()</code> with them.'}
+],
+cards:[
+ ['Array declaration','<code>int[] nums = new int[10];</code> with fixed size.'],
+ ['Default values','0 for numbers, false for boolean, null for objects.'],
+ ['array.length','A field, not a method — no parentheses.'],
+ ['String length()','A method, with parentheses — the opposite of arrays.'],
+ ['ArrayIndexOutOfBoundsException','Thrown when accessing an index below 0 or at or above length.'],
+ ['Finding a maximum','Initialise to arr[0], never to 0.'],
+ ['Sequential search','Checks each element in turn; works on unsorted data.'],
+ ['Binary search','Halves a sorted array each step; requires the data be sorted first.'],
+ ['Selection sort','Repeatedly finds the smallest remaining element and swaps it into position.'],
+ ['Swapping elements','Requires a temporary variable to avoid losing a value.']
+],
+quiz:[
+ {q:'For an array named <code>data</code>, the number of elements is:',
+  c:['<code>data.length()</code>','<code>data.length</code>','<code>data.size()</code>','<code>data.count</code>'],
+  a:1, why:'Arrays expose length as a field. Only Strings use length() as a method.'},
+ {q:'Binary search requires that the array be:',
+  c:['Small','Sorted','All positive','An array of Strings'],
+  a:1, why:'Halving only works if order guarantees which side the target must lie on.'},
+ {q:'<code>int[] a = new int[5];</code> — what is <code>a[2]</code> before assignment?',
+  c:['null','0','Undefined','A compile error'],
+  a:1, why:'Numeric array elements are initialised to 0 automatically.'},
+ {q:'Accessing <code>arr[arr.length]</code> causes:',
+  c:['The last element','ArrayIndexOutOfBoundsException','0','A compile error'],
+  a:1, why:'Valid indices stop at length − 1, so length itself is out of bounds.'}
+]
+},
+{
+id:'u7', title:'Unit 7 · ArrayList',
+guide:[
+{h:'ArrayList versus array',
+ intro:'An ArrayList resizes itself. That convenience costs you some syntax and one significant trap when removing elements inside a loop.',
+ table:{head:['','Array','ArrayList'],rows:[
+   ['Size','Fixed at creation','Grows and shrinks'],
+   ['Access','<code>arr[i]</code>','<code>list.get(i)</code>'],
+   ['Change','<code>arr[i] = x</code>','<code>list.set(i, x)</code>'],
+   ['Size check','<code>arr.length</code>','<code>list.size()</code>'],
+   ['Holds','Primitives or objects','Objects only']]},
+ points:[
+  'Declare with <code>ArrayList&lt;String&gt; names = new ArrayList&lt;String&gt;();</code>',
+  'ArrayLists store <b>objects only</b>. Use wrapper classes — <code>Integer</code>, <code>Double</code>, <code>Boolean</code> — for primitives.',
+  '<b>Autoboxing</b> converts an <code>int</code> to an <code>Integer</code> automatically when you add it.',
+  'Key methods: <code>add(x)</code>, <code>add(i, x)</code>, <code>get(i)</code>, <code>set(i, x)</code>, <code>remove(i)</code>, <code>size()</code>, <code>contains(x)</code>.',
+  '<code>remove(i)</code> returns the removed element and shifts everything after it left by one.'
+ ]},
+{h:'The removal trap',
+ intro:'This is the most reliably tested bug in the entire course. Removing while looping forward skips elements, and the exam will present code that looks correct.',
+ points:[
+  'When you remove index i, every later element shifts left. The loop then increments i, so the element that moved into position i is <b>never examined</b>.',
+  'Two safe fixes: <b>do not increment</b> after a successful removal, or <b>loop backwards</b> from <code>size() - 1</code> down to 0.',
+  'Looping backwards is usually cleaner because shifting only affects indices you have already passed.',
+  'Modifying an ArrayList during an <b>enhanced for loop</b> throws a ConcurrentModificationException.',
+  'Adding at index i also shifts elements, so the same care applies.'
+ ],
+ ex:{q:'This code should remove every zero from a list but misses some. Why? <code>for (int i = 0; i &lt; list.size(); i++) if (list.get(i) == 0) list.remove(i);</code>',
+     steps:['Suppose the list is [0, 0, 5].',
+            'i = 0: removes the first zero. The list becomes [0, 5].',
+            'The loop increments i to 1.',
+            'Index 1 now holds 5, so the second zero at index 0 is never checked.'],
+     a:'Answer: removal shifts elements left while the index still moves right. Loop backwards, or use <code>i--</code> after removing.'},
+ trap:'Removing forward without adjusting the index. The code compiles, runs, and silently produces the wrong answer.'}
+],
+cards:[
+ ['ArrayList declaration','<code>ArrayList&lt;String&gt; list = new ArrayList&lt;String&gt;();</code>'],
+ ['ArrayList size','<code>list.size()</code> — a method, unlike an array\u2019s length field.'],
+ ['Accessing an element','<code>list.get(i)</code> rather than bracket notation.'],
+ ['Wrapper classes','Integer, Double, Boolean — needed because ArrayLists hold objects only.'],
+ ['Autoboxing','Automatic conversion between a primitive and its wrapper class.'],
+ ['remove(i)','Removes the element and shifts all later elements left by one.'],
+ ['The removal trap','Removing forward skips elements because indices shift left as the loop moves right.'],
+ ['Two safe removal methods','Loop backwards, or decrement the index after removing.'],
+ ['ConcurrentModificationException','Thrown when modifying a list during an enhanced for loop.']
+],
+quiz:[
+ {q:'Which safely removes all zeros from an ArrayList?',
+  c:['Loop forward with <code>i++</code> always','Loop backwards from size() − 1 to 0','Use an enhanced for loop','Use <code>list.length</code>'],
+  a:1, why:'Backward iteration means shifts only affect indices already visited.'},
+ {q:'An <code>ArrayList&lt;int&gt;</code> does not compile because:',
+  c:['ArrayLists are fixed size','ArrayLists store objects, so you need <code>Integer</code>','int is too large','Generics are not allowed'],
+  a:1, why:'Generic types require reference types, so primitives use their wrapper classes.'},
+ {q:'The number of elements in an ArrayList is found with:',
+  c:['<code>list.length</code>','<code>list.size()</code>','<code>list.count()</code>','<code>list.length()</code>'],
+  a:1, why:'ArrayList uses size() as a method; only arrays use the length field.'},
+ {q:'Modifying an ArrayList inside an enhanced for loop throws:',
+  c:['NullPointerException','ConcurrentModificationException','ArrayIndexOutOfBoundsException','ArithmeticException'],
+  a:1, why:'The loop detects that the collection changed underneath it and fails immediately.'}
+]
+},
+{
+id:'u8', title:'Unit 8 · 2D Arrays',
+guide:[
+{h:'Structure and traversal',
+ intro:'A 2D array is an array of arrays. Once you accept that, indexing and the <code>length</code> quirks make sense.',
+ points:[
+  'Declare with <code>int[][] grid = new int[3][4];</code> — 3 rows and 4 columns.',
+  '<code>grid.length</code> gives the number of <b>rows</b>. <code>grid[0].length</code> gives the number of <b>columns</b>.',
+  'Access an element as <code>grid[row][col]</code>. Row always comes first.',
+  '<b>Row-major</b> traversal visits each row completely before moving to the next; this is the standard pattern.',
+  '<b>Column-major</b> swaps the loop order so the column index is the outer loop.',
+  'Enhanced for over a 2D array: the outer variable is a whole <code>int[]</code> row.'
+ ],
+ table:{head:['Task','Loop structure'],rows:[
+   ['Row-major','<code>for (int r...) for (int c...) grid[r][c]</code>'],
+   ['Column-major','<code>for (int c...) for (int r...) grid[r][c]</code>'],
+   ['Sum one row','Fix r, loop over c'],
+   ['Sum one column','Fix c, loop over r'],
+   ['Main diagonal','<code>grid[i][i]</code>']]}},
+{h:'Common operations',
+ points:[
+  'Every element: two nested loops, outer over rows and inner over columns.',
+  'Row totals: fix the row index and loop over columns. Column totals: the reverse.',
+  'The <b>main diagonal</b> is every element where row equals column.',
+  'Neighbours require bounds checking: verify the index is within range <b>before</b> accessing.',
+  'Free-response questions frequently ask for row sums, column sums, or a search across a grid.',
+  'Jagged arrays are legal in Java but are not tested on the AP exam.'
+ ],
+ ex:{q:'Write a loop that sums column 2 of a 2D array <code>grid</code>.',
+     steps:['Summing a column means the column index stays fixed.',
+            'The row index varies, so it is the loop variable.',
+            'Loop from 0 to <code>grid.length</code>, since that is the row count.'],
+     a:'<code>int sum = 0; for (int r = 0; r &lt; grid.length; r++) sum += grid[r][2];</code>'},
+ trap:'Using <code>grid.length</code> for the number of columns. It gives rows; columns come from <code>grid[0].length</code>.'}
+],
+cards:[
+ ['2D array declaration','<code>int[][] grid = new int[3][4];</code> — 3 rows, 4 columns.'],
+ ['Number of rows','<code>grid.length</code>'],
+ ['Number of columns','<code>grid[0].length</code>'],
+ ['Element access','<code>grid[row][col]</code>, with row first.'],
+ ['Row-major traversal','Outer loop over rows, inner over columns.'],
+ ['Column-major traversal','Outer loop over columns, inner over rows.'],
+ ['Summing a row','Fix the row index and loop over columns.'],
+ ['Summing a column','Fix the column index and loop over rows.'],
+ ['Main diagonal','Elements where the row index equals the column index.'],
+ ['Enhanced for on a 2D array','The outer loop variable is a whole row array.']
+],
+quiz:[
+ {q:'For <code>int[][] g = new int[5][8];</code>, what is <code>g[0].length</code>?',
+  c:['5','8','40','0'],
+  a:1, why:'g.length is the number of rows (5); g[0].length is the length of one row, which is the column count.'},
+ {q:'To sum a single column you should:',
+  c:['Fix the row index and loop over columns','Fix the column index and loop over rows','Use one loop only','Use an enhanced for loop'],
+  a:1, why:'A column holds one entry per row, so the row index is what varies.'},
+ {q:'In an enhanced for loop over a 2D array, the outer loop variable is:',
+  c:['A single element','An entire row array','The row index','The column count'],
+  a:1, why:'A 2D array is an array of arrays, so iterating it yields one row array at a time.'},
+ {q:'Elements on the main diagonal satisfy:',
+  c:['<code>row + col == 0</code>','<code>row == col</code>','<code>row &gt; col</code>','<code>col == 0</code>'],
+  a:1, why:'The main diagonal runs from the top-left corner where both indices advance together.'}
+]
+},
+{
+id:'u9', title:'Unit 9 · Inheritance',
+guide:[
+{h:'Extending a class',
+ intro:'Inheritance lets a subclass reuse and specialise a superclass. The exam tests two things relentlessly: constructor chaining, and which method actually runs.',
+ points:[
+  '<code>class Dog extends Animal</code> makes <code>Dog</code> a subclass inheriting all public and protected members.',
+  'A subclass inherits methods and fields but <b>not</b> constructors.',
+  '<code>super()</code> calls the superclass constructor and <b>must be the first statement</b> if used.',
+  'If you omit <code>super()</code>, Java inserts a call to the no-argument superclass constructor — which fails to compile if none exists.',
+  '<b>Overriding</b> replaces an inherited method with the same signature. <b>Overloading</b> is a different parameter list.',
+  '<code>super.method()</code> calls the superclass version explicitly.'
+ ],
+ table:{head:['','Overriding','Overloading'],rows:[
+   ['Signature','Identical','Different parameters'],
+   ['Where','In a subclass','Anywhere'],
+   ['Resolved','At runtime','At compile time']]}},
+{h:'Polymorphism',
+ intro:'This is the hardest idea in the course and the most tested. The declared type decides what compiles; the actual object decides what runs.',
+ points:[
+  '<code>Animal a = new Dog();</code> is legal — a subclass reference fits a superclass variable.',
+  '<b>Compile time</b>: the <i>declared</i> type (Animal) determines which methods you are allowed to call.',
+  '<b>Runtime</b>: the <i>actual</i> object (Dog) determines which version executes. This is <b>dynamic binding</b>.',
+  'So calling <code>a.speak()</code> runs <code>Dog</code>\u2019s version, but calling a Dog-only method fails to compile.',
+  'An <b>abstract class</b> cannot be instantiated and may declare abstract methods subclasses must implement.',
+  'An <b>interface</b> declares methods a class promises to provide; a class may implement many interfaces but extend only one class.',
+  'Every class inherits from <code>Object</code>, which supplies <code>toString</code> and <code>equals</code>.'
+ ],
+ ex:{q:'<code>Animal a = new Dog();</code> where both define <code>speak()</code> and Dog also has <code>fetch()</code>. What happens with <code>a.speak()</code> and <code>a.fetch()</code>?',
+     steps:['<code>a.speak()</code>: Animal declares speak, so it compiles.',
+            'At runtime the object is a Dog, so Dog\u2019s speak runs.',
+            '<code>a.fetch()</code>: Animal has no fetch method.',
+            'The compiler checks the declared type and rejects it.'],
+     a:'Answer: <code>a.speak()</code> runs Dog\u2019s version; <code>a.fetch()</code> does not compile. Declared type gates access, actual type chooses behaviour.'},
+ trap:'Assuming the declared type decides which method body runs. It decides what you may call; the object decides what happens.'}
+],
+cards:[
+ ['extends','Creates a subclass inheriting the superclass\u2019s public and protected members.'],
+ ['Constructors and inheritance','Constructors are not inherited; use super() to call the superclass one.'],
+ ['super() placement','Must be the first statement in a constructor if present.'],
+ ['Overriding','Replacing an inherited method with the identical signature.'],
+ ['Overloading','Same method name with a different parameter list.'],
+ ['Polymorphism','A superclass reference can hold a subclass object.'],
+ ['Compile-time rule','The declared type determines which methods may be called.'],
+ ['Runtime rule','The actual object determines which version executes — dynamic binding.'],
+ ['Abstract class','Cannot be instantiated; may declare methods subclasses must implement.'],
+ ['Interface','A contract of methods; a class may implement many but extend only one class.'],
+ ['Object class','The root of every class hierarchy, supplying toString and equals.']
+],
+quiz:[
+ {q:'<code>Animal a = new Cat();</code> and both classes define <code>makeSound()</code>. Calling <code>a.makeSound()</code> runs:',
+  c:['Animal\u2019s version','Cat\u2019s version','Neither','A compile error'],
+  a:1, why:'Dynamic binding selects the method of the actual object at runtime.'},
+ {q:'A subclass method with the same name but different parameters is:',
+  c:['Overriding','Overloading','Abstract','Illegal'],
+  a:1, why:'Overriding requires an identical signature; a different parameter list is overloading.'},
+ {q:'<code>super()</code> in a constructor must be:',
+  c:['The last statement','The first statement','Omitted entirely','Inside an if statement'],
+  a:1, why:'The superclass must be fully initialised before the subclass adds to it.'},
+ {q:'A class may extend how many classes and implement how many interfaces?',
+  c:['Many classes, one interface','One class, many interfaces','One of each','Many of each'],
+  a:1, why:'Java allows single class inheritance but multiple interface implementation.'}
+]
+},
+{
+id:'u10', title:'Unit 10 · Recursion',
+guide:[
+{h:'How recursion works',
+ intro:'A recursive method calls itself on a smaller version of the problem. Every recursive method needs two things, and missing either one causes an immediate failure.',
+ points:[
+  'A <b>base case</b> stops the recursion. Without one you get a <b>StackOverflowError</b>.',
+  'A <b>recursive case</b> must move measurably toward the base case, or it never terminates.',
+  'Each call gets its own copy of the parameters and local variables on the call stack.',
+  'Calls stack up until a base case is reached, then unwind, returning values back up the chain.',
+  'To trace recursion, write out each call and its return value in order — do not trace mentally.',
+  'Anything recursive can be written iteratively, and vice versa. Recursion is chosen for clarity, not speed.'
+ ],
+ table:{head:['Classic example','Base case','Recursive case'],rows:[
+   ['Factorial','n == 0 returns 1','n * factorial(n − 1)'],
+   ['Fibonacci','n &lt;= 1 returns n','fib(n−1) + fib(n−2)'],
+   ['Sum of digits','n &lt; 10 returns n','n % 10 + sum(n / 10)'],
+   ['Reverse a String','Length &lt;= 1 returns it','last char + reverse(rest)'],
+   ['Binary search','Not found or match','Search one half']]}},
+{h:'Tracing and analysis',
+ points:[
+  'Exam questions almost always ask what a recursive method <b>returns</b> or how many times it is <b>called</b>.',
+  'For return value questions, work from the base case back upward.',
+  'For call-count questions, draw the call tree. Fibonacci branches into two calls each time, which is why it is slow.',
+  '<b>Binary search</b> is naturally recursive and runs in logarithmic time.',
+  '<b>Merge sort</b> splits, sorts each half recursively, then merges. It is the standard recursive sort on this exam.',
+  'A recursive method returning void performs an action at each level rather than computing a value.'
+ ],
+ ex:{q:'What does <code>mystery(4)</code> return? <code>public int mystery(int n) { if (n &lt;= 1) return 1; return n * mystery(n - 1); }</code>',
+     steps:['mystery(4) needs 4 * mystery(3).',
+            'mystery(3) needs 3 * mystery(2).',
+            'mystery(2) needs 2 * mystery(1).',
+            'mystery(1) hits the base case and returns 1.',
+            'Unwind: 2 * 1 = 2, then 3 * 2 = 6, then 4 * 6.'],
+     a:'Answer: 24. This is factorial. Working from the base case upward is the reliable method.'},
+ trap:'Forgetting the base case, or writing a recursive call that does not shrink the problem. Both produce a StackOverflowError immediately.'}
+],
+cards:[
+ ['Base case','The condition that stops recursion; without it you get StackOverflowError.'],
+ ['Recursive case','Must move measurably toward the base case.'],
+ ['Call stack','Each call keeps its own parameters and local variables until it returns.'],
+ ['StackOverflowError','Caused by a missing base case or a recursive call that never shrinks.'],
+ ['Factorial base case','n == 0 or n &lt;= 1 returns 1.'],
+ ['Fibonacci recursion','fib(n−1) + fib(n−2), branching into two calls each time.'],
+ ['Tracing recursion','Work from the base case back upward, writing each return value.'],
+ ['Binary search','Naturally recursive, halving the search space each call.'],
+ ['Merge sort','Splits, sorts each half recursively, then merges the results.'],
+ ['Recursion vs iteration','Either can express the other; recursion is chosen for clarity.']
+],
+quiz:[
+ {q:'A recursive method without a base case causes:',
+  c:['A compile error','StackOverflowError','It returns 0','An infinite loop that terminates'],
+  a:1, why:'Calls keep stacking until the call stack runs out of space.'},
+ {q:'<code>sum(1234)</code> where <code>sum(n) = n &lt; 10 ? n : n % 10 + sum(n / 10)</code> returns:',
+  c:['1234','10','4','24'],
+  a:1, why:'It adds the digits: 4 + 3 + 2 + 1 = 10.'},
+ {q:'The most reliable way to trace a recursive method is to:',
+  c:['Guess the pattern','Work from the base case back upward','Read only the first line','Convert it to a loop first'],
+  a:1, why:'The base case is the only call with a known value, so everything else is built from it.'},
+ {q:'Recursive Fibonacci is slow because each call:',
+  c:['Uses too much memory per frame','Branches into two further calls','Cannot reach the base case','Requires sorting'],
+  a:1, why:'Branching produces exponentially many calls, most of them recomputing the same values.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
+/* ------------------------------------------ AP SEMINAR */
+addUnits('ap-seminar', [
+{
+id:'u1', title:'Skill 1 · Question and Explore',
+guide:[
+{h:'Building a research question',
+ intro:'AP Seminar has no content to memorise. It is assessed entirely on process, and the process begins with a question narrow enough to answer and open enough to argue about.',
+ points:[
+  'The course runs on <b>QUEST</b>: Question and explore, Understand and analyse, Evaluate multiple perspectives, Synthesise ideas, Team transform and transmit.',
+  'A good research question is <b>answerable with evidence</b>, <b>contestable</b>, and <b>narrow enough</b> to address in the space available.',
+  '"Is climate change real?" fails on contestability. "How should coastal cities weigh managed retreat against sea walls?" works.',
+  'Move from a broad topic to a <b>lens</b> — economic, ethical, scientific, political, cultural — then to a question.',
+  'Questions beginning "to what extent" or "how should" invite argument. Questions beginning "what is" usually invite summary.'
+ ],
+ table:{head:['Weak question','Why it fails','Stronger version'],rows:[
+   ['Is social media bad?','Vague, no defined outcome','How does algorithmic ranking affect teenage news literacy?'],
+   ['What is gene editing?','Answerable by definition','Under what conditions is germline editing ethically defensible?'],
+   ['Should we ban plastic?','Too broad to research','What has replaced single-use plastic in states that banned it, and at what cost?']]}},
+{h:'Finding and judging sources',
+ points:[
+  'Evaluate every source with <b>RAVEN</b>: Reputation, Ability to observe, Vested interest, Expertise, Neutrality.',
+  '<b>Primary</b> sources are direct evidence; <b>secondary</b> sources interpret them. Both are legitimate when identified correctly.',
+  'A source with a vested interest is not automatically disqualified — but the interest must be named in your analysis.',
+  'Prefer peer-reviewed research, government data, and named expert commentary over aggregators and unattributed articles.',
+  'Track where each source disagrees with the others. Those disagreements are the substance of your later analysis.',
+  'Record citations as you go. Reconstructing them later wastes hours and risks losing credit.'
+ ],
+ ex:{q:'A study funded by a tobacco company finds no link between vaping and lung damage. How do you handle it?',
+     steps:['Apply RAVEN: the vested interest is obvious and significant.',
+            'Do not simply discard it — check the methodology on its own terms.',
+            'Compare its findings with independently funded studies.',
+            'Report the funding alongside the finding.'],
+     a:'Answer: include it while naming the conflict of interest and setting it against independent research. Dismissing a source without examination is as weak as accepting it uncritically.'},
+ trap:'Choosing a question you already know the answer to. If you cannot imagine a credible opposing view, there is nothing to argue.'}
+],
+cards:[
+ ['QUEST framework','Question and explore, Understand and analyse, Evaluate perspectives, Synthesise, Team and transmit.'],
+ ['Good research question','Answerable with evidence, contestable, and narrow enough to address.'],
+ ['Lens','The disciplinary angle — economic, ethical, scientific, political, cultural — on a topic.'],
+ ['RAVEN','Reputation, Ability to observe, Vested interest, Expertise, Neutrality.'],
+ ['Primary source','Direct evidence such as data, interviews, or original documents.'],
+ ['Secondary source','A work that interprets or analyses primary evidence.'],
+ ['Vested interest','A stake in the outcome; it must be disclosed, not automatically disqualifying.'],
+ ['Question stems that work','"To what extent" and "how should" invite argument rather than summary.'],
+ ['Why record citations early','Reconstructing them later wastes time and risks losing credit.']
+],
+quiz:[
+ {q:'Which is the strongest research question?',
+  c:['What is artificial intelligence?','Is AI dangerous?','To what extent should hiring algorithms be subject to public audit?','Why do people use AI?'],
+  a:2, why:'It is contestable, narrow, and can be argued with evidence, unlike a definition or a vague yes-or-no.'},
+ {q:'The V in RAVEN stands for:',
+  c:['Verification','Vested interest','Validity','Volume'],
+  a:1, why:'Vested interest asks what the source stands to gain from the position it takes.'},
+ {q:'A source with a clear vested interest should be:',
+  c:['Discarded immediately','Used without comment','Included with the interest disclosed and weighed','Used only as a primary source'],
+  a:2, why:'Naming the interest is stronger analysis than either dismissing or ignoring it.'},
+ {q:'A research question you already know the answer to is problematic because:',
+  c:['It is too long','There is no genuine argument to make','It requires primary sources','It cannot be cited'],
+  a:1, why:'Seminar rewards weighing perspectives, which requires a question with credible opposing answers.'}
+]
+},
+{
+id:'u2', title:'Skill 2 · Understand and Analyse Arguments',
+guide:[
+{h:'Taking an argument apart',
+ intro:'Analysing an argument means identifying its parts and testing whether they hold together, not deciding whether you agree with the conclusion.',
+ table:{head:['Part','Question it answers'],rows:[
+   ['Claim','What is being asserted?'],
+   ['Evidence','What supports it?'],
+   ['Reasoning','Why does that evidence support that claim?'],
+   ['Assumption','What must be true but is left unstated?'],
+   ['Qualifier','Under what limits does the claim hold?'],
+   ['Implication','What follows if the claim is accepted?']]},
+ points:[
+  'The <b>line of reasoning</b> is the path from evidence to conclusion. Trace it explicitly.',
+  '<b>Unstated assumptions</b> are where most arguments are actually vulnerable, and naming them is high-level analysis.',
+  'An argument can have true evidence and still fail if the reasoning does not connect it to the claim.',
+  'Distinguish the <b>strength</b> of evidence from the <b>relevance</b> of evidence. Both must hold.',
+  'Note whether a claim is factual, evaluative, or a policy recommendation — each requires different support.'
+ ]},
+{h:'Reasoning flaws',
+ table:{head:['Fallacy','What it does'],rows:[
+   ['Straw man','Misrepresents an opposing view to attack it easily'],
+   ['False dilemma','Presents two options when more exist'],
+   ['Hasty generalisation','Draws a broad conclusion from thin evidence'],
+   ['Post hoc','Assumes sequence proves causation'],
+   ['Ad hominem','Attacks the person instead of the argument'],
+   ['Slippery slope','Claims one step must lead to an extreme outcome'],
+   ['Appeal to authority','Cites status rather than relevant expertise'],
+   ['Circular reasoning','Uses the conclusion as its own support']]},
+ points:[
+  'Naming a fallacy earns little. Explaining <b>how it weakens this specific argument</b> earns the credit.',
+  'Correlation presented as causation is the most common flaw in the sources you will be given.',
+  'Cherry-picked data and missing context are more frequent than formal logical fallacies.',
+  'Be equally rigorous with sources you agree with — one-sided scrutiny is itself a weakness.'
+ ],
+ ex:{q:'"Cities that raised the minimum wage saw restaurant closures rise, so the wage increase caused them." Analyse.',
+     steps:['Claim: the wage rise caused the closures.',
+            'Evidence: closures rose after the increase.',
+            'Reasoning gap: sequence is treated as causation.',
+            'Unstated assumption: nothing else changed in those cities at the same time.'],
+     a:'Answer: post hoc reasoning. The evidence is consistent with the claim but does not establish it, since rent, competition, or wider economic conditions could explain the same pattern.'}}
+],
+cards:[
+ ['Line of reasoning','The path connecting evidence to conclusion.'],
+ ['Unstated assumption','Something that must be true for an argument to work but is never stated.'],
+ ['Claim types','Factual, evaluative, or policy — each needs a different kind of support.'],
+ ['Straw man','Misrepresenting an opposing view to make it easier to attack.'],
+ ['False dilemma','Offering two options when more exist.'],
+ ['Post hoc fallacy','Treating sequence as proof of causation.'],
+ ['Slippery slope','Claiming one step must inevitably lead to an extreme result.'],
+ ['Circular reasoning','Using the conclusion as its own justification.'],
+ ['Analysing a fallacy','Explain how it weakens this argument, not just its name.'],
+ ['Most common real flaw','Correlation presented as causation.']
+],
+quiz:[
+ {q:'An argument\u2019s evidence is accurate but does not establish its conclusion. The problem is with the:',
+  c:['Evidence','Reasoning','Citation','Topic'],
+  a:1, why:'Reasoning is the link between evidence and claim, and it can fail even when the facts are correct.'},
+ {q:'"Either we ban the technology entirely or we accept total surveillance." This is a:',
+  c:['Straw man','False dilemma','Ad hominem','Circular reasoning'],
+  a:1, why:'It presents two extremes as the only options when regulated middle positions exist.'},
+ {q:'The strongest way to handle a fallacy in an argument is to:',
+  c:['Name it','Explain how it undermines that specific argument','Ignore it','Cite a textbook definition'],
+  a:1, why:'Identification alone is description; explaining the damage is analysis.'},
+ {q:'An unstated assumption is worth identifying because:',
+  c:['It is always false','It is often where the argument is most vulnerable','It replaces evidence','It is required by the rubric'],
+  a:1, why:'Arguments usually survive scrutiny of stated evidence but fail on what they take for granted.'}
+]
+},
+{
+id:'u3', title:'Skill 3 · Evaluate Multiple Perspectives',
+guide:[
+{h:'Perspectives are not just opinions',
+ intro:'A perspective is a position grounded in a discipline, an interest, or a set of values. Seminar asks you to map them accurately before judging between them.',
+ points:[
+  'Identify each perspective\u2019s <b>underlying values</b>, not just its conclusion. Two people can share evidence and differ on what matters.',
+  'Ask what <b>discipline</b> each perspective speaks from — an economist and an ethicist will frame the same problem differently.',
+  'Ask <b>who is affected</b> and whether their perspective is represented at all. Absent voices are worth naming.',
+  'Distinguish perspectives that disagree about <b>facts</b> from those that disagree about <b>values</b>. Only the first can be settled by evidence.',
+  'Present the strongest version of a view you disagree with. Weak representation is a straw man.'
+ ],
+ table:{head:['Lens','Asks'],rows:[
+   ['Economic','What are the costs, benefits, and incentives?'],
+   ['Ethical','What is right, and who bears the burden?'],
+   ['Scientific','What does the evidence show, and how certain is it?'],
+   ['Political','Who decides, and by what authority?'],
+   ['Cultural','What meanings and traditions are at stake?'],
+   ['Historical','What has been tried before, and what happened?']]}},
+{h:'Weighing perspectives',
+ points:[
+  'Evaluation is not neutrality. You are expected to reach a position, having genuinely considered the alternatives.',
+  'Compare perspectives on <b>quality of evidence</b>, <b>internal consistency</b>, and <b>scope of what they account for</b>.',
+  'A perspective that explains more of the available evidence is stronger, even if less appealing.',
+  'Acknowledge what your own position <b>cannot</b> account for. This is a mark of sophistication, not weakness.',
+  'Note where perspectives <b>overlap</b>. Shared ground is often where a workable answer sits.',
+  'Avoid false balance: giving equal weight to well-supported and poorly supported positions is a distortion.'
+ ],
+ ex:{q:'On a proposed factory closure, an economist and a community organiser disagree. How do you evaluate?',
+     steps:['Name each lens: efficiency and aggregate output versus local livelihoods and community stability.',
+            'Ask whether they disagree on facts or on values. Both may accept the same employment figures.',
+            'Identify what each account leaves out.',
+            'Take a position and state which considerations you are prioritising, and why.'],
+     a:'Answer: this is a values disagreement, not a factual one. A strong response names that, takes a side, and is explicit about the trade-off being accepted.'},
+ trap:'Concluding that "both sides have a point" and stopping. Seminar requires a defended position, not a summary of the debate.'}
+],
+cards:[
+ ['Perspective','A position grounded in a discipline, interest, or set of values.'],
+ ['Underlying values','What a perspective treats as most important; often the real source of disagreement.'],
+ ['Factual vs value disagreement','Only factual disagreements can be settled with evidence.'],
+ ['Steelmanning','Presenting the strongest version of a view you oppose.'],
+ ['Absent voices','Perspectives of affected people that are missing from the debate.'],
+ ['Criteria for weighing','Quality of evidence, internal consistency, and explanatory scope.'],
+ ['False balance','Giving equal weight to well-supported and poorly supported positions.'],
+ ['Acknowledging limits','Naming what your own position cannot explain is a strength.'],
+ ['Why "both sides have a point" fails','Seminar requires a defended position, not a neutral summary.']
+],
+quiz:[
+ {q:'Two experts agree on the data but disagree on policy. This is a disagreement about:',
+  c:['Facts','Values','Methodology','Citation'],
+  a:1, why:'Shared evidence with different conclusions means they weigh outcomes differently.'},
+ {q:'Presenting the strongest version of an opposing argument is:',
+  c:['A straw man','Steelmanning','False balance','Circular reasoning'],
+  a:1, why:'Engaging the best form of a view makes your own response substantially stronger.'},
+ {q:'False balance means:',
+  c:['Ignoring one side','Treating unequally supported positions as equally credible','Using too many sources','Taking a position too early'],
+  a:1, why:'Equal airtime is not the same as equal evidential standing.'},
+ {q:'Concluding that both perspectives are valid and stopping there is weak because:',
+  c:['It is too short','The task requires reaching and defending a position','It ignores citations','Perspectives cannot be compared'],
+  a:1, why:'Evaluation means judging between perspectives, not merely cataloguing them.'}
+]
+},
+{
+id:'u4', title:'Skill 4 · Synthesise Ideas',
+guide:[
+{h:'From sources to your own argument',
+ intro:'Synthesis is where most Seminar work is won or lost. Sources are raw material for <i>your</i> argument, never a tour of what other people said.',
+ points:[
+  '<b>Organise by idea, not by source.</b> A paragraph per source is a summary; a paragraph per claim is an argument.',
+  'Your <b>thesis</b> should be something none of your sources says in exactly that form.',
+  'Put sources in conversation: show where they agree, where they conflict, and what that tension reveals.',
+  'Use evidence to <b>advance</b> the argument, not to decorate it. Every citation needs commentary explaining its role.',
+  'A <b>solution or resolution</b> should follow from your analysis rather than being asserted at the end.',
+  'Acknowledge limitations of your own argument explicitly.'
+ ],
+ table:{head:['Summary looks like','Synthesis looks like'],rows:[
+   ['Smith argues X. Jones argues Y.','Smith and Jones both assume Z, which the data on W undermines.'],
+   ['One paragraph per source','One paragraph per claim, drawing on several sources'],
+   ['Ends with "both views have merit"','Ends with a defended position and its costs'],
+   ['Quotes then moves on','Quotes then explains what it establishes']]}},
+{h:'Citation and academic integrity',
+ points:[
+  'Use one consistent style throughout — MLA, APA, or Chicago. Consistency matters more than which you choose.',
+  'Cite <b>ideas</b>, not just direct quotations. Paraphrasing without attribution is still plagiarism.',
+  'Paraphrase means restating in genuinely your own words and structure, not swapping a few synonyms.',
+  'AP Seminar treats plagiarism severely: a score of 0 on that component, with no opportunity to resubmit.',
+  'Falsifying or fabricating evidence carries the same penalty.',
+  'When in doubt, cite. Over-citation is a stylistic issue; under-citation is an integrity violation.'
+ ],
+ ex:{q:'Three sources say lockdowns reduced transmission; one says the economic cost outweighed it. How do you synthesise?',
+     steps:['Do not write four paragraphs, one per source.',
+            'Identify the actual point of disagreement: not whether transmission fell, but how to weigh health against economic harm.',
+            'Note that the three agree on a fact and the fourth disputes a value judgement.',
+            'Build your argument around that distinction.'],
+     a:'Answer: organise around the value question the sources are really disputing, using all four as evidence for your framing rather than summarising each in turn.'},
+ trap:'Writing a literature review instead of an argument. If your paper could be retitled "What people say about X", it is not synthesis.'}
+],
+cards:[
+ ['Synthesis','Combining sources to build your own argument rather than reporting theirs.'],
+ ['Organising principle','Structure by idea, never one paragraph per source.'],
+ ['A strong thesis','States something none of your sources says in that exact form.'],
+ ['Putting sources in conversation','Showing agreement, conflict, and what the tension reveals.'],
+ ['Commentary','Explanation of what a piece of evidence establishes for your claim.'],
+ ['Citing ideas','Required even when paraphrasing; attribution is not only for quotations.'],
+ ['Real paraphrase','Restating in your own words and structure, not swapping synonyms.'],
+ ['Plagiarism penalty','A score of 0 on that component with no resubmission.'],
+ ['Literature review vs argument','If it reads as "what people say about X", it is not synthesis.']
+],
+quiz:[
+ {q:'The clearest sign of synthesis rather than summary is that the paper is organised by:',
+  c:['Source','Idea','Date','Author surname'],
+  a:1, why:'Organising by claim forces sources into conversation; organising by source produces a list.'},
+ {q:'Paraphrasing a source\u2019s idea without citing it is:',
+  c:['Acceptable if reworded','Plagiarism','Acceptable if the source is well known','Only an issue for direct quotes'],
+  a:1, why:'Attribution is owed to ideas, not merely to strings of words.'},
+ {q:'A strong Seminar thesis should:',
+  c:['Restate the most authoritative source','Say something no single source says in that form','Summarise all perspectives','Avoid taking a position'],
+  a:1, why:'If a source already made your argument, you have reported rather than synthesised.'},
+ {q:'Plagiarism in AP Seminar results in:',
+  c:['A warning','A score of 0 on that component','A one-point deduction','Resubmission with a penalty'],
+  a:1, why:'The College Board treats integrity violations as non-negotiable, with no resubmission.'}
+]
+},
+{
+id:'u5', title:'Skill 5 · Team, Transform, and Transmit',
+guide:[
+{h:'Working as a team',
+ intro:'The team project is assessed on the group product and on your individual contribution. Both need managing deliberately, because a strong individual cannot rescue a badly organised team.',
+ points:[
+  'Agree <b>roles and deadlines</b> in writing at the start. Verbal agreements dissolve under pressure.',
+  'Each member takes a distinct <b>lens</b> on the shared question so the perspectives genuinely differ.',
+  'Build in a checkpoint well before the deadline where the team reads each other\u2019s work.',
+  'Handle disagreement by returning to the evidence, not to who spoke loudest.',
+  'A team member who under-delivers is a real risk. Document contributions as you go rather than after a dispute.',
+  'Reflection on your own process is assessed, so keep notes on what changed and why.'
+ ]},
+{h:'Presenting',
+ table:{head:['Do','Do not'],rows:[
+   ['Design slides to support speech','Read text off the slides'],
+   ['One idea per slide','Paragraphs of text'],
+   ['Use visuals that carry evidence','Use decorative images'],
+   ['Rehearse to time','Discover the overrun on the day'],
+   ['Prepare for defence questions','Assume questions will be easy'],
+   ['Cite on the slide','Leave sources unattributed']]},
+ points:[
+  'The <b>oral defence</b> asks questions you cannot script for. Preparation means knowing your reasoning, not memorising answers.',
+  'Expect to be asked what you would do differently and what your argument\u2019s weakest point is. Have honest answers ready.',
+  'Speak to the audience rather than the screen. Delivery is explicitly assessed.',
+  'Keep to time — running long is a common and avoidable loss of marks.',
+  'Anticipate the strongest objection to your conclusion and be ready to address it directly.'
+ ],
+ ex:{q:'In the defence you are asked: "What is the weakest part of your argument?" How should you respond?',
+     steps:['Do not claim there is no weakness — that reads as not having examined it.',
+            'Name a genuine limitation in your evidence or scope.',
+            'Explain why you still find your conclusion defensible despite it.',
+            'Say what further evidence would settle the question.'],
+     a:'Answer: name a real limitation and explain why the argument still holds. Examiners reward demonstrated self-awareness far more than a confident denial.'},
+ trap:'Reading from slides. It is the single most common presentation failure and is visible immediately.'}
+],
+cards:[
+ ['Team roles','Agree responsibilities and deadlines in writing at the start.'],
+ ['Distinct lenses','Each team member takes a different disciplinary angle on the shared question.'],
+ ['Handling team disagreement','Return to the evidence rather than to who argued hardest.'],
+ ['Slide design','One idea per slide, supporting speech rather than replacing it.'],
+ ['Oral defence','Unscripted questions testing whether you understand your own reasoning.'],
+ ['Expected defence question','What would you do differently, and what is your weakest point.'],
+ ['Answering about weaknesses','Name a real limitation and explain why the conclusion still holds.'],
+ ['Most common presentation failure','Reading text directly off the slides.'],
+ ['Timing','Overrunning is a frequent and entirely avoidable loss of marks.']
+],
+quiz:[
+ {q:'Asked to name your argument\u2019s weakest point in the defence, the best answer:',
+  c:['Denies there is one','Names a genuine limitation and explains why the conclusion holds','Changes the subject','Blames the sources'],
+  a:1, why:'Demonstrated self-awareness scores; a confident denial suggests you never examined the argument.'},
+ {q:'The most common presentation failure is:',
+  c:['Speaking too quietly','Reading directly from slides','Using too few sources','Finishing early'],
+  a:1, why:'It signals unfamiliarity with your own material and is immediately obvious to any audience.'},
+ {q:'Team roles should be agreed:',
+  c:['Verbally, on the day','In writing at the start','After the first draft','By the highest-scoring member'],
+  a:1, why:'Written agreements survive pressure and support the individual contribution assessment.'},
+ {q:'Each team member should approach the shared question through:',
+  c:['The same lens for consistency','A distinct disciplinary lens','Only primary sources','Whatever they find first'],
+  a:1, why:'Genuinely different lenses are what make the group\u2019s multiple-perspective analysis real.'}
+]
+},
+{
+id:'u6', title:'Task 1 · Team Project and Presentation',
+guide:[
+{h:'What the task requires',
+ intro:'Performance Task 1 is worth 20% of your score and has three parts: an individual research report, a team presentation, and an oral defence.',
+ table:{head:['Component','What it is','Length'],rows:[
+   ['Individual Research Report','Your own written analysis of one lens','1,200 words'],
+   ['Team Multimedia Presentation','A shared solution or conclusion','8–10 minutes'],
+   ['Oral Defence','Individual questions from the teacher','Two questions each']]},
+ points:[
+  'The team agrees on a <b>problem or issue</b>; each member investigates it through a different lens.',
+  'The <b>IRR</b> is written individually and is scored individually. It must stand alone as an argument.',
+  'The presentation must offer a <b>solution, resolution, or recommendation</b>, not merely describe the problem.',
+  'Your individual score depends on the IRR, your part of the presentation, and your defence answers.',
+  'A weak teammate cannot sink your IRR, which is why the report deserves your best independent work.'
+ ]},
+{h:'Doing it well',
+ points:[
+  'Choose a problem with genuine competing perspectives and available research. Narrow it early.',
+  'Assign lenses deliberately so the reports complement rather than overlap.',
+  'Build the presentation from the reports rather than writing it separately at the end.',
+  'The recommendation should follow visibly from the combined evidence.',
+  'Practise the defence by having teammates ask each other hard questions.',
+  'Cite consistently in both the report and on the slides.'
+ ],
+ ex:{q:'Your team investigates urban air quality. How should the four lenses be assigned?',
+     steps:['Avoid four people all reading environmental science.',
+            'Assign genuinely different disciplines.',
+            'Scientific: what pollutants and what health effects.',
+            'Economic: cost of mitigation versus healthcare burden.',
+            'Political: who has regulatory authority and what has passed.',
+            'Ethical: who bears exposure and who bears the cost.'],
+     a:'Answer: distinct lenses produce a presentation that genuinely synthesises rather than repeating one argument four times.'},
+ trap:'Splitting the topic by subtopic rather than by lens. Four sub-questions produce four mini-reports, not multiple perspectives on one question.'}
+],
+cards:[
+ ['Performance Task 1 weight','20% of the AP Seminar score.'],
+ ['Individual Research Report','1,200-word individual analysis, scored individually.'],
+ ['Team presentation','8–10 minutes proposing a solution or recommendation.'],
+ ['Oral defence','Two individual questions per team member.'],
+ ['Assigning lenses','Each member takes a different discipline, not a different subtopic.'],
+ ['Presentation requirement','Must propose a solution or resolution, not just describe a problem.'],
+ ['Why the IRR matters most','It is individually scored and cannot be undermined by teammates.'],
+ ['Common team mistake','Dividing by subtopic, which produces four mini-reports instead of multiple perspectives.']
+],
+quiz:[
+ {q:'The Individual Research Report is:',
+  c:['Written jointly','Written and scored individually','Optional','A summary of the presentation'],
+  a:1, why:'It is your own argument through your assigned lens and carries your individual score.'},
+ {q:'A team presentation that only describes the problem will:',
+  c:['Score full marks','Lose credit for lacking a solution or recommendation','Be disqualified','Be rescored'],
+  a:1, why:'The task explicitly requires proposing a resolution supported by the research.'},
+ {q:'Four team members investigating four subtopics rather than four lenses produces:',
+  c:['Stronger synthesis','Four mini-reports rather than multiple perspectives','A shorter presentation','Better citations'],
+  a:1, why:'Multiple perspectives means different ways of viewing one question, not different questions.'},
+ {q:'Performance Task 1 is worth what share of the AP Seminar score?',
+  c:['10%','20%','35%','45%'],
+  a:1, why:'Task 1 is 20%, Task 2 is 35%, and the end-of-course exam is 45%.'}
+]
+},
+{
+id:'u7', title:'Task 2 · Individual Research and Presentation',
+guide:[
+{h:'The individual task',
+ intro:'Performance Task 2 is worth 35% and is entirely your own work, built from stimulus material released by the College Board.',
+ table:{head:['Component','What it is','Length'],rows:[
+   ['Individual Written Argument','Your researched argument','2,000 words'],
+   ['Individual Multimedia Presentation','Presenting that argument','6–8 minutes'],
+   ['Oral Defence','Two questions from the teacher','—']]},
+ points:[
+  'You receive <b>stimulus materials</b> — several short texts on a broad theme — and must generate your own question from them.',
+  'Your question must connect to the stimulus but go well beyond it. Simply answering a stimulus text is insufficient.',
+  'The written argument must use <b>multiple perspectives</b> and reach a defended conclusion.',
+  'Research beyond the stimulus is required. The provided texts are a starting point, not a source list.',
+  'Include a works-cited list in a consistent style.'
+ ]},
+{h:'Common failures and how to avoid them',
+ points:[
+  'The most frequent problem is a question that is <b>too broad</b>. Narrow it until you can genuinely answer it in 2,000 words.',
+  'The second is <b>summary instead of argument</b>. If your paper reports what sources say, it will score in the lower bands.',
+  'Start early. Task 2 is released months before the deadline and rewards sustained work.',
+  'Draft the question first, test whether sources exist, then commit. Discovering there is no research at week six is costly.',
+  'Address the strongest counterargument explicitly rather than in passing.',
+  'Leave time to cut. First drafts of 2,000-word arguments are almost always overlong and under-argued.'
+ ],
+ ex:{q:'The stimulus theme is "borders". Turn it into a viable question.',
+     steps:['"What are borders?" is definitional and too broad.',
+            'Add a lens and a specific case.',
+            'Consider what is genuinely contested and researchable.'],
+     a:'Answer: something like "To what extent should climate displacement create legal grounds for asylum?" — narrow, contestable, connected to the theme, and supported by an existing body of research.'},
+ trap:'Choosing a question because it sounds impressive. Choose one where you can find substantial evidence on more than one side.'}
+],
+cards:[
+ ['Performance Task 2 weight','35% of the AP Seminar score.'],
+ ['Individual Written Argument','2,000-word researched argument, entirely individual.'],
+ ['Individual presentation','6–8 minutes presenting your argument.'],
+ ['Stimulus materials','Short texts on a broad theme, released by the College Board.'],
+ ['Relationship to the stimulus','Your question must connect to it but go substantially beyond it.'],
+ ['Research beyond the stimulus','Required; the provided texts are a starting point only.'],
+ ['Most common failure','A question that is far too broad.'],
+ ['Second most common failure','Summarising sources instead of building an argument.'],
+ ['Handling counterarguments','Address the strongest one explicitly, not in passing.']
+],
+quiz:[
+ {q:'The stimulus materials for Task 2 should be treated as:',
+  c:['Your complete source list','A starting point requiring further research','Optional reading','The subject of a summary'],
+  a:1, why:'The task requires independent research well beyond the provided texts.'},
+ {q:'The most common reason Task 2 papers score poorly is:',
+  c:['Poor citation style','A research question that is far too broad','Insufficient length','Too many sources'],
+  a:1, why:'A broad question forces shallow coverage and prevents a genuinely defended argument.'},
+ {q:'Performance Task 2 is worth:',
+  c:['20%','35%','45%','50%'],
+  a:1, why:'Task 2 is 35%, the largest of the two performance tasks.'},
+ {q:'A Task 2 paper that reports what each source argues will:',
+  c:['Score highly on synthesis','Score in the lower bands for lacking an argument','Be disqualified','Receive full evidence marks'],
+  a:1, why:'The rubric rewards constructing your own argument, not surveying existing ones.'}
+]
+},
+{
+id:'u8', title:'Exam · End-of-Course Written Exam',
+guide:[
+{h:'Format and timing',
+ intro:'The written exam is worth 45% — more than either performance task. It is two hours and entirely writing, with no multiple choice.',
+ table:{head:['Part','Task','Time','Weight'],rows:[
+   ['Part A','Analyse one argument in a source','~30 min','1 question'],
+   ['Part B','Build an evidence-based argument from four sources','~90 min','1 essay']]},
+ points:[
+  'You are given previously unseen source material on exam day. No prior knowledge of the topic is expected.',
+  '<b>Part A</b> asks you to identify and explain the author\u2019s argument, line of reasoning, and use of evidence.',
+  '<b>Part B</b> gives four sources on a common theme. You must take a position and use <b>at least two</b> of them.',
+  'You may bring in outside knowledge in Part B, but the provided sources must do the primary work.',
+  'Manage the clock deliberately — Part B carries more weight and needs the larger share of time.'
+ ]},
+{h:'Writing under exam conditions',
+ points:[
+  'For Part A, name the <b>main claim</b> first, then trace how the evidence supports it, then evaluate the reasoning.',
+  'Do not simply summarise the source. Analysis explains <i>how</i> the argument works.',
+  'For Part B, read all four sources before deciding your position. Committing early wastes reading.',
+  'Choose the position with the strongest available support, not the one you personally hold.',
+  'Cite sources clearly by author or label. Vague reference to "one source" loses credit.',
+  'Address a counterargument drawn from a source that opposes your position.',
+  'Leave five minutes to check that every paragraph supports your thesis.'
+ ],
+ ex:{q:'Part B gives four sources; three support one view. Should you take the majority position?',
+     steps:['Weight of numbers is not weight of evidence.',
+            'Assess the quality and relevance of each source.',
+            'A single well-supported source may outweigh three weak ones.',
+            'Whichever you choose, engage the opposing sources directly.'],
+     a:'Answer: choose the position you can argue most strongly from the evidence, then use the opposing source as the counterargument you address.'},
+ tip:'The exam rewards the same skills as the performance tasks, done fast. If you have practised analysing arguments and synthesising sources all year, the exam is a timed version of familiar work.'}
+],
+cards:[
+ ['End-of-course exam weight','45% — more than either performance task.'],
+ ['Exam format','Two hours, entirely written, with no multiple choice.'],
+ ['Part A','Analyse the argument, reasoning, and evidence in one source.'],
+ ['Part B','Build an evidence-based argument using at least two of four sources.'],
+ ['Prior knowledge','None required; all source material is provided on the day.'],
+ ['Part A common error','Summarising the source instead of analysing how the argument works.'],
+ ['Choosing a Part B position','Pick what you can argue best from the evidence, not what you personally believe.'],
+ ['Citing in the exam','Refer to sources clearly by author or label, never vaguely.'],
+ ['Counterargument','Draw it from a source that opposes your position and address it directly.']
+],
+quiz:[
+ {q:'The end-of-course exam is worth:',
+  c:['20%','35%','45%','55%'],
+  a:2, why:'At 45% it outweighs either performance task individually.'},
+ {q:'In Part B you must use at least:',
+  c:['One source','Two of the four sources','All four sources','Outside sources only'],
+  a:1, why:'The task requires synthesis across at least two provided sources.'},
+ {q:'The most common Part A error is:',
+  c:['Writing too much','Summarising rather than analysing the argument','Citing incorrectly','Taking a position'],
+  a:1, why:'Part A asks how the argument functions, which retelling its content does not address.'},
+ {q:'Three of four sources support one position. You should:',
+  c:['Always take the majority view','Choose the position best supported by the evidence','Refuse to take a position','Use only the majority sources'],
+  a:1, why:'Evidential strength decides, and the opposing source then becomes your counterargument.'}
+]
+}
+]);
+
+/* ------------------------------ AP AFRICAN AMERICAN STUDIES */
+addUnits('ap-afam', [
+{
+id:'u1', title:'Unit 1 · Origins of the African Diaspora',
+guide:[
+{h:'Africa before the transatlantic trade',
+ intro:'The course begins in Africa rather than at the point of enslavement. That choice is deliberate: it establishes that enslaved people came from societies with their own histories, institutions, and achievements.',
+ table:{head:['Society','Period','Known for'],rows:[
+   ['Ghana Empire','c. 300–1200','Gold and salt trade across the Sahara'],
+   ['Mali Empire','c. 1235–1600','Mansa Musa; Timbuktu as a centre of learning'],
+   ['Songhai','c. 1464–1591','Largest West African empire; Sankore university'],
+   ['Kongo Kingdom','c. 1390–1857','Centralised state; early diplomatic ties with Portugal'],
+   ['Benin Kingdom','c. 1180–1897','Bronze casting; walled capital city']]},
+ points:[
+  'West and Central Africa contained large states, extensive trade networks, universities, and written scholarship.',
+  '<b>Timbuktu</b> housed major libraries and drew scholars from across the Islamic world.',
+  'Religious traditions included Islam, Christianity, and Indigenous belief systems, often coexisting.',
+  'Griots preserved history and genealogy orally across generations.',
+  'Slavery existed in some African societies but differed fundamentally from what followed — it was generally not hereditary, not racial, and not chattel.'
+ ]},
+{h:'The transatlantic slave trade',
+ points:[
+  'European demand for plantation labour in the Americas drove a trade of unprecedented scale.',
+  'Roughly <b>12.5 million</b> Africans were forcibly transported; about 10.7 million survived the crossing.',
+  'The <b>Middle Passage</b> was the Atlantic crossing, marked by extreme overcrowding, disease, and mortality.',
+  'Olaudah Equiano\u2019s narrative is a key primary source describing capture and the crossing from lived experience.',
+  'The trade reshaped African societies, strengthening some states involved in it and devastating others.',
+  '<b>Chattel slavery</b> in the Americas was distinctive: hereditary, permanent, and racially defined by law.',
+  'Africans arrived with skills in rice cultivation, metalwork, medicine, and navigation that shaped colonial economies.'
+ ],
+ ex:{q:'Explain why the course emphasises African societies before covering enslavement.',
+     steps:['Beginning at enslavement implies people had no prior history.',
+            'Establishing states, scholarship, and trade networks corrects that.',
+            'It shows enslaved people brought skills, beliefs, and knowledge with them.',
+            'Those inheritances then shaped culture in the Americas.'],
+     a:'Answer: it establishes continuity of history and culture, framing enslavement as a rupture within a longer story rather than the beginning of one.'}}
+],
+cards:[
+ ['Mali Empire','West African state known for Mansa Musa and Timbuktu as a centre of learning.'],
+ ['Timbuktu','Major centre of scholarship with extensive libraries and universities.'],
+ ['Songhai','The largest West African empire, home to Sankore university.'],
+ ['Kingdom of Kongo','Centralised Central African state with early diplomatic ties to Portugal.'],
+ ['Griot','A West African oral historian preserving genealogy and history.'],
+ ['Scale of the trade','Roughly 12.5 million Africans forcibly transported across the Atlantic.'],
+ ['Middle Passage','The Atlantic crossing, marked by extreme conditions and high mortality.'],
+ ['Olaudah Equiano','Author of a widely read narrative describing capture and the Middle Passage.'],
+ ['Chattel slavery','Hereditary, permanent, racially defined slavery distinctive to the Americas.'],
+ ['African agricultural knowledge','Rice cultivation and other expertise that shaped colonial economies.']
+],
+quiz:[
+ {q:'Timbuktu was significant primarily as a centre of:',
+  c:['Military power','Scholarship and trade','Shipbuilding','Christian missionary work'],
+  a:1, why:'Its libraries and universities drew scholars from across the Islamic world.'},
+ {q:'Chattel slavery in the Americas differed from earlier forms of slavery chiefly because it was:',
+  c:['Temporary','Hereditary and racially defined in law','Limited to cities','Voluntary'],
+  a:1, why:'Status passed to children and was tied to race, unlike most earlier systems.'},
+ {q:'Roughly how many Africans were forcibly transported across the Atlantic?',
+  c:['1 million','12.5 million','50 million','100,000'],
+  a:1, why:'About 12.5 million embarked and roughly 10.7 million survived the crossing.'},
+ {q:'The course begins with African societies before enslavement in order to:',
+  c:['Reduce the focus on slavery','Establish the histories and knowledge enslaved people carried with them','Avoid difficult material','Cover more geography'],
+  a:1, why:'It frames enslavement as a rupture within a longer history rather than the start of one.'}
+]
+},
+{
+id:'u2', title:'Unit 2 · Freedom, Enslavement, and Resistance',
+guide:[
+{h:'The system of slavery in America',
+ intro:'Slavery in the United States was a legal, economic, and social system, and understanding it requires seeing how law, labour, and family were shaped together.',
+ points:[
+  '<b>Slave codes</b> defined enslaved people as property, restricted movement, banned literacy, and denied legal personhood.',
+  'The <b>cotton gin</b> made short-staple cotton profitable, driving slavery\u2019s westward expansion after 1793.',
+  'The <b>domestic slave trade</b> forcibly separated roughly a million people from families as slavery moved into the Deep South.',
+  'Enslaved people built kinship networks, sustained marriages without legal recognition, and preserved naming traditions.',
+  'Labour varied: field work, skilled trades, domestic work, and urban hiring-out arrangements.',
+  'Free Black communities existed in both North and South, always under legal precariousness.'
+ ]},
+{h:'Resistance',
+ intro:'Resistance was constant and took many forms. Focusing only on armed revolt misses most of it.',
+ table:{head:['Form','Examples'],rows:[
+   ['Everyday resistance','Work slowdowns, feigned illness, tool breaking, truancy'],
+   ['Cultural preservation','Music, spirituals, foodways, religion, naming'],
+   ['Escape','The Underground Railroad; Harriet Tubman'],
+   ['Literacy','Learning to read despite legal prohibition'],
+   ['Armed revolt','Stono Rebellion (1739); Nat Turner (1831)'],
+   ['Legal and political','Freedom suits; abolitionist organising']]},
+ points:[
+  '<b>Frederick Douglass</b>\u2019s narrative linked literacy directly to freedom and became central to abolitionist argument.',
+  '<b>Harriet Tubman</b> escaped and returned repeatedly to lead others out, later serving as a Union scout.',
+  '<b>David Walker\u2019s Appeal</b> (1829) called for resistance and circulated widely despite suppression.',
+  'Spirituals carried coded meaning as well as religious content.',
+  'Black abolitionists including Douglass, Sojourner Truth, and Maria Stewart shaped the movement rather than merely participating in it.',
+  'The Haitian Revolution demonstrated that enslaved people could overthrow a slaveholding state, and alarmed enslavers throughout the Americas.'
+ ],
+ ex:{q:'Why is everyday resistance historically significant if it did not end slavery?',
+     steps:['Armed revolt was rare because it was almost always fatal.',
+            'Daily acts imposed real economic costs on enslavers.',
+            'They preserved autonomy and asserted personhood within a system built to deny it.',
+            'They sustained the culture and networks that later organised abolition.'],
+     a:'Answer: it demonstrates continuous refusal of the system\u2019s terms, and shows enslaved people acting as agents rather than passive subjects.'}}
+],
+cards:[
+ ['Slave codes','Laws defining enslaved people as property and banning literacy and movement.'],
+ ['Cotton gin','Made short-staple cotton profitable, expanding slavery westward after 1793.'],
+ ['Domestic slave trade','Forced relocation of roughly a million people, separating families.'],
+ ['Everyday resistance','Work slowdowns, feigned illness, and tool breaking as continuous refusal.'],
+ ['Frederick Douglass','Formerly enslaved writer and orator who linked literacy to freedom.'],
+ ['Harriet Tubman','Escaped enslavement and returned repeatedly to lead others to freedom.'],
+ ['David Walker\u2019s Appeal','1829 pamphlet calling for resistance to slavery.'],
+ ['Stono Rebellion','1739 South Carolina revolt, the largest in the colonial period.'],
+ ['Nat Turner\u2019s Rebellion','1831 Virginia uprising followed by severe legal restrictions.'],
+ ['Spirituals','Religious songs that also carried coded meaning and preserved culture.'],
+ ['Haitian Revolution','The only successful large-scale revolt by enslaved people establishing a state.']
+],
+quiz:[
+ {q:'Slave codes banned literacy primarily because:',
+  c:['Paper was expensive','Reading enabled communication, organisation, and access to abolitionist material','Schools did not exist','It was a religious requirement'],
+  a:1, why:'Literacy threatened the system\u2019s control over information and made coordinated resistance possible.'},
+ {q:'Everyday resistance is historically important because it:',
+  c:['Ended slavery directly','Shows continuous refusal and asserts personhood within the system','Was legally protected','Was rare'],
+  a:1, why:'It demonstrates sustained agency where open revolt would have been fatal.'},
+ {q:'The cotton gin affected slavery by:',
+  c:['Reducing the need for enslaved labour','Making cotton profitable and expanding slavery westward','Ending the domestic slave trade','Improving conditions'],
+  a:1, why:'Faster processing made the crop enormously profitable, increasing demand for enslaved labour.'},
+ {q:'The Haitian Revolution alarmed slaveholding societies because it:',
+  c:['Was funded by Britain','Showed enslaved people could overthrow a state and abolish slavery','Ended the Atlantic trade','Created a monarchy'],
+  a:1, why:'It proved that a successful revolt was possible, which no slaveholding society could ignore.'}
+]
+},
+{
+id:'u3', title:'Unit 3 · The Practice of Freedom',
+guide:[
+{h:'Reconstruction and its reversal',
+ intro:'Emancipation was not the end of the struggle. Unit 3 traces what freedom meant in practice, and how quickly it was contested.',
+ table:{head:['Amendment','Year','Guarantee'],rows:[
+   ['13th','1865','Abolished slavery'],
+   ['14th','1868','Citizenship, due process, equal protection'],
+   ['15th','1870','Voting regardless of race']]},
+ points:[
+  'Freedpeople immediately sought <b>family reunification</b>, <b>education</b>, <b>land</b>, and <b>political participation</b>.',
+  'The <b>Freedmen\u2019s Bureau</b> provided food, schools, and labour contracts, though with limited resources.',
+  'Black churches, schools, and colleges founded in this period became lasting institutions.',
+  'Black men voted in large numbers and held office at every level, including Congress.',
+  '<b>Black Codes</b> and later <b>Jim Crow</b> laws re-established racial control after federal enforcement receded.',
+  '<b>Sharecropping</b> replaced slavery with debt-based dependence for most freedpeople.',
+  '<i>Plessy v. Ferguson</i> (1896) constitutionalised segregation under "separate but equal".'
+ ]},
+{h:'Migration, culture, and organising',
+ points:[
+  'The <b>Great Migration</b> moved roughly six million Black Americans from the rural South to Northern and Western cities between 1916 and 1970.',
+  'People left to escape violence and disfranchisement and to pursue industrial employment.',
+  'The <b>Harlem Renaissance</b> produced major literature, music, and art — Hughes, Hurston, Ellington, and others.',
+  'It reframed Black cultural production as central to American culture rather than peripheral to it.',
+  '<b>Booker T. Washington</b> emphasised vocational training and gradual economic advancement; <b>W.E.B. Du Bois</b> argued for immediate civil rights and higher education for a "Talented Tenth".',
+  '<b>Ida B. Wells</b> documented lynching statistically and campaigned internationally against it.',
+  'The <b>NAACP</b>, founded in 1909, pursued a long-term legal strategy against segregation.'
+ ],
+ ex:{q:'Compare Washington and Du Bois on how to advance Black Americans\u2019 position.',
+     steps:['Washington: prioritise vocational skills and economic self-sufficiency; accept segregation temporarily.',
+            'Du Bois: demand full civil and political rights immediately; educate a leadership class.',
+            'Both sought advancement; they disagreed on sequence and on what to concede.',
+            'Their context differed — Washington operated in the Deep South under direct threat.'],
+     a:'Answer: a strategic disagreement about sequencing and accommodation, not about the goal. Strong answers note how each man\u2019s circumstances shaped his approach.'},
+ trap:'Reducing Washington and Du Bois to a simple right-and-wrong. The exam rewards understanding the constraints each was operating under.'}
+],
+cards:[
+ ['13th Amendment','Abolished slavery throughout the United States.'],
+ ['14th Amendment','Granted citizenship and guaranteed due process and equal protection.'],
+ ['15th Amendment','Prohibited denying the vote on the basis of race.'],
+ ['Freedmen\u2019s Bureau','Federal agency providing food, schools, and labour contracts to freedpeople.'],
+ ['Sharecropping','Farming another\u2019s land for a share of the crop, producing cyclical debt.'],
+ ['Plessy v. Ferguson','1896 ruling upholding segregation under "separate but equal".'],
+ ['Great Migration','Movement of about six million Black Americans from the rural South, 1916–1970.'],
+ ['Harlem Renaissance','1920s flowering of Black literature, art, and music centred in Harlem.'],
+ ['Booker T. Washington','Advocated vocational training and gradual economic advancement.'],
+ ['W.E.B. Du Bois','Argued for immediate civil rights and higher education for a leadership class.'],
+ ['Ida B. Wells','Journalist who documented lynching and campaigned against it internationally.'],
+ ['NAACP','Founded 1909; pursued a long-term legal strategy against segregation.']
+],
+quiz:[
+ {q:'Sharecropping developed primarily because:',
+  c:['Freedpeople preferred it','Landowners had land but no cash and freedpeople had labour but no land','The federal government required it','Cotton prices were high'],
+  a:1, why:'The arrangement matched the two resources available, but crop liens produced lasting debt.'},
+ {q:'The primary disagreement between Washington and Du Bois concerned:',
+  c:['Whether slavery was wrong','Strategy and sequencing of advancement','Whether to migrate north','The value of education'],
+  a:1, why:'Both sought advancement; they differed on what to prioritise and what to concede in the short term.'},
+ {q:'The Great Migration was driven mainly by:',
+  c:['Federal relocation programmes','Escape from violence and disfranchisement plus Northern industrial jobs','Agricultural failure alone','Military conscription'],
+  a:1, why:'Push factors in the South and pull factors in Northern industry operated together.'},
+ {q:'The Harlem Renaissance is significant because it:',
+  c:['Ended segregation','Established Black cultural production as central to American culture','Was funded federally','Focused only on music'],
+  a:1, why:'It asserted cultural authority and produced work that reshaped American literature, art, and music.'}
+]
+},
+{
+id:'u4', title:'Unit 4 · Movements and Debates',
+guide:[
+{h:'The civil rights movement',
+ intro:'The movement was not a single organisation with a single strategy. Understanding the disagreements within it is as important as knowing its achievements.',
+ table:{head:['Event','Year','Significance'],rows:[
+   ['Brown v. Board','1954','Overturned Plessy; segregated schools inherently unequal'],
+   ['Montgomery Bus Boycott','1955–56','Mass nonviolent protest; King emerges as a leader'],
+   ['Sit-ins and SNCC','1960','Student-led direct action'],
+   ['Freedom Rides','1961','Tested desegregation of interstate travel'],
+   ['Birmingham campaign','1963','Televised violence forced federal response'],
+   ['Civil Rights Act','1964','Banned discrimination in public accommodations and employment'],
+   ['Voting Rights Act','1965','Ended literacy tests; federal oversight of registration']]},
+ points:[
+  'Legal strategy, mass protest, and federal legislation worked together; no single tactic explains the outcome.',
+  'King\u2019s <b>Letter from Birmingham Jail</b> defended civil disobedience against unjust laws and criticised moderate calls for patience.',
+  '<b>Ella Baker</b> favoured grassroots organising and participatory leadership over charismatic figureheads.',
+  '<b>Malcolm X</b> emphasised self-determination, self-defence, and Black pride, and his views shifted over time.',
+  '<b>Black Power</b> grew from frustration that legal equality had not produced economic equality, particularly outside the South.',
+  'Northern segregation was <i>de facto</i> rather than legal, and proved harder to attack through the courts.'
+ ]},
+{h:'Contemporary debates',
+ points:[
+  'Ongoing debates concern <b>reparations</b>, <b>affirmative action</b>, criminal justice, and how history is taught.',
+  '<b>Intersectionality</b>, developed by Kimberlé Crenshaw, analyses how race, gender, and class operate together rather than separately.',
+  'The <b>Black Arts Movement</b> and later Afrofuturism asserted cultural self-definition.',
+  '<b>Pan-Africanism</b> connected struggles across the diaspora, linking American movements to African independence.',
+  'Debates over <b>respectability politics</b> ask whether adapting to dominant norms advances or constrains a movement.',
+  'The <b>Black Lives Matter</b> movement organised largely through decentralised networks rather than a single leadership structure — closer to Baker\u2019s model than King\u2019s.',
+  'Data on wealth, health, and incarceration disparities is central to contemporary policy argument.'
+ ],
+ ex:{q:'Why did some activists turn toward Black Power despite the legislative victories of 1964 and 1965?',
+     steps:['The Acts removed legal segregation and secured voting rights.',
+            'They did not address wealth gaps, housing discrimination, or policing.',
+            'Northern segregation was de facto and untouched by those laws.',
+            'Some concluded that integration alone would not deliver equality.'],
+     a:'Answer: legal equality had not produced economic or social equality, so the emphasis shifted toward self-determination and building independent institutions.'},
+ tip:'This course rewards recognising disagreement within movements. Answers that treat Black political thought as uniform will miss the point of the unit.'}
+],
+cards:[
+ ['Brown v. Board of Education','1954 ruling that segregated public schools are inherently unequal.'],
+ ['Letter from Birmingham Jail','King\u2019s defence of civil disobedience against unjust laws.'],
+ ['Ella Baker','Organiser favouring grassroots participation over charismatic leadership.'],
+ ['Malcolm X','Advocate of self-determination and self-defence whose views evolved over time.'],
+ ['Black Power','Emphasis on self-determination, arising from the limits of legal equality.'],
+ ['De facto vs de jure segregation','De facto exists in practice; de jure is written into law.'],
+ ['Civil Rights Act of 1964','Banned discrimination in public accommodations and employment.'],
+ ['Voting Rights Act of 1965','Suspended literacy tests and added federal oversight of registration.'],
+ ['Intersectionality','Crenshaw\u2019s framework analysing how race, gender, and class operate together.'],
+ ['Pan-Africanism','Movement connecting struggles across the African diaspora.'],
+ ['Respectability politics','Debate over whether adapting to dominant norms advances or limits a movement.'],
+ ['Black Lives Matter','Decentralised movement organised through networks rather than a single leadership.']
+],
+quiz:[
+ {q:'De facto segregation differs from de jure segregation because it:',
+  c:['Is written into law','Exists in practice without legal backing','Only occurs in the South','Was ended by Brown'],
+  a:1, why:'Northern segregation arose through housing, lending, and school-district patterns rather than statute, making it harder to litigate.'},
+ {q:'Ella Baker\u2019s organising philosophy emphasised:',
+  c:['Charismatic national leadership','Grassroots participation and shared leadership','Legal strategy alone','Withdrawal from politics'],
+  a:1, why:'She believed durable movements grow from local capacity rather than depending on a single figure.'},
+ {q:'Intersectionality analyses how:',
+  c:['Movements split apart','Race, gender, and class operate together rather than separately','Courts interpret statutes','Migration patterns form'],
+  a:1, why:'Crenshaw showed that overlapping identities produce experiences that single-axis analysis misses.'},
+ {q:'The shift toward Black Power after 1965 reflected:',
+  c:['Rejection of the Civil Rights Acts','Recognition that legal equality had not produced economic equality','Declining participation','Federal encouragement'],
+  a:1, why:'Wealth, housing, and policing disparities persisted after segregation was outlawed.'}
+]
+}
+]);
+clearOutlineFlags();
+</script>
+<script>
 /* ============================================================
    StudyBuddy app
    ============================================================ */
@@ -15994,7 +17388,7 @@ function startReview() {
 /* ============================================================
    BACKUP AND RESTORE
    ============================================================ */
-const BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.tally'];
+const BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally'];
 function collectData() {
   const out = { app: 'StudyBuddy', version: 2, exported: new Date().toISOString(), data: {} };
   BACKUP_KEYS.forEach(k => { const v = store.get(k, null); if (v !== null) out.data[k] = v; });
@@ -17157,6 +18551,245 @@ vCourses = function () {
 </script>
 <script>
 /* ============================================================
+   ACTIVITY LOG
+   Records what was studied each day so the dashboard can show
+   a real chart instead of a decorative one.
+   ============================================================ */
+const Activity = {
+  all() { return store.get('sb.activity', {}); },
+  log(kind, n) {
+    const a = this.all(), t = today();
+    const d = a[t] || { cards: 0, questions: 0 };
+    d[kind] = (d[kind] || 0) + (n || 1);
+    a[t] = d;
+    /* keep 90 days so the store stays small */
+    const cut = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+    Object.keys(a).forEach(k => { if (k < cut) delete a[k]; });
+    store.set('sb.activity', a);
+  },
+  lastDays(n) {
+    const a = this.all(), out = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+      const rec = a[d] || {};
+      out.push({ date: d, cards: rec.cards || 0, questions: rec.questions || 0,
+                 total: (rec.cards || 0) + (rec.questions || 0) });
+    }
+    return out;
+  },
+  totals() {
+    const a = this.all();
+    return Object.values(a).reduce((s, d) =>
+      ({ cards: s.cards + (d.cards || 0), questions: s.questions + (d.questions || 0) }),
+      { cards: 0, questions: 0 });
+  }
+};
+
+/* hook into the two places studying actually happens */
+(function trackActivity() {
+  if (typeof markCard === 'function') {
+    const _mark = markCard;
+    markCard = function (known) { Activity.log('cards', 1); return _mark(known); };
+  }
+  if (typeof answer === 'function') {
+    const _ans = answer;
+    answer = function (i) { Activity.log('questions', 1); return _ans(i); };
+  }
+})();
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function activityChart() {
+  const days = Activity.lastDays(14);
+  const max = Math.max(4, ...days.map(d => d.total));
+  const W = 100, H = 42, gap = 1.6;
+  const bw = (W - gap * (days.length - 1)) / days.length;
+  const bars = days.map((d, i) => {
+    const h = d.total ? Math.max(2, (d.total / max) * (H - 6)) : 1.5;
+    const x = i * (bw + gap);
+    const isToday = i === days.length - 1;
+    return `<rect x="${x.toFixed(2)}" y="${(H - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}"
+      rx="0.8" fill="${d.total ? (isToday ? 'var(--margin)' : 'var(--ink)') : 'var(--line)'}"
+      opacity="${d.total ? (isToday ? 1 : .78) : 1}"><title>${d.date}: ${d.total} answered</title></rect>`;
+  }).join('');
+  const active = days.filter(d => d.total > 0).length;
+  const sum = days.reduce((n, d) => n + d.total, 0);
+  return `<div class="card">
+    <span class="eyebrow">Last 14 days</span>
+    <div class="row" style="gap:26px;margin:6px 0 14px">
+      <div class="stat"><b>${sum}</b><span>answered</span></div>
+      <div class="stat"><b>${active}</b><span>active days</span></div>
+      <div class="stat"><b>${sum && active ? Math.round(sum / active) : 0}</b><span>per active day</span></div>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:78px;display:block">${bars}</svg>
+    <div class="row" style="justify-content:space-between;margin-top:6px">
+      <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">14 DAYS AGO</span>
+      <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">TODAY</span>
+    </div>
+    ${sum === 0 ? `<p style="font-size:.85rem;color:var(--ink-faint);margin:12px 0 0">This fills in as you study. Answer a few flashcards and come back.</p>` : ''}
+  </div>`;
+}
+
+function masteryPanel() {
+  const all = COURSES.concat(customCourses());
+  const rows = all.map(c => ({ c, m: courseMastery(c) }))
+    .filter(r => r.m !== null)
+    .sort((a, b) => b.m - a.m)
+    .slice(0, 6);
+  if (!rows.length) {
+    return `<div class="card">
+      <span class="eyebrow">Mastery</span>
+      <h3 style="margin-bottom:6px">No scores yet</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">Take a unit quiz and your mastery per course appears here.</p>
+      <a class="btn ghost sm" href="#/courses">Find a course</a>
+    </div>`;
+  }
+  return `<div class="card">
+    <span class="eyebrow">Mastery by course</span>
+    <div style="margin-top:12px">
+      ${rows.map(r => `<a href="#/course/${r.c.id}" style="display:block;text-decoration:none;color:inherit;margin-bottom:13px">
+        <div class="row" style="justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:.88rem;font-weight:600">${esc(r.c.short)}</span>
+          <span style="font-size:.8rem;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft)">${r.m}%</span>
+        </div>
+        <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${r.m}%;background:${r.c.color || 'var(--ink)'};border-radius:3px"></div>
+        </div>
+      </a>`).join('')}
+    </div>
+  </div>`;
+}
+
+function continuePanel() {
+  const last = store.get('sb.last', null);
+  const prog = S.progress;
+  /* units touched recently, newest first, excluding the resume unit */
+  const recent = Object.keys(prog)
+    .map(k => ({ k, when: prog[k].when || '', best: prog[k].best }))
+    .sort((a, b) => (b.when || '').localeCompare(a.when || ''))
+    .map(r => {
+      const [cid, uid] = r.k.split('/');
+      const c = findCourse(cid); if (!c) return null;
+      const u = findUnit(c, uid); if (!u) return null;
+      if (last && last.c === cid && last.u === uid) return null;
+      return { c, u, best: r.best };
+    })
+    .filter(Boolean)
+    .slice(0, 4);
+  if (!recent.length) return '';
+  return `<div class="card">
+    <span class="eyebrow">Also in progress</span>
+    <div style="margin-top:10px">
+      ${recent.map(r => `<a href="#/study/${r.c.id}/${r.u.id}/cards"
+        style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;padding:9px 0;border-bottom:1px solid var(--line)">
+        <span style="width:3px;height:30px;background:${r.c.color || 'var(--ink)'};border-radius:2px;flex:0 0 3px"></span>
+        <span style="flex:1;min-width:0">
+          <span style="display:block;font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.u.title)}</span>
+          <span style="display:block;font-size:.76rem;color:var(--ink-faint)">${esc(r.c.short)}</span>
+        </span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft)">${r.best}%</span>
+      </a>`).join('')}
+    </div>
+  </div>`;
+}
+
+vDashboard = function () {
+  const all = COURSES.concat(customCourses());
+  const studied = Object.keys(S.progress).length;
+  const last = store.get('sb.last', null);
+  const due = (typeof Leitner !== 'undefined') ? (Leitner.counts().due || 0) : 0;
+  const missed = (typeof Missed !== 'undefined') ? Missed.count() : 0;
+  const streak = streakCount();
+  const tot = Activity.totals();
+  const ready = all.filter(c => !c.outlineOnly).length;
+
+  const resumeCard = (() => {
+    if (!last || !findCourse(last.c)) {
+      return `<div class="card" style="border-left:3px solid var(--margin)">
+        <span class="eyebrow">Start here</span>
+        <h3 style="margin-bottom:6px">Nothing studied yet</h3>
+        <p style="color:var(--ink-soft);font-size:.9rem;margin-bottom:14px">${ready} courses are ready to open, with study guides, flashcards, quizzes, and timed practice.</p>
+        <div class="row"><a class="btn mark" href="#/courses">Browse courses</a><a class="btn ghost" href="#/tutor">Use my own notes</a></div>
+      </div>`;
+    }
+    const c = findCourse(last.c), u = findUnit(c, last.u);
+    if (!u) return '';
+    const m = mastery(c.id, u.id);
+    return `<div class="card" style="border-left:3px solid ${c.color || 'var(--ink)'}">
+      <span class="eyebrow">Pick up where you left off</span>
+      <h3 style="margin-bottom:2px">${esc(u.title)}</h3>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin-bottom:${m === null ? '14' : '10'}px">${esc(c.name)}</p>
+      ${m === null ? '' : `<div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px">
+        <div style="height:100%;width:${m}%;background:${c.color || 'var(--ink)'};border-radius:3px"></div></div>`}
+      <div class="row">
+        <a class="btn mark" href="#/study/${c.id}/${u.id}/cards">Flashcards</a>
+        <a class="btn ghost" href="#/study/${c.id}/${u.id}/quiz">Quiz</a>
+        <a class="btn ghost" href="#/study/${c.id}/${u.id}/guide">Study guide</a>
+      </div>
+    </div>`;
+  })();
+
+  const action = (href, n, label, sub, urgent) => `<a href="${href}" class="card" style="text-decoration:none;color:inherit;display:block;padding:16px 18px${urgent && n ? ';border-color:var(--margin)' : ''}">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:1.7rem;font-weight:600;line-height:1;color:${urgent && n ? 'var(--margin)' : 'var(--ink)'}">${n}</div>
+    <div style="font-size:.9rem;font-weight:600;margin-top:5px">${label}</div>
+    <div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px">${sub}</div>
+  </a>`;
+
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Free · no account · no limits</span>
+    <h1>${streak > 0 ? `${streak} day${streak > 1 ? 's' : ''} in a <span class="hl">row</span>.` : 'Study something <span class="hl">today</span>.'}</h1>
+    <p>${studied ? `${studied} unit${studied > 1 ? 's' : ''} started across ${ready} courses. Keep going below.` : `Study guides, flashcards, quizzes, and timed practice for AP courses, the SAT, and the ACT.`}</p>
+  </div>
+
+  <!--mistake-slot-->
+  <div class="grid g2" style="margin-bottom:16px;align-items:start">
+    ${resumeCard}
+    ${activityChart()}
+  </div>
+
+  <div class="grid g3" style="margin-bottom:16px">
+    ${action('#/review', due, 'Due today', due ? 'Cards scheduled for review' : 'Nothing scheduled', true)}
+    ${action('#/mistakes', missed, 'Mistake book', missed ? 'Questions to revisit' : 'Nothing missed yet', true)}
+    ${action('#/tests', streak, 'Day streak', streak ? 'Study today to keep it' : 'Answer one question to start')}
+  </div>
+
+  <div class="grid g2" style="margin-bottom:16px;align-items:start">
+    ${masteryPanel()}
+    ${continuePanel() || `<div class="card">
+      <span class="eyebrow">Your totals</span>
+      <div class="row" style="gap:26px;margin-top:8px">
+        <div class="stat"><b>${tot.cards}</b><span>cards reviewed</span></div>
+        <div class="stat"><b>${tot.questions}</b><span>questions answered</span></div>
+      </div>
+      <hr class="divide">
+      <p style="font-size:.86rem;color:var(--ink-soft);margin:0">Everything is stored on this device. Sign in on the Account page to sync it, or export a backup from Settings.</p>
+    </div>`}
+  </div>
+
+  <span class="eyebrow" style="margin-top:8px">Jump back in</span>
+  <div class="grid g3" style="margin-bottom:10px">
+    <a class="card" href="#/courses" style="text-decoration:none;color:inherit">
+      <span class="eyebrow">Library</span>
+      <h3 style="margin-bottom:4px">${ready} courses ready</h3>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin:0">Full study guides, flashcards, quizzes, and timed practice.</p>
+    </a>
+    <a class="card" href="#/tests" style="text-decoration:none;color:inherit">
+      <span class="eyebrow">Practice</span>
+      <h3 style="margin-bottom:4px">Timed practice tests</h3>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin:0">Exam-length papers with no feedback until the end.</p>
+    </a>
+    <a class="card" href="#/tutor" style="text-decoration:none;color:inherit">
+      <span class="eyebrow">Your notes</span>
+      <h3 style="margin-bottom:4px">Build your own deck</h3>
+      <p style="color:var(--ink-soft);font-size:.87rem;margin:0">Paste class notes and get flashcards and a quiz back.</p>
+    </a>
+  </div>`;
+};
+</script>
+<script>
+/* ============================================================
    MISTAKE TRACKING
    Every question you get wrong is saved with the reason you missed
    it. Getting it right later clears it. This is the single highest
@@ -17405,7 +19038,10 @@ vDashboard = function () {
   const n = Missed.count();
   const html = _vDashboard();
   if (!n) return html;
-  return html.replace('<div class="grid g2" style="margin-bottom:22px">',
+  /* the dashboard exposes a stable marker so restyling it cannot silently
+     drop this card, which is exactly what happened once before. */
+  if (html.indexOf('<!--mistake-slot-->') === -1) return html;
+  return html.replace('<!--mistake-slot-->',
     `<a class="card fade" href="#/mistakes" style="display:block;text-decoration:none;border-left:3px solid var(--margin);margin-bottom:14px">
       <div class="spread">
         <div>
@@ -17416,7 +19052,7 @@ vDashboard = function () {
         <span class="btn mark">Review them</span>
       </div>
     </a>
-    <div class="grid g2" style="margin-bottom:22px">`);
+    `);
 };
 
 NAV.splice(4, 0, { h: '#/mistakes', t: 'Mistakes', i: '◔', m: 'Fix' });

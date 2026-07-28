@@ -370,6 +370,24 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* ================= FREE RESPONSE =========================== */
+#frtext{
+  border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  background:var(--paper);color:var(--ink);resize:vertical;min-height:280px;
+}
+#frtext:focus{outline:none;border-color:var(--ink)}
+.frsel{
+  font-family:'IBM Plex Mono',monospace;font-size:.86rem;padding:8px 10px;
+  border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);
+}
+.timer.low{color:var(--margin)}
+.plan-bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.plan-bar>div{height:100%;border-radius:4px}
+.daybox{
+  font-family:'IBM Plex Mono',monospace;font-size:2.1rem;font-weight:600;line-height:1;
+}
+@media print{#frtext{border:0}}
+
 /* ============ RICH STUDY GUIDE BLOCKS ====================== */
 code{
   font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.88em;
@@ -15941,17 +15959,18 @@ function allQuestions(filter) {
 const NAV = [
   { h: '#/', t: 'Dashboard', i: '◧', m: 'Home' },
   { h: '#/courses', t: 'Courses', i: '▤', m: 'Courses' },
-  { h: '#/tutor', t: 'AI Tutor', i: '✦', m: 'Tutor' },
+  { h: '#/tutor', t: 'AI Tutor', i: '✦', m: 'Tutor', deskOnly: true },
   { h: '#/tests', t: 'Practice tests', i: '⏱', m: 'Tests' },
   { h: '#/review', t: 'Due today', i: '◷', m: 'Due' },
-  { h: '#/stats', t: 'Students', i: '◉', m: 'Stats' },
-  { h: '#/settings', t: 'Settings', i: '⚙', m: 'More' }
+  { h: '#/stats', t: 'Students', i: '◉', m: 'Stats', deskOnly: true },
+  { h: '#/settings', t: 'Settings', i: '⚙', m: 'More', deskOnly: true }
 ];
 function paintNav() {
   const h = location.hash || '#/';
   $('#nav').innerHTML = '<span class="nav-label">Study</span>' + NAV.map(n =>
     `<a href="${n.h}" class="${h === n.h || (n.h !== '#/' && h.startsWith(n.h)) ? 'on' : ''}"><span class="ico">${n.i}</span>${n.t}</a>`).join('');
-  $('#tabbar').innerHTML = NAV.map(n =>
+  /* the phone bar only fits a handful; the rest stay in the sidebar */
+  $('#tabbar').innerHTML = NAV.filter(n => !n.deskOnly).map(n =>
     `<a href="${n.h}" class="${h === n.h || (n.h !== '#/' && h.startsWith(n.h)) ? 'on' : ''}"><span class="ico">${n.i}</span>${n.m || n.t.split(' ')[0]}</a>`).join('');
 }
 
@@ -16770,6 +16789,9 @@ function render() {
   else if (parts[0] === 'exam') html = vMasterReview(parts[1]);
   else if (parts[0] === 'stats') html = vStats();
   else if (parts[0] === 'tests') html = vTests();
+  else if (parts[0] === 'frq' && parts[1]) html = vFRQ(parts[1]);
+  else if (parts[0] === 'frq') html = vFRQs();
+  else if (parts[0] === 'plan') html = vPlan();
   else if (parts[0] === 'examtest') html = vExamTest(parts[1]);
   else if (parts[0] === 'tutor') html = vTutor();
   else if (parts[0] === 'settings') html = vSettings();
@@ -17389,7 +17411,7 @@ function startReview() {
 /* ============================================================
    BACKUP AND RESTORE
    ============================================================ */
-const BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally'];
+let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally'];
 function collectData() {
   const out = { app: 'StudyBuddy', version: 2, exported: new Date().toISOString(), data: {} };
   BACKUP_KEYS.forEach(k => { const v = store.get(k, null); if (v !== null) out.data[k] = v; });
@@ -19526,6 +19548,622 @@ paintQuizResult = function () {
 </script>
 <script>
 /* ============================================================
+   FREE RESPONSE
+   Prompts, source documents, a clock, and a rubric the student
+   walks themselves through. No AI grading: an honest yes/no
+   against explicit criteria, and it works with no connection.
+   ============================================================ */
+const FRQS = [
+{
+id:'apush-dbq-1', cid:'apush', type:'DBQ', mins:60, points:7,
+title:'Reconstruction: promise and reversal',
+prompt:'Evaluate the extent to which Reconstruction (1865\u20131877) represented a turning point in the lives of formerly enslaved Americans.',
+note:'Documents below are short paraphrased summaries written for practice, not full transcriptions. On the real exam you will be given seven documents of similar length.',
+docs:[
+ {n:1, src:'Freedmen\u2019s Bureau field report, Georgia, 1866',
+  text:'An agent reports that freedpeople across the district are pressing for two things above all others: schools for their children and written labour contracts. He notes that several planters refuse to sign contracts and that he lacks the men to compel them.'},
+ {n:2, src:'Mississippi Black Code, 1865',
+  text:'A state law requiring every Black person to hold written proof of employment each January, making it a criminal offence to leave an employer before the contract expires, and permitting the arrest of those found without work.'},
+ {n:3, src:'Speech by a Black delegate, South Carolina constitutional convention, 1868',
+  text:'A delegate argues that the vote is meaningless without land, and that men who must rent from their former enslavers cannot vote freely. He proposes state purchase of land for sale in small plots.'},
+ {n:4, src:'Photograph caption, Freedmen\u2019s school, Virginia, 1870',
+  text:'A one-room school with roughly sixty pupils ranging from small children to adults in their sixties. The teacher notes that many walk several miles and that attendance is highest after the harvest.'},
+ {n:5, src:'Congressional testimony on Klan violence, 1871',
+  text:'Witnesses describe night raids on Black officeholders and voters, the burning of a schoolhouse, and the reluctance of local authorities to make arrests. Several witnesses state they have stopped attending political meetings.'},
+ {n:6, src:'Sharecropping contract, Alabama, 1876',
+  text:'An agreement giving the labourer one third of the crop, with seed, tools, and provisions advanced by the landowner against that share. The contract forbids the labourer from selling any portion of the crop without the owner\u2019s consent.'},
+ {n:7, src:'Northern newspaper editorial, 1877',
+  text:'An editorial argues that the South must be left to manage its own affairs, that the nation is weary of the question, and that continued federal intervention serves no purpose.'}
+],
+rubric:[
+ {pts:1, label:'Thesis or claim', check:'Did you make a historically defensible claim that establishes a line of reasoning, in one or more consecutive sentences in the introduction or conclusion?',
+  tips:['A restatement of the prompt earns nothing.','"To a great extent... however..." style claims work well because they establish reasoning.']},
+ {pts:1, label:'Contextualization', check:'Did you describe a broader historical context relevant to the prompt, beyond a passing phrase?',
+  tips:['A sentence or two on the Civil War, emancipation, or the antebellum South.','It must be developed, not a single clause.']},
+ {pts:2, label:'Evidence from documents', check:'Did you accurately use the content of at least THREE documents to support your argument? (1 point) Did you use at least SIX? (2 points)',
+  tips:['Describing a document is not using it. It must support your claim.','Cite by number or by clear reference.']},
+ {pts:1, label:'Evidence beyond the documents', check:'Did you use at least one specific historical example NOT found in the documents, and explain how it supports your argument?',
+  tips:['Must be different from your contextualization.','Examples: the 14th and 15th Amendments, the Compromise of 1877, Black colleges founded in this period.']},
+ {pts:1, label:'Document sourcing', check:'For at least TWO documents, did you explain how the point of view, purpose, situation, or intended audience is relevant to the argument?',
+  tips:['Not just naming the author. Explain why it matters that a planter, agent, or delegate said it.']},
+ {pts:1, label:'Complexity', check:'Did you demonstrate a complex understanding \u2014 for example by analysing change over time, corroborating and qualifying, or explaining both continuity and change?',
+  tips:['This point is rarely earned. Arguing that Reconstruction was transformative AND reversed is a strong route.']}
+]
+},
+{
+id:'apush-leq-1', cid:'apush', type:'LEQ', mins:40, points:6,
+title:'Industrialization and American society, 1865\u20131900',
+prompt:'Evaluate the extent to which industrialization changed American society in the period from 1865 to 1900.',
+note:'No documents are provided. You supply all evidence from your own knowledge, which is what makes the LEQ harder than it looks.',
+docs:[],
+rubric:[
+ {pts:1, label:'Thesis or claim', check:'Did you make a historically defensible claim that establishes a line of reasoning?',
+  tips:['Must go beyond restating the prompt.','Establish what changed, for whom, and what did not.']},
+ {pts:1, label:'Contextualization', check:'Did you situate the argument in a broader historical context with a developed description?',
+  tips:['The Civil War, westward expansion, or earlier market revolution all work.']},
+ {pts:2, label:'Evidence', check:'Did you provide at least TWO specific and relevant examples? (1 point) Did you use that evidence to support an argument? (2 points)',
+  tips:['Naming Carnegie is evidence. Explaining how vertical integration changed labour is using it.','Specific: the Homestead Strike, the Sherman Antitrust Act, the AFL, tenement housing.']},
+ {pts:2, label:'Analysis and reasoning', check:'Did you use historical reasoning \u2014 causation, comparison, or continuity and change \u2014 to frame the argument? (1 point) Did you demonstrate a complex understanding? (2 points)',
+  tips:['Complexity route: industrialization raised aggregate wealth while worsening conditions for many workers.','Acknowledging what stayed the same is a reliable way to show complexity.']}
+]
+},
+{
+id:'apbio-frq-1', cid:'ap-bio', type:'FRQ', mins:25, points:8,
+title:'Enzyme activity and experimental design',
+prompt:'A student investigates catalase, an enzyme that breaks hydrogen peroxide into water and oxygen. She measures the volume of oxygen produced in 60 seconds at pH values of 3, 5, 7, 9, and 11, holding temperature and enzyme concentration constant. Activity peaks sharply at pH 7 and is near zero at pH 3 and pH 11.\n\n(a) Describe the relationship between pH and catalase activity shown by the data.\n(b) Explain, in terms of protein structure, why activity falls at extreme pH.\n(c) The student claims her data prove catalase would not function in the human stomach. Evaluate this claim.\n(d) Design a controlled experiment to determine the optimal temperature for catalase, identifying the independent variable, dependent variable, and one controlled variable.',
+note:'AP Biology free response rewards precision about the task verb. "Describe" is not "explain," and "evaluate" requires a judgement plus reasoning.',
+docs:[],
+rubric:[
+ {pts:2, label:'(a) Describe the relationship', check:'Did you state that activity rises to a maximum near pH 7 and falls on both sides, rather than describing a single direction?',
+  tips:['1 point for identifying the peak at pH 7.','1 point for noting activity declines on BOTH sides of the optimum.']},
+ {pts:2, label:'(b) Explain using protein structure', check:'Did you refer to denaturation and to disruption of the active site\u2019s shape?',
+  tips:['1 point for naming denaturation or loss of tertiary structure.','1 point for connecting shape change to substrate no longer binding the active site.']},
+ {pts:2, label:'(c) Evaluate the claim', check:'Did you take a position AND support it with reasoning about stomach pH?',
+  tips:['1 point for a clear judgement.','1 point for reasoning: stomach pH is around 2, where the data show near-zero activity, so the claim is reasonable for THIS enzyme \u2014 but note pepsin works there, so enzymes differ.']},
+ {pts:2, label:'(d) Experimental design', check:'Did you correctly identify all three variables and describe a valid procedure?',
+  tips:['1 point for IV = temperature, DV = oxygen volume produced.','1 point for a named controlled variable such as pH, enzyme concentration, or substrate concentration.','Holding "everything else constant" without naming one is not enough.']}
+]
+},
+{
+id:'apbio-frq-2', cid:'ap-bio', type:'FRQ', mins:12, points:4,
+title:'Cell signalling and feedback',
+prompt:'Insulin is released by the pancreas when blood glucose rises. Insulin binds receptors on muscle and liver cells, triggering glucose uptake, which lowers blood glucose.\n\n(a) Identify the type of signalling used by insulin and justify your answer.\n(b) Explain why insulin must bind a cell-surface receptor rather than entering the cell directly.\n(c) Identify the type of feedback shown and explain how it maintains homeostasis.\n(d) Predict the effect on blood glucose if a mutation prevented insulin receptors from changing shape after binding.',
+note:'Short free-response questions are scored tightly. Every point has a specific target; padding earns nothing.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Signalling type', check:'Did you identify endocrine signalling AND justify it by noting insulin travels through the bloodstream to distant target cells?',
+  tips:['Naming it without justification does not earn the point.']},
+ {pts:1, label:'(b) Why a surface receptor', check:'Did you explain that insulin is a protein, and therefore large and polar, so it cannot cross the hydrophobic phospholipid bilayer?',
+  tips:['"It is too big" alone is weak. Name the polarity or the hydrophobic interior.']},
+ {pts:1, label:'(c) Feedback type', check:'Did you identify negative feedback AND explain that the response reverses the original stimulus?',
+  tips:['Rising glucose triggers insulin, which lowers glucose, which reduces insulin release.']},
+ {pts:1, label:'(d) Prediction', check:'Did you predict that blood glucose would remain elevated, and connect it to failed signal transduction?',
+  tips:['The receptor binds but cannot transduce, so no glucose uptake occurs despite insulin being present.']}
+]
+},
+{
+id:'apchem-frq-1', cid:'ap-chem', type:'FRQ', mins:25, points:10,
+title:'Acid\u2013base equilibrium and titration',
+prompt:'A 25.0 mL sample of 0.100 M propanoic acid (HC\u2083H\u2085O\u2082, Ka = 1.3 \u00d7 10\u207b\u2075) is titrated with 0.100 M NaOH.\n\n(a) Write the balanced net ionic equation for the neutralisation.\n(b) Calculate the pH of the original acid solution before any base is added.\n(c) Calculate the pH after 12.5 mL of NaOH has been added, and identify what this point on the curve is called.\n(d) Is the pH at the equivalence point greater than, less than, or equal to 7? Justify your answer.\n(e) A student uses phenolphthalein (colour change pH 8.2\u201310.0) as the indicator. Explain whether this is an appropriate choice.',
+note:'AP Chemistry awards points for the work as much as the answer. Show setups even when you use a calculator.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Net ionic equation', check:'Did you write HC\u2083H\u2085O\u2082 + OH\u207b \u2192 C\u2083H\u2085O\u2082\u207b + H\u2082O, keeping the weak acid undissociated?',
+  tips:['Weak acids appear as intact molecules in net ionic equations. Writing H\u207a + OH\u207b loses the point.']},
+ {pts:2, label:'(b) Initial pH', check:'Did you set up an ICE table or the Ka expression and reach pH \u2248 2.94?',
+  tips:['1 point for a correct setup: Ka = x²/(0.100 − x).','1 point for the answer, roughly [H\u207a] = 1.14 \u00d7 10\u207b\u00b3 and pH = 2.94.']},
+ {pts:2, label:'(c) Half-equivalence point', check:'Did you recognise this as the half-equivalence point AND state pH = pKa \u2248 4.89?',
+  tips:['1 point for identifying half-equivalence.','1 point for pH = pKa = \u2212log(1.3 \u00d7 10\u207b\u2075) \u2248 4.89.']},
+ {pts:2, label:'(d) Equivalence point pH', check:'Did you state greater than 7 AND justify it by the conjugate base hydrolysing water?',
+  tips:['1 point for the direction.','1 point for the reason: propanoate is a weak base and accepts protons from water, producing OH\u207b.']},
+ {pts:1, label:'(e) Indicator choice', check:'Did you conclude phenolphthalein is appropriate and connect its range to the equivalence pH?',
+  tips:['The equivalence point is above 7, which falls within phenolphthalein\u2019s 8.2\u201310.0 range.']},
+ {pts:2, label:'Communication and units', check:'Did you show setups rather than bare answers, and carry units and significant figures?',
+  tips:['Bare numerical answers frequently lose points even when correct.']}
+]
+},
+{
+id:'apchem-frq-2', cid:'ap-chem', type:'FRQ', mins:12, points:4,
+title:'Kinetics and reaction mechanism',
+prompt:'For the reaction 2NO(g) + O\u2082(g) \u2192 2NO\u2082(g), experiments give the following: doubling [NO] quadruples the rate; doubling [O\u2082] doubles the rate.\n\n(a) Write the rate law and give the overall order.\n(b) A student proposes a single-step mechanism in which all three molecules collide simultaneously. Evaluate this proposal.\n(c) Explain why raising the temperature increases the rate, referring to activation energy.\n(d) A catalyst is added. Describe its effect on the rate, on \u0394H, and on the position of equilibrium.',
+note:'The rate law comes from experiment, never from the balanced equation. That distinction is tested every year.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Rate law', check:'Did you write rate = k[NO]\u00b2[O\u2082] and state third order overall?',
+  tips:['2\u02e3 = 4 gives x = 2; 2\u02b8 = 2 gives y = 1. Orders sum to 3.']},
+ {pts:1, label:'(b) Evaluate the mechanism', check:'Did you note that a simultaneous three-body collision is highly improbable, so a multi-step mechanism is more likely?',
+  tips:['The rate law happens to match the coefficients here, which is exactly why the question is a trap.']},
+ {pts:1, label:'(c) Temperature and activation energy', check:'Did you explain that higher temperature increases the fraction of collisions with energy exceeding the activation energy?',
+  tips:['"Molecules move faster" alone is incomplete. Name the energy distribution.']},
+ {pts:1, label:'(d) Catalyst effects', check:'Did you state that rate increases, \u0394H is unchanged, and equilibrium position is unchanged?',
+  tips:['All three must be correct. A catalyst provides an alternative pathway with lower activation energy.']}
+]
+},
+{
+id:'apcalc-frq-1', cid:'ap-calc-ab', type:'FRQ', mins:25, points:9,
+title:'Rates in and out: accumulation',
+prompt:'Water flows into a tank at a rate of R(t) = 20 + 8sin(t/3) litres per minute, for 0 \u2264 t \u2264 30. Water is removed at a constant rate of 25 litres per minute. The tank holds 400 litres at time t = 0.\n\n(a) Is the amount of water increasing or decreasing at t = 5? Justify with a calculation.\n(b) Find the total amount of water that flowed IN during the first 30 minutes.\n(c) Write, but do not evaluate, an expression for the amount of water in the tank at t = 30.\n(d) Find the time in [0, 30] at which the amount of water in the tank is at a minimum, and justify that it is a minimum.',
+note:'Calculator permitted. AP Calculus awards points for correct setups even when the arithmetic goes wrong, so always write the integral.',
+docs:[],
+rubric:[
+ {pts:2, label:'(a) Increasing or decreasing', check:'Did you compare R(5) with 25 and reach a conclusion with justification?',
+  tips:['1 point for evaluating R(5) \u2248 20 + 8sin(1.667) \u2248 27.96.','1 point for concluding it is increasing because inflow exceeds the 25 L/min outflow.']},
+ {pts:2, label:'(b) Total inflow', check:'Did you write the definite integral of R(t) from 0 to 30 and evaluate it?',
+  tips:['1 point for the correct integral setup.','1 point for the numerical value, roughly 622 litres.']},
+ {pts:2, label:'(c) Amount at t = 30', check:'Did you write 400 + \u222b\u2080\u00b3\u2070 (R(t) \u2212 25) dt, keeping the initial amount and the net rate?',
+  tips:['1 point for the initial 400.','1 point for integrating the NET rate, not just the inflow.','Forgetting the initial amount is the most common error on this part.']},
+ {pts:3, label:'(d) Minimum and justification', check:'Did you find where the net rate changes from negative to positive, and justify with a sign analysis?',
+  tips:['1 point for setting R(t) \u2212 25 = 0.','1 point for the correct t value.','1 point for justification: the net rate changes from negative to positive there, so it is a minimum. Stating the answer without sign analysis loses this point.']}
+]
+},
+{
+id:'apcalc-frq-2', cid:'ap-calc-ab', type:'FRQ', mins:20, points:9,
+title:'Particle motion',
+prompt:'A particle moves along a line with velocity v(t) = t\u00b2 \u2212 6t + 8 metres per second, for 0 \u2264 t \u2264 5. At t = 0 the particle is at position x = 3.\n\n(a) Find all times in [0, 5] when the particle changes direction, and justify.\n(b) Find the displacement of the particle over [0, 5].\n(c) Find the total distance travelled over [0, 5].\n(d) Find the particle\u2019s position at t = 5.\n(e) Is the particle speeding up or slowing down at t = 1? Justify.',
+note:'Displacement and total distance are different questions, and part (e) requires comparing the signs of velocity and acceleration.',
+docs:[],
+rubric:[
+ {pts:2, label:'(a) Direction changes', check:'Did you factor to find t = 2 and t = 4, AND verify that v changes sign at each?',
+  tips:['1 point for the correct times.','1 point for justification by sign change. Setting v = 0 alone does not prove a direction change.']},
+ {pts:2, label:'(b) Displacement', check:'Did you compute \u222b\u2080\u2075 v(t) dt without absolute value?',
+  tips:['1 point for the setup.','1 point for the value: 125/3 \u2212 75 + 40 = 20/3 \u2248 6.67 m.']},
+ {pts:3, label:'(c) Total distance', check:'Did you split the integral at t = 2 and t = 4 and sum the absolute values?',
+  tips:['1 point for recognising the need to split.','1 point for splitting at BOTH sign changes.','1 point for the correct total, 71/3 \u2248 23.67 m.']},
+ {pts:1, label:'(d) Position at t = 5', check:'Did you compute 3 + displacement = 3 + 20/3 \u2248 9.67?',
+  tips:['Position equals initial position plus displacement, never total distance.']},
+ {pts:1, label:'(e) Speeding up or slowing down', check:'Did you evaluate both v(1) and a(1) and compare their signs?',
+  tips:['v(1) = 3 (positive), a(1) = 2(1) \u2212 6 = \u22124 (negative). Opposite signs mean slowing down.']}
+]
+},
+{
+id:'aplang-frq-1', cid:'ap-lang', type:'Essay', mins:40, points:6,
+title:'Rhetorical analysis',
+prompt:'Read the passage below, then write an essay analysing the rhetorical choices the writer makes to advance her argument.\n\nPASSAGE (adapted for practice): A city council member addresses residents opposing a new homeless shelter in their neighbourhood. She opens by naming three streets they all live on, then describes a man she met at the existing shelter who had worked twenty years at a factory two miles away. She concedes that the residents\u2019 concerns about property values are "not imaginary, and not unreasonable." She then presents figures from two comparable cities where values rose. She closes by asking what the neighbourhood would want if the man she described had been their neighbour \u2014 because, she notes, he was.',
+note:'Rhetorical analysis is not device-spotting. The rubric rewards explaining how choices work on this specific audience.',
+docs:[],
+rubric:[
+ {pts:1, label:'Thesis', check:'Did you make a defensible thesis analysing the writer\u2019s rhetorical choices, rather than summarising the passage?',
+  tips:['"The writer uses pathos and logos" is a list, not a thesis.','A strong thesis names what the choices accomplish together.']},
+ {pts:4, label:'Evidence and commentary', check:'Did you select specific evidence and explain how each choice advances the argument? Score honestly: 1 for mostly summary, 2 for evidence with weak links, 3 for consistent explanation, 4 for consistent explanation of how choices work on the audience.',
+  tips:['Naming the streets establishes shared identity before making a request.','The concession disarms opposition by granting the concern is legitimate.','The final reveal reframes an abstraction as a neighbour.']},
+ {pts:1, label:'Sophistication', check:'Did you situate the argument in a broader context, address tension or complexity, or write with consistent rhetorical control?',
+  tips:['Noting that the concession is itself a persuasive strategy is a strong move.','Elevated vocabulary does not earn this point.']}
+]
+},
+{
+id:'aplit-frq-1', cid:'ap-lit', type:'Essay', mins:40, points:6,
+title:'Poetry analysis',
+prompt:'Read the poem below, then write an essay analysing how the poet uses literary techniques to convey the speaker\u2019s attitude toward the house.\n\nPOEM (written for practice):\n\nThe key still turns. The hinge still gives its cry.\nI know which floorboard sings beneath the stair,\nwhich window sticks, which shutter holds the sky\nan inch too long before it lets in air.\n\nI could walk blind from kitchen door to bed.\nMy hands remember what my mind let go.\nThe rooms have kept their measurements. Instead\nit is the measurer who does not know\n\nwhat he came back to find, or why he came,\nor how a place can stay so much the same\nand still refuse him. Nothing here has moved.\nHe is the only thing the house removed.',
+note:'The poem is original, written for this exercise. Read it twice before writing: once for sense, once for structure and shift.',
+docs:[],
+rubric:[
+ {pts:1, label:'Thesis', check:'Did you make a defensible interpretive claim about the speaker\u2019s attitude, responding to the prompt?',
+  tips:['"The speaker feels nostalgic" is thin. What is the relationship between his memory and his exclusion?']},
+ {pts:4, label:'Evidence and commentary', check:'Did you use specific textual evidence and explain how techniques create meaning? Score honestly: 1 for summary, 2 for evidence with thin commentary, 3 for consistent explanation, 4 for sustained analysis of how techniques build the attitude.',
+  tips:['The volta at "Instead" turns the poem from the house to the speaker.','The final line reverses agency: he expected to find the house changed; the house removed him.','Sensory precision in the first stanza establishes intimacy the ending withdraws.']},
+ {pts:1, label:'Sophistication', check:'Did you engage complexity \u2014 tension, ambiguity, or a reading the poem resists resolving?',
+  tips:['The poem never says whether the exclusion is grief, guilt, or time. Naming that irresolution is a route to this point.']}
+]
+}
+];
+
+/* ---------------- storage ---------------- */
+const FR = {
+  key(id) { return 'sb.fr.' + id; },
+  get(id) { return store.get(this.key(id), { text: '', scores: {}, best: null, at: '' }); },
+  save(id, v) { store.set(this.key(id), v); },
+  pct(id) { const r = this.get(id); return r.best; }
+};
+
+/* ---------------- views ---------------- */
+function vFRQs() {
+  const byCourse = {};
+  FRQS.forEach(f => { (byCourse[f.cid] = byCourse[f.cid] || []).push(f); });
+  const order = Object.keys(byCourse);
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Free response</span>
+    <h1>Write it out</h1>
+    <p>AP exams are roughly half free response, and no amount of multiple choice prepares you for a blank page and a clock. Each of these gives you a real prompt, a timer, and the actual scoring rubric to mark yourself against.</p>
+  </div>
+  <div class="note" style="max-width:66ch;margin-bottom:20px">
+    <b>Nothing here is graded by a machine.</b> You write, then you walk the rubric line by line and decide honestly whether you did each thing. That is closer to how examiners actually score, and it teaches you what they are looking for.
+  </div>
+  ${order.map(cid => {
+    const c = findCourse(cid);
+    return `<span class="eyebrow" style="margin-top:20px">${c ? esc(c.name) : esc(cid)}</span>
+    <div class="grid g2" style="margin-bottom:12px">
+      ${byCourse[cid].map(f => {
+        const rec = FR.get(f.id);
+        return `<a class="card" href="#/frq/${f.id}" style="text-decoration:none;color:inherit;display:block">
+          <div class="spread">
+            <div style="min-width:0">
+              <span class="eyebrow">${f.type} · ${f.points} points · ${f.mins} min</span>
+              <h3 style="margin-bottom:3px">${esc(f.title)}</h3>
+              <p style="color:var(--ink-soft);font-size:.85rem;margin:0">${f.docs.length ? f.docs.length + ' documents' : 'No documents'}</p>
+            </div>
+            <span class="btn ${rec.best === null ? 'mark' : 'ghost'} sm">${rec.best === null ? 'Start' : rec.best + '/' + f.points}</span>
+          </div>
+        </a>`;
+      }).join('')}
+    </div>`;
+  }).join('')}`;
+}
+
+function findFRQ(id) { return FRQS.find(f => f.id === id) || null; }
+
+function vFRQ(id) {
+  const f = findFRQ(id);
+  if (!f) return notFound();
+  const rec = FR.get(f.id);
+  return topbar() + `
+  <a class="crumb" href="#/frq">← Free response</a>
+  <div class="page-head fade">
+    <span class="eyebrow">${f.type} · ${f.points} points · ${f.mins} minutes</span>
+    <h1>${esc(f.title)}</h1>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <span class="eyebrow">Prompt</span>
+    <p style="white-space:pre-wrap;font-family:'Newsreader',Georgia,serif;font-size:1.05rem;line-height:1.65;margin:8px 0 0">${esc(f.prompt)}</p>
+    ${f.note ? `<div class="note" style="margin-top:14px">${f.note}</div>` : ''}
+  </div>
+  ${f.docs.length ? `<span class="eyebrow">Documents</span>
+  <div class="grid g2" style="margin-bottom:16px">
+    ${f.docs.map(d => `<div class="card" style="padding:14px 16px">
+      <span class="eyebrow">Document ${d.n}</span>
+      <p style="font-size:.8rem;color:var(--ink-faint);margin:2px 0 8px;font-style:italic">${esc(d.src)}</p>
+      <p style="font-size:.9rem;line-height:1.6;margin:0">${esc(d.text)}</p>
+    </div>`).join('')}
+  </div>` : ''}
+  <div class="card" id="frwrap">
+    <div class="spread" style="margin-bottom:10px">
+      <span class="eyebrow">Your response</span>
+      <span class="row" style="gap:10px">
+        <span class="timer" id="frclock">${f.mins}:00</span>
+        <button class="btn ghost sm" id="frtimer" onclick="frStart('${f.id}')">Start the clock</button>
+      </span>
+    </div>
+    <textarea id="frtext" rows="16" placeholder="Write your response here. It saves as you type, so you can close the tab and come back."
+      style="width:100%;font-family:'Newsreader',Georgia,serif;font-size:1rem;line-height:1.7"
+      oninput="frSave('${f.id}')">${esc(rec.text || '')}</textarea>
+    <div class="spread" style="margin-top:10px">
+      <span style="font-size:.8rem;color:var(--ink-faint)" id="frcount">${(rec.text || '').trim() ? (rec.text.trim().split(/\s+/).length + ' words') : 'Not started'}</span>
+      <button class="btn mark" onclick="frGrade('${f.id}')">I\u2019m done — score it</button>
+    </div>
+  </div>
+  <div id="frrubric"></div>`;
+}
+
+let FRT = null;
+function frStart(id) {
+  const f = findFRQ(id);
+  if (FRT) { clearInterval(FRT); FRT = null; }
+  const ends = Date.now() + f.mins * 60000;
+  const btn = $('#frtimer'); if (btn) { btn.textContent = 'Stop'; btn.setAttribute('onclick', `frStop()`); }
+  const paint = () => {
+    const el = $('#frclock'); if (!el) { clearInterval(FRT); return; }
+    const left = Math.max(0, ends - Date.now());
+    el.textContent = Math.floor(left / 60000) + ':' + String(Math.floor(left % 60000 / 1000)).padStart(2, '0');
+    el.classList.toggle('low', left < 120000);
+    if (left <= 0) { clearInterval(FRT); FRT = null; el.textContent = 'Time'; }
+  };
+  paint(); FRT = setInterval(paint, 1000);
+}
+function frStop() {
+  if (FRT) { clearInterval(FRT); FRT = null; }
+  const btn = $('#frtimer'); if (btn) { btn.textContent = 'Start the clock'; }
+}
+function frSave(id) {
+  const t = $('#frtext'); if (!t) return;
+  const rec = FR.get(id); rec.text = t.value; rec.at = today(); FR.save(id, rec);
+  const c = $('#frcount');
+  if (c) c.textContent = t.value.trim() ? (t.value.trim().split(/\s+/).length + ' words · saved') : 'Not started';
+}
+
+function frGrade(id) {
+  const f = findFRQ(id), rec = FR.get(id);
+  frStop();
+  const box = $('#frrubric');
+  box.innerHTML = `
+  <span class="eyebrow" style="margin-top:22px">Score yourself</span>
+  <p style="color:var(--ink-soft);font-size:.9rem;max-width:64ch;margin:0 0 14px">Read your response against each row and answer honestly. Marking a point you did not earn only fools you \u2014 the examiner will not be so generous.</p>
+  ${f.rubric.map((r, i) => `<div class="card" style="margin-bottom:10px">
+    <div class="spread" style="align-items:flex-start;gap:14px">
+      <div style="min-width:0">
+        <span class="eyebrow">${esc(r.label)} · ${r.pts} point${r.pts > 1 ? 's' : ''}</span>
+        <p style="font-size:.95rem;line-height:1.6;margin:6px 0 0">${esc(r.check)}</p>
+        ${r.tips && r.tips.length ? `<ul style="margin:10px 0 0;padding-left:18px;font-size:.86rem;color:var(--ink-soft);line-height:1.6">
+          ${r.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+      </div>
+      <select class="frsel" data-i="${i}" data-max="${r.pts}" onchange="frTotal('${id}')" style="flex:0 0 96px">
+        ${Array.from({ length: r.pts + 1 }, (_, n) => `<option value="${n}"${(rec.scores && rec.scores[i] === n) ? ' selected' : ''}>${n} / ${r.pts}</option>`).join('')}
+      </select>
+    </div>
+  </div>`).join('')}
+  <div class="card" style="border-left:3px solid var(--margin)">
+    <div class="spread">
+      <div>
+        <span class="eyebrow">Total</span>
+        <h3 style="margin-bottom:2px" id="frtotal">— / ${f.points}</h3>
+        <p style="color:var(--ink-soft);font-size:.86rem;margin:0" id="frband">Choose a score for each row.</p>
+      </div>
+      <button class="btn mark" onclick="frSaveScore('${id}')">Save this score</button>
+    </div>
+  </div>`;
+  frTotal(id);
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function frTotal(id) {
+  const f = findFRQ(id);
+  let n = 0;
+  document.querySelectorAll('.frsel').forEach(s => { n += +s.value; });
+  const el = $('#frtotal'); if (el) el.textContent = n + ' / ' + f.points;
+  const pct = n / f.points;
+  const band = pct >= 0.85 ? 'That is a very strong response. Check you were honest on the hardest rows.'
+    : pct >= 0.6 ? 'Solid. Look at the rows you missed \u2014 those are usually the same ones every time.'
+    : pct >= 0.35 ? 'There is a clear structure to work on here. Rewrite it targeting the rows you scored zero.'
+    : 'Start with the thesis and evidence rows. Those carry the most points and are the most learnable.';
+  const b = $('#frband'); if (b) b.textContent = band;
+}
+
+function frSaveScore(id) {
+  const f = findFRQ(id), rec = FR.get(id);
+  const scores = {};
+  let n = 0;
+  document.querySelectorAll('.frsel').forEach(s => { scores[+s.dataset.i] = +s.value; n += +s.value; });
+  rec.scores = scores;
+  rec.best = rec.best === null ? n : Math.max(rec.best, n);
+  rec.at = today();
+  FR.save(id, rec);
+  if (typeof Activity !== 'undefined') Activity.log('questions', 1);
+  const b = $('#frband');
+  if (b) b.innerHTML = `Saved. Your best on this prompt is <b>${rec.best} / ${f.points}</b>.`;
+}
+</script>
+<script>
+/* ============================================================
+   EXAM COUNTDOWN AND STUDY PLAN
+   Turns the library into a coach. Everything below is derived
+   from data the app already keeps: mastery scores, Leitner
+   boxes, and the mistake book. Only the dates are new.
+   ============================================================ */
+const Exams = {
+  all() { return store.get('sb.examdates', {}); },
+  save(m) { store.set('sb.examdates', m); },
+  set(cid, date) { const m = this.all(); if (date) m[cid] = date; else delete m[cid]; this.save(m); },
+  get(cid) { return this.all()[cid] || null; },
+  daysTo(date) {
+    if (!date) return null;
+    const t = new Date(today() + 'T00:00:00').getTime();
+    const d = new Date(date + 'T00:00:00').getTime();
+    return Math.round((d - t) / 864e5);
+  },
+  /* courses with a date, soonest first, past exams dropped */
+  upcoming() {
+    const m = this.all();
+    return Object.keys(m)
+      .map(cid => ({ c: findCourse(cid), date: m[cid], days: this.daysTo(m[cid]) }))
+      .filter(x => x.c && x.days !== null && x.days >= 0)
+      .sort((a, b) => a.days - b.days);
+  }
+};
+
+/* ---------- what the app already knows about a course ---------- */
+function courseDiagnosis(c) {
+  const units = c.units || [];
+  const scored = [], unstarted = [];
+  units.forEach(u => {
+    const m = mastery(c.id, u.id);
+    if (m === null) unstarted.push(u); else scored.push({ u, m });
+  });
+  scored.sort((a, b) => a.m - b.m);
+  const avg = scored.length ? Math.round(scored.reduce((n, x) => n + x.m, 0) / scored.length) : null;
+  /* mistakes and due cards belonging to this course */
+  let missed = 0;
+  try {
+    const all = Missed.all();
+    Object.keys(all).forEach(k => { if (all[k] && all[k].cid === c.id) missed++; });
+  } catch (e) {}
+  let due = 0;
+  try {
+    Leitner.dueCards().forEach(d => { if (d.cid === c.id) due++; });
+  } catch (e) {}
+  return { avg, weakest: scored.slice(0, 3), unstarted, scored, missed, due, total: units.length };
+}
+
+/* ---------- a concrete plan for the week ---------- */
+function weekPlan(c, days) {
+  const d = courseDiagnosis(c);
+  const out = [];
+  if (d.missed > 0)
+    out.push({ do: `Clear ${d.missed} question${d.missed > 1 ? 's' : ''} from your mistake book`, why: 'Questions you already got wrong are the cheapest points available.', href: '#/mistakes' });
+  if (d.due > 0)
+    out.push({ do: `Review ${d.due} card${d.due > 1 ? 's' : ''} due today`, why: 'Spaced repetition only works if you meet the schedule.', href: '#/review' });
+  d.weakest.forEach(w => {
+    if (w.m < 80) out.push({ do: `Redo ${w.u.title} — currently ${w.m}%`, why: 'Your lowest scoring unit is where the most marks are sitting.', href: `#/study/${c.id}/${w.u.id}/quiz` });
+  });
+  if (d.unstarted.length)
+    out.push({ do: `Start ${d.unstarted[0].title}`, why: `${d.unstarted.length} unit${d.unstarted.length > 1 ? 's' : ''} untouched. Cover them before polishing.`, href: `#/study/${c.id}/${d.unstarted[0].id}/guide` });
+  const frq = FRQS.filter(f => f.cid === c.id);
+  if (frq.length) {
+    const un = frq.find(f => FR.get(f.id).best === null) || frq[0];
+    out.push({ do: `Write one timed ${un.type}: ${un.title}`, why: 'Roughly half the exam is free response. Multiple choice does not prepare you for it.', href: `#/frq/${un.id}` });
+  }
+  if (days !== null && days <= 14 && d.total)
+    out.push({ do: 'Sit a full timed practice test', why: 'Close to the exam, pacing matters more than new content.', href: '#/tests' });
+  /* with little data the list above is thin, so fill it with the things
+     that are worth doing regardless of what the app knows yet */
+  if (out.length < 4) {
+    if (d.scored.length === 0)
+      out.unshift({ do: `Quiz yourself on ${(c.units[0]||{}).title || 'the first unit'}`, why: 'The plan sharpens as soon as it has scores to work from.', href: `#/study/${c.id}/${(c.units[0]||{}).id||''}/quiz` });
+    if (d.unstarted.length > 1)
+      out.push({ do: `Read the guide for ${d.unstarted[Math.min(1, d.unstarted.length - 1)].title}`, why: 'Cover unseen material before polishing what you already know.', href: `#/study/${c.id}/${d.unstarted[Math.min(1, d.unstarted.length - 1)].id}/guide` });
+    if (days !== null && days > 14)
+      out.push({ do: 'Build a review habit now', why: `${days} days is enough to space your revision. Cramming in the last week costs marks.`, href: '#/review' });
+    out.push({ do: `Run a mixed practice test for ${c.short}`, why: 'Mixing units exposes gaps that unit-by-unit study hides.', href: '#/tests' });
+  }
+  const seen = new Set();
+  return out.filter(o => { if (seen.has(o.do)) return false; seen.add(o.do); return true; }).slice(0, 5);
+}
+
+function urgency(days) {
+  if (days === null) return { c: 'var(--ink-faint)', t: '' };
+  if (days <= 7) return { c: 'var(--margin)', t: 'This week' };
+  if (days <= 30) return { c: 'var(--margin)', t: 'Under a month' };
+  if (days <= 90) return { c: 'var(--ink)', t: '' };
+  return { c: 'var(--ink-faint)', t: '' };
+}
+
+function vPlan() {
+  const all = COURSES.concat(customCourses()).filter(c => !c.outlineOnly);
+  const up = Exams.upcoming();
+  const dates = Exams.all();
+
+  const setter = `
+  <div class="card" style="margin-bottom:18px">
+    <span class="eyebrow">Your exam dates</span>
+    <p style="color:var(--ink-soft);font-size:.9rem;margin:6px 0 14px">Add a date and the plan below builds itself from your scores, your mistake book, and what is due for review.</p>
+    <div class="row" style="flex-wrap:nowrap;gap:8px;margin-bottom:10px">
+      <select id="planCourse" style="flex:1;min-width:0">
+        ${all.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}
+      </select>
+      <input type="date" id="planDate" style="flex:0 0 auto">
+      <button class="btn sm mark" onclick="addExamDate()">Add</button>
+    </div>
+    ${Object.keys(dates).length ? `<div style="margin-top:6px">
+      ${Object.keys(dates).map(cid => {
+        const c = findCourse(cid); if (!c) return '';
+        const d = Exams.daysTo(dates[cid]);
+        return `<div class="spread" style="padding:7px 0;border-bottom:1px solid var(--line)">
+          <span style="font-size:.88rem">${esc(c.short)} — ${esc(dates[cid])}${d !== null && d < 0 ? ' <span style="color:var(--ink-faint)">(past)</span>' : ''}</span>
+          <button class="chip" onclick="removeExamDate('${cid}')">Remove</button>
+        </div>`;
+      }).join('')}
+    </div>` : ''}
+  </div>`;
+
+  if (!up.length) {
+    return topbar() + `
+    <div class="page-head fade">
+      <span class="eyebrow">Exam plan</span>
+      <h1>What should I do <span class="hl">this week</span>?</h1>
+      <p>Tell StudyBuddy when your exams are and it will work out what to study, using the scores and mistakes you have already built up.</p>
+    </div>
+    ${setter}
+    <div class="note" style="max-width:64ch">Nothing scheduled yet. AP exams usually run in the first two weeks of May; the SAT and ACT have dates through the year.</div>`;
+  }
+
+  const next = up[0];
+  const d = courseDiagnosis(next.c);
+  const plan = weekPlan(next.c, next.days);
+  const u = urgency(next.days);
+
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Exam plan</span>
+    <h1>${next.days === 0 ? 'Your exam is <span class="hl">today</span>.' : next.days === 1 ? '<span class="hl">Tomorrow</span>.' : `<span class="hl">${next.days} days</span> to ${esc(next.c.short)}.`}</h1>
+    <p>${d.avg === null ? 'No scores yet for this course, so the plan below starts with getting some.' : `Your average across ${d.scored.length} scored unit${d.scored.length > 1 ? 's' : ''} is ${d.avg}%. Here is where the marks are.`}</p>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:16px;align-items:start">
+    <div class="card" style="border-left:3px solid ${u.c}">
+      <span class="eyebrow">${esc(next.c.name)}${u.t ? ' · ' + u.t : ''}</span>
+      <div class="row" style="gap:26px;margin:10px 0 14px">
+        <div><div class="daybox" style="color:${u.c}">${next.days}</div><span style="font-size:.78rem;color:var(--ink-faint)">days left</span></div>
+        <div><div class="daybox">${d.avg === null ? '—' : d.avg + '%'}</div><span style="font-size:.78rem;color:var(--ink-faint)">average</span></div>
+        <div><div class="daybox">${d.scored.length}/${d.total}</div><span style="font-size:.78rem;color:var(--ink-faint)">units scored</span></div>
+      </div>
+      <div class="plan-bar"><div style="width:${d.total ? Math.round(d.scored.length / d.total * 100) : 0}%;background:${next.c.color || 'var(--ink)'}"></div></div>
+      <p style="font-size:.8rem;color:var(--ink-faint);margin:8px 0 0">Coverage: ${d.total - d.scored.length} unit${d.total - d.scored.length === 1 ? '' : 's'} still unscored.</p>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Weakest units</span>
+      ${d.weakest.length ? `<div style="margin-top:10px">
+        ${d.weakest.map(w => `<a href="#/study/${next.c.id}/${w.u.id}/quiz" style="display:block;text-decoration:none;color:inherit;margin-bottom:12px">
+          <div class="spread" style="margin-bottom:4px">
+            <span style="font-size:.87rem;font-weight:600">${esc(w.u.title)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:${w.m < 60 ? 'var(--margin)' : 'var(--ink-soft)'}">${w.m}%</span>
+          </div>
+          <div class="plan-bar"><div style="width:${w.m}%;background:${w.m < 60 ? 'var(--margin)' : next.c.color || 'var(--ink)'}"></div></div>
+        </a>`).join('')}
+      </div>` : `<p style="color:var(--ink-soft);font-size:.9rem;margin-top:8px">No unit scores yet. Take a quiz and this fills in.</p>`}
+    </div>
+  </div>
+
+  <span class="eyebrow">This week</span>
+  <p style="color:var(--ink-soft);font-size:.9rem;max-width:62ch;margin:0 0 12px">Ordered by how many marks each is worth relative to the effort.</p>
+  <div style="margin-bottom:20px">
+    ${plan.map((p, i) => `<a class="card" href="${p.href}" style="display:block;text-decoration:none;color:inherit;margin-bottom:9px;padding:14px 18px">
+      <div class="spread" style="align-items:flex-start;gap:14px">
+        <div style="min-width:0">
+          <div class="row" style="gap:9px;margin-bottom:3px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-faint)">${String(i + 1).padStart(2, '0')}</span>
+            <span style="font-weight:600;font-size:.95rem">${esc(p.do)}</span>
+          </div>
+          <p style="color:var(--ink-soft);font-size:.85rem;margin:0 0 0 24px">${esc(p.why)}</p>
+        </div>
+        <span class="btn ghost sm">Go</span>
+      </div>
+    </a>`).join('')}
+  </div>
+
+  ${up.length > 1 ? `<span class="eyebrow">Also coming up</span>
+  <div class="grid g3" style="margin-bottom:16px">
+    ${up.slice(1).map(x => {
+      const uu = urgency(x.days);
+      return `<a class="card" href="#/course/${x.c.id}" style="text-decoration:none;color:inherit;display:block">
+        <span class="eyebrow">${esc(x.date)}</span>
+        <div class="daybox" style="color:${uu.c};margin:6px 0 3px">${x.days}</div>
+        <div style="font-size:.86rem;font-weight:600">${esc(x.c.short)}</div>
+        <div style="font-size:.78rem;color:var(--ink-faint)">days left</div>
+      </a>`;
+    }).join('')}
+  </div>` : ''}
+
+  ${setter}`;
+}
+
+function addExamDate() {
+  const cid = $('#planCourse').value, date = $('#planDate').value;
+  if (!date) return;
+  Exams.set(cid, date);
+  render();
+}
+function removeExamDate(cid) { Exams.set(cid, null); render(); }
+
+/* ---------- dashboard: surface the nearest exam ---------- */
+const _vDashPlan = vDashboard;
+vDashboard = function () {
+  const html = _vDashPlan();
+  const up = Exams.upcoming();
+  if (!up.length || html.indexOf('<!--mistake-slot-->') === -1) return html;
+  const n = up[0], u = urgency(n.days);
+  const card = `<a class="card fade" href="#/plan" style="display:block;text-decoration:none;color:inherit;border-left:3px solid ${u.c};margin-bottom:16px">
+    <div class="spread">
+      <div>
+        <span class="eyebrow">Next exam${u.t ? ' · ' + u.t : ''}</span>
+        <h3 style="margin-bottom:2px">${n.days === 0 ? esc(n.c.short) + ' is today' : n.days === 1 ? esc(n.c.short) + ' is tomorrow' : esc(n.c.short) + ' in ' + n.days + ' days'}</h3>
+        <p style="color:var(--ink-soft);font-size:.88rem;margin:0">See what to work on this week.</p>
+      </div>
+      <span class="btn mark">Open plan</span>
+    </div>
+  </a>
+  <!--mistake-slot-->`;
+  return html.replace('<!--mistake-slot-->', card);
+};
+
+/* ---------- include the new data in backup and restore ---------- */
+(function extendBackup() {
+  if (typeof BACKUP_KEYS === 'undefined') return;
+  ['sb.examdates'].forEach(k => { if (BACKUP_KEYS.indexOf(k) === -1) BACKUP_KEYS.push(k); });
+  /* free-response drafts are per-prompt keys, so add them explicitly */
+  if (typeof FRQS !== 'undefined')
+    FRQS.forEach(f => { const k = 'sb.fr.' + f.id; if (BACKUP_KEYS.indexOf(k) === -1) BACKUP_KEYS.push(k); });
+})();
+</script>
+<script>
+/* ============================================================
    MISTAKE TRACKING
    Every question you get wrong is saved with the reason you missed
    it. Getting it right later clears it. This is the single highest
@@ -19792,9 +20430,11 @@ vDashboard = function () {
 };
 
 NAV.splice(4, 0, { h: '#/mistakes', t: 'Mistakes', i: '◔', m: 'Fix' });
-NAV.push({ h: '#/assign', t: 'Tutor tools', i: '✎', m: 'Tutor' });
-NAV.push({ h: '#/account', t: 'Account', i: '◐', m: 'Me' });
-NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App' });
+NAV.push({ h: '#/assign', t: 'Tutor tools', i: '✎', m: 'Tutor', deskOnly: true });
+NAV.push({ h: '#/account', t: 'Account', i: '◐', m: 'Me', deskOnly: true });
+NAV.push({ h: '#/frq', t: 'Free response', i: '✍', m: 'Write' });
+NAV.push({ h: '#/plan', t: 'Exam plan', i: '◷', m: 'Plan' });
+NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App', deskOnly: true });
 
 /* ---------------- boot ---------------- */
 applyTheme();

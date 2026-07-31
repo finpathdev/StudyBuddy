@@ -30,6 +30,12 @@
   --shadow:0 1px 0 rgba(22,35,43,.06), 0 10px 24px -18px rgba(22,35,43,.5);
   --radius:14px;
   --blend:multiply;
+  /* layered background: three soft washes over the base canvas */
+  --glow-1:rgba(169,195,210,.44);
+  --glow-2:rgba(207,89,69,.10);
+  --glow-3:rgba(242,225,76,.14);
+  --grain:.030;
+  --rail-bg:rgba(252,252,249,.55);
 }
 [data-theme="night"]{
   --canvas:#12181C;
@@ -45,11 +51,21 @@
   --line:rgba(232,237,236,.14);
   --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -20px #000;
   --blend:screen;
+  --glow-1:rgba(51,80,95,.50);
+  --glow-2:rgba(226,112,92,.11);
+  --glow-3:rgba(79,186,139,.09);
+  --grain:.045;
+  --rail-bg:rgba(27,36,41,.42);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:var(--canvas);
+  background:
+    radial-gradient(1180px 760px at 8% -8%,  var(--glow-1), transparent 62%),
+    radial-gradient(980px 680px at 104% 10%, var(--glow-2), transparent 58%),
+    radial-gradient(900px 900px at 46% 118%, var(--glow-3), transparent 60%),
+    var(--canvas);
+  background-attachment:fixed;
   color:var(--ink);
   font-family:'Karla',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   font-size:16px;line-height:1.55;
@@ -104,7 +120,11 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 .nav a:hover{background:var(--paper);color:var(--ink)}
 .nav a.on{background:var(--paper);color:var(--ink);border-color:var(--line);box-shadow:var(--shadow)}
-.nav a .ico{width:18px;text-align:center;opacity:.85;font-size:1rem}
+.nav a .ico{width:20px;display:inline-flex;align-items:center;justify-content:center;opacity:.9}
+.ic{width:19px;height:19px;flex:0 0 19px;display:block}
+.nav a.on .ic{color:var(--margin)}
+.btn .ic,.chip .ic{width:16px;height:16px;flex:0 0 16px;margin-right:6px;vertical-align:-3px}
+.brand-mark svg{width:100%;height:100%;display:block}
 .rail-foot{margin-top:auto;padding:18px 10px 0;font-size:.76rem;color:var(--ink-faint);line-height:1.4}
 
 .main{flex:1;min-width:0;padding:34px clamp(16px,3.4vw,44px) 96px;max-width:1180px}
@@ -139,8 +159,13 @@ button,input,select,textarea{font:inherit;color:inherit}
     position:sticky;top:0;z-index:40;background:var(--canvas);
     padding:10px 2px;border-bottom:1px solid var(--line);
   }
-  /* lift the bar above the drawer so the same button closes it again */
-  body.drawer-open .mobile-top{z-index:130;background:transparent;border-color:transparent}
+  /* lift the bar above the drawer so the same button closes it again.
+     The bar itself must stop catching taps, or it blocks the drawer
+     underneath; only the button stays interactive. */
+  body.drawer-open .mobile-top{
+    z-index:130;background:transparent;border-color:transparent;pointer-events:none;
+  }
+  body.drawer-open .mobile-top .menu-btn{pointer-events:auto}
   body.drawer-open .mobile-top .brand,
   body.drawer-open .mobile-top .chip{visibility:hidden}
   .menu-btn{
@@ -162,6 +187,18 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 @media (min-width:861px){.scrim,.menu-btn,.drawer-close{display:none}}
 @media (min-width:861px){.mobile-top{display:none}}
+
+/* fine grain over the whole page: this is what stops a gradient
+   reading as a template. Pure CSS, no image request. */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:var(--grain);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.app,.tabbar,.scrim,.ask-fab,.ask-panel{position:relative;z-index:1}
+
+/* the rail floats on the wash instead of sitting on a flat block */
+.rail{background:var(--rail-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 
 /* ============================ cards ======================== */
 .card{
@@ -400,6 +437,34 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
 .ask-suggest button:hover{border-color:var(--ink-soft);color:var(--ink)}
 .ask-src{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px;display:block}
 
+/* =================== THEME CONTROL ========================= */
+.theme-row{margin-top:auto;padding:14px 8px 4px}
+.theme-btn{
+  width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:11px;background:var(--paper);
+  color:var(--ink-soft);font-weight:600;font-size:.9rem;cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+.theme-btn:hover{color:var(--ink);border-color:var(--ink-soft)}
+.theme-ico{width:19px;height:19px;flex:0 0 19px;display:block;color:var(--margin)}
+.theme-ico svg{width:100%;height:100%;display:block}
+@media (max-width:860px){.theme-row{margin-top:18px}}
+
+/* ==================== MATCH GAME =========================== */
+.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:640px){.match-grid{grid-template-columns:repeat(2,1fr);gap:8px}}
+.mtile{
+  min-height:104px;padding:12px 13px;border-radius:12px;cursor:pointer;
+  background:var(--paper);border:1px solid var(--line);color:var(--ink);
+  font-size:.86rem;line-height:1.42;text-align:left;
+  display:flex;align-items:center;transition:transform .12s,border-color .12s,opacity .2s;
+}
+.mtile:hover:not(:disabled){border-color:var(--ink-soft);transform:translateY(-1px)}
+.mtile.sel{border-color:var(--ink);border-width:2px;background:var(--canvas-2)}
+.mtile.bad{border-color:var(--margin);background:color-mix(in srgb,var(--margin) 9%,var(--paper))}
+.mtile.gone{opacity:0;pointer-events:none;transform:scale(.94)}
+@media (max-width:640px){.mtile{min-height:88px;font-size:.8rem}}
+
 /* ================= FREE RESPONSE =========================== */
 #frtext{
   border:1px solid var(--line);border-radius:10px;padding:14px 16px;
@@ -632,6 +697,11 @@ code{
       </span>
     </a>
     <nav class="nav" id="nav"></nav>
+    <div class="theme-row">
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Switch between day and night">
+        <span class="theme-ico" id="themeIco"></span><span id="themeLbl">Night</span>
+      </button>
+    </div>
     <div class="rail-foot">
       Open source · no account · nothing to pay.<br>
       Your progress stays in this browser.
@@ -16857,7 +16927,7 @@ let ROUTE_Q = new URLSearchParams('');
    searching the unit's own guide and flashcards; with a key it
    answers in full sentences, still grounded in the same text.
    ============================================================ */
-const OWL = `<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="28" stroke-width="2.2"/><path d="M17 22.5 21.5 15 27 20M47 22.5 42.5 15 37 20"/><circle cx="24.5" cy="28" r="7.5"/><circle cx="39.5" cy="28" r="7.5"/><circle cx="24.5" cy="28" r="2.3" fill="currentColor" stroke="none"/><circle cx="39.5" cy="28" r="2.3" fill="currentColor" stroke="none"/><path d="M32 32.5 29.5 36.5 32 38 34.5 36.5Z"/><path d="M17.5 30.5C15.5 41 21 50 32 50s16.5-9 14.5-19.5"/><path d="M22 38c-1 5 1.5 8.5 4 9.5M42 38c1 5-1.5 8.5-4 9.5"/></g></svg>`;
+let OWL = `<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="28" stroke-width="2.2"/><path d="M17 22.5 21.5 15 27 20M47 22.5 42.5 15 37 20"/><circle cx="24.5" cy="28" r="7.5"/><circle cx="39.5" cy="28" r="7.5"/><circle cx="24.5" cy="28" r="2.3" fill="currentColor" stroke="none"/><circle cx="39.5" cy="28" r="2.3" fill="currentColor" stroke="none"/><path d="M32 32.5 29.5 36.5 32 38 34.5 36.5Z"/><path d="M17.5 30.5C15.5 41 21 50 32 50s16.5-9 14.5-19.5"/><path d="M22 38c-1 5 1.5 8.5 4 9.5M42 38c1 5-1.5 8.5-4 9.5"/></g></svg>`;
 
 const ASK = { open: false, msgs: [], ctx: null, busy: false };
 
@@ -17819,8 +17889,10 @@ function authError() {
   const desc = q.get('error_description') || q.get('error') || '';
   return desc ? desc.replace(/\+/g, ' ') : '';
 }
+let AUTH_HANDLED = false;
 async function handleAuthCallback() {
   if (!hasAuthCallback()) return false;
+  AUTH_HANDLED = true;
   const err = authError();
   view().innerHTML = topbar() +
     `<div class="empty"><div class="big">◔</div><h2>Confirming your email…</h2></div>`;
@@ -20747,18 +20819,6 @@ NAV.push({ h: '#/search', t: 'Search', i: '⌕', m: 'Find', deskOnly: true });
 NAV.push({ h: '#/frq', t: 'Free response', i: '✍', m: 'Write' });
 NAV.push({ h: '#/plan', t: 'Exam plan', i: '◷', m: 'Plan' });
 NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App', deskOnly: true });
-
-/* ---------------- boot ---------------- */
-applyTheme();
-syncCustomUnits();
-if (typeof hasAuthCallback === 'function' && hasAuthCallback()) {
-  /* returning from an email confirmation link — resolve it before routing */
-  handleAuthCallback();
-} else {
-  render();
-}
-initCounter();
-if (typeof sbInit === 'function') sbInit();
 </script>
 <script>
 /* ============================================================
@@ -21080,6 +21140,497 @@ if (_vMistakesGrouped) {
     }).join('')}`;
   };
 }
+</script>
+<script>
+/* ============================================================
+   ICONS
+   Unicode glyphs (◧ ▤ ✦ ⏱) were the clearest tell that nobody
+   drew this. Replaced with a real stroked icon set.
+   ============================================================ */
+function ico(d, extra) {
+  return `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+}
+const ICONS = {
+  home:    ico('<path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9.5 20v-6h5v6"/>'),
+  books:   ico('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M10 4h4.5A1.5 1.5 0 0 1 16 5.5v13a1.5 1.5 0 0 1-1.5 1.5H10Z"/><path d="M17 6.5l2.6.7a1 1 0 0 1 .7 1.2l-2.8 10.4"/>'),
+  spark:   ico('<path d="M12 3.5 13.7 9l5.5 1.7-5.5 1.7L12 18l-1.7-5.6L4.8 10.7 10.3 9Z"/><path d="M18.5 4.5v3M17 6h3"/>'),
+  clock:   ico('<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.8"/><path d="M9 2.5h6"/>'),
+  target:  ico('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>'),
+  refresh: ico('<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4h-4"/>'),
+  people:  ico('<circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5c0-3.1 2.7-5.2 6-5.2s6 2.1 6 5.2"/><path d="M16 6.2a3.2 3.2 0 0 1 0 6.1"/><path d="M17.5 14.6c2 .7 3.5 2.4 3.5 4.9"/>'),
+  gear:    ico('<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5"/>'),
+  pencil:  ico('<path d="M4 20l1-4.2L16.2 4.6a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.2 19 4 20Z"/><path d="M15 6l3 3"/>'),
+  user:    ico('<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c0-3.6 3.4-6 7.5-6s7.5 2.4 7.5 6"/>'),
+  search:  ico('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.4 15.4 21 21"/>'),
+  write:   ico('<path d="M6 3.5h8.5L19 8v12.5H6Z"/><path d="M14 3.5V8h5"/><path d="M9 12.5h6M9 16h4"/>'),
+  calendar:ico('<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.8h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h3"/>'),
+  download:ico('<path d="M12 3.5v10.5"/><path d="M8 10.5 12 14.5 16 10.5"/><path d="M4.5 17v2.5h15V17"/>'),
+  flag:    ico('<path d="M5.5 21V4"/><path d="M5.5 5h11l-2 3.5 2 3.5h-11"/>'),
+  play:    ico('<rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10.3 9.4v5.2l4.4-2.6Z" fill="currentColor" stroke="none"/>')
+};
+
+/* map the old glyphs onto the new set */
+const ICON_FOR = {
+  '#/': 'home', '#/courses': 'books', '#/tutor': 'spark', '#/tests': 'clock',
+  '#/mistakes': 'target', '#/review': 'refresh', '#/stats': 'people',
+  '#/settings': 'gear', '#/assign': 'pencil', '#/account': 'user',
+  '#/search': 'search', '#/frq': 'write', '#/plan': 'calendar', '#/install': 'download'
+};
+NAV.forEach(n => { if (ICON_FOR[n.h]) n.i = ICONS[ICON_FOR[n.h]]; });
+
+/* ============================================================
+   LOGO
+   Tighter owl: fewer strokes, stronger silhouette, and it now
+   reads at 20px instead of turning to mush.
+   ============================================================ */
+OWL = `<svg viewBox="0 0 64 64" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 27c0-11 8.5-19 19-19s19 8 19 19c0 13-6 23-19 23s-19-10-19-23Z"/>
+    <path d="M13.5 24 18 11.5 27.5 17M50.5 24 46 11.5 36.5 17"/>
+    <circle cx="24" cy="29" r="7"/><circle cx="40" cy="29" r="7"/>
+    <path d="M32 34.5 28.8 39.5 32 41.8 35.2 39.5Z" fill="currentColor"/>
+    <path d="M22 46.5c0 4 4.5 6.5 10 6.5s10-2.5 10-6.5"/>
+  </g>
+  <circle cx="24" cy="29" r="2.6" fill="currentColor"/>
+  <circle cx="40" cy="29" r="2.6" fill="currentColor"/>
+</svg>`;
+
+/* ============================================================
+   VIDEO RECOMMENDATIONS
+   No hardcoded video IDs: those rot within a year. Channel names
+   and search links keep working.
+   ============================================================ */
+const CHANNELS = {
+  'apush':        [['Heimler\u2019s History', 'Unit-by-unit reviews mapped to the CED, plus DBQ and LEQ walkthroughs'], ['Tom Richey', 'Longer lectures with strong period framing']],
+  'ap-world':     [['Heimler\u2019s History', 'Covers all nine units with the same structure as the exam'], ['Freeman-Pedia', 'Visual unit summaries and comparison charts']],
+  'ap-euro':      [['Tom Richey', 'The most thorough AP European History channel'], ['Heimler\u2019s History', 'Shorter unit reviews if you are short on time']],
+  'ap-gov':       [['Heimler\u2019s History', 'Required documents and cases explained one at a time'], ['Jocz Productions', 'Clear breakdowns of the free-response question types']],
+  'ap-psych':     [['Mr. Sinn', 'Unit reviews built around the new AAQ and EBQ format'], ['Heimler\u2019s History', 'Concise unit summaries']],
+  'ap-hug':       [['Mr. Sinn', 'The standard AP Human Geography review channel'], ['Kirk Ratliff', 'Model-by-model explanations']],
+  'ap-bio':       [['Amoeba Sisters', 'Short, genuinely clear explanations of single concepts'], ['Bozeman Science', 'Full unit coverage from a former AP reader']],
+  'ap-chem':      [['The Organic Chemistry Tutor', 'Worked problems for every calculation type'], ['Melissa Maribel', 'Topic explanations aimed squarely at AP Chemistry']],
+  'ap-es':        [['Mr. Smedes', 'Unit reviews with the case studies the exam expects'], ['Bozeman Science', 'Systems-based explanations']],
+  'ap-phys1':     [['Flipping Physics', 'Worked problems and lab walkthroughs'], ['The Organic Chemistry Tutor', 'Broad problem sets for every topic']],
+  'ap-phys2':     [['Flipping Physics', 'The clearest coverage of the algebra-based sequel'], ['The Organic Chemistry Tutor', 'Circuits, optics, and modern physics problems']],
+  'ap-physc-m':   [['Flipping Physics', 'Calculus-based mechanics with full derivations'], ['Michel van Biezen', 'Short, dense worked examples']],
+  'ap-physc-e':   [['Michel van Biezen', 'Step-by-step electromagnetism derivations'], ['Flipping Physics', 'Exam-style problem walkthroughs']],
+  'ap-calc-ab':   [['The Organic Chemistry Tutor', 'Every AB topic with worked problems'], ['Professor Leonard', 'Long-form lectures if the concept has not clicked']],
+  'ap-calc-bc':   [['The Organic Chemistry Tutor', 'Series and parametrics covered thoroughly'], ['Professor Leonard', 'Deep explanations of convergence tests']],
+  'ap-stats':     [['jbstatistics', 'Careful, precise explanations of inference'], ['The Organic Chemistry Tutor', 'Worked problems for every procedure']],
+  'ap-precalc':   [['The Organic Chemistry Tutor', 'Covers the whole course topic by topic'], ['Professor Leonard', 'Strong on trigonometry and functions']],
+  'ap-macro':     [['Jacob Clifford', 'The standard AP Economics channel, with unit playlists'], ['ACDC Econ', 'Graph drills and review packets']],
+  'ap-micro':     [['Jacob Clifford', 'Graph-by-graph explanations of every market structure'], ['ACDC Econ', 'Fast review before the exam']],
+  'ap-csp':       [['Coding with John', 'Clear explanations of the computing concepts'], ['Mr. Rasmussen CSP', 'Create task guidance']],
+  'ap-csa':       [['Coding with John', 'Java concepts explained properly rather than memorised'], ['Bro Code', 'Short Java syntax lessons']],
+  'ap-lang':      [['Garden of English', 'Rhetorical analysis and argument essays broken down'], ['Coach Hall Writes', 'Rubric-focused essay coaching']],
+  'ap-lit':       [['Garden of English', 'Poetry and prose analysis with real rubric application'], ['Coach Hall Writes', 'Thesis and commentary technique']],
+  'ap-comp-gov':  [['Mr. Sinn', 'Country-by-country comparisons'], ['Heimler\u2019s History', 'Unit reviews']],
+  'ap-afam':      [['Heimler\u2019s History', 'Unit reviews for the newest AP course'], ['Crash Course Black American History', 'Narrative background for each period']],
+  'ap-seminar':   [['Coach Hall Writes', 'Research and argument skills'], ['AP Seminar Help', 'Performance task walkthroughs']],
+  'sat':          [['SupertutorTV', 'Strategy and timing for the digital format'], ['Khan Academy', 'The official free practice partner of the College Board']],
+  'act':          [['SupertutorTV', 'Section strategy for the Enhanced ACT'], ['Khan Academy', 'Concept review for the maths content']]
+};
+
+function ytSearch(q) { return 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q); }
+
+function videoPanel(c, u) {
+  const chans = CHANNELS[c.id] || [];
+  const topic = u ? `${c.short} ${String(u.title).replace(/^(Unit|Period|Big Idea|Skill|Task|Exam)\s*[\d·\u00b7]*\s*/i, '')}` : c.name;
+  return `<div class="card">
+    <span class="eyebrow">Watch instead</span>
+    <h3 style="margin-bottom:6px">${u ? 'Video for this unit' : 'Video for this course'}</h3>
+    <p style="color:var(--ink-soft);font-size:.89rem;margin:0 0 14px">Some things land better watched than read. These open YouTube searches rather than fixed links, so they keep working as channels post new material.</p>
+    <a class="btn mark" href="${ytSearch(topic + ' review')}" target="_blank" rel="noopener">${ICONS.play} Search YouTube for this ${u ? 'unit' : 'course'}</a>
+    ${chans.length ? `<hr class="divide">
+      <span class="eyebrow">Channels worth knowing</span>
+      <div style="margin-top:9px">
+        ${chans.map(ch => `<a href="${ytSearch(ch[0] + ' ' + (u ? topic : c.short))}" target="_blank" rel="noopener"
+          style="display:flex;gap:11px;align-items:flex-start;text-decoration:none;color:inherit;padding:9px 0;border-bottom:1px solid var(--line)">
+          <span style="color:var(--margin);flex:0 0 auto;margin-top:1px">${ICONS.play}</span>
+          <span style="min-width:0">
+            <span style="display:block;font-size:.9rem;font-weight:600">${esc(ch[0])}</span>
+            <span style="display:block;font-size:.83rem;color:var(--ink-soft);line-height:1.5">${esc(ch[1])}</span>
+          </span>
+        </a>`).join('')}
+      </div>
+      <p style="font-size:.78rem;color:var(--ink-faint);margin:10px 0 0">These are independent channels with no connection to StudyBuddy. Nobody here is paid to recommend them.</p>` : ''}
+  </div>`;
+}
+
+/* attach to the course page and the study guide */
+const _vCourseVid = vCourse;
+vCourse = function (cid) {
+  const c = findCourse(cid);
+  const html = _vCourseVid(cid);
+  if (!c || c.outlineOnly || !CHANNELS[c.id]) return html;
+  /* sits above the unit grid; anchored on the grid itself, which always exists */
+  const anchor = '<div class="grid g2">';
+  const at = html.indexOf(anchor);
+  const panel = `<div style="max-width:560px;margin:0 0 20px">${videoPanel(c, null)}</div>`;
+  return at === -1 ? html + panel : html.slice(0, at) + panel + html.slice(at);
+};
+
+const _vGuideVid = vGuide;
+vGuide = function (cid, uid) {
+  const html = _vGuideVid(cid, uid);
+  const c = findCourse(cid);
+  if (!c) return html;
+  const u = findUnit(c, uid);
+  if (!u || !CHANNELS[c.id]) return html;
+  const panel = `<div style="max-width:720px;margin:26px 0 0">${videoPanel(c, u)}</div>`;
+  /* drop it after the last guide section */
+  const idx = html.lastIndexOf('</section>');
+  if (idx === -1) return html + panel;
+  return html.slice(0, idx + 10) + panel + html.slice(idx + 10);
+};
+
+
+/* the brand mark is written into static markup at boot, so refresh it */
+(function refreshBrand() {
+  document.querySelectorAll('.brand-mark').forEach(el => { el.innerHTML = OWL; });
+  /* never re-render while an email confirmation is being resolved: that
+     callback writes its result into the view and a repaint would erase it */
+  /* no re-render needed: boot now runs after every wrapper is installed */
+})();
+</script>
+<script>
+/* ============================================================
+   LEARN MODE
+   Round-based recall. A card retires only after two consecutive
+   correct answers; a miss resets it to zero and pushes it back
+   into the queue. Written from scratch — the pattern is old
+   (Leitner, 1972), the implementation is ours.
+   ============================================================ */
+let LN = null;
+
+function vLearn(cid, uid) {
+  const c = findCourse(cid); if (!c) return notFound();
+  const u = findUnit(c, uid); if (!u) return notFound();
+  const cards = u.cards || [];
+  if (cards.length < 4) return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.short)}</a>
+    <div class="page-head fade"><h1>Not enough cards</h1><p>Learn mode needs at least four cards in a unit so it can build believable wrong answers.</p></div>`;
+
+  LN = {
+    cid, uid, c, u,
+    queue: shuffle(cards.map((_, i) => i)),
+    streak: {}, done: {}, total: cards.length,
+    asked: 0, right: 0, startedAt: Date.now()
+  };
+  cards.forEach((_, i) => { LN.streak[i] = 0; });
+  return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.short)}</a>
+  <div class="page-head fade">
+    <span class="eyebrow">Learn mode · ${esc(c.short)}</span>
+    <h1>${esc(u.title)}</h1>
+    <p>Each card retires once you get it right <b>twice in a row</b>. Miss one and it comes back. Nothing here is timed.</p>
+  </div>
+  <div id="lnwrap"></div>`;
+}
+
+function paintLearn() {
+  const w = $('#lnwrap'); if (!w || !LN) return;
+  const remaining = LN.queue.length;
+  const mastered = Object.keys(LN.done).length;
+
+  if (!remaining) {
+    const mins = Math.max(1, Math.round((Date.now() - LN.startedAt) / 60000));
+    const acc = LN.asked ? Math.round(LN.right / LN.asked * 100) : 0;
+    w.innerHTML = `<div class="card" style="max-width:520px;border-left:3px solid var(--green)">
+      <span class="eyebrow">Finished</span>
+      <h2 style="margin-bottom:6px">All ${LN.total} cards mastered</h2>
+      <div class="row" style="gap:26px;margin:12px 0 16px">
+        <div class="stat"><b>${acc}%</b><span>first-try accuracy</span></div>
+        <div class="stat"><b>${LN.asked}</b><span>answers given</span></div>
+        <div class="stat"><b>${mins}</b><span>minutes</span></div>
+      </div>
+      <div class="row">
+        <a class="btn mark" href="#/study/${LN.cid}/${LN.uid}/quiz">Take the quiz</a>
+        <button class="btn ghost" onclick="location.hash='#/study/${LN.cid}/${LN.uid}/learn';render()">Run it again</button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  const i = LN.queue[0];
+  const card = LN.u.cards[i];
+  /* three distractors drawn from other cards in the same unit */
+  const pool = LN.u.cards.map((c2, j) => j).filter(j => j !== i);
+  const picks = shuffle(pool).slice(0, 3).map(j => LN.u.cards[j][1]);
+  const opts = shuffle([card[1], ...picks]);
+  const answer = opts.indexOf(card[1]);
+
+  w.innerHTML = `
+  <div class="spread" style="margin-bottom:12px">
+    <span style="font-size:.82rem;color:var(--ink-soft)">${mastered} of ${LN.total} mastered · ${remaining} in the queue</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-faint)">streak ${LN.streak[i]}/2</span>
+  </div>
+  <div class="meter ${mastered === LN.total ? 'good' : ''}" style="margin-bottom:18px"><i style="width:${Math.round(mastered / LN.total * 100)}%"></i></div>
+  <div class="card">
+    <span class="eyebrow">What does this mean?</span>
+    <h2 style="margin:8px 0 18px;font-family:'Newsreader',Georgia,serif">${fx(card[0])}</h2>
+    <div id="lnopts">
+      ${opts.map((o, k) => `<button class="opt" onclick="learnAnswer(${k},${answer},${i})">${fx(o)}</button>`).join('')}
+    </div>
+    <div id="lnfb"></div>
+  </div>`;
+  if (typeof sweepMath === 'function') sweepMath(w);
+}
+
+function learnAnswer(picked, answer, i) {
+  if (!LN || LN.locked) return;
+  LN.locked = true;
+  LN.asked++;
+  const correct = picked === answer;
+  if (correct) LN.right++;
+  const btns = document.querySelectorAll('#lnopts .opt');
+  btns.forEach(b => b.setAttribute('disabled', ''));
+  btns[answer].classList.add('right');
+  if (!correct) btns[picked].classList.add('wrong');
+
+  LN.queue.shift();
+  if (correct) {
+    LN.streak[i]++;
+    if (LN.streak[i] >= 2) LN.done[i] = true;
+    else LN.queue.splice(Math.min(3, LN.queue.length), 0, i);   /* soon, but not next */
+  } else {
+    LN.streak[i] = 0;
+    delete LN.done[i];
+    LN.queue.splice(Math.min(2, LN.queue.length), 0, i);         /* sooner when missed */
+    if (typeof Missed !== 'undefined' && Missed.add) {
+      Missed.add({ q: LN.u.cards[i][0], c: [LN.u.cards[i][1]], a: 0,
+        why: LN.u.cards[i][1], _c: LN.cid, _u: LN.uid,
+        _cn: LN.c.name, _un: LN.u.title });
+    }
+  }
+  if (typeof Activity !== 'undefined') Activity.log('cards', 1);
+  if (typeof bumpStreak === 'function') bumpStreak();
+
+  $('#lnfb').innerHTML = `<div class="why fade" style="margin-top:14px">
+    <b>${correct ? (LN.done[i] ? 'Mastered.' : 'Correct — once more to retire it.') : 'Not quite.'}</b>
+    ${correct ? '' : ' ' + fx(LN.u.cards[i][1])}
+  </div>`;
+  setTimeout(() => { LN.locked = false; paintLearn(); }, correct ? 550 : 1500);
+}
+
+/* ============================================================
+   MATCH
+   Six terms, six definitions, a clock that counts up. Fast,
+   and it exposes cards you only half know.
+   ============================================================ */
+let MT = null;
+
+function vMatch(cid, uid) {
+  const c = findCourse(cid); if (!c) return notFound();
+  const u = findUnit(c, uid); if (!u) return notFound();
+  const cards = u.cards || [];
+  if (cards.length < 6) return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.short)}</a>
+    <div class="page-head fade"><h1>Not enough cards</h1><p>Match needs at least six cards in a unit.</p></div>`;
+  const best = store.get('sb.match.' + cid + '/' + uid, null);
+  return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.short)}</a>
+  <div class="page-head fade">
+    <span class="eyebrow">Match · ${esc(c.short)}</span>
+    <h1>${esc(u.title)}</h1>
+    <p>Six terms, six meanings. Tap a pair. The clock runs until every pair is gone.${best ? ` Your best is <b>${best}s</b>.` : ''}</p>
+  </div>
+  <div id="mtwrap"></div>`;
+}
+
+function startMatch() {
+  if (!MT) return;
+  MT.startedAt = Date.now();
+  MT.timer = setInterval(() => {
+    const el = $('#mtclock');
+    if (!el) { clearInterval(MT.timer); return; }
+    el.textContent = ((Date.now() - MT.startedAt) / 1000).toFixed(1) + 's';
+  }, 100);
+}
+
+function paintMatch() {
+  const w = $('#mtwrap'); if (!w) return;
+  const c = findCourse(MT.cid), u = findUnit(c, MT.uid);
+
+  if (MT.left === 0) {
+    clearInterval(MT.timer);
+    const secs = +((Date.now() - MT.startedAt) / 1000).toFixed(1);
+    const key = 'sb.match.' + MT.cid + '/' + MT.uid;
+    const prev = store.get(key, null);
+    const isBest = prev === null || secs < prev;
+    if (isBest) store.set(key, secs);
+    w.innerHTML = `<div class="card" style="max-width:480px;border-left:3px solid var(--green)">
+      <span class="eyebrow">${isBest ? 'New best' : 'Finished'}</span>
+      <h2 style="margin-bottom:4px">${secs}s</h2>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin:0 0 16px">${MT.misses} wrong pair${MT.misses === 1 ? '' : 's'}${prev !== null && !isBest ? ` · your best is ${prev}s` : ''}</p>
+      <div class="row">
+        <button class="btn mark" onclick="location.hash='#/study/${MT.cid}/${MT.uid}/match';render()">Play again</button>
+        <a class="btn ghost" href="#/study/${MT.cid}/${MT.uid}/learn">Learn mode</a>
+      </div>
+    </div>`;
+    return;
+  }
+
+  w.innerHTML = `
+  <div class="spread" style="margin-bottom:14px">
+    <span style="font-size:.85rem;color:var(--ink-soft)">${MT.left} pair${MT.left === 1 ? '' : 's'} left</span>
+    <span class="timer" id="mtclock">0.0s</span>
+  </div>
+  <div class="match-grid">
+    ${MT.tiles.map((t, i) => `<button class="mtile${t.gone ? ' gone' : ''}${MT.sel === i ? ' sel' : ''}${t.bad ? ' bad' : ''}"
+      ${t.gone ? 'disabled' : ''} onclick="matchTap(${i})">${fx(t.text)}</button>`).join('')}
+  </div>`;
+  if (typeof sweepMath === 'function') sweepMath(w);
+  if (!MT.startedAt) startMatch();
+}
+
+function matchTap(i) {
+  if (!MT || MT.busy) return;
+  const t = MT.tiles[i];
+  if (t.gone) return;
+  if (MT.sel === i) { MT.sel = null; paintMatch(); return; }
+  if (MT.sel === null) { MT.sel = i; paintMatch(); return; }
+
+  const a = MT.tiles[MT.sel], b = t;
+  if (a.pair === b.pair && a.side !== b.side) {
+    a.gone = b.gone = true;
+    MT.left--; MT.sel = null;
+    if (typeof Activity !== 'undefined') Activity.log('cards', 1);
+    paintMatch();
+  } else {
+    MT.misses++;
+    a.bad = b.bad = true;
+    MT.busy = true;
+    paintMatch();
+    setTimeout(() => { a.bad = b.bad = false; MT.sel = null; MT.busy = false; paintMatch(); }, 420);
+  }
+}
+
+function buildMatch(cid, uid) {
+  const c = findCourse(cid), u = findUnit(c, uid);
+  const picked = shuffle((u.cards || []).map((_, i) => i)).slice(0, 6);
+  const tiles = [];
+  picked.forEach(i => {
+    tiles.push({ text: u.cards[i][0], pair: i, side: 't', gone: false });
+    tiles.push({ text: u.cards[i][1], pair: i, side: 'd', gone: false });
+  });
+  MT = { cid, uid, tiles: shuffle(tiles), sel: null, left: 6, misses: 0, startedAt: 0, timer: null, busy: false };
+}
+
+/* ---- routing and the mode row on each unit ---- */
+(function wireModes() {
+  const _renderModes = render;
+  render = function () {
+    const raw = (location.hash || '#/').replace(/^#\/?/, '');
+    const parts = raw.split('?')[0].split('/').filter(Boolean);
+    if (parts[0] === 'study' && (parts[3] === 'learn' || parts[3] === 'match')) {
+      const [, cid, uid, mode] = parts;
+      view().innerHTML = mode === 'learn' ? vLearn(cid, uid) : vMatch(cid, uid);
+      if (typeof sweepMath === 'function') sweepMath(view());
+      if (mode === 'learn') { if (LN) paintLearn(); }
+      else { buildMatch(cid, uid); paintMatch(); }
+      if (typeof paintNav === 'function') paintNav();
+      if (typeof afterRender === 'function') afterRender();
+      window.scrollTo(0, 0);
+      return;
+    }
+    return _renderModes();
+  };
+  window.addEventListener('hashchange', () => {
+    const raw = (location.hash || '').replace(/^#\/?/, '');
+    if (raw.split('/')[3] === 'learn' || raw.split('/')[3] === 'match') render();
+  });
+})();
+
+/* add the two modes to every unit card on a course page */
+const _vCourseModes = vCourse;
+vCourse = function (cid) {
+  const c = findCourse(cid);
+  let html = _vCourseModes(cid);
+  if (!c || c.outlineOnly) return html;
+  c.units.forEach(u => {
+    if (!(u.cards || []).length) return;
+    const anchor = `<a class="btn ghost sm" href="#/study/${c.id}/${u.id}/cards">`;
+    const at = html.indexOf(anchor);
+    if (at === -1) return;
+    const extra = (u.cards.length >= 4 ? `<a class="chip" href="#/study/${c.id}/${u.id}/learn">Learn</a>` : '') +
+                  (u.cards.length >= 6 ? `<a class="chip" href="#/study/${c.id}/${u.id}/match">Match</a>` : '');
+    /* place after the flashcards link's closing tag */
+    const close = html.indexOf('</a>', at) + 4;
+    html = html.slice(0, close) + extra + html.slice(close);
+  });
+  return html;
+};
+</script>
+<script>
+/* ============================================================
+   THEME CONTROL
+   The toggle only existed in the mobile top bar, which is hidden
+   above 860px — so on a laptop there was no way to switch themes
+   at all. It now lives in the sidebar, visible everywhere.
+   ============================================================ */
+const THEME_ICON = {
+  day:   ICONS.sun   || '',
+  night: ICONS.moon  || ''
+};
+
+/* sun and moon, drawn to match the rest of the icon set */
+ICONS.sun = ico('<circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.4M12 19v2.4M21.4 12H19M5 12H2.6M18.7 5.3l-1.7 1.7M7 17l-1.7 1.7M18.7 18.7 17 17M7 7 5.3 5.3"/>');
+ICONS.moon = ico('<path d="M20 13.4A8.2 8.2 0 0 1 10.6 4a8.4 8.4 0 1 0 9.4 9.4Z"/>');
+
+function paintThemeBtn() {
+  const night = (S.cfg.theme === 'night');
+  const ico2 = document.getElementById('themeIco');
+  const lbl = document.getElementById('themeLbl');
+  const btn = document.getElementById('themeBtn');
+  if (ico2) ico2.innerHTML = night ? ICONS.sun : ICONS.moon;
+  if (lbl) lbl.textContent = night ? 'Day' : 'Night';
+  if (btn) btn.setAttribute('title', night ? 'Switch to day' : 'Switch to night');
+}
+
+/* keep the sidebar control in step whenever the theme changes */
+const _toggleThemeSide = toggleTheme;
+toggleTheme = function () {
+  const r = _toggleThemeSide();
+  paintThemeBtn();
+  return r;
+};
+
+/* the mobile top bar had the only control; it is now redundant there */
+const _topbarTheme = topbar;
+topbar = function () {
+  return _topbarTheme().replace(
+    /<button class="chip" onclick="toggleTheme\(\)">[^<]*<\/button>/,
+    '');
+};
+
+paintThemeBtn();
+</script>
+<script>
+/* ============================================================
+   BOOT — must be the LAST script in the document.
+
+   Every feature file wraps something: render, topbar, vCourse,
+   vDashboard, vMistakes. If the app paints before those wrappers
+   install, the first screen a student sees is missing whatever
+   loaded after it. That happened four separate times during this
+   build, and each was patched with another re-render.
+
+   Starting last removes the whole class of bug. Nothing below
+   this line may define or wrap anything.
+   ============================================================ */
+/* ---------------- boot ---------------- */
+applyTheme();
+syncCustomUnits();
+if (typeof hasAuthCallback === 'function' && hasAuthCallback()) {
+  /* returning from an email confirmation link — resolve it before routing */
+  handleAuthCallback();
+} else {
+  render();
+}
+initCounter();
+if (typeof sbInit === 'function') sbInit();
+
+/* guard: if a later file ever appends itself after this one, say so
+   loudly in the console rather than failing silently on screen. */
+window.__SB_BOOTED = true;
 </script>
 </body>
 </html>

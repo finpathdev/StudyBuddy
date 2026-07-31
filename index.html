@@ -16067,6 +16067,16 @@ const NAV = [
   { h: '#/stats', t: 'Students', i: '◉', m: 'Stats', deskOnly: true },
   { h: '#/settings', t: 'Settings', i: '⚙', m: 'More', deskOnly: true }
 ];
+/* Timers outlive the screen that created them. Leaving a page used to
+   leave its interval running, and coming back started a second one on
+   top, which made the clock tick at double speed. Clear them on every
+   route change instead of hoping each timer notices its element is gone. */
+function stopStrayTimers() {
+  if (typeof QZ !== 'undefined' && QZ && QZ.timer) { clearInterval(QZ.timer); QZ.timer = null; }
+  if (typeof FRT !== 'undefined' && FRT) { clearInterval(FRT); FRT = null; }
+  if (typeof MT !== 'undefined' && MT && MT.timer) { clearInterval(MT.timer); MT.timer = null; }
+}
+
 function paintNav() {
   const h = location.hash || '#/';
   $('#nav').innerHTML = '<span class="nav-label">Study</span>' + NAV.map(n =>
@@ -16899,6 +16909,7 @@ function render() {
   else if (parts[0] === 'tutor') html = vTutor();
   else if (parts[0] === 'settings') html = vSettings();
   else html = notFound();
+  stopStrayTimers();
   view().innerHTML = html;
   if (typeof sweepMath === 'function') sweepMath(view());
   if (typeof afterRender === 'function') afterRender();
@@ -17514,10 +17525,24 @@ function startReview() {
 /* ============================================================
    BACKUP AND RESTORE
    ============================================================ */
-let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally'];
+let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally', 'sb.reports', 'sb.examdates'];
+/* prefixes whose keys are created dynamically: free-response drafts,
+   practice-test bests, and match times. Listing them by prefix means a
+   new prompt or test is backed up automatically. */
+const BACKUP_PREFIXES = ['sb.fr.', 'sb.exam.', 'sb.match.'];
+function backupKeys() {
+  const keys = BACKUP_KEYS.slice();
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (BACKUP_PREFIXES.some(p => k.indexOf(p) === 0) && keys.indexOf(k) === -1) keys.push(k);
+    }
+  } catch (e) {}
+  return keys;
+}
 function collectData() {
   const out = { app: 'StudyBuddy', version: 2, exported: new Date().toISOString(), data: {} };
-  BACKUP_KEYS.forEach(k => { const v = store.get(k, null); if (v !== null) out.data[k] = v; });
+  backupKeys().forEach(k => { const v = store.get(k, null); if (v !== null) out.data[k] = v; });
   return out;
 }
 function downloadBackup() {
@@ -17536,7 +17561,7 @@ function restoreBackup(file, mode) {
       const j = JSON.parse(reader.result);
       if (!j || j.app !== 'StudyBuddy' || !j.data) throw new Error('That is not a StudyBuddy backup file.');
       if (mode === 'replace') {
-        BACKUP_KEYS.forEach(k => { if (j.data[k] !== undefined) store.set(k, j.data[k]); });
+        Object.keys(j.data).forEach(k => { if (k.indexOf('sb.') === 0) store.set(k, j.data[k]); });
       } else {
         /* merge: keep the better result for every unit, union everything else */
         const p = store.get('sb.progress', {}), np = j.data['sb.progress'] || {};
@@ -20476,13 +20501,8 @@ vDashboard = function () {
 };
 
 /* ---------- include the new data in backup and restore ---------- */
-(function extendBackup() {
-  if (typeof BACKUP_KEYS === 'undefined') return;
-  ['sb.examdates'].forEach(k => { if (BACKUP_KEYS.indexOf(k) === -1) BACKUP_KEYS.push(k); });
-  /* free-response drafts are per-prompt keys, so add them explicitly */
-  if (typeof FRQS !== 'undefined')
-    FRQS.forEach(f => { const k = 'sb.fr.' + f.id; if (BACKUP_KEYS.indexOf(k) === -1) BACKUP_KEYS.push(k); });
-})();
+/* sb.examdates and the dynamic score keys are covered by the backup
+   list and BACKUP_PREFIXES, so nothing extra is needed here. */
 </script>
 <script>
 /* ============================================================
@@ -21522,6 +21542,7 @@ function buildMatch(cid, uid) {
     const parts = raw.split('?')[0].split('/').filter(Boolean);
     if (parts[0] === 'study' && (parts[3] === 'learn' || parts[3] === 'match')) {
       const [, cid, uid, mode] = parts;
+      if (typeof stopStrayTimers === 'function') stopStrayTimers();
       view().innerHTML = mode === 'learn' ? vLearn(cid, uid) : vMatch(cid, uid);
       if (typeof sweepMath === 'function') sweepMath(view());
       if (mode === 'learn') { if (LN) paintLearn(); }

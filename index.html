@@ -16792,6 +16792,7 @@ function render() {
   else if (parts[0] === 'frq' && parts[1]) html = vFRQ(parts[1]);
   else if (parts[0] === 'frq') html = vFRQs();
   else if (parts[0] === 'plan') html = vPlan();
+  else if (parts[0] === 'search') html = vSearch(ROUTE_Q.get('q') || '');
   else if (parts[0] === 'examtest') html = vExamTest(parts[1]);
   else if (parts[0] === 'tutor') html = vTutor();
   else if (parts[0] === 'settings') html = vSettings();
@@ -19923,6 +19924,223 @@ function frSaveScore(id) {
 </script>
 <script>
 /* ============================================================
+   MORE FREE RESPONSE
+   Covers the courses that had none: Physics 1 and C, Statistics,
+   US Government, Psychology, European and World History, Human
+   Geography, and Computer Science A.
+   ============================================================ */
+FRQS.push(
+{
+id:'apphys1-frq-1', cid:'ap-phys1', type:'FRQ', mins:25, points:12,
+title:'Experimental design: forces on an incline',
+prompt:'A block of unknown mass is released from rest at the top of an incline of adjustable angle. A student wants to determine the coefficient of kinetic friction between the block and the surface.\n\n(a) Derive an expression for the block\u2019s acceleration down the incline in terms of g, the angle \u03b8, and the coefficient of kinetic friction \u03bc.\n(b) Describe an experimental procedure to measure the acceleration, listing the equipment and the measurements taken.\n(c) Explain how the student should graph the data so that \u03bc can be obtained from a straight line, and state what the slope represents.\n(d) The block is replaced with one of twice the mass. Predict the effect on the acceleration and justify your answer.\n(e) A classmate claims friction can be eliminated by making the incline steeper. Evaluate this claim.',
+note:'AP Physics 1 free response rewards reasoning in words as much as algebra. Parts asking you to "justify" or "evaluate" need a claim plus physics, not a formula alone.',
+docs:[],
+rubric:[
+ {pts:3, label:'(a) Derivation', check:'Did you resolve gravity into components and write a = g(sin\u03b8 \u2212 \u03bccos\u03b8)?',
+  tips:['1 point for resolving weight into mg sin\u03b8 along and mg cos\u03b8 into the surface.','1 point for friction = \u03bcmg cos\u03b8.','1 point for the final expression with mass cancelled.']},
+ {pts:3, label:'(b) Procedure', check:'Did you name the equipment and the measurements clearly enough that another student could repeat it?',
+  tips:['1 point for a distance and timing method, or motion sensor.','1 point for measuring or setting the angle.','1 point for repeating trials or stating a control.']},
+ {pts:2, label:'(c) Linearisation', check:'Did you propose plotting a against sin\u03b8 or a suitable rearrangement, and identify what the slope gives?',
+  tips:['1 point for a valid linear plot.','1 point for interpreting the slope or intercept in terms of \u03bc.']},
+ {pts:2, label:'(d) Mass prediction', check:'Did you state acceleration is unchanged AND justify it by mass cancelling?',
+  tips:['1 point for the prediction.','1 point for the reason: both the driving force and the friction force scale with mass.']},
+ {pts:2, label:'(e) Evaluate the claim', check:'Did you reject the claim and explain what actually happens to friction as \u03b8 increases?',
+  tips:['1 point for the judgement.','1 point for the physics: a steeper incline reduces the normal force so friction shrinks, but it never reaches zero.']}
+]
+},
+{
+id:'apphyscm-frq-1', cid:'ap-physc-m', type:'FRQ', mins:25, points:15,
+title:'Rotational dynamics and angular momentum',
+prompt:'A uniform disc of mass M and radius R rotates freely about a frictionless vertical axle at angular speed \u03c9\u2080. A ring of mass M and radius R is dropped onto the disc and quickly reaches a common angular speed.\n\n(a) Derive the rotational inertia of the combined system in terms of M and R.\n(b) Determine the final angular speed in terms of \u03c9\u2080, justifying which conservation law applies.\n(c) Calculate the fraction of the original kinetic energy that remains, and explain where the rest went.\n(d) A torque \u03c4 is now applied. Derive an expression for the angular acceleration.\n(e) Starting from rest under that torque, derive an expression for the angular displacement after time t.',
+note:'Physics C expects derivations from first principles with symbols carried throughout. Substituting numbers early costs points.',
+docs:[],
+rubric:[
+ {pts:3, label:'(a) Rotational inertia', check:'Did you use I_disc = \u00bdMR\u00b2 and I_ring = MR\u00b2 and add them correctly?',
+  tips:['1 point each for the two moments of inertia.','1 point for the sum, (3/2)MR\u00b2.']},
+ {pts:3, label:'(b) Final angular speed', check:'Did you state that angular momentum is conserved because no external torque acts, and reach \u03c9 = \u03c9\u2080/3?',
+  tips:['1 point for naming conservation of angular momentum AND why it applies.','1 point for setting I\u2080\u03c9\u2080 = I_f\u03c9_f.','1 point for the answer \u03c9\u2080/3.']},
+ {pts:3, label:'(c) Energy fraction', check:'Did you compute the ratio of final to initial rotational kinetic energy and account for the loss?',
+  tips:['1 point for setting up both energies.','1 point for the fraction, one third.','1 point for explaining the loss went to friction and heat during the coupling \u2014 the collision is inelastic.']},
+ {pts:3, label:'(d) Angular acceleration', check:'Did you apply \u03c4 = I\u03b1 with the combined inertia to get \u03b1 = 2\u03c4/(3MR\u00b2)?',
+  tips:['1 point for using the rotational form of Newton\u2019s second law.','1 point for using the combined I.','1 point for the correct expression.']},
+ {pts:3, label:'(e) Angular displacement', check:'Did you derive \u03b8 = \u00bd\u03b1t\u00b2 and substitute your expression for \u03b1?',
+  tips:['1 point for the rotational kinematic relation.','1 point for correct substitution.','1 point for \u03b8 = \u03c4t\u00b2/(3MR\u00b2).']}
+]
+},
+{
+id:'apphysce-frq-1', cid:'ap-physc-e', type:'FRQ', mins:25, points:15,
+title:'Gauss\u2019s law and a charged sphere',
+prompt:'A solid insulating sphere of radius a carries a total charge Q distributed uniformly through its volume.\n\n(a) Using Gauss\u2019s law, derive an expression for the electric field at a distance r from the centre, for r &gt; a.\n(b) Derive the field for r &lt; a.\n(c) Sketch a graph of E against r from r = 0 to r = 3a, labelling the value at r = a.\n(d) Derive an expression for the electric potential at the surface of the sphere, taking V = 0 at infinity.\n(e) A point charge +q is released from rest at r = 3a. Derive an expression for its speed when it reaches r = 2a.',
+note:'Gauss\u2019s law is only useful where symmetry lets you take E outside the integral. State the symmetry argument explicitly \u2014 it carries points.',
+docs:[],
+rubric:[
+ {pts:3, label:'(a) Field outside', check:'Did you choose a spherical Gaussian surface, argue symmetry, and reach E = Q/(4\u03c0\u03b5\u2080r\u00b2)?',
+  tips:['1 point for the Gaussian surface and symmetry statement.','1 point for enclosed charge = Q.','1 point for the expression \u2014 identical to a point charge.']},
+ {pts:3, label:'(b) Field inside', check:'Did you compute the enclosed charge as Q(r\u00b3/a\u00b3) and reach E = Qr/(4\u03c0\u03b5\u2080a\u00b3)?',
+  tips:['1 point for recognising only the charge within r counts.','1 point for the volume fraction r\u00b3/a\u00b3.','1 point for the linear dependence on r.']},
+ {pts:2, label:'(c) Graph', check:'Does your sketch rise linearly to a maximum at r = a, then fall as 1/r\u00b2?',
+  tips:['1 point for the correct shape in each region.','1 point for continuity at r = a with the value Q/(4\u03c0\u03b5\u2080a\u00b2).']},
+ {pts:3, label:'(d) Potential at the surface', check:'Did you integrate the external field from infinity to a and get V = Q/(4\u03c0\u03b5\u2080a)?',
+  tips:['1 point for setting up V = \u2212\u222bE\u00b7dr with the correct limits.','1 point for using the external expression.','1 point for the result.']},
+ {pts:4, label:'(e) Speed of the point charge', check:'Did you use energy conservation with the potential difference between 3a and 2a?',
+  tips:['1 point for qΔV = ΔKE.','1 point for the potentials at both radii.','1 point for solving for v.','1 point for a correct final expression showing v depends on the square root of the potential difference.']}
+]
+},
+{
+id:'apstats-frq-1', cid:'ap-stats', type:'FRQ', mins:25, points:4,
+title:'Experimental design and inference',
+prompt:'A school wants to know whether a new 20-minute daily reading period improves reading scores. There are 400 students available.\n\n(a) Describe a completely randomised design for this experiment, including how you would assign students.\n(b) Explain one advantage of blocking by prior reading level rather than using a completely randomised design.\n(c) After the study, the treatment group has a mean score of 78 and the control group 74. Explain what additional information you would need before concluding the programme works.\n(d) The school instead surveys students who volunteered for an existing optional reading club and finds higher scores. Explain why this cannot establish that the club improves scores.',
+note:'AP Statistics free response is scored holistically per part as Essentially correct, Partially correct, or Incorrect. Vague answers that omit context score down even when the statistical idea is right.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Randomised design', check:'Did you describe random assignment of the 400 students to two groups AND specify the comparison?',
+  tips:['Naming a mechanism \u2014 random number generator, slips in a hat \u2014 is expected.','"Randomly assign" without saying how usually scores Partially correct.']},
+ {pts:1, label:'(b) Advantage of blocking', check:'Did you explain that blocking reduces variability from prior reading level, making the treatment effect easier to detect?',
+  tips:['The point is variability reduction, not fairness.','Blocking is to experiments what stratifying is to sampling.']},
+ {pts:1, label:'(c) What else is needed', check:'Did you identify the need for a measure of variability and a significance test, not just the difference in means?',
+  tips:['A 4-point gap is meaningless without knowing the spread and sample sizes.','Mentioning a two-sample t-test with conditions is a strong answer.']},
+ {pts:1, label:'(d) Why the survey fails', check:'Did you identify self-selection or confounding, and explain that students who volunteer likely differ already?',
+  tips:['Name the direction: keener readers choose the club, so the club may not be causing anything.','Saying only "correlation is not causation" without applying it scores down.']}
+]
+},
+{
+id:'apgov-frq-1', cid:'ap-gov', type:'FRQ', mins:20, points:4,
+title:'SCOTUS comparison: Baker v. Carr',
+prompt:'In Baker v. Carr (1962) the Supreme Court held that federal courts could hear challenges to state legislative apportionment, rejecting the argument that redistricting was a purely political question. The decision opened the door to the "one person, one vote" principle.\n\n(a) Identify the constitutional clause or amendment that is common to both Baker v. Carr and Shaw v. Reno (1993).\n(b) Explain how the facts of Baker v. Carr led to a different holding than in Shaw v. Reno.\n(c) Describe an action that Congress or state legislatures could take in response to Shaw v. Reno, and explain how that action might affect redistricting.',
+note:'The SCOTUS comparison question always gives you one case and expects you to supply the other from the required list. Know the fifteen required cases by holding, not just by name.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Common constitutional basis', check:'Did you identify the Fourteenth Amendment\u2019s equal protection clause?',
+  tips:['Both cases turn on equal protection, though applied to different problems.','Naming the amendment without the clause is usually accepted, but the clause is safer.']},
+ {pts:2, label:'(b) Compare the reasoning', check:'Did you accurately describe BOTH cases and explain why the facts produced different holdings?',
+  tips:['1 point for correctly describing Baker: malapportionment made rural votes count more, and the Court held this was justiciable.','1 point for Shaw: a majority-minority district drawn on racial lines was subject to strict scrutiny.','A common error is describing Shaw as approving racial gerrymandering \u2014 it did the opposite.']},
+ {pts:1, label:'(c) Response and effect', check:'Did you describe a specific institutional action AND connect it to a redistricting outcome?',
+  tips:['Independent redistricting commissions, new state criteria, or federal legislation all work.','The action must be plausible and the effect must be explained, not merely asserted.']}
+]
+},
+{
+id:'appsych-frq-1', cid:'ap-psych', type:'FRQ', mins:25, points:7,
+title:'Evidence-based question: sleep and memory',
+prompt:'Research question: Does sleep after learning improve memory consolidation?\n\nSOURCE 1 (summary): Participants learned word pairs in the morning or evening, then were tested twelve hours later. Those whose interval included a night of sleep recalled 22% more pairs than those who stayed awake. Sample size 48 undergraduates.\n\nSOURCE 2 (summary): A study measured slow-wave sleep duration and next-day recall in 60 adults. Recall correlated with slow-wave sleep at r = 0.41. No sleep manipulation was performed.\n\nSOURCE 3 (summary): Participants were deprived of REM sleep specifically while total sleep time was held constant. Procedural skill retention fell sharply; factual recall was unaffected.\n\n(a) Propose a specific and defensible claim answering the research question.\n(b) Support your claim with evidence from ONE of the sources and explain how it supports the claim.\n(c) Support your claim with evidence from a DIFFERENT source and explain the connection.\n(d) Explain how one source\u2019s methodology limits the conclusion that can be drawn from it.',
+note:'The Evidence-Based Question replaced the older AP Psychology free-response format. It rewards using sources as evidence for your own claim rather than summarising them in turn.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Claim', check:'Did you state a specific, defensible claim that answers the question rather than restating it?',
+  tips:['"Sleep helps memory" is thin. Which kind of memory, and by what mechanism?','A claim distinguishing procedural from declarative memory is stronger.']},
+ {pts:2, label:'(b) First source and explanation', check:'Did you cite specific evidence AND explain how it supports your claim?',
+  tips:['1 point for accurate evidence from the source.','1 point for the explanatory link. Quoting a statistic without connecting it earns half.']},
+ {pts:2, label:'(c) Second source and explanation', check:'Did you use a different source with accurate evidence and an explanatory link?',
+  tips:['1 point for evidence, 1 for explanation.','Using the same source twice earns nothing for this row.']},
+ {pts:2, label:'(d) Methodological limitation', check:'Did you identify a specific limitation AND explain what it prevents you concluding?',
+  tips:['1 point for naming the limitation.','1 point for the consequence. Source 2 is correlational, so it cannot establish that slow-wave sleep causes better recall.','Source 1\u2019s time-of-day confound is also a legitimate answer.']}
+]
+},
+{
+id:'apeuro-leq-1', cid:'ap-euro', type:'LEQ', mins:40, points:6,
+title:'The Reformation and political authority',
+prompt:'Evaluate the extent to which the Protestant Reformation changed the relationship between religious and political authority in Europe in the period from 1517 to 1648.',
+note:'The end date is deliberate. A strong response will treat the Peace of Westphalia as the settlement of the question the Reformation opened.',
+docs:[],
+rubric:[
+ {pts:1, label:'Thesis or claim', check:'Did you make a historically defensible claim establishing a line of reasoning?',
+  tips:['Restating the prompt earns nothing.','A claim distinguishing what changed from what persisted works well here.']},
+ {pts:1, label:'Contextualization', check:'Did you situate the argument in a broader context with a developed description?',
+  tips:['Late medieval church abuses, the printing press, or the fragmented Holy Roman Empire all qualify.']},
+ {pts:2, label:'Evidence', check:'Did you provide at least TWO specific relevant examples (1 point), and use them to support your argument (2 points)?',
+  tips:['Specific: the Peace of Augsburg, the Act of Supremacy, the Council of Trent, the Edict of Nantes, the Peace of Westphalia.','Naming an event is evidence; explaining how it shifted authority is using it.']},
+ {pts:2, label:'Analysis and reasoning', check:'Did you frame the argument with historical reasoning (1 point) and demonstrate complexity (2 points)?',
+  tips:['Complexity route: princes gained authority over religion, but the Reformation also unleashed conflicts they could not control.','Noting that Westphalia settled the question on political rather than doctrinal terms is a strong move.']}
+]
+},
+{
+id:'apworld-dbq-1', cid:'ap-world', type:'DBQ', mins:60, points:7,
+title:'Industrialization and empire, 1750\u20131900',
+prompt:'Evaluate the extent to which industrialization shaped the relationship between European powers and the regions they colonised in the period 1750 to 1900.',
+note:'Documents are short paraphrased summaries written for practice. The real exam supplies seven of comparable length.',
+docs:[
+ {n:1, src:'British trade ledger, Manchester, 1815', text:'Records showing raw cotton arriving from India and the American South, and finished cloth shipped outward, including large consignments returning to Indian ports.'},
+ {n:2, src:'Petition from Bengali weavers, 1830s', text:'Weavers describe the collapse of demand for handwoven cloth, attributing it to cheap imported machine-made fabric and to duties that favour British goods.'},
+ {n:3, src:'Speech to the French Chamber of Deputies, 1885', text:'A deputy argues that industrial nations require guaranteed markets and raw materials, and that colonies are therefore an economic necessity rather than a matter of prestige.'},
+ {n:4, src:'Missionary account, West Africa, 1890', text:'A missionary describes a new railway built to move palm oil to the coast, noting that it has shortened a journey of weeks to two days and that local traders have lost their intermediary role.'},
+ {n:5, src:'Report on quinine supply, Dutch East Indies, 1870s', text:'An administrator notes that reliable quinine production has made prolonged European presence in tropical interiors possible for the first time.'},
+ {n:6, src:'Chinese official memorial, 1861', text:'An official argues that China must acquire steamships and modern weapons, because treaty terms cannot be resisted with existing forces.'},
+ {n:7, src:'Berlin Conference resolution, 1885', text:'An agreement among European powers establishing that claims to African territory must be supported by effective occupation, with no African representation present.'}
+],
+rubric:[
+ {pts:1, label:'Thesis or claim', check:'Did you make a historically defensible claim establishing a line of reasoning?',
+  tips:['A claim naming both economic and technological dimensions gives you room to argue.']},
+ {pts:1, label:'Contextualization', check:'Did you describe a broader relevant context beyond a passing reference?',
+  tips:['Earlier trading-post empires, the Columbian Exchange, or pre-industrial manufacturing all work.']},
+ {pts:2, label:'Evidence from documents', check:'Did you accurately use at least THREE documents (1 point) or at least SIX (2 points) to support your argument?',
+  tips:['Describing a document is not using it. It must support your claim.']},
+ {pts:1, label:'Evidence beyond the documents', check:'Did you use one specific example not in the documents and explain its relevance?',
+  tips:['The Opium Wars, the Suez Canal, the Sepoy Rebellion, or Ethiopia at Adwa.']},
+ {pts:1, label:'Document sourcing', check:'For at least TWO documents, did you explain how point of view, purpose, situation, or audience is relevant?',
+  tips:['Why does it matter that Document 3 is a speech seeking political support, or that Document 7 excluded Africans?']},
+ {pts:1, label:'Complexity', check:'Did you demonstrate complex understanding \u2014 for example by showing both European advantage and colonised responses?',
+  tips:['Document 6 shows adaptation rather than passivity. Using it to complicate a one-directional argument is a strong route.']}
+]
+},
+{
+id:'aphug-frq-1', cid:'ap-hug', type:'FRQ', mins:25, points:7,
+title:'Urban models and the periphery',
+prompt:'Cities in Latin America and the United States developed different internal spatial patterns.\n\n(a) Identify the urban model most associated with Latin American cities and name the geographers credited with it.\n(b) Describe TWO ways the spatial distribution of wealth in the Latin American model differs from the Burgess concentric zone model.\n(c) Explain ONE historical process that produced the Latin American pattern.\n(d) Explain ONE consequence of rapid peripheral growth for residents of those areas.\n(e) Describe ONE policy a city government could adopt to address that consequence, and explain a limitation of that policy.',
+note:'Human Geography free response uses precise task verbs. "Identify" needs a word or phrase; "explain" needs a causal link; "describe" needs detail without requiring causation.',
+docs:[],
+rubric:[
+ {pts:1, label:'(a) Identify the model', check:'Did you name the Griffin-Ford model, or the Latin American city model, with the geographers?',
+  tips:['Naming the model alone usually earns the point; the geographers make it safe.']},
+ {pts:2, label:'(b) Two contrasts', check:'Did you describe two distinct differences in where wealth sits?',
+  tips:['1 point each. Latin American: elite spine extending from the centre, poverty concentrated in peripheral disamenity zones.','Burgess: wealth increases outward, poverty near the centre.','Two versions of the same contrast earn one point.']},
+ {pts:1, label:'(c) Historical process', check:'Did you explain a process, not just name one?',
+  tips:['Colonial planning around a central plaza, or rural-to-urban migration outpacing housing supply.','"Colonialism" alone is naming, not explaining.']},
+ {pts:2, label:'(d) Consequence of peripheral growth', check:'Did you explain a specific consequence with a causal link?',
+  tips:['1 point for identifying it, 1 for the explanation.','Informal settlements lacking piped water, sanitation, tenure security, or transport access.']},
+ {pts:1, label:'(e) Policy and limitation', check:'Did you name a policy AND a genuine limitation of it?',
+  tips:['Site-and-service schemes, tenure regularisation, or transit extension.','Limitations: cost, displacement, or that formalising land can raise prices and push out the poorest.']}
+]
+},
+{
+id:'apcsa-frq-1', cid:'ap-csa', type:'FRQ', mins:25, points:9,
+title:'Methods and control structures',
+prompt:'A class Gradebook stores student scores in an ArrayList&lt;Integer&gt; named scores.\n\n(a) Write a method public int countAbove(int cutoff) that returns the number of scores strictly greater than cutoff.\n\n(b) Write a method public double average() that returns the mean of all scores, or 0.0 if the list is empty.\n\n(c) Write a method public void removeFailing(int passMark) that removes every score below passMark. Your method must work correctly regardless of how many scores fall below the mark.\n\n(d) Explain why a straightforward forward loop with an index fails in part (c), and describe two different ways to fix it.',
+note:'AP CSA free response is scored on working code. Write real Java, including the method signature. Part (c) is the classic removal trap and appears on the exam regularly.',
+docs:[],
+rubric:[
+ {pts:2, label:'(a) countAbove', check:'Does your method traverse the list, compare against cutoff with strict inequality, and return a count?',
+  tips:['1 point for a correct traversal.','1 point for the strict comparison and the return.','An enhanced for loop is fine here because nothing is modified.']},
+ {pts:2, label:'(b) average', check:'Did you handle the empty list case AND compute the mean as a double?',
+  tips:['1 point for the empty check returning 0.0.','1 point for avoiding integer division \u2014 cast the sum or divide by a double.','Returning sum / scores.size() with both ints is the most common error.']},
+ {pts:3, label:'(c) removeFailing', check:'Does your method remove every failing score correctly, without skipping elements?',
+  tips:['1 point for a correct comparison and removal call.','1 point for handling index shifting.','1 point for code that works when consecutive elements both fail.']},
+ {pts:2, label:'(d) Explain the trap', check:'Did you explain that removal shifts elements left while the index moves right, AND give two valid fixes?',
+  tips:['1 point for the explanation.','1 point for two fixes: iterate backwards from size() \u2212 1, or decrement the index after a removal.','An enhanced for loop is not a fix \u2014 it throws ConcurrentModificationException.']}
+]
+},
+{
+id:'apphys2-frq-1', cid:'ap-phys2', type:'FRQ', mins:20, points:10,
+title:'Circuits and the effect of a second path',
+prompt:'A 12 V battery of negligible internal resistance is connected to a 4 \u03a9 resistor R\u2081. A switch can connect a second resistor R\u2082 of 12 \u03a9 in parallel with R\u2081.\n\n(a) With the switch open, calculate the current through R\u2081 and the power dissipated.\n(b) With the switch closed, calculate the total resistance and the current drawn from the battery.\n(c) Explain why closing the switch increases the current from the battery even though a resistor was added.\n(d) The battery is replaced with one having internal resistance 1 \u03a9. Explain qualitatively how the terminal voltage changes when the switch is closed.\n(e) A student claims that adding resistors in parallel always increases total resistance. Evaluate this claim.',
+note:'Physics 2 rewards explanations in words. Parts (c) and (e) carry as many points as the calculations and are where most marks are lost.',
+docs:[],
+rubric:[
+ {pts:2, label:'(a) Single resistor', check:'Did you get I = 3 A and P = 36 W with correct units?',
+  tips:['1 point for the current from V = IR.','1 point for the power from P = IV or I\u00b2R.']},
+ {pts:2, label:'(b) Parallel combination', check:'Did you compute R_total = 3 \u03a9 and I = 4 A?',
+  tips:['1 point for the parallel formula giving 3 \u03a9.','1 point for the total current.']},
+ {pts:2, label:'(c) Why current rises', check:'Did you explain that a parallel branch adds another path, lowering total resistance?',
+  tips:['1 point for identifying the reduced total resistance.','1 point for the reason: current now has two routes, so more total charge flows per second.']},
+ {pts:2, label:'(d) Internal resistance', check:'Did you state that terminal voltage falls, and connect it to greater current across the internal resistance?',
+  tips:['1 point for the direction.','1 point for the reason: terminal voltage is \u03b5 \u2212 Ir, and I has increased.']},
+ {pts:2, label:'(e) Evaluate the claim', check:'Did you reject it and explain that parallel resistance is always less than the smallest branch?',
+  tips:['1 point for the judgement.','1 point for the reasoning, ideally with the formula or the extra-path argument.']}
+]
+}
+);
+</script>
+<script>
+/* ============================================================
    EXAM COUNTDOWN AND STUDY PLAN
    Turns the library into a coach. Everything below is derived
    from data the app already keeps: mastery scores, Leitner
@@ -20432,6 +20650,7 @@ vDashboard = function () {
 NAV.splice(4, 0, { h: '#/mistakes', t: 'Mistakes', i: '◔', m: 'Fix' });
 NAV.push({ h: '#/assign', t: 'Tutor tools', i: '✎', m: 'Tutor', deskOnly: true });
 NAV.push({ h: '#/account', t: 'Account', i: '◐', m: 'Me', deskOnly: true });
+NAV.push({ h: '#/search', t: 'Search', i: '⌕', m: 'Find', deskOnly: true });
 NAV.push({ h: '#/frq', t: 'Free response', i: '✍', m: 'Write' });
 NAV.push({ h: '#/plan', t: 'Exam plan', i: '◷', m: 'Plan' });
 NAV.push({ h: '#/install', t: 'Install app', i: '⤓', m: 'App', deskOnly: true });
@@ -20447,6 +20666,327 @@ if (typeof hasAuthCallback === 'function' && hasAuthCallback()) {
 }
 initCounter();
 if (typeof sbInit === 'function') sbInit();
+</script>
+<script>
+/* ============================================================
+   SEARCH
+   Builds an index once, lazily, over every unit title, guide
+   heading, flashcard, and quiz question in the app.
+   ============================================================ */
+let SEARCH_INDEX = null;
+function buildIndex() {
+  if (SEARCH_INDEX) return SEARCH_INDEX;
+  const out = [];
+  const clean = s => String(s || '').replace(/<[^>]+>/g, ' ').replace(/@@/g, ' ').replace(/\s+/g, ' ').trim();
+  COURSES.concat(customCourses()).forEach(c => {
+    (c.units || []).forEach(u => {
+      out.push({ kind: 'unit', c, u, text: clean(u.title), sub: c.name, href: `#/study/${c.id}/${u.id}/guide` });
+      (u.guide || []).forEach(sec => {
+        out.push({ kind: 'section', c, u, text: clean(sec.h), sub: `${c.short} · ${clean(u.title)}`, href: `#/study/${c.id}/${u.id}/guide` });
+        (sec.points || []).forEach(p => {
+          const t = clean(p);
+          if (t.length > 12) out.push({ kind: 'note', c, u, text: t, sub: `${c.short} · ${clean(sec.h)}`, href: `#/study/${c.id}/${u.id}/guide` });
+        });
+      });
+      (u.cards || []).forEach((k, i) => {
+        out.push({ kind: 'card', c, u, text: clean(k[0]), extra: clean(k[1]),
+          sub: `${c.short} · ${clean(u.title)}`, href: `#/study/${c.id}/${u.id}/cards` });
+      });
+      (u.quiz || []).forEach((q, i) => {
+        out.push({ kind: 'question', c, u, text: clean(q.q), extra: clean(q.why),
+          sub: `${c.short} · ${clean(u.title)}`, href: `#/study/${c.id}/${u.id}/quiz` });
+      });
+    });
+  });
+  if (typeof FRQS !== 'undefined') FRQS.forEach(f => {
+    const c = findCourse(f.cid);
+    out.push({ kind: 'frq', c: c || { short: f.cid, name: f.cid }, text: clean(f.title),
+      extra: clean(f.prompt), sub: `${c ? c.short : f.cid} · ${f.type}`, href: `#/frq/${f.id}` });
+  });
+  SEARCH_INDEX = out;
+  return out;
+}
+
+function runSearch(q) {
+  const needle = String(q || '').toLowerCase().trim();
+  if (needle.length < 2) return [];
+  const words = needle.split(/\s+/);
+  const idx = buildIndex();
+  const scored = [];
+  idx.forEach(item => {
+    const hay = (item.text + ' ' + (item.extra || '')).toLowerCase();
+    if (!words.every(w => hay.includes(w))) return;
+    const t = item.text.toLowerCase();
+    let score = 0;
+    if (t === needle) score += 100;
+    else if (t.startsWith(needle)) score += 60;
+    else if (t.includes(needle)) score += 40;
+    else score += 10;
+    /* prefer definitions and unit titles over passing mentions */
+    score += { unit: 14, card: 12, section: 10, question: 6, frq: 8, note: 2 }[item.kind] || 0;
+    scored.push({ item, score });
+  });
+  scored.sort((a, b) => b.score - a.score || a.item.text.length - b.item.text.length);
+  return scored.slice(0, 60).map(s => s.item);
+}
+
+function mark(text, q) {
+  const needle = String(q).trim();
+  if (!needle) return esc(text);
+  try {
+    const re = new RegExp('(' + needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').split(/\s+/).join('|') + ')', 'ig');
+    return esc(text).replace(re, '<b style="background:var(--highlight);padding:0 2px;border-radius:2px">$1</b>');
+  } catch (e) { return esc(text); }
+}
+
+const KIND_LABEL = { unit: 'Unit', section: 'Guide section', note: 'Guide note', card: 'Flashcard', question: 'Quiz question', frq: 'Free response' };
+
+function vSearch(q) {
+  const query = q || '';
+  const hits = runSearch(query);
+  const byKind = {};
+  hits.forEach(h => { (byKind[h.kind] = byKind[h.kind] || []).push(h); });
+  const order = ['unit', 'card', 'section', 'frq', 'question', 'note'].filter(k => byKind[k]);
+  return topbar() + `
+  <div class="page-head fade">
+    <span class="eyebrow">Search</span>
+    <h1>Find anything</h1>
+    <p>Across ${COURSES.reduce((n, c) => n + c.units.length, 0)} units, every flashcard, quiz question, and study guide.</p>
+  </div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="row" style="flex-wrap:nowrap;gap:8px">
+      <input type="search" id="sq" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
+        style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()" onkeydown="if(event.key==='Enter')searchGo()">
+    </div>
+    ${query.length >= 2 ? `<p style="font-size:.85rem;color:var(--ink-faint);margin:10px 0 0">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
+  </div>
+  ${query.length < 2 ? `<div class="note" style="max-width:60ch">Type at least two characters. Searching a term finds the flashcard that defines it, the guide section that explains it, and every question that tests it.</div>` :
+    !hits.length ? `<div class="note" style="max-width:60ch">No match for <b>${esc(query)}</b>. Try a shorter term, or check the spelling.</div>` :
+    order.map(k => `<span class="eyebrow" style="margin-top:18px">${KIND_LABEL[k]} · ${byKind[k].length}</span>
+    <div style="margin-bottom:10px">
+      ${byKind[k].slice(0, 12).map(h => `<a class="card" href="${h.href}" style="display:block;text-decoration:none;color:inherit;margin-bottom:7px;padding:12px 16px">
+        <div style="font-size:.93rem;font-weight:600;margin-bottom:3px">${mark(h.text, query)}</div>
+        ${h.extra ? `<div style="font-size:.85rem;color:var(--ink-soft);line-height:1.5">${mark(h.extra.slice(0, 170), query)}${h.extra.length > 170 ? '…' : ''}</div>` : ''}
+        <div style="font-size:.75rem;color:var(--ink-faint);margin-top:5px;font-family:'IBM Plex Mono',monospace">${esc(h.sub)}</div>
+      </a>`).join('')}
+      ${byKind[k].length > 12 ? `<p style="font-size:.8rem;color:var(--ink-faint);margin:4px 0 0">…and ${byKind[k].length - 12} more</p>` : ''}
+    </div>`).join('')}`;
+}
+
+function searchGo() {
+  const v = $('#sq') ? $('#sq').value : '';
+  history.replaceState(null, '', location.pathname + location.search + '#/search?q=' + encodeURIComponent(v));
+  const box = document.getElementById('view');
+  const pos = $('#sq') ? $('#sq').selectionStart : 0;
+  box.innerHTML = vSearch(v);
+  if (typeof sweepMath === 'function') sweepMath(box);
+  const inp = $('#sq');
+  if (inp) { inp.focus(); try { inp.setSelectionRange(pos, pos); } catch (e) {} }
+}
+
+/* ============================================================
+   REPORT A PROBLEM
+   1,945 flashcards and 873 questions, none reviewed by a person.
+   This turns whoever finds an error into the person who logs it.
+   ============================================================ */
+const Reports = {
+  all() { return store.get('sb.reports', []); },
+  save(v) { store.set('sb.reports', v); },
+  add(r) { const a = this.all(); a.unshift({ ...r, at: new Date().toISOString() }); this.save(a.slice(0, 300)); },
+  count() { return this.all().length; },
+  clear() { this.save([]); }
+};
+
+function reportFlag(kind, cid, uid, i, textSample) {
+  return `<button class="chip" style="font-size:.7rem;padding:3px 8px"
+    onclick="openReport('${kind}','${cid}','${uid}',${i},this)" title="Report a problem with this ${kind}">\u2691 Looks wrong</button>`;
+}
+
+function openReport(kind, cid, uid, i, btn) {
+  const c = findCourse(cid), u = c ? findUnit(c, uid) : null;
+  let sample = '';
+  if (u && kind === 'card' && u.cards[i]) sample = u.cards[i][0];
+  if (u && kind === 'question' && u.quiz[i]) sample = u.quiz[i].q;
+  const wrap = document.createElement('div');
+  wrap.className = 'card';
+  wrap.style.cssText = 'margin-top:10px;border-left:3px solid var(--margin)';
+  wrap.innerHTML = `
+    <span class="eyebrow">Report a problem</span>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin:6px 0 10px">${esc(String(sample).replace(/<[^>]+>/g, '').slice(0, 120))}</p>
+    <select id="rptWhy" style="width:100%;margin-bottom:8px">
+      <option value="wrong answer">The marked answer is wrong</option>
+      <option value="factual error">A fact is incorrect</option>
+      <option value="confusing">The wording is confusing or ambiguous</option>
+      <option value="typo">Typo or formatting problem</option>
+      <option value="other">Something else</option>
+    </select>
+    <textarea id="rptNote" rows="2" placeholder="What is wrong? Optional but useful." style="width:100%;font-size:.9rem"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn mark sm" onclick="submitReport('${kind}','${cid}','${uid}',${i},this)">Send</button>
+      <button class="btn ghost sm" onclick="this.closest('.card').remove()">Cancel</button>
+    </div>`;
+  btn.parentNode.insertBefore(wrap, btn.nextSibling);
+  btn.style.display = 'none';
+}
+
+function submitReport(kind, cid, uid, i, btn) {
+  const why = $('#rptWhy') ? $('#rptWhy').value : 'other';
+  const note = $('#rptNote') ? $('#rptNote').value : '';
+  const c = findCourse(cid), u = c ? findUnit(c, uid) : null;
+  let sample = '';
+  if (u && kind === 'card' && u.cards[i]) sample = u.cards[i][0];
+  if (u && kind === 'question' && u.quiz[i]) sample = u.quiz[i].q;
+  Reports.add({ kind, course: c ? c.name : cid, courseId: cid, unit: u ? u.title : uid, unitId: uid,
+    index: i, reason: why, note: note, sample: String(sample).replace(/<[^>]+>/g, '').slice(0, 200) });
+  const box = btn.closest('.card');
+  box.innerHTML = `<span class="eyebrow">Reported</span>
+    <p style="font-size:.88rem;margin:6px 0 0">Logged on this device. Export the list from Settings and send it on, and it can be fixed for everyone.</p>`;
+}
+
+function vReports() {
+  const list = Reports.all();
+  if (!list.length) return `<div class="card">
+    <span class="eyebrow">Reported problems</span>
+    <h3 style="margin-bottom:6px">Nothing reported</h3>
+    <p style="color:var(--ink-soft);font-size:.88rem;margin:0">A <b>Looks wrong</b> button sits on every flashcard and quiz question. Nobody has read all 1,945 cards, so if something seems off it probably is \u2014 flag it.</p>
+  </div>`;
+  return `<div class="card">
+    <span class="eyebrow">Reported problems · ${list.length}</span>
+    <div style="max-height:280px;overflow:auto;margin:10px 0">
+      ${list.map(r => `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
+        <div style="font-size:.85rem;font-weight:600">${esc(r.reason)} \u2014 ${esc(r.course)}</div>
+        <div style="font-size:.8rem;color:var(--ink-soft)">${esc(r.unit)} · ${esc(r.kind)} ${r.index + 1}</div>
+        <div style="font-size:.8rem;color:var(--ink-faint);margin-top:2px">${esc((r.sample || '').slice(0, 90))}</div>
+        ${r.note ? `<div style="font-size:.82rem;margin-top:3px">${esc(r.note)}</div>` : ''}
+      </div>`).join('')}
+    </div>
+    <div class="row">
+      <button class="btn sm" onclick="exportReports()">Export as text</button>
+      <button class="btn ghost sm" onclick="if(confirm('Clear all reported problems?')){Reports.clear();render();}">Clear</button>
+    </div>
+  </div>`;
+}
+
+function exportReports() {
+  const list = Reports.all();
+  const txt = 'StudyBuddy — reported problems\n' + new Date().toDateString() + '\n\n' +
+    list.map((r, i) => `${i + 1}. [${r.reason}] ${r.course} — ${r.unit} — ${r.kind} #${r.index + 1}\n   "${r.sample}"\n   ${r.note || '(no note)'}\n`).join('\n');
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'studybuddy-reports.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ---- put the flag on flashcards and quiz questions ---- */
+const _paintCardRpt = paintCard;
+paintCard = function () {
+  _paintCardRpt();
+  const w = document.getElementById('deckwrap');
+  if (!w || !DECK || !DECK.cid) return;
+  if (w.querySelector('.rptrow')) return;
+  const row = document.createElement('div');
+  row.className = 'rptrow';
+  row.style.cssText = 'margin-top:12px;text-align:center';
+  const i = DECK.order ? DECK.order[DECK.i] : DECK.i;
+  row.innerHTML = reportFlag('card', DECK.cid, DECK.uid, i);
+  w.appendChild(row);
+};
+const _paintQuizRpt = paintQuiz;
+paintQuiz = function () {
+  _paintQuizRpt();
+  const w = document.getElementById('qwrap');
+  if (!w || !QZ || !QZ.cid || QZ.test) return;
+  if (w.querySelector('.rptrow')) return;
+  const row = document.createElement('div');
+  row.className = 'rptrow';
+  row.style.cssText = 'margin-top:12px;text-align:center';
+  row.innerHTML = reportFlag('question', QZ.cid, QZ.uid, QZ.i);
+  w.appendChild(row);
+};
+
+/* ---- surface the list in Settings ---- */
+const _vSettingsRpt = vSettings;
+vSettings = function () {
+  const html = _vSettingsRpt();
+  const block = vReports();
+  return html.replace('<div class="card">\n      <span class="eyebrow">Install</span>', block + '\n    <div class="card">\n      <span class="eyebrow">Install</span>')
+    .replace(/(<div class="grid g2"[^>]*>)/, '$1');
+};
+
+/* ============================================================
+   MISTAKE BOOK, GROUPED
+   A flat list of twelve questions hides the pattern. Grouped by
+   course and unit, a student sees where they keep losing marks.
+   ============================================================ */
+const _vMistakesGrouped = typeof vMistakes === 'function' ? vMistakes : null;
+if (_vMistakesGrouped) {
+  vMistakes = function () {
+    const all = Missed.all();
+    const keys = Object.keys(all);
+    if (!keys.length) return _vMistakesGrouped();
+
+    const groups = {};
+    keys.forEach(k => {
+      const m = all[k];
+      const cid = m.cid || 'unknown', uid = m.uid || 'unknown';
+      const g = groups[cid] = groups[cid] || { c: findCourse(cid), units: {}, n: 0 };
+      const uu = g.units[uid] = g.units[uid] || { u: g.c ? findUnit(g.c, uid) : null, items: [] };
+      uu.items.push({ k, m });
+      g.n++;
+    });
+    const order = Object.keys(groups).sort((a, b) => groups[b].n - groups[a].n);
+    const total = keys.length;
+    const repeatTotal = keys.filter(k => (all[k].n || 1) > 1).length;
+    const worst = order[0] ? groups[order[0]] : null;
+
+    return topbar() + `
+    <div class="page-head fade">
+      <span class="eyebrow">Mistake book · ${total} question${total > 1 ? 's' : ''}</span>
+      <h1>Where you keep <span class="hl">losing marks</span></h1>
+      <p>${worst && worst.c ? `Most of these are in <b>${esc(worst.c.short)}</b> — ${worst.n} of ${total}. Grouped below so the pattern is visible.` : 'Grouped by course and unit so you can see the pattern rather than a flat list.'}</p>
+    </div>
+    <div class="row" style="margin-bottom:18px">
+      <button class="btn mark" onclick="retryMistakes(0)">Retry all ${total}</button>
+      ${repeatTotal ? `<button class="btn ghost" onclick="retryMistakes(1)">Just the ${repeatTotal} repeat${repeatTotal > 1 ? 's' : ''}</button>` : ''}
+    </div>
+    ${order.map(cid => {
+      const g = groups[cid];
+      const uOrder = Object.keys(g.units).sort((a, b) => g.units[b].items.length - g.units[a].items.length);
+      return `<div class="card" style="margin-bottom:12px;border-left:3px solid ${g.c && g.c.color ? g.c.color : 'var(--margin)'}">
+        <div class="spread" style="margin-bottom:10px">
+          <div>
+            <span class="eyebrow">${g.c ? esc(g.c.name) : esc(cid)}</span>
+            <h3 style="margin:2px 0 0">${g.n} question${g.n > 1 ? 's' : ''} to fix</h3>
+          </div>
+          ${g.c ? `<a class="btn ghost sm" href="#/course/${g.c.id}">Open course</a>` : ''}
+        </div>
+        ${uOrder.map(uid => {
+          const uu = g.units[uid];
+          const repeats = uu.items.filter(x => (x.m.n || 1) > 1).length;
+          return `<div style="padding:9px 0;border-top:1px solid var(--line)">
+            <div class="spread" style="margin-bottom:5px">
+              <span style="font-size:.88rem;font-weight:600">${uu.u ? esc(uu.u.title) : esc(uid)}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft)">${uu.items.length}${repeats ? ` · ${repeats} repeated` : ''}</span>
+            </div>
+            <div class="plan-bar"><div style="width:${Math.min(100, uu.items.length * 20)}%;background:${repeats ? 'var(--margin)' : 'var(--ink-soft)'}"></div></div>
+            <div style="margin-top:7px">
+              ${uu.items.slice(0, 3).map(x => `<div style="font-size:.83rem;color:var(--ink-soft);line-height:1.5;padding:3px 0">
+                ${esc(String(x.m.q || '').replace(/<[^>]+>/g, '').slice(0, 110))}${(x.m.n || 1) > 1 ? ` <span style="color:var(--margin);font-weight:600">×${x.m.n}</span>` : ''}
+              </div>`).join('')}
+              ${uu.items.length > 3 ? `<div style="font-size:.8rem;color:var(--ink-faint);padding-top:2px">…and ${uu.items.length - 3} more</div>` : ''}
+            </div>
+            ${uu.u ? `<div class="row" style="margin-top:8px">
+              <a class="chip" href="#/study/${cid}/${uid}/guide">Reread the guide</a>
+              <a class="chip" href="#/study/${cid}/${uid}/quiz">Retake the quiz</a>
+            </div>` : ''}
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('')}`;
+  };
+}
 </script>
 </body>
 </html>

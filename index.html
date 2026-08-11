@@ -17529,7 +17529,7 @@ let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last
 /* prefixes whose keys are created dynamically: free-response drafts,
    practice-test bests, and match times. Listing them by prefix means a
    new prompt or test is backed up automatically. */
-const BACKUP_PREFIXES = ['sb.fr.', 'sb.exam.', 'sb.match.'];
+const BACKUP_PREFIXES = ['sb.fr.', 'sb.exam.', 'sb.match.', 'sb.scores.'];
 function backupKeys() {
   const keys = BACKUP_KEYS.slice();
   try {
@@ -24570,6 +24570,377 @@ addWorked('ap-lit','u9','The literary argument essay is where most marks are los
   steps:['Three thin paragraphs cannot demonstrate the explanation the rubric measures.','Evidence and commentary carry four of six points.','Depth of commentary is what distinguishes bands.','One developed paragraph shows more than three undeveloped ones.'],
   a:'Answer: write one fully developed paragraph with your strongest evidence, and add a second only if time genuinely allows. Skip the conclusion — the rubric does not require one.'}],
 'Prepare three or four works thoroughly rather than knowing many superficially. For each, know the arc, the central tension, the structure, and three quotable moments.');
+</script>
+<script>
+/* ============================================================
+   SAT AND ACT — REAL EXAM STRUCTURE
+   The tests ran as one undifferentiated block. Both exams are
+   sectioned, separately timed, and separately scored, so the
+   practice now mirrors that: real section order, real per-
+   question pacing, and scores on the real scale.
+
+   Honest limitation, stated in the UI: each section here is a
+   10-question sample, not a full-length module. Pacing is
+   authentic; the scaled score is an estimate from a small
+   sample and will be noisier than a real test.
+   ============================================================ */
+
+const EXAM_FORMAT = {
+  sat: {
+    name: 'SAT',
+    scale: [400, 1600],
+    note: 'Digital SAT: two Reading and Writing modules (27 questions, 32 minutes each) and two Math modules (22 questions, 35 minutes each). The real test is adaptive — your first module determines the difficulty of the second.',
+    sections: [
+      { key: 'rw',   name: 'Reading and Writing', from: 0,  to: 10, mins: 12, realQ: 54, realMins: 64, scale: [200, 800] },
+      { key: 'math', name: 'Math',                from: 10, to: 20, mins: 16, realQ: 44, realMins: 70, scale: [200, 800] }
+    ]
+  },
+  act: {
+    name: 'ACT',
+    scale: [1, 36],
+    note: 'Enhanced ACT: English (50 questions, 35 minutes), Math (45 questions, 50 minutes), Reading (36 questions, 40 minutes). Science is now optional and is reported separately, outside the Composite.',
+    sections: [
+      { key: 'eng',  name: 'English', from: 0,  to: 7,  mins: 5,  realQ: 50, realMins: 35, scale: [1, 36] },
+      { key: 'math', name: 'Math',    from: 7,  to: 14, mins: 8,  realQ: 45, realMins: 50, scale: [1, 36] },
+      { key: 'read', name: 'Reading', from: 14, to: 20, mins: 7,  realQ: 36, realMins: 40, scale: [1, 36] }
+    ]
+  }
+};
+
+function examKind(id) { return id.indexOf('sat') === 0 ? 'sat' : 'act'; }
+
+/* raw fraction to a scaled score on the real range */
+function scaleScore(fraction, range) {
+  const [lo, hi] = range;
+  return Math.round(lo + fraction * (hi - lo));
+}
+
+/* ---------------- score history ---------------- */
+const Scores = {
+  key(kind) { return 'sb.scores.' + kind; },
+  all(kind) { return store.get(this.key(kind), []); },
+  add(kind, rec) {
+    const a = this.all(kind);
+    a.push(rec);
+    store.set(this.key(kind), a.slice(-40));
+  },
+  best(kind) {
+    const a = this.all(kind);
+    return a.length ? Math.max(...a.map(r => r.total)) : null;
+  },
+  latest(kind) {
+    const a = this.all(kind);
+    return a.length ? a[a.length - 1] : null;
+  },
+  clear(kind) { store.set(this.key(kind), []); }
+};
+
+/* ---------------- the growth graph ---------------- */
+function scoreGraph(kind) {
+  const hist = Scores.all(kind);
+  const fmt = EXAM_FORMAT[kind];
+  const [lo, hi] = fmt.scale;
+
+  if (hist.length < 1) {
+    return `<div class="card">
+      <span class="eyebrow">${fmt.name} score history</span>
+      <h3 style="margin-bottom:6px">No tests taken yet</h3>
+      <p style="color:var(--ink-soft);font-size:.9rem;margin:0">Finish a practice test and your scores appear here as a graph, so you can see whether you are actually improving.</p>
+    </div>`;
+  }
+
+  const W = 100, H = 46, pad = 2;
+  const n = hist.length;
+  const xs = i => n === 1 ? W / 2 : pad + (i / (n - 1)) * (W - pad * 2);
+  const ys = v => H - pad - ((v - lo) / (hi - lo)) * (H - pad * 2);
+
+  const pts = hist.map((r, i) => [xs(i), ys(r.total)]);
+  const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' ');
+  /* the shaded area closes down to the baseline */
+  const area = `M${pts[0][0].toFixed(2)} ${(H - pad).toFixed(2)} ` +
+    pts.map(p => 'L' + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join(' ') +
+    ` L${pts[n - 1][0].toFixed(2)} ${(H - pad).toFixed(2)} Z`;
+
+  const first = hist[0].total, last = hist[n - 1].total, change = last - first;
+  const best = Math.max(...hist.map(r => r.total));
+  const gid = 'grad-' + kind;
+
+  return `<div class="card">
+    <div class="spread" style="margin-bottom:4px">
+      <span class="eyebrow">${fmt.name} score history</span>
+      <span style="font-size:.78rem;font-family:'IBM Plex Mono',monospace;color:var(--ink-faint)">${n} test${n > 1 ? 's' : ''}</span>
+    </div>
+    <div class="row" style="gap:24px;margin:8px 0 12px">
+      <div class="stat"><b>${last}</b><span>most recent</span></div>
+      <div class="stat"><b>${best}</b><span>best</span></div>
+      ${n > 1 ? `<div class="stat"><b style="color:${change > 0 ? 'var(--green)' : change < 0 ? 'var(--margin)' : 'var(--ink)'}">${change > 0 ? '+' : ''}${change}</b><span>since first</span></div>` : ''}
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:150px;display:block;overflow:visible">
+      <defs>
+        <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--margin)" stop-opacity="0.30"/>
+          <stop offset="100%" stop-color="var(--margin)" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
+      <line x1="${pad}" y1="${H - pad}" x2="${W - pad}" y2="${H - pad}" stroke="var(--line)" stroke-width="0.3"/>
+      <line x1="${pad}" y1="${pad}" x2="${W - pad}" y2="${pad}" stroke="var(--line)" stroke-width="0.3" stroke-dasharray="1 1"/>
+      <path d="${area}" fill="url(#${gid})"/>
+      <path d="${line}" fill="none" stroke="var(--margin)" stroke-width="0.7" stroke-linejoin="round" stroke-linecap="round"/>
+      ${pts.map((p, i) => `<circle cx="${p[0].toFixed(2)}" cy="${p[1].toFixed(2)}" r="${i === n - 1 ? 1.3 : 0.9}"
+        fill="var(--paper)" stroke="var(--margin)" stroke-width="0.6"><title>${esc(hist[i].date)}: ${hist[i].total}</title></circle>`).join('')}
+    </svg>
+    <div class="row" style="justify-content:space-between;margin-top:4px">
+      <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">${esc(hist[0].date)}</span>
+      <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">SCALE ${lo}\u2013${hi}</span>
+      <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">${esc(hist[n - 1].date)}</span>
+    </div>
+    ${hist.length > 1 ? `<hr class="divide">
+      <span class="eyebrow">By section</span>
+      <div style="margin-top:8px">
+        ${fmt.sections.map(s => {
+          const vals = hist.filter(r => r.sections && r.sections[s.key] != null).map(r => r.sections[s.key]);
+          if (!vals.length) return '';
+          const f = vals[0], l = vals[vals.length - 1], d = l - f;
+          return `<div class="spread" style="padding:5px 0;border-bottom:1px solid var(--line)">
+            <span style="font-size:.86rem">${esc(s.name)}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.8rem">
+              ${l}<span style="color:${d > 0 ? 'var(--green)' : d < 0 ? 'var(--margin)' : 'var(--ink-faint)'};margin-left:8px">${d > 0 ? '+' : ''}${d}</span>
+            </span>
+          </div>`;
+        }).join('')}
+      </div>` : ''}
+    <div class="row" style="margin-top:12px">
+      <button class="btn ghost sm" onclick="if(confirm('Clear your ${fmt.name} score history?')){Scores.clear('${kind}');render();}">Clear history</button>
+    </div>
+  </div>`;
+}
+
+/* ---------------- sectioned test runner ---------------- */
+let SEC = null;
+
+function startExamTest(id) {
+  const t = findExamTest(id);
+  if (!t) return;
+  const kind = examKind(id);
+  const fmt = EXAM_FORMAT[kind];
+  SEC = { test: t, kind: kind, fmt: fmt, i: 0, results: [] };
+  runSection();
+}
+
+function runSection() {
+  if (!SEC) return;
+  const s = SEC.fmt.sections[SEC.i];
+  const qs = SEC.test.qs.slice(s.from, s.to);
+  QZ = {
+    cid: null, uid: null, examId: SEC.test.id, sectionKey: s.key,
+    title: `${s.name} · ${qs.length} questions · ${s.mins} minutes`,
+    sub: `${SEC.fmt.name} · section ${SEC.i + 1} of ${SEC.fmt.sections.length}`,
+    qs: prepQuestions(qs), i: 0, right: 0, marks: [], answered: false,
+    test: true, timed: true, endsAt: Date.now() + s.mins * 60000
+  };
+  view().innerHTML = topbar() + `<a class="crumb" href="#/tests">← Practice tests</a>
+    <div class="note" style="max-width:60ch;margin-bottom:14px">
+      <b>${esc(s.name)}</b> — ${qs.length} questions in ${s.mins} minutes, matching the real pace of about
+      ${Math.round(s.realMins * 60 / s.realQ)} seconds per question. No feedback until the whole test is done.
+    </div>
+    <div id="qwrap"></div>`;
+  paintQuiz();
+}
+
+/* when a section ends, move to the next or score the whole test */
+const _paintQuizResultSec = paintQuizResult;
+paintQuizResult = function () {
+  if (!SEC || !QZ || !QZ.sectionKey) return _paintQuizResultSec();
+
+  const s = SEC.fmt.sections[SEC.i];
+  SEC.results.push({ key: s.key, name: s.name, right: QZ.right, total: QZ.qs.length,
+                     marks: QZ.marks.slice(), qs: QZ.qs.slice() });
+  SEC.i++;
+
+  if (SEC.i < SEC.fmt.sections.length) {
+    const next = SEC.fmt.sections[SEC.i];
+    view().innerHTML = topbar() + `<a class="crumb" href="#/tests">← Practice tests</a>
+      <div class="page-head fade">
+        <span class="eyebrow">Section complete</span>
+        <h1>${esc(s.name)} done</h1>
+        <p>On the real exam you would move straight on. Take a moment if you need it — your answers are saved.</p>
+      </div>
+      <div class="card" style="max-width:520px">
+        <span class="eyebrow">Up next</span>
+        <h3 style="margin-bottom:4px">${esc(next.name)}</h3>
+        <p style="color:var(--ink-soft);font-size:.9rem;margin:0 0 14px">${next.to - next.from} questions in ${next.mins} minutes.</p>
+        <button class="btn mark" onclick="runSection()">Start ${esc(next.name)}</button>
+      </div>`;
+    return;
+  }
+  return paintExamResult();
+};
+
+function paintExamResult() {
+  const fmt = SEC.fmt, kind = SEC.kind;
+  const secScores = {};
+  let totalRight = 0, totalQs = 0;
+
+  SEC.results.forEach(r => {
+    const s = fmt.sections.find(x => x.key === r.key);
+    secScores[r.key] = scaleScore(r.total ? r.right / r.total : 0, s.scale);
+    totalRight += r.right; totalQs += r.total;
+  });
+
+  /* SAT totals its two section scores; ACT averages its three */
+  let total;
+  if (kind === 'sat') {
+    total = fmt.sections.reduce((n, s) => n + (secScores[s.key] || 0), 0);
+  } else {
+    const vals = fmt.sections.map(s => secScores[s.key] || 0);
+    total = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+  }
+
+  Scores.add(kind, { date: today(), testId: SEC.test.id, total: total,
+                     sections: secScores, right: totalRight, of: totalQs });
+
+  const prev = Scores.all(kind);
+  const before = prev.length > 1 ? prev[prev.length - 2].total : null;
+  const delta = before === null ? null : total - before;
+
+  view().innerHTML = topbar() + `<a class="crumb" href="#/tests">← Practice tests</a>
+  <div class="page-head fade">
+    <span class="eyebrow">${esc(fmt.name)} · ${esc(SEC.test.name)}</span>
+    <h1>${total}<span style="color:var(--ink-faint);font-size:.5em"> / ${fmt.scale[1]}</span></h1>
+    <p>${totalRight} of ${totalQs} correct.${delta !== null ? ` That is <b style="color:${delta >= 0 ? 'var(--green)' : 'var(--margin)'}">${delta >= 0 ? '+' : ''}${delta}</b> compared with your last attempt.` : ''}</p>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:16px;align-items:start">
+    <div class="card">
+      <span class="eyebrow">Section scores</span>
+      <div style="margin-top:10px">
+        ${SEC.results.map(r => {
+          const s = fmt.sections.find(x => x.key === r.key);
+          const sc = secScores[r.key];
+          const pct = Math.round(r.right / r.total * 100);
+          return `<div style="margin-bottom:13px">
+            <div class="spread" style="margin-bottom:4px">
+              <span style="font-size:.9rem;font-weight:600">${esc(r.name)}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.85rem">${sc}<span style="color:var(--ink-faint)"> / ${s.scale[1]}</span></span>
+            </div>
+            <div class="plan-bar"><div style="width:${pct}%;background:${pct >= 70 ? 'var(--green)' : pct >= 45 ? 'var(--ink)' : 'var(--margin)'}"></div></div>
+            <div style="font-size:.76rem;color:var(--ink-faint);margin-top:3px">${r.right} of ${r.total} correct</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <hr class="divide">
+      <p style="font-size:.8rem;color:var(--ink-faint);margin:0">
+        ${kind === 'sat' ? 'The SAT total is the sum of the two section scores.' : 'The ACT Composite is the average of English, Math, and Reading. Science is reported separately and is not included.'}
+      </p>
+    </div>
+    ${scoreGraph(kind)}
+  </div>
+
+  <div class="note" style="max-width:66ch;margin-bottom:18px">
+    <b>About this score.</b> Each section here samples ${SEC.results[0].total} questions rather than a full module, so the pacing is authentic but the scaled score is an estimate from a small sample. Treat the <i>trend</i> across several tests as meaningful and any single number as rough.
+  </div>
+
+  <span class="eyebrow">Every question</span>
+  <div style="margin-top:10px">
+    ${SEC.results.map(r => `
+      <div class="spread" style="margin:16px 0 8px">
+        <span class="eyebrow">${esc(r.name)}</span>
+        <span style="font-size:.8rem;color:var(--ink-soft)">${r.right}/${r.total}</span>
+      </div>
+      ${r.qs.map((q, i) => `<div class="card" style="margin-bottom:9px;border-left:3px solid ${r.marks[i] === 1 ? 'var(--green)' : 'var(--margin)'}">
+        <span class="eyebrow">${r.marks[i] === 1 ? 'Correct' : 'Missed'} · Q${i + 1}</span>
+        <p style="font-weight:600;margin-bottom:6px">${fx(q.q)}</p>
+        <p style="margin-bottom:6px"><b>Answer:</b> ${fx(q.c[q.a])}</p>
+        <div class="why" style="margin:0">${fx(q.why)}</div>
+      </div>`).join('')}
+    `).join('')}
+  </div>`;
+  if (typeof sweepMath === 'function') sweepMath(view());
+  SEC = null;
+}
+
+/* ---------------- the test detail page ---------------- */
+vExamTest = function (id) {
+  const t = findExamTest(id);
+  if (!t) return notFound();
+  const kind = examKind(id), fmt = EXAM_FORMAT[kind];
+  const totalMins = fmt.sections.reduce((n, s) => n + s.mins, 0);
+  const best = Scores.best(kind);
+  return topbar() + `
+  <a class="crumb" href="#/tests">← Practice tests</a>
+  <div class="page-head fade">
+    <span class="eyebrow">${esc(fmt.name)} · ${t.level}</span>
+    <h1>${esc(t.name)}</h1>
+    <p>Run in the real section order, separately timed, and scored on the ${fmt.scale[0]}\u2013${fmt.scale[1]} scale.</p>
+  </div>
+  <div class="grid g2" style="align-items:start;margin-bottom:16px">
+    <div class="card">
+      <span class="eyebrow">Sections, in order</span>
+      <div style="margin-top:10px">
+        ${fmt.sections.map((s, i) => `<div class="spread" style="padding:9px 0;border-bottom:1px solid var(--line)">
+          <span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-faint);margin-right:8px">${String(i + 1).padStart(2, '0')}</span>
+            <span style="font-size:.9rem;font-weight:600">${esc(s.name)}</span>
+          </span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft)">${s.to - s.from}q · ${s.mins} min</span>
+        </div>`).join('')}
+      </div>
+      <div class="row" style="gap:24px;margin:14px 0 16px">
+        <div class="stat"><b>${t.qs.length}</b><span>questions</span></div>
+        <div class="stat"><b>${totalMins}</b><span>minutes</span></div>
+        ${best !== null ? `<div class="stat"><b>${best}</b><span>your best</span></div>` : ''}
+      </div>
+      <button class="btn mark" onclick="startExamTest('${t.id}')">Start the test</button>
+      <p style="color:var(--ink-faint);font-size:.8rem;margin:12px 0 0">Each section is timed separately. Answers lock in as you go and nothing is revealed until the end.</p>
+    </div>
+    ${scoreGraph(kind)}
+  </div>
+  <div class="note" style="max-width:66ch">
+    <b>How the real exam is built.</b> ${fmt.note}
+  </div>`;
+};
+
+/* ---------------- the practice tests page ---------------- */
+function examTestCards(kind) {
+  const list = EXAM_TESTS[kind] || [];
+  const fmt = EXAM_FORMAT[kind];
+  return list.map(t => {
+    const mins = fmt.sections.reduce((n, s) => n + s.mins, 0);
+    const taken = Scores.all(kind).filter(r => r.testId === t.id);
+    const bestOn = taken.length ? Math.max(...taken.map(r => r.total)) : null;
+    return `<a class="card" href="#/examtest/${t.id}" style="text-decoration:none;color:inherit;display:block">
+      <div class="spread">
+        <div>
+          <span class="eyebrow">${fmt.name} · ${t.level}</span>
+          <h3 style="margin-bottom:3px">${esc(t.name)}</h3>
+          <p style="color:var(--ink-soft);font-size:.85rem;margin:0">${fmt.sections.length} sections · ${t.qs.length} questions · ${mins} min</p>
+        </div>
+        <span class="btn ${bestOn === null ? 'mark' : 'ghost'} sm">${bestOn === null ? 'Start' : 'Best ' + bestOn}</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+const _vTestsScored = vTests;
+vTests = function () {
+  const base = _vTestsScored();
+  /* strip the old block and rebuild it with the graphs */
+  const cut = base.indexOf('<span class="eyebrow" style="margin-top:26px">Full practice tests</span>');
+  const head = cut === -1 ? base : base.slice(0, cut);
+  return head + `
+  <span class="eyebrow" style="margin-top:26px">Full practice tests</span>
+  <p style="color:var(--ink-soft);font-size:.9rem;max-width:64ch;margin:0 0 16px">
+    Structured like the real exams: proper section order, separate timing at the real per-question pace, and scores on the real scale. Your history is graphed so you can see whether you are actually improving.
+  </p>
+  <div class="grid g2" style="margin-bottom:20px;align-items:start">
+    ${scoreGraph('sat')}
+    ${scoreGraph('act')}
+  </div>
+  <span class="eyebrow">SAT · 400\u20131600</span>
+  <div class="grid g2" style="margin-bottom:18px">${examTestCards('sat')}</div>
+  <span class="eyebrow">ACT · 1\u201336 composite</span>
+  <div class="grid g2" style="margin-bottom:10px">${examTestCards('act')}</div>`;
+};
 </script>
 <script>
 /* ============================================================

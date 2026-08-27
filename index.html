@@ -80,6 +80,14 @@ p{margin:0 0 .8em}
 a{color:inherit}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--margin);outline-offset:2px;border-radius:4px}
+html{color-scheme:light}
+html[data-theme="night"]{color-scheme:dark}
+/* stop the 300ms double-tap delay and the default blue tap flash */
+button,a,.opt,.tile,.fcard,summary,[role="button"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+/* keep drawer and modal scrolling from chaining to the page behind */
+#rail,.drawer,.sheet,.modal{overscroll-behavior:contain}
+/* screen-reader-only announcements */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 ::selection{background:var(--highlight);color:#16232B}
 
 /* eyebrow / utility type ------------------------------------ */
@@ -470,7 +478,8 @@ label.fld small{color:var(--ink-faint);font-weight:400;display:block;margin-top:
   border:1px solid var(--line);border-radius:10px;padding:14px 16px;
   background:var(--paper);color:var(--ink);resize:vertical;min-height:280px;
 }
-#frtext:focus{outline:none;border-color:var(--ink)}
+#frtext:focus-visible{outline:3px solid var(--margin);outline-offset:2px;border-color:var(--ink)}
+#frtext:focus:not(:focus-visible){outline:none;border-color:var(--ink)}
 .frsel{
   font-family:'IBM Plex Mono',monospace;font-size:.86rem;padding:8px 10px;
   border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);
@@ -635,6 +644,10 @@ code{
 /* ---- accessibility ---- */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .fcard:focus-visible{outline:3px solid var(--margin);outline-offset:6px;border-radius:14px}
+@media (max-width:760px){
+  /* Web Interface Guidelines: 44px minimum hit target on touch */
+  .brand,.btn.sm,.btn.ghost.sm{min-height:44px;display:inline-flex;align-items:center}
+}
 .skip-link{position:absolute;left:-9999px;top:8px;z-index:400;background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-weight:700}
 .skip-link:focus{left:8px}
 
@@ -16422,13 +16435,13 @@ function paintQuiz() {
       const cls = QZ.test ? (done ? 'done' : i === QZ.i ? 'now' : '') : (QZ.marks[i] === 1 ? 'done' : QZ.marks[i] === 0 ? 'miss' : i === QZ.i ? 'now' : '');
       return `<i class="${cls}"></i>`;
     }).join('')}</div>
-    ${QZ.timed ? `<span class="timer" id="clock">--:--</span>` : QZ.test ? `<span class="tag">${QZ.i + 1} / ${QZ.qs.length}</span>` : `<span class="tag">${QZ.right}/${QZ.i} correct</span>`}
+    ${QZ.timed ? `<span class="timer" id="clock" aria-live="off" role="timer" aria-label="Time remaining">--:--</span>` : QZ.test ? `<span class="tag">${QZ.i + 1} / ${QZ.qs.length}</span>` : `<span class="tag">${QZ.right}/${QZ.i} correct</span>`}
   </div>
   <div class="card qbox">
     <span class="eyebrow">Question ${QZ.i + 1} of ${QZ.qs.length}${q.tag ? ' · ' + esc(q.tag) : ''}</span>
-    <p class="qstem">${esc(q.q)}</p>
+    <p class="qstem">${qtext(q.q)}</p>
     <div id="opts">${q.c.map((t, i) => `<button class="opt" data-i="${i}" onclick="answer(${i})"><span class="k">${'ABCD'[i]}</span><span>${esc(t)}</span></button>`).join('')}</div>
-    <div id="feedback"></div>
+    <div id="feedback" aria-live="polite" aria-atomic="true"></div>
   </div>`;
   if (QZ.timed) tick();
 }
@@ -16451,6 +16464,7 @@ function answer(i) {
   $('#feedback').innerHTML = `
     <div class="why fade"><b>${correct ? 'Correct.' : 'Not quite.'}</b> ${esc(q.why)}</div>
     <button class="btn" onclick="next()">${QZ.i + 1 >= QZ.qs.length ? 'See results' : 'Next question'}</button>`;
+  announce((correct ? 'Correct. ' : 'Not quite. The answer is ' + q.c[q.a] + '. ') + q.why);
 }
 function next() { QZ.i++; QZ.answered = false; paintQuiz(); }
 function paintQuizResult() {
@@ -16476,7 +16490,7 @@ function paintQuizResult() {
   <div style="max-width:640px;margin:0 auto">
     ${QZ.qs.map((q, i) => `<div class="card" style="margin-bottom:10px;border-left:3px solid ${QZ.marks[i] === 1 ? 'var(--green)' : 'var(--margin)'}">
       <span class="eyebrow">${QZ.marks[i] === 1 ? 'Correct' : 'Missed'} · Q${i + 1}</span>
-      <p style="font-weight:600;margin-bottom:6px">${esc(q.q)}</p>
+      <p style="font-weight:600;margin-bottom:6px">${qtext(q.q)}</p>
       <p style="margin-bottom:6px"><b>Answer:</b> ${esc(q.c[q.a])}</p>
       <div class="why" style="margin:0">${esc(q.why)}</div>
     </div>`).join('')}
@@ -17617,7 +17631,7 @@ function vPrint(type, cid, uid) {
       title = 'Practice worksheet';
       const qs = u.quiz || [];
       body = `<div class="wcols">${qs.map((q, i) => `<div class="wq">
-          <p class="stem">${i + 1}. ${esc(q.q)}</p>
+          <p class="stem">${i + 1}. ${qtext(q.q)}</p>
           <ol type="A">${q.c.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
         </div>`).join('')}</div>
         <div class="answerkey"><h3>Answer key</h3><div class="wcols">
@@ -18164,7 +18178,7 @@ function groupRoomHTML() {
     </div>
     <div class="card" style="max-width:720px">
       ${q ? `<span class="eyebrow">Question ${q.n} of ${q.total}</span>
-        <p class="qstem">${esc(q.q)}</p>
+        <p class="qstem">${qtext(q.q)}</p>
         ${q.c.map((t, i) => `<div class="opt" style="cursor:default;${i === q.a ? 'border-color:var(--green)' : ''}">
             <span class="k">${'ABCD'[i]}</span>
             <span style="flex:1">${esc(t)}</span>
@@ -18187,7 +18201,7 @@ function groupRoomHTML() {
   </div>
   <div class="card qbox">
     ${q ? `<span class="eyebrow">Question ${q.n} of ${q.total}</span>
-      <p class="qstem">${esc(q.q)}</p>
+      <p class="qstem">${qtext(q.q)}</p>
       ${q.c.map((t, i) => `<button class="opt ${GROUP.answered === i ? 'picked' : ''}" ${GROUP.answered !== false ? 'disabled' : ''} onclick="groupAnswer(${i})">
         <span class="k">${'ABCD'[i]}</span><span>${esc(t)}</span></button>`).join('')}
       ${GROUP.answered !== false ? `<p style="color:var(--ink-soft);font-size:.9rem;margin-top:10px">Answer sent. Waiting for the group.</p>` : ''}`
@@ -18345,10 +18359,10 @@ async function doInstall() {
 
 /* small SVGs of the buttons a student actually has to tap */
 const TAP = {
-  share: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M6 12H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>`,
-  dots: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>`,
-  plus: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>`,
-  down: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M12 8v5m0 0-2.5-2.5M12 13l2.5-2.5"/><path d="M8 21h8"/></svg>`
+  share: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m8 7 4-4 4 4"/><path d="M6 12H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-1"/></svg>`,
+  dots: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg>`,
+  plus: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>`,
+  down: `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M12 8v5m0 0-2.5-2.5M12 13l2.5-2.5"/><path d="M8 21h8"/></svg>`
 };
 const tapIcon = k => `<span class="tapicon">${TAP[k]}</span>`;
 
@@ -18604,6 +18618,31 @@ function mathify(s) {
 /* the two entry points used everywhere text is emitted */
 function fx(s) { return mathify(esc(s)); }      // untrusted text: escape then render
 function fxRaw(s) { return mathify(s); }         // authored guide HTML
+/* Question stems may carry a short passage using a tiny tag whitelist.
+   Everything is escaped first, then only <i> <em> <b> <strong> <br> are
+   restored, so authored passages render while any other markup stays inert. */
+/* Screen readers get spoken feedback for anything that updates without a
+   page change: answer results, section transitions, saves. One shared polite
+   region, cleared then set so repeated identical messages still announce. */
+function announce(msg) {
+  let el = document.getElementById('sr-live');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'sr-live';
+    el.className = 'sr-only';
+    el.setAttribute('aria-live', 'polite');
+    el.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(el);
+  }
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 60);
+}
+function qtext(s) {
+  let out = esc(s);
+  out = out.replace(/&lt;(\/?)(i|em|b|strong)&gt;/g, '<$1$2>')
+           .replace(/&lt;br\s*\/?&gt;/g, '<br>');
+  return mathify(out);
+}
 
 /* ---- retro-fit the existing views so formulas render everywhere ---- */
 (function applyMath() {
@@ -18758,7 +18797,7 @@ function activityChart() {
       <div class="stat"><b>${active}</b><span>active days</span></div>
       <div class="stat"><b>${sum && active ? Math.round(sum / active) : 0}</b><span>per active day</span></div>
     </div>
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:78px;display:block">${bars}</svg>
+    <svg aria-hidden="true" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:78px;display:block">${bars}</svg>
     <div class="row" style="justify-content:space-between;margin-top:6px">
       <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">14 DAYS AGO</span>
       <span style="font-size:.7rem;color:var(--ink-faint);font-family:'IBM Plex Mono',monospace">TODAY</span>
@@ -24653,7 +24692,7 @@ function scoreGraph(kind) {
       <div class="stat"><b>${best}</b><span>best</span></div>
       ${n > 1 ? `<div class="stat"><b style="color:${change > 0 ? 'var(--green)' : change < 0 ? 'var(--margin)' : 'var(--ink)'}">${change > 0 ? '+' : ''}${change}</b><span>since first</span></div>` : ''}
     </div>
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:150px;display:block;overflow:visible">
+    <svg aria-hidden="true" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:150px;display:block;overflow:visible">
       <defs>
         <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="var(--margin)" stop-opacity="0.30"/>
@@ -24737,6 +24776,7 @@ paintQuizResult = function () {
   SEC.results.push({ key: s.key, name: s.name, right: QZ.right, total: QZ.qs.length,
                      marks: QZ.marks.slice(), qs: QZ.qs.slice() });
   SEC.i++;
+  if (SEC.i < SEC.fmt.sections.length) announce(SEC.fmt.sections[SEC.i - 1].name + ' complete. Next section: ' + SEC.fmt.sections[SEC.i].name + '.');
 
   if (SEC.i < SEC.fmt.sections.length) {
     const next = SEC.fmt.sections[SEC.i];
@@ -24849,7 +24889,7 @@ function paintExamResult() {
       </div>
       ${r.qs.map((q, i) => `<div class="card" style="margin-bottom:9px;border-left:3px solid ${r.marks[i] === 1 ? 'var(--green)' : 'var(--margin)'}">
         <span class="eyebrow">${r.marks[i] === 1 ? 'Correct' : 'Missed'} · Q${i + 1}</span>
-        <p style="font-weight:600;margin-bottom:6px">${fx(q.q)}</p>
+        <p style="font-weight:600;margin-bottom:6px">${qtext(q.q)}</p>
         <p style="margin-bottom:6px"><b>Answer:</b> ${fx(q.c[q.a])}</p>
         <div class="why" style="margin:0">${fx(q.why)}</div>
       </div>`).join('')}
@@ -27649,6 +27689,240 @@ null,
      c:['The whole parabola x = y²','Only the right half, where x ≥ 0','A straight line','A circle'],a:1,
      why:'Since t² is never negative, x cannot be negative, so only the half of the parabola with x ≥ 0 is traced.'}
   ]);
+})();
+</script>
+<script>
+/* ============================================================
+   SAT TEST 1 — REBUILT
+   Two defects in the original:
+     1. Reading and Writing questions referred to "the passage"
+        and "the second paragraph" without ever supplying a
+        passage. Those questions could not be answered.
+     2. Maths was bare equation drill. The real exam is
+        dominated by multi-step problems set in context.
+   Both modules of each subject are replaced below. Every
+   R&W item now carries its own passage.
+   ============================================================ */
+
+const SAT1_RW1_NEW = fullTest([
+// ---- Craft and Structure: words in context ----
+['<i>Freezing rain coated the branches for three days. When the thaw finally came, the orchard looked untouched — until the first strong wind, which brought down a third of the trees at once.</i><br><br>As used in the text, "untouched" most nearly means:',
+ ['physically unreachable','apparently undamaged','never harvested','recently planted'],1,'The dash sets up a reversal: the orchard looked fine but was not. "Untouched" therefore describes appearance, and the wind reveals hidden damage.','Craft'],
+['<i>Wren\u2019s later drawings abandon the confident single line of his youth. Each edge is now built from a dozen tentative strokes, as though he were negotiating with the paper rather than instructing it.</i><br><br>As used in the text, "negotiating" most nearly means:',
+ ['bargaining over a price','working out an agreement through give and take','travelling across','arguing forcefully'],1,'The contrast is with "instructing", so the sense is a two-way process rather than a command. The commercial sense does not fit a drawing.','Craft'],
+['<i>The committee called the estimate conservative. In the three years since, actual costs have exceeded it by a factor of four.</i><br><br>The author\u2019s juxtaposition of the two sentences most strongly implies that:',
+ ['the committee was deliberately dishonest','the estimate was far less cautious than claimed','costs are impossible to predict','the project should be cancelled'],1,'Placing the claim beside the outcome undercuts the word "conservative" without alleging intent, which rules out the accusation of dishonesty.','Craft'],
+['<i>Marisol had prepared for the objection about cost. She had not prepared for the objection that the whole thing was unnecessary, and she found herself agreeing with it halfway through her own rebuttal.</i><br><br>The passage primarily serves to convey:',
+ ['Marisol\u2019s thorough preparation','a speaker being persuaded by an argument she is opposing','the importance of budgeting','hostility from the audience'],1,'The final clause is the point: she is arguing against a position and converting to it mid-sentence.','Craft'],
+['<i>Text 1: Urban density lowers per-capita emissions, because shared walls, shorter journeys, and public transport all reduce the energy each resident consumes.<br>Text 2: The ten densest cities in the study also produced the highest total emissions of any settlements measured, by a wide margin.</i><br><br>How would the author of Text 2 most likely respond to Text 1?',
+ ['By denying that per-capita emissions fall with density','By agreeing on the per-capita figure while noting it says nothing about totals','By arguing that public transport increases energy use','By rejecting the study entirely'],1,'Both claims can hold at once because they measure different things. The strongest response grants the first and questions what it implies.','Craft'],
+['<i>Text 1: The programme cut reoffending by nine points in the districts that adopted it.<br>Text 2: Reoffending fell by eight points over the same period in neighbouring districts that adopted nothing.</i><br><br>Text 2 most directly challenges Text 1\u2019s:',
+ ['measurement of reoffending','attribution of the fall to the programme','choice of districts','definition of a district'],1,'A near-identical fall without the programme leaves almost nothing for it to explain, which undermines the causal claim rather than the measurement.','Craft'],
+['<i>The novel\u2019s narrator describes his brother\u2019s wedding in eleven pages of exhaustive detail: the flowers, the seating, the temperature of the soup. He does not mention that he was not invited, a fact the reader assembles from a single line forty pages later.</i><br><br>The narrator\u2019s exhaustive detail most likely functions to:',
+ ['establish the setting realistically','mask what he cannot bring himself to state','demonstrate his good memory','criticise his brother\u2019s taste'],1,'Dense detail about the trivial alongside silence about the significant is displacement, and the delayed revelation confirms it.','Craft'],
+['<i>Ledger entries from the abbey record payments to a "wall-maker" every spring for sixty years, and to a "wall-mender" every autumn for the same period.</i><br><br>The pairing of the two entries most strongly suggests that:',
+ ['two different craftsmen were employed','the wall was rebuilt as fast as it fell down','the abbey was wealthy','records were poorly kept'],1,'The seasonal alternation over six decades implies construction and decay were in equilibrium, which is what the two job titles together indicate.','Craft'],
+['<i>Rainfall in the region has not changed measurably in forty years. What has changed is when it arrives: the same total now falls in half as many days.</i><br><br>The main idea of the text is that:',
+ ['the region is becoming drier','rainfall has become more concentrated without becoming scarcer','forty years is too short a period to judge','rainfall is impossible to measure'],1,'The text explicitly holds the total constant and changes the distribution, so any answer about scarcity contradicts it.','Ideas'],
+['<i>A fungus that grows only on one species of ant secretes a compound that alters the ant\u2019s climbing behaviour. Infected ants ascend to a height where humidity best suits the fungus, then die there, releasing spores over the colony below.</i><br><br>Which choice best states the main idea?',
+ ['A fungus infects ants.','A fungus manipulates its host\u2019s behaviour in a way that serves the fungus\u2019s own reproduction.','Ants climb to find food.','Humidity affects fungal growth.'],1,'The main idea must join the behavioural change to the reproductive benefit, which only one option does.','Ideas'],
+['<i>Researchers proposed that a seabird locates its nest by smell. Birds released 40 km offshore returned reliably; birds whose olfactory nerves had been blocked, released at the same point, did not.</i><br><br>Which finding would most strengthen the researchers\u2019 conclusion?',
+ ['The birds have large eyes','Blocked birds regained the ability once the block wore off','Seabirds nest in colonies','The release point was 40 km out'],1,'A reversible manipulation showing the effect returns is stronger evidence than any single observation, because it rules out permanent injury as the cause.','Ideas'],
+['<i>A study of 12,000 adults found that those who reported reading fiction regularly scored higher on a test of interpreting others\u2019 emotions. The authors concluded that reading fiction improves emotional perception.</i><br><br>Which finding would most WEAKEN the conclusion?',
+ ['The sample was drawn from six countries','People who already read emotions well were found to seek out fiction','The test was administered twice','Fiction readers also read non-fiction'],1,'Reversed causation is the specific threat here: if perception drives reading rather than the other way round, the conclusion fails.','Ideas'],
+['<i>A table lists annual output for four mills: Ashby 4,200 units; Corve 12,600; Deeping 2,100; Elton 6,300.</i><br><br>Which statement is supported by the table?',
+ ['Corve produces three times as much as Ashby','Corve is the largest mill by floor area','Deeping is the least efficient','Elton is growing fastest'],0,'12,600 divided by 4,200 is 3. Size, efficiency, and growth are all claims the table cannot support.','Ideas'],
+['<i>A graph shows median first-time house purchase age rising from 26 in 1990 to 34 in 2022, while the median deposit rose from 8% to 21% of the purchase price.</i><br><br>Which statement is supported?',
+ ['Both the purchase age and the deposit share rose over the period','Fewer people buy houses now','Deposits caused the age to rise','Prices doubled'],0,'Only the two described trends are supported. Causation and any claim about volume or price go beyond the data.','Ideas'],
+['<i>The manuscript was long attributed to a scribe working in the 1450s. But its parchment carries a watermark first used by a mill that opened in 1478, which means the attribution ______</i><br><br>Which choice most logically completes the text?',
+ ['is confirmed by physical evidence','cannot be correct as it stands','remains the most likely account','is impossible to evaluate'],1,'Material that did not exist before 1478 rules out a 1450s date, though it does not establish who did write it.','Ideas'],
+['<i>Participants selected themselves into the treatment group by volunteering. Because volunteers differed from non-volunteers in motivation, income, and prior health, any difference in outcome ______</i><br><br>Which choice most logically completes the text?',
+ ['proves the treatment worked','cannot be attributed to the treatment alone','shows the treatment failed','is impossible to measure'],1,'Self-selection introduces confounds, which blocks causal attribution without making the difference meaningless or unmeasurable.','Ideas'],
+// ---- Standard English Conventions ----
+['<i>The survey covered four regions ______ the northern uplands, the river basin, the coastal strip, and the eastern plain.</i>',
+ [',',':',';','—and'],1,'A complete sentence precedes the list, so a colon is correct. A comma would create a splice.','Conventions'],
+['<i>The ledger, which had been water-damaged in the 1953 flood ______ still legible in places.</i>',
+ ['was',', was','were','being'],1,'The nonessential clause needs a closing comma, and the singular subject "ledger" takes "was".','Conventions'],
+['<i>Neither the two surveyors nor the project engineer ______ able to explain the discrepancy in the readings.</i>',
+ ['were','was','are','have been'],1,'With neither/nor the verb agrees with the nearer subject, which here is the singular "engineer".','Conventions'],
+['<i>Having been sealed in the tomb for two thousand years ______</i>',
+ ['archaeologists found the seeds still viable','the seeds germinated within a week of planting','it was a remarkable discovery','the excavation team was astonished'],1,'The opening modifier describes what was sealed, which is the seeds rather than the archaeologists.','Conventions'],
+['<i>The foundation announced ______ intention to fund the restoration, a decision its trustees had debated for years.</i>',
+ ['it\u2019s','its','its\u2019','their'],1,'The possessive "its" carries no apostrophe, and the singular noun "foundation" takes the singular form.','Conventions'],
+['<i>The excavation uncovered pottery, coins, and iron tools ______ several of them stamped with a maker\u2019s mark.</i>',
+ [',',';',':','—and'],0,'A comma correctly attaches the nonessential absolute phrase to the main clause.','Conventions'],
+['<i>The reason the bridge was closed to traffic is ______ inspectors found corrosion in two of the main supports.</i>',
+ ['because','that','due to','on account of'],1,'"The reason...is because" is redundant. The correct construction is "the reason...is that".','Conventions'],
+['<i>She submitted the paper for a fourth time ______ three journals had already rejected it without review.</i>',
+ ['because','even though','so that','therefore'],1,'Submitting again after repeated rejection is a concession, which requires a contrast conjunction.','Conventions'],
+// ---- Expression of Ideas ----
+['<i>Notes: the tunnel was begun in 1873; it runs 12.9 kilometres; it took 28 years to complete; it cost 40 million francs.</i><br><br>The writer wants to emphasise how long the project took. Which choice best accomplishes this?',
+ ['The tunnel was begun in 1873.','Twenty-eight years passed between the first excavation and the first train.','The tunnel runs 12.9 kilometres.','The tunnel cost 40 million francs.'],1,'Duration requires a span, not a start date, a length, or a cost.','Expression'],
+['<i>The alloy withstood every stress test the laboratory could devise. ______ it corroded within four months of installation in a marine environment.</i>',
+ ['Moreover,','However,','Therefore,','Similarly,'],1,'The field failure contradicts the laboratory success, so the transition must signal contrast.','Expression'],
+['<i>A student is writing about a restoration project and wants to introduce a paragraph that will go on to describe three separate failed attempts.</i><br><br>Which choice best introduces that paragraph?',
+ ['The mill is a listed building.','Three teams have tried to restore the mill, and three have abandoned it.','Restoration is expensive work.','The roof was replaced in 1998.'],1,'An introduction must preview what actually follows, which here is a pattern of failure.','Expression']
+], 'SAT R&W Module 1');
+
+const SAT1_RW2_NEW = fullTest([
+['<i>The city council described the consultation as extensive. Two hundred letters were sent to residents; eleven replies were received; no public meeting was held.</i><br><br>As used in the text, "extensive" is best understood as:',
+ ['accurate as stated','a characterisation the following details undercut','a technical planning term','an understatement'],1,'The three facts that follow are offered as evidence and instead work against the word, which is the point of the sentence order.','Craft'],
+['<i>Okonkwo\u2019s translations are famously literal. He renders each idiom word by word, producing English that no speaker would use, and he insists this is the only honest method: a smooth translation, he argues, tells you about the translator.</i><br><br>The passage indicates that Okonkwo values:',
+ ['readability above all','visible fidelity to the original over fluency','commercial success','brevity'],1,'His argument treats smoothness as a sign of interference, so awkwardness is deliberate evidence of faithfulness.','Craft'],
+['<i>The report runs to four hundred pages. Its conclusion occupies a single paragraph, and that paragraph recommends further study.</i><br><br>The author\u2019s tone is best described as:',
+ ['admiring','dryly sceptical','openly hostile','indifferent'],1,'The disproportion between length and conclusion is presented without comment, which produces understated scepticism rather than open attack.','Craft'],
+['<i>Text 1: Smaller classes raise attainment; the effect appears in every year of the study.<br>Text 2: When teacher experience is held constant, the class-size effect disappears entirely.</i><br><br>Text 2 suggests that Text 1 may have:',
+ ['measured attainment incorrectly','attributed to class size an effect produced by who teaches the class','used too few schools','defined attainment unusually'],1,'An effect that vanishes under a control was most likely driven by the controlled variable.','Craft'],
+['<i>Text 1: The vaccine reduced infection by 62% in the trial population.<br>Text 2: The trial enrolled only adults aged 18 to 40 with no chronic conditions.</i><br><br>Text 2 functions primarily to:',
+ ['contradict the 62% figure','limit the population to which the figure can be extended','question the trial\u2019s honesty','propose a different vaccine'],1,'Describing the sample constrains generalisation without disputing the measured result.','Craft'],
+['<i>For thirty years the standard account held that the settlement was abandoned after a flood. Excavation of the eastern quarter has now produced grain stores, sealed and full, dated to two centuries after the flood.</i><br><br>The passage primarily serves to:',
+ ['confirm the standard account','present evidence that the standard account cannot accommodate','describe excavation methods','date the flood precisely'],1,'Full grain stores two centuries later are incompatible with abandonment, which is why the evidence is presented at all.','Ideas'],
+['<i>A deep-sea fish produces light at two wavelengths. Its prey can detect only one of them. The fish uses the other to illuminate the water directly ahead while remaining, to everything it hunts, in darkness.</i><br><br>Which choice best states the main idea?',
+ ['Some fish produce light.','The fish hunts using a wavelength its prey cannot see.','The deep sea is dark.','Prey animals have poor vision.'],1,'The main idea must combine the two wavelengths with the hunting advantage that follows from the difference.','Ideas'],
+['<i>An economist argues that a minimum wage rise caused employment to fall in a city, citing a 3% decline over the following year. A colleague notes that employment fell 3.2% nationally over the same period.</i><br><br>The colleague\u2019s observation most directly suggests that the decline:',
+ ['was larger than reported','may reflect a national trend rather than the local policy','proves the policy worked','cannot be measured'],1,'A matching national fall means the local change needs no local explanation.','Ideas'],
+['<i>A soil sample contains pollen from three species that today grow only above 2,000 metres. The sample was taken at 400 metres.</i><br><br>Which choice most logically completes the inference? The evidence suggests that when the pollen was deposited, the local climate was ______',
+ ['warmer than at present','considerably cooler than at present','identical to the present','too variable to infer'],1,'Species now restricted to high altitude indicate cooler conditions at the lower site when the pollen fell.','Ideas'],
+['<i>The instrument was later found to read 4% high across its entire range. The published measurements were not corrected before release.</i><br><br>Which choice most logically completes the text? The published values therefore ______',
+ ['are accurate within tolerance','systematically overstate the true quantities','understate the true quantities','are randomly distributed around the truth'],1,'A consistent upward bias produces systematic overstatement, not random error in either direction.','Ideas'],
+['<i>A chart plots two lines. Line A rises steadily from 20 to 60 between 2000 and 2020. Line B is flat at 45 throughout.</i><br><br>In which year did the two lines cross?',
+ ['About 2005','About 2013','About 2018','They never cross'],1,'A rises 40 units over 20 years, or 2 per year, reaching 45 about 12.5 years in, which is near 2013.','Ideas'],
+['<i>A study reports that 7 of 350 samples exceeded the safety threshold.</i><br><br>Which statement is supported?',
+ ['2% of samples exceeded the threshold','The contaminant is dangerous at these levels','Most samples were near the threshold','Testing was unreliable'],0,'7 divided by 350 is 2%. Danger, distribution, and reliability are all beyond what the figure shows.','Ideas'],
+['<i>The archive holds letters from Bell, Hastings, and Okri ______ all three of whom corresponded with the founder for decades.</i>',
+ [',',';',':','—and'],0,'A comma correctly attaches the nonessential relative clause to the main clause.','Conventions'],
+['<i>Each of the seventeen samples recovered from the wreck ______ catalogued before conservation began.</i>',
+ ['were','was','are','have been'],1,'"Each" is singular; "of the seventeen samples" is a prepositional phrase and not the subject.','Conventions'],
+['<i>The findings, published in April and widely reported within a week ______ since been retracted by two of the four authors.</i>',
+ ['has','have','having','is'],1,'The subject "findings" is plural, so the auxiliary must be "have".','Conventions'],
+['<i>Not only did the expedition fail to reach the summit ______ it lost the greater part of its equipment on the descent.</i>',
+ [', and',', but','; but',', so'],1,'"Not only...but also" is a fixed correlative pair.','Conventions'],
+['<i>The scientist ______ notebooks were believed destroyed in the fire had in fact deposited them with a colleague.</i>',
+ ['who\u2019s','whose','whos','that\u2019s'],1,'The blank shows possession of the notebooks, which requires "whose".','Conventions'],
+['<i>She spent the winter cataloguing the collection, repairing the bindings, and ______ the most fragile volumes.</i>',
+ ['to digitise','digitised','digitising','digitisation of'],2,'Parallel structure requires the third item to match the -ing form of the first two.','Conventions'],
+['<i>Written over four decades and published only after her death ______</i>',
+ ['critics received the novel warmly','the novel became an unexpected bestseller','it was widely admired','the publisher was astonished'],1,'The opening modifier describes what was written and published, which is the novel.','Conventions'],
+['<i>The measurements were consistent across all six stations ______ the instrument at the seventh had been miscalibrated for the entire period.</i>',
+ [', and',', but','; and','because'],1,'The exception contrasts with the consistency, so a contrast conjunction is required.','Conventions'],
+['<i>Notes: the reef covers 340 square kilometres; it supports 1,400 species; it has lost 60% of its coral cover since 1998; it is protected by law.</i><br><br>The writer wants to emphasise the scale of the decline. Which choice best accomplishes this?',
+ ['The reef covers 340 square kilometres.','Sixty per cent of the reef\u2019s coral cover has been lost since 1998.','The reef supports 1,400 species.','The reef is protected by law.'],1,'Decline requires a change figure, not a measure of extent, diversity, or legal status.','Expression'],
+['<i>A writer is describing a laboratory result to readers with no scientific training.</i><br><br>Which choice best conveys the finding to that audience?',
+ ['Attenuation across the tested band exceeded 12 dB.','About three-quarters of the vibration was absorbed before it reached the frame.','A transfer function was computed numerically.','Results were consistent with the model.'],1,'A general audience needs the effect described physically and proportionally, without technical units.','Expression'],
+['<i>Notes: composer A worked in Vienna; composer B in Paris; both abandoned tonal centres by 1912; A died in 1951; B in 1937.</i><br><br>The writer wants to emphasise a similarity between the two composers. Which choice best accomplishes this?',
+ ['A worked in Vienna and B in Paris.','Both had abandoned tonal centres by 1912.','A died in 1951.','They worked in different cities.'],1,'A similarity requires a shared feature; cities and dates are differences or unrelated facts.','Expression'],
+['<i>The treatment costs a fraction of the standard therapy ______ it must be stored below minus seventy degrees, which most clinics cannot manage.</i>',
+ ['and',', but','so','because'],1,'The storage limitation contrasts with the cost advantage, so "but" is required.','Expression'],
+['<i>A student is writing an essay that has just finished describing the causes of a crisis and will next describe how governments responded.</i><br><br>Which choice best transitions between the two sections?',
+ ['Additionally, the causes were complex.','These pressures shaped every response that followed.','In conclusion, the causes were many.','For example, one cause was economic.'],1,'A transition must close the previous topic and open the next, which only this option does.','Expression'],
+['<i>A paragraph argues that a new manufacturing process is environmentally preferable.</i><br><br>Which choice best supports that claim?',
+ ['The process was patented in 2019.','It operates at room temperature rather than the 400°C the conventional route requires.','Three companies have licensed it.','Engineers consider it elegant.'],1,'An environmental claim needs a resource or energy comparison, not evidence of novelty or adoption.','Expression'],
+['<i>A paragraph has argued that the evidence for a theory is suggestive but far from settled.</i><br><br>Which choice best concludes that paragraph?',
+ ['The theory is now established.','Larger and longer studies will be needed before the question is resolved.','The theory has been disproved.','Researchers remain interested in it.'],1,'A conclusion must match the paragraph\u2019s qualified position without overshooting in either direction.','Expression']
+], 'SAT R&W Module 2');
+
+const SAT1_M1_NEW = fullTest([
+['A gym offers two plans. Plan A costs $39 per month plus $0.75 per visit. Plan B costs $54 per month plus $0.50 per visit. For how many visits in a month do the two plans cost the same?',
+ ['15','40','60','75'],2,'Set 39 + 0.75v = 54 + 0.50v. Subtracting gives 0.25v = 15, so v = 60. Both plans then cost $84.','Algebra'],
+['A theatre sold 21 tickets for $53 total. Adult tickets cost $3 and child tickets cost $2. How many adult tickets were sold?',
+ ['8','10','11','13'],2,'With a + c = 21 and 3a + 2c = 53, substitute c = 21 − a: 3a + 42 − 2a = 53, so a = 11.','Algebra'],
+['A ball is thrown upward from a 80-foot ledge, and its height in feet after t seconds is h = −16t² + 64t + 80. What is its maximum height?',
+ ['80 feet','128 feet','144 feet','160 feet'],2,'The vertex is at t = −b/2a = 64/32 = 2 seconds. Substituting gives −64 + 128 + 80 = 144 feet.','Advanced'],
+['Using the same model h = −16t² + 64t + 80, after how many seconds does the ball hit the ground?',
+ ['2','4','5','6'],2,'Set h = 0 and divide by −16: t² − 4t − 5 = 0, which factors as (t − 5)(t + 1). Only t = 5 is physically meaningful.','Advanced'],
+['A colony of 2,400 bacteria decreases by 12% each hour. After how many whole hours does the population first fall below 1,200?',
+ ['4','5','6','8'],2,'Solve 0.88^t < 0.5. Taking logarithms gives t > 5.42, so the first whole hour is 6.','Advanced'],
+['A jacket priced at $250 is marked up 18% and then discounted 12% from the new price. What is the final price?',
+ ['$250.00','$256.00','$259.60','$265.00'],2,'Apply the factors in order: 250 × 1.18 × 0.88 = 259.60. The two percentages do not cancel because they apply to different bases.','Data'],
+['For what value of k does the system 4x + 6y = 14 and 6x + ky = 21 have infinitely many solutions?',
+ ['4','6','9','12'],2,'Infinitely many solutions means the equations are proportional. Since 6/4 = 1.5 and 21/14 = 1.5, we need k = 1.5 × 6 = 9.','Algebra'],
+['How many solutions does the equation 1/(x − 2) + 1/(x + 2) = 4/(x² − 4) have?',
+ ['None','Exactly one','Exactly two','Infinitely many'],0,'Multiplying through gives 2x = 4, so x = 2. But x = 2 makes the original denominators zero, so it is extraneous and no solution remains.','Advanced'],
+['A circle in the xy-plane has equation x² + y² − 6x + 8y = 0. What is its radius?',
+ ['3','4','5','25'],2,'Complete the square: (x − 3)² + (y + 4)² = 9 + 16 = 25, so the radius is 5, not 25.','Geometry'],
+['If (2^(x+1))(4^x) = 128, what is x?',
+ ['1','2','3','7'],1,'Write everything in base 2: 2^(x+1) · 2^(2x) = 2^(3x+1) = 2^7, so 3x + 1 = 7 and x = 2.','Advanced'],
+['A recipe divides flour and sugar in the ratio 3 to 5. If a batch uses 64 grams in total, how many grams are flour?',
+ ['21','24','32','40'],1,'The eight parts total 64 grams, so each part is 8 grams and flour is 3 × 8 = 24 grams.','Data'],
+['If f(x) = x² − 3 and g(x) = 2x + 1, what is f(g(2))?',
+ ['5','13','22','25'],2,'Work from the inside out: g(2) = 5, then f(5) = 25 − 3 = 22. Computing g(f(2)) instead gives 3.','Advanced'],
+['The solution set of |2x − 7| ≤ 5 is:',
+ ['x ≤ 6','1 ≤ x ≤ 6','x ≥ 1','x ≤ 1 or x ≥ 6'],1,'Rewrite as −5 ≤ 2x − 7 ≤ 5, then add 7 to get 2 ≤ 2x ≤ 12, so 1 ≤ x ≤ 6.','Algebra'],
+['A student scored an average of 78 on her first 12 tests and 90 on her next 3. What is her average across all 15?',
+ ['79.2','80.4','82.0','84.0'],1,'Total points are 12(78) + 3(90) = 936 + 270 = 1206, and 1206/15 = 80.4. Averaging 78 and 90 gives 84, which is the trap.','Data'],
+['A line passes through (2, 11) and (5, 23). What is its y-intercept?',
+ ['1','3','4','7'],1,'The slope is 12/3 = 4. Substituting into y = 4x + b at (2, 11) gives 11 = 8 + b, so b = 3.','Algebra'],
+['Pump A fills a tank in 6 hours and pump B fills the same tank in 12 hours. Working together, how long do they take?',
+ ['3 hours','4 hours','8 hours','9 hours'],1,'Rates add: 1/6 + 1/12 = 1/4 of the tank per hour, so the tank fills in 4 hours. Averaging the times to get 9 is the trap.','Advanced'],
+['A 6-foot post casts an 8-foot shadow at the same moment a tower casts a 28-foot shadow. How tall is the tower?',
+ ['18 feet','21 feet','24 feet','37 feet'],1,'Similar triangles give 6/8 = h/28, so h = 6(28)/8 = 21 feet.','Geometry'],
+['For what positive value of k does 2x² + kx + 8 = 0 have exactly one real solution?',
+ ['4','8','16','64'],1,'One solution means the discriminant is zero: k² − 4(2)(8) = 0, so k² = 64 and the positive root is k = 8.','Advanced'],
+['Two cubes are similar, and the larger has 8 times the volume of the smaller. The surface area of the larger is how many times that of the smaller?',
+ ['2','4','8','16'],1,'Volume scales with the cube of the linear ratio, so the ratio is 2. Surface area scales with the square, giving 4.','Geometry'],
+['The mean of 4, 7, 9, 12, and x is 9. What is x?',
+ ['9','11','13','15'],2,'The five values must total 45. The four known values sum to 32, so x = 13.','Data'],
+['An account of $5,000 earns 4% compounded annually. What is its value after 6 years, to the nearest dollar?',
+ ['$5,200','$6,200','$6,327','$7,000'],2,'A = 5000(1.04)⁶ = 5000(1.26532) ≈ $6,327. Simple interest would give only $6,200.','Advanced'],
+['A rectangle has a perimeter of 34 and an area of 60. What is the length of its longer side?',
+ ['10','12','15','17'],1,'From l + w = 17 and lw = 60, the pair is 5 and 12, so the longer side is 12.','Geometry']
+], 'SAT Math Module 1');
+
+const SAT1_M2_NEW = fullTest([
+['If 3(x − 1)² = 48, what are all values of x?',
+ ['5 only','5 and −3','4 and −4','16 and −16'],1,'Divide by 3 to get (x − 1)² = 16, so x − 1 = ±4 and x = 5 or x = −3. Taking only the positive root loses half the answer.','Advanced'],
+['A train travelling 180 km at a constant speed would arrive one hour earlier if it went 15 km/h faster. What is its actual speed?',
+ ['30 km/h','40 km/h','45 km/h','60 km/h'],2,'From 180/r = 180/(r + 15) + 1 the equation becomes r² + 15r − 2700 = 0, which factors as (r + 60)(r − 45). Only the positive root is meaningful.','Algebra'],
+['A quadratic f(x) = ax² + bx + c passes through (0, 6), (1, 3), and (3, 15). What is a?',
+ ['1','2','3','6'],2,'From (0, 6), c = 6. Then a + b = −3 and 9a + 3b = 9, which simplifies to 3a + b = 3. Subtracting gives 2a = 6, so a = 3.','Advanced'],
+['How many real solutions does √(2x + 7) = x − 4 have?',
+ ['None','Exactly one','Exactly two','Infinitely many'],1,'Squaring gives x² − 10x + 9 = 0, with roots 1 and 9. Only x = 9 satisfies x ≥ 4, so x = 1 is extraneous.','Advanced'],
+['A 30-litre solution is 40% salt. How much pure water must be added to make it 25% salt?',
+ ['12 litres','15 litres','18 litres','20 litres'],2,'The salt content of 12 litres does not change. Solve 12 = 0.25(30 + w) to get 30 + w = 48, so w = 18.','Algebra'],
+['What is the product (3 + 2i)(1 − 4i), where i² = −1?',
+ ['11 − 10i','3 − 8i','11 + 10i','−5 − 10i'],0,'Expand: 3 − 12i + 2i − 8i². Since i² = −1, the last term is +8, giving 11 − 10i.','Advanced'],
+['A circle has radius 9. What is the length of an arc subtending a central angle of 100 degrees?',
+ ['5π','9π','10π','18π'],0,'Arc length is the circumference times the fraction of the circle: 18π × (100/360) = 5π.','Geometry'],
+['A population of 500 doubles every 8 years. After how many years does it reach 4,000?',
+ ['16','24','32','64'],1,'4,000 is 8 times 500, and 8 is 2³, so three doublings are needed: 3 × 8 = 24 years.','Advanced'],
+['For what value of k does the system 3x − 5y = 8 and 6x + ky = 1 have no solution?',
+ ['−10','−5','5','10'],0,'No solution means parallel lines, so the coefficients must be proportional: 6/3 = k/(−5) gives k = −10. The constants differ, so it is genuinely inconsistent.','Algebra'],
+['The mean of 20 test scores is 82. When the lowest score of 44 is removed, what is the mean of the remaining 19?',
+ ['82','83','84','86'],2,'The total is 1,640. Removing 44 leaves 1,596 across 19 scores, and 1596/19 = 84.','Data'],
+['If the radius of a sphere is doubled, its volume is multiplied by:',
+ ['2','4','6','8'],3,'Volume scales with the cube of the linear ratio, so doubling the radius gives 2³ = 8 times the volume.','Geometry'],
+['In a right triangle, tan θ = 8/15. What is sin θ?',
+ ['8/15','8/17','15/17','17/8'],1,'Opposite 8 and adjacent 15 give a hypotenuse of 17, so sin θ = 8/17. This is the 8-15-17 triple.','Geometry'],
+['If f(x) = (3x − 1)/4, what is f⁻¹(2)?',
+ ['1','2','3','5'],2,'Set (3x − 1)/4 = 2, so 3x − 1 = 8 and x = 3. The inverse asks which input produces the output 2.','Advanced'],
+['If 5^(2x − 1) = 125, what is x?',
+ ['1','2','3','4'],1,'Write 125 as 5³, so 2x − 1 = 3 and x = 2.','Advanced'],
+['Each interior angle of a regular polygon measures 156 degrees. How many sides does it have?',
+ ['12','13','15','18'],2,'Each exterior angle is 180 − 156 = 24 degrees, and 360/24 = 15 sides.','Geometry'],
+['A batch has a 10% defect rate. If three items are drawn independently, what is the probability that at least one is defective?',
+ ['0.001','0.100','0.271','0.729'],2,'P(none defective) = 0.9³ = 0.729, so P(at least one) = 1 − 0.729 = 0.271.','Data'],
+['A line perpendicular to the line through (−1, 4) and (3, −4) passes through the origin. What is its equation?',
+ ['y = −2x','y = 2x','y = x/2','y = −x/2'],2,'The given slope is −8/4 = −2, so the perpendicular slope is 1/2. Passing through the origin gives y = x/2.','Coordinate'],
+['A shop marks up cost by 60% and then offers 25% off the marked price. What is the profit as a percentage of cost?',
+ ['15%','20%','25%','35%'],1,'Selling price is 1.60 × 0.75 = 1.20 times cost, so the profit is 20% of cost.','Data'],
+['If x + 1/x = 5, what is x² + 1/x²?',
+ ['21','23','25','27'],1,'Square both sides: x² + 2 + 1/x² = 25, so x² + 1/x² = 23. Answering 25 forgets the middle term.','Advanced'],
+['A cone and a cylinder have the same radius and the same height. The cylinder\u2019s volume is how many times the cone\u2019s?',
+ ['1/3','2','3','9'],2,'Cone volume is one third of πr²h, so the cylinder holds three times as much.','Geometry'],
+['The function g is defined by g(x) = 2x² − 12x + 7. What is its minimum value?',
+ ['−11','−7','3','7'],0,'The vertex is at x = 12/4 = 3. Substituting gives 18 − 36 + 7 = −11.','Advanced'],
+['Data set P has standard deviation 6. Every value is doubled and then increased by 5. What is the new standard deviation?',
+ ['6','11','12','17'],2,'Doubling multiplies the spread by 2, and adding a constant leaves it unchanged, so the result is 12.','Data']
+], 'SAT Math Module 2');
+
+/* ---- swap the rebuilt modules into place ---- */
+SAT_POOLS.SAT1_RW1 = SAT1_RW1_NEW;
+SAT_POOLS.SAT1_RW2 = SAT1_RW2_NEW;
+SAT_POOLS.SAT1_M1  = SAT1_M1_NEW;
+SAT_POOLS.SAT1_M2  = SAT1_M2_NEW;
+(function swapTest1(){
+  const t = EXAM_TESTS.satFull.find(x => x.id === 'sat-full-1');
+  if (t) t.qs = SAT1_RW1_NEW.concat(SAT1_RW2_NEW, SAT1_M1_NEW, SAT1_M2_NEW);
 })();
 </script>
 <script>

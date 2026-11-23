@@ -74,6 +74,26 @@ check('phone bar has five destinations', boot.tabs === 5, String(boot.tabs));
 check('no page errors on first paint', desk.errors.length === 0, desk.errors.join(' | '));
 check('does not call the visitor counter', !desk.requests.some(u => /counterapi|formspree|anthropic/i.test(u)), desk.requests.filter(u => !u.startsWith(base.slice(0, 20)) && !u.includes('fonts.')).slice(0, 8).join(' '));
 
+const welcome = await desk.page.evaluate(() => {
+  const text = document.getElementById('view').innerText;
+  const fab = document.getElementById('installfab');
+  const theme = document.getElementById('themeBtn');
+  const foot = document.querySelector('.rail-foot');
+  const box = el => el ? el.getBoundingClientRect() : null;
+  const hit = (a, b) => a && b && !(a.bottom <= b.top + 1 || a.top >= b.bottom - 1 || a.right <= b.left + 1 || a.left >= b.right - 1);
+  const fabBox = box(fab);
+  return {
+    owl: !!document.querySelector('#view .mascot'),
+    zeros: /PER ACTIVE DAY|Nothing scheduled/.test(text),
+    inRail: !!(fab && fab.closest('#rail')),
+    fixed: fab ? getComputedStyle(fab).position : '',
+    coversTheme: hit(fabBox, box(theme)),
+    coversFoot: hit(fabBox, box(foot))
+  };
+});
+check('empty desk is an invitation, not a wall of zeros', welcome.owl && !welcome.zeros, JSON.stringify(welcome));
+check('install prompt sits in the sidebar without covering Night or the footer', welcome.inRail && welcome.fixed !== 'fixed' && !welcome.coversTheme && !welcome.coversFoot, JSON.stringify(welcome));
+
 for (const hash of routes) {
   const before = desk.errors.length;
   await desk.page.evaluate(h => { location.hash = h; }, hash);
@@ -255,6 +275,21 @@ check('night mode applies', night === 'night', night);
 const phone = await open(390, 844);
 await phone.page.goto(base, { waitUntil: 'domcontentloaded' });
 await wait(300);
+const phoneInstall = await phone.page.evaluate(() => {
+  const bar = document.getElementById('installphone');
+  const tabs = document.getElementById('tabbar');
+  if (!bar || !tabs) return { missing: true };
+  const b = bar.getBoundingClientRect();
+  const t = tabs.getBoundingClientRect();
+  const view = document.getElementById('view').getBoundingClientRect();
+  return {
+    above: b.bottom <= t.top + 1,
+    gap: Math.round(t.top - b.bottom),
+    coversTabs: b.bottom > t.top + 1,
+    inSidebar: !!bar.closest('#rail')
+  };
+});
+check('phone install bar sits above the tab bar', phoneInstall.above && !phoneInstall.coversTabs && phoneInstall.gap >= 0 && phoneInstall.gap < 24, JSON.stringify(phoneInstall));
 for (const hash of ['#/', '#/focus', '#/plan', '#/courses', '#/study/ap-bio/u1/cards']) {
   await phone.page.evaluate(h => { location.hash = h; }, hash);
   await wait(100);
@@ -269,7 +304,7 @@ for (const hash of ['#/', '#/focus', '#/plan', '#/courses', '#/study/ap-bio/u1/c
 check('phone has no console errors', phone.errors.length === 0, phone.errors.join(' | '));
 
 const sw = await readFile(join(root, 'sw.js'), 'utf8');
-check('service worker cache bumped', sw.includes("studybuddy-v82"));
+check('service worker cache bumped', sw.includes("studybuddy-v83"));
 
 await browser.close();
 server.close();

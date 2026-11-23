@@ -33,6 +33,10 @@
   ],
   "shortcuts": [
     {
+      "name": "Focus",
+      "url": "./index.html#/focus"
+    },
+    {
       "name": "Due today",
       "url": "./index.html#/review"
     },

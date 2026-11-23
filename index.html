@@ -160,8 +160,7 @@ button,a,.opt,.tile,.fcard,summary,[role="button"]{touch-action:manipulation;-we
   body.drawer-open{overflow:hidden}
   .rail .nav a{padding:12px 12px;font-size:1rem}
   .rail .nav a .ico{font-size:1.15rem;width:22px}
-  .tabbar{display:none !important}
-  .main{padding:16px 16px 48px;max-width:100%}
+  .main{padding:16px 16px calc(92px + env(safe-area-inset-bottom));max-width:100%}
   .mobile-top{
     display:flex;align-items:center;gap:12px;margin:-4px -2px 16px;
     position:sticky;top:0;z-index:40;background:var(--canvas);
@@ -248,7 +247,7 @@ body::before{
 }
 
 /* inputs ----------------------------------------------------- */
-input[type=text],input[type=password],input[type=number],select,textarea{
+input[type=text],input[type=password],input[type=number],input[type=search],input[type=date],select,textarea{
   width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
   background:var(--paper);font-size:.94rem;
 }
@@ -695,10 +694,98 @@ code{
   width:104px;height:104px;border-radius:50%;background:var(--paper);display:grid;place-items:center;
   font-family:'IBM Plex Mono',monospace;font-size:1.8rem;font-weight:600;
 }
+
+/* drifting wash — transform only, so phones do not repaint the page */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora span{
+  position:absolute;width:52vw;height:52vw;border-radius:50%;
+  background:radial-gradient(circle, var(--glow-1), transparent 68%);
+  opacity:.9;will-change:transform;animation:drift1 32s ease-in-out infinite;
+}
+.aurora span:nth-child(2){
+  width:42vw;height:42vw;left:auto;right:-10vw;top:8vh;
+  background:radial-gradient(circle, var(--glow-2), transparent 70%);
+  animation-name:drift2;animation-duration:38s;
+}
+.aurora span:nth-child(3){
+  width:48vw;height:48vw;left:28vw;top:auto;bottom:-18vw;
+  background:radial-gradient(circle, var(--glow-3), transparent 68%);
+  animation-name:drift3;animation-duration:44s;
+}
+.aurora span:nth-child(1){left:-12vw;top:-16vw}
+@keyframes drift1{50%{transform:translate3d(6vw,4vh,0)}}
+@keyframes drift2{50%{transform:translate3d(-5vw,6vh,0)}}
+@keyframes drift3{50%{transform:translate3d(4vw,-5vh,0)}}
+@media (max-width:860px){
+  body{background-attachment:scroll}
+  .aurora span{animation:none;opacity:.55}
+  .rail{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--paper)}
+  .tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:90;
+    background:var(--paper);
+    background:color-mix(in srgb, var(--paper) 92%, transparent);
+    border-top:1px solid var(--line);
+    padding:4px 4px calc(4px + env(safe-area-inset-bottom));
+    justify-content:space-around;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .tabbar a{
+    flex:1;min-width:0;min-height:48px;text-decoration:none;color:var(--ink-faint);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    font-size:.64rem;font-weight:700;letter-spacing:.01em;border-radius:10px;
+  }
+  .tabbar a .ic{width:22px;height:22px;margin:0}
+  .tabbar a.on{color:var(--ink);background:var(--canvas-2)}
+}
+@media (prefers-reduced-motion:reduce){
+  .aurora span{animation:none}
+}
+
+/* focus lamp */
+.lamp{
+  width:min(280px,72vw);height:min(280px,72vw);margin:6px auto 18px;border-radius:50%;
+  display:grid;place-items:center;
+  background:conic-gradient(var(--margin) calc(var(--p,0)*1%), var(--canvas-2) 0);
+  box-shadow:0 18px 40px -28px rgba(22,35,43,.7);
+}
+.lamp-face{
+  width:78%;height:78%;border-radius:50%;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  border:1px solid var(--line);
+}
+.lamp-face b{font-family:'IBM Plex Mono',monospace;font-size:clamp(2rem,6vw,2.8rem);font-weight:600;letter-spacing:-.03em;line-height:1}
+.lamp-face span{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.lamp.running{animation:lamp 2.8s ease-in-out infinite}
+@keyframes lamp{50%{transform:scale(1.015)}}
+.sittings{display:flex;gap:8px;justify-content:center;margin:4px 0 16px}
+.sittings i{
+  width:14px;height:18px;border-radius:2px 2px 7px 7px;display:block;
+  background:var(--canvas-2);border:1px solid var(--line);position:relative;
+}
+.sittings i.on{background:var(--highlight);border-color:transparent}
+.sittings i.on::after{content:'';position:absolute;left:4px;right:4px;top:-5px;height:6px;border-radius:4px 4px 0 0;background:var(--margin)}
+
+/* tasks */
+.task{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.task button.tick{
+  flex:0 0 28px;width:28px;height:28px;border-radius:8px;border:1.5px solid var(--ink-faint);
+  background:transparent;cursor:pointer;padding:0;margin-top:1px;
+}
+.task.done button.tick{background:var(--green);border-color:var(--green);color:#fff}
+.task.done .task-title{text-decoration:line-through;color:var(--ink-faint)}
+.task.late .when{color:var(--margin)}
+.when{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+.task-form{min-width:0}
+.task-form .fld{min-width:0;flex:1 1 150px}
+.task-form select,.task-form input{width:100%;max-width:100%}
+input[type=date]{width:auto}
+.fld input[type=date]{width:100%}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#view">Skip to main content</a>
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="app">
   <aside class="rail" id="rail">
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Close menu">✕</button>
@@ -722,7 +809,7 @@ code{
   </aside>
   <main class="main" id="view"></main>
 </div>
-<nav class="tabbar" id="tabbar" hidden></nav>
+<nav class="tabbar" id="tabbar" aria-label="Primary"></nav>
 <button class="scrim" id="scrim" aria-label="Close menu" onclick="closeDrawer()" tabindex="-1"></button>
 <script>
 /* ============================================================
@@ -15987,7 +16074,20 @@ const store = (() => {
       const s = JSON.stringify(v);
       try { if (ok) localStorage.setItem(k, s); else mem[k] = s; } catch (e) { mem[k] = s; }
     },
-    wipe() { try { if (ok) ['sb.progress','sb.cards','sb.streak','sb.custom','sb.last'].forEach(k => localStorage.removeItem(k)); } catch (e) {} mem = {}; }
+    wipe() {
+      const keep = new Set(['sb.cfg', 'sb.seen', 'sb.installed', 'sb.filter']);
+      try {
+        if (ok) {
+          const keys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith('sb.') && !keep.has(k)) keys.push(k);
+          }
+          keys.forEach(k => localStorage.removeItem(k));
+        }
+      } catch (e) {}
+      mem = {};
+    }
   };
 })();
 
@@ -16352,7 +16452,7 @@ function paintCard() {
       <div class="row center" style="justify-content:center;margin-top:8px">
         ${DECK.missed.length ? `<button class="btn" onclick="redoMissed()">Review the ${DECK.missed.length} missed</button>` : ''}
         ${DECK.cid ? `<a class="btn ${DECK.missed.length ? 'ghost' : ''}" href="#/study/${DECK.cid}/${DECK.uid}/quiz">Take the quiz</a>` : `<a class="btn ghost" href="#/review">Back to review</a>`}
-        <button class="btn ghost" onclick="location.reload()">Shuffle and restart</button>
+        <button class="btn ghost" onclick="restartDeck()">Shuffle and restart</button>
       </div>
     </div>`;
     return;
@@ -16384,8 +16484,10 @@ function paintCard() {
   if (live && DECK.autofocus) live.textContent = `Card ${DECK.i + 1} of ${DECK.order.length}. Term: ${DECK.cards[DECK.order[DECK.i]][0]}`;
 }
 function flipCard() {
-  DECK.flipped = !DECK.flipped;
+  if (!DECK) return;
   const el = $('#fc');
+  if (!el) return;
+  DECK.flipped = !DECK.flipped;
   el.classList.toggle('flipped');
   el.setAttribute('aria-expanded', String(DECK.flipped));
   const card = DECK.cards[DECK.order[DECK.i]];
@@ -16402,6 +16504,13 @@ function markCard(known) {
   paintCard(); bumpStreak();
 }
 function redoMissed() { DECK.order = shuffle(DECK.missed); DECK.missed = []; DECK.i = 0; paintCard(); }
+function restartDeck() {
+  if (!DECK) return;
+  if (DECK.review) { startReview(); return; }
+  DECK.order = shuffle(DECK.cards.map((_, i) => i));
+  DECK.missed = []; DECK.i = 0; DECK.flipped = false;
+  paintCard();
+}
 
 /* ---------------- quiz ---------------- */
 let QZ = null;
@@ -16481,9 +16590,9 @@ function paintQuizResult() {
     <h2 style="margin-bottom:6px">${QZ.right} of ${QZ.qs.length}</h2>
     <p style="color:var(--ink-soft)">${msg}</p>
     <div class="row" style="justify-content:center;margin-top:10px">
-      <button class="btn" onclick="location.reload()">Try again</button>
+      <button class="btn" onclick="${QZ.fromNotes ? 'quizGenerated()' : 'location.reload()'}">Try again</button>
       ${QZ.cid ? `<a class="btn ghost" href="#/study/${QZ.cid}/${QZ.uid}/cards">Flashcards</a>
-      <a class="btn ghost" href="#/study/${QZ.cid}/${QZ.uid}/guide">Study guide</a>` : `<a class="btn ghost" href="#/tests">New test</a>`}
+      <a class="btn ghost" href="#/study/${QZ.cid}/${QZ.uid}/guide">Study guide</a>` : QZ.fromNotes ? `<button class="btn ghost" onclick="render()">Back to your notes</button>` : `<a class="btn ghost" href="#/tests">New test</a>`}
     </div>
   </div>
   <h3 style="max-width:640px;margin:26px auto 12px">Review every question</h3>
@@ -16690,9 +16799,23 @@ async function genDeck() {
     <h3 style="margin-bottom:8px">${cards.length} flashcards · ${quiz.length} questions</h3>
     <p style="color:var(--ink-soft);font-size:.88rem">Save it and it joins your courses on the dashboard.</p>
     <label class="fld"><span>Name this deck</span><input type="text" id="dname" value="${esc(defaultDeckName())}"></label>
-    <div class="row"><button class="btn" onclick="saveDeck()">Save to my courses</button><button class="btn ghost" onclick="previewDeck()">Preview cards</button></div>
+    <div class="row"><button class="btn" onclick="saveDeck()">Save to my courses</button>${quiz.length ? `<button class="btn ghost" onclick="quizGenerated()">Quiz these now</button>` : ''}<button class="btn ghost" onclick="previewDeck()">Preview cards</button></div>
     <div id="dprev"></div>
   </div>`;
+}
+function quizGenerated() {
+  const g = TUTOR.gen;
+  if (!g || !(g.quiz || []).length) return;
+  if ($('#dname') && $('#dname').value) TUTOR.deckName = $('#dname').value;
+  QZ = {
+    cid: null, uid: null, fromNotes: true, title: ($('#dname') && $('#dname').value) || 'Notes quiz',
+    sub: 'Your notes', qs: prepQuestions(g.quiz), i: 0, right: 0, marks: [], answered: false, timed: false, test: false
+  };
+  const host = $('#genout');
+  if (!host) return;
+  host.innerHTML = `<div id="qwrap"></div>`;
+  paintQuiz();
+  host.scrollIntoView({ block: 'start' });
 }
 function previewDeck() {
   $('#dprev').innerHTML = `<hr class="divide">` + TUTOR.gen.cards.slice(0, 8).map(c =>
@@ -16701,7 +16824,8 @@ function previewDeck() {
 }
 function saveDeck() {
   const list = S.custom;
-  list.push({ id: String(Date.now()), name: ($('#dname').value || 'My deck').slice(0, 60), cards: TUTOR.gen.cards, quiz: TUTOR.gen.quiz, note: 'Built from your notes.' });
+  const named = ($('#dname') && $('#dname').value) || TUTOR.deckName || 'My deck';
+  list.push({ id: String(Date.now()), name: String(named).slice(0, 60), cards: TUTOR.gen.cards, quiz: TUTOR.gen.quiz, note: 'Built from your notes.' });
   S.custom = list;
   location.hash = '#/courses';
 }
@@ -16889,6 +17013,7 @@ function render() {
   }
   else if (parts[0] === 'mistakes') html = vMistakes();
   else if (parts[0] === 'review') html = vReview();
+  else if (parts[0] === 'focus') html = vFocus();
   else if (parts[0] === 'assign') html = vAssign();
   else if (parts[0] === 'import') html = vImport();
   else if (parts[0] === 'account') html = vAccount();
@@ -16924,7 +17049,10 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') markCard(false);
 });
 
-window.addEventListener('hashchange', render);
+/* Look up render at event time. A direct reference would keep calling
+   the original function and skip every wrapper installed later, which
+   is how Learn and Match used to need a second listener. */
+window.addEventListener('hashchange', () => render());
 let ROUTE_Q = new URLSearchParams('');
 </script>
 <script>
@@ -17128,7 +17256,7 @@ const CONFIG = {
      Change `name` to something unique to you before you deploy, or the
      numbers will be shared with anyone else running this file. */
   counter: {
-    enabled: true,
+    enabled: false,
     workspace: 'studybuddy',
     name: 'finpathdev-studybuddy'
   },
@@ -17413,9 +17541,13 @@ function defaultDeckName() { return TUTOR.deckName || ('My notes — ' + new Dat
 </script>
 <script>
 /* ============================================================
-   LEITNER SPACED REPETITION (3 boxes)
-   Box 1 → review today. Box 2 → in 3 days. Box 3 → in 7 days.
-   Right answer promotes one box, wrong answer drops to box 1.
+   LEITNER SPACED REPETITION
+   The first two correct answers still wait 3 days, then 7, so
+   older saves behave exactly as before. After that the gap
+   grows (about 16 days, then longer) instead of sticking at a
+   week. A miss always comes back today.
+   Records are still {box, due, seen, last} plus optional iv,
+   ease, and meta. Old records that only have a box still load.
    ============================================================ */
 const Leitner = {
   GAP: { 1: 0, 2: 3, 3: 7 },
@@ -17423,19 +17555,41 @@ const Leitner = {
   save(m) { store.set('sb.leitner', m); },
   plus(days) { return new Date(Date.now() + days * 864e5).toISOString().slice(0, 10); },
   get(k) { return this.all()[k] || null; },
+  reviewable(k, v) { return !String(k).startsWith('q:') || !!(v && v.meta && v.meta.q); },
   grade(k, correct, meta) {
     const m = this.all();
     const cur = m[k] || { box: 1, seen: 0 };
-    const box = correct ? Math.min(3, (cur.box || 1) + 1) : 1;
-    m[k] = { box, due: this.plus(this.GAP[box]), seen: (cur.seen || 0) + 1, last: today(), ...(meta || cur.meta ? { meta: meta || cur.meta } : {}) };
+    const ease0 = cur.ease || 2.3;
+    const iv0 = cur.iv != null ? cur.iv : (this.GAP[cur.box] || 0);
+    let box, iv, ease;
+    if (!correct) {
+      box = 1;
+      iv = 0;
+      ease = Math.max(1.3, +(ease0 - 0.2).toFixed(2));
+    } else if ((cur.box || 1) < 3) {
+      box = (cur.box || 1) + 1;
+      iv = this.GAP[box];
+      ease = Math.min(2.8, +(ease0 + 0.05).toFixed(2));
+    } else {
+      box = 3;
+      ease = Math.min(2.8, +(ease0 + 0.1).toFixed(2));
+      iv = Math.min(180, Math.max(16, Math.round(Math.max(iv0, 7) * ease)));
+    }
+    m[k] = {
+      box, iv, ease, due: this.plus(iv), seen: (cur.seen || 0) + 1, last: today(),
+      ...(meta || cur.meta ? { meta: meta || cur.meta } : {})
+    };
     this.save(m);
     return box;
   },
   counts() {
     const c = { 1: 0, 2: 0, 3: 0, due: 0, total: 0 };
     const t = today();
-    Object.values(this.all()).forEach(v => {
-      c.total++; c[v.box] = (c[v.box] || 0) + 1;
+    Object.entries(this.all()).forEach(([k, v]) => {
+      if (!this.reviewable(k, v)) return;
+      c.total++;
+      const box = v.box === 1 || v.box === 2 || v.box === 3 ? v.box : 1;
+      c[box] = (c[box] || 0) + 1;
       if (!v.due || v.due <= t) c.due++;
     });
     return c;
@@ -17450,6 +17604,15 @@ const Leitner = {
         if (rec && (!rec.due || rec.due <= t)) out.push({ k, card, cid: c.id, uid: u.id, cn: c.short, un: u.title, box: rec.box });
       });
     }));
+    /* quiz questions scheduled with a stored prompt, so a miss can come back */
+    Object.entries(m).forEach(([k, rec]) => {
+      if (!k.startsWith('q:') || !rec.meta || !rec.meta.q) return;
+      if (rec.due && rec.due > t) return;
+      out.push({
+        k, card: [rec.meta.q, rec.meta.back || ''], cid: rec.meta.cid || null, uid: rec.meta.uid || null,
+        cn: rec.meta.cn || 'Quiz', un: rec.meta.un || 'Question', box: rec.box
+      });
+    });
     return out;
   }
 };
@@ -17458,8 +17621,12 @@ const Leitner = {
 const _markCard = markCard;
 markCard = function (known) {
   if (DECK) {
-    const idx = DECK.order[DECK.i];
-    if (idx !== undefined) Leitner.grade('card:' + DECK.cid + '/' + DECK.uid + '/' + idx, known);
+    const pos = DECK.order[DECK.i];
+    if (pos !== undefined) {
+      /* review sessions carry the real schedule key; unit decks use the card index */
+      const k = (DECK.keys && DECK.keys[pos]) || (DECK.cid ? ('card:' + DECK.cid + '/' + DECK.uid + '/' + pos) : null);
+      if (k) Leitner.grade(k, known);
+    }
   }
   return _markCard(known);
 };
@@ -17468,7 +17635,10 @@ const _answerL = answer;
 answer = function (i) {
   if (QZ && !QZ.answered) {
     const q = QZ.qs[QZ.i];
-    if (q) Leitner.grade('q:' + qid(q.q), i === q.a);
+    if (q) Leitner.grade('q:' + qid(q.q), i === q.a, {
+      kind: 'q', q: q.q, back: (q.c && q.c[q.a]) || '',
+      cid: q._c || null, uid: q._u || null, cn: q._cn || '', un: q._un || ''
+    });
   }
   return _answerL(i);
 };
@@ -17480,7 +17650,7 @@ function vReview() {
   if (!due.length) {
     return topbar() + `
     <div class="page-head fade"><span class="eyebrow">Spaced repetition</span><h1>Nothing due today</h1>
-    <p>Cards come back on a schedule: miss one and it returns tomorrow, get it right and it waits 3 days, then 7. Studying any deck adds cards to the schedule.</p></div>
+    <p>Cards come back on a schedule: miss one and it returns today, get it right and it waits 3 days, then a week, then longer. Studying any deck adds cards to the schedule.</p></div>
     ${leitnerBoxes()}
     <div class="empty" style="margin-top:20px"><div class="big">◷</div>
       <p>${c.total ? 'Everything scheduled is resting. Come back tomorrow.' : 'Study a flashcard deck and cards start appearing here.'}</p>
@@ -17503,7 +17673,7 @@ function leitnerBoxes() {
   return `<div class="boxes" style="max-width:560px">
     <div class="lbox b1"><b>${c[1] || 0}</b><span>Box 1 · daily</span></div>
     <div class="lbox b2"><b>${c[2] || 0}</b><span>Box 2 · 3 days</span></div>
-    <div class="lbox b3"><b>${c[3] || 0}</b><span>Box 3 · 7 days</span></div>
+    <div class="lbox b3"><b>${c[3] || 0}</b><span>Box 3 · a week or more</span></div>
   </div>`;
 }
 function startReview() {
@@ -17522,7 +17692,7 @@ function startReview() {
 /* ============================================================
    BACKUP AND RESTORE
    ============================================================ */
-let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally', 'sb.reports', 'sb.examdates'];
+let BACKUP_KEYS = ['sb.progress', 'sb.cards', 'sb.streak', 'sb.custom', 'sb.last', 'sb.missed', 'sb.leitner', 'sb.activity', 'sb.tally', 'sb.reports', 'sb.examdates', 'sb.tasks', 'sb.focus.log', 'sb.focus.cfg', 'sb.focus.session'];
 /* prefixes whose keys are created dynamically: free-response drafts,
    practice-test bests, and match times. Listing them by prefix means a
    new prompt or test is backed up automatically. */
@@ -17583,6 +17753,17 @@ function restoreBackup(file, mode) {
         store.set('sb.custom', cust);
         const t = store.get('sb.tally', { cards: 0, questions: 0 }), nt = j.data['sb.tally'] || {};
         store.set('sb.tally', { cards: Math.max(t.cards || 0, nt.cards || 0), questions: Math.max(t.questions || 0, nt.questions || 0) });
+        const tasks = store.get('sb.tasks', []), ntks = Array.isArray(j.data['sb.tasks']) ? j.data['sb.tasks'] : [];
+        const tids = new Set(tasks.map(d => d && d.id));
+        ntks.forEach(d => { if (d && d.id && !tids.has(d.id)) tasks.push(d); });
+        if (tasks.length) store.set('sb.tasks', tasks);
+        const fl = store.get('sb.focus.log', []), nfl = Array.isArray(j.data['sb.focus.log']) ? j.data['sb.focus.log'] : [];
+        const seenAt = new Set(fl.map(d => d && d.at));
+        nfl.forEach(d => { if (d && d.at && !seenAt.has(d.at)) fl.push(d); });
+        if (fl.length) store.set('sb.focus.log', fl.slice(-180));
+        if (j.data['sb.focus.cfg'] && typeof j.data['sb.focus.cfg'] === 'object') {
+          store.set('sb.focus.cfg', Object.assign({}, j.data['sb.focus.cfg'], store.get('sb.focus.cfg', {})));
+        }
       }
       msg.innerHTML = `<p style="color:var(--green);font-size:.85rem;margin:10px 0 0">Restored from ${esc((j.exported || '').slice(0, 10))}. Reloading…</p>`;
       setTimeout(() => location.reload(), 900);
@@ -18768,7 +18949,10 @@ const Activity = {
   }
   if (typeof answer === 'function') {
     const _ans = answer;
-    answer = function (i) { Activity.log('questions', 1); return _ans(i); };
+    answer = function (i) {
+      if (!(QZ && QZ.answered)) Activity.log('questions', 1);
+      return _ans(i);
+    };
   }
 })();
 
@@ -20397,7 +20581,7 @@ function vPlan() {
       <select id="planCourse" style="flex:1;min-width:0">
         ${all.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}
       </select>
-      <input type="date" id="planDate" style="flex:0 0 auto">
+      <input type="date" id="planDate" style="flex:0 0 11.5rem;width:auto;max-width:46%">
       <button class="btn sm mark" onclick="addExamDate()">Add</button>
     </div>
     ${Object.keys(dates).length ? `<div style="margin-top:6px">
@@ -21576,10 +21760,6 @@ function buildMatch(cid, uid) {
     }
     return _renderModes();
   };
-  window.addEventListener('hashchange', () => {
-    const raw = (location.hash || '').replace(/^#\/?/, '');
-    if (raw.split('/')[3] === 'learn' || raw.split('/')[3] === 'match') render();
-  });
 })();
 
 /* add the two modes to every unit card on a course page */
@@ -28027,6 +28207,378 @@ vCourse = function (cid) {
   const at = html.indexOf('<div class="grid g2">');
   return at === -1 ? html + note : html.slice(0, at) + note + html.slice(at);
 };
+</script>
+<script>
+/* ============================================================
+   LEVEL UP
+   Focus timer, a dated to-do list, and a progress page that
+   only knows about this device. Installed before boot so the
+   first paint already includes them.
+   ============================================================ */
+
+const Tasks = {
+  all() {
+    const list = store.get('sb.tasks', []);
+    return Array.isArray(list) ? list : [];
+  },
+  save(list) { store.set('sb.tasks', list); },
+  add(title, due, cid) {
+    const t = String(title || '').replace(/[\u0000-\u001f]/g, '').trim().slice(0, 140);
+    if (!t) return false;
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(due || '') ? due : '';
+    const course = cid && findCourse(cid) ? cid : '';
+    const list = this.all();
+    list.push({
+      id: 't' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title: t, due: d, cid: course, done: false, at: today()
+    });
+    this.save(list);
+    return true;
+  },
+  toggle(id) {
+    const list = this.all();
+    const task = list.find(x => x.id === id);
+    if (!task) return;
+    task.done = !task.done;
+    this.save(list);
+  },
+  drop(id) { this.save(this.all().filter(x => x.id !== id)); }
+};
+
+function addTask(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const title = $('#taskTitle') ? $('#taskTitle').value : '';
+  const due = $('#taskDue') ? $('#taskDue').value : '';
+  const cid = $('#taskCourse') ? $('#taskCourse').value : '';
+  if (!Tasks.add(title, due, cid)) {
+    const el = $('#taskTitle');
+    if (el) el.focus();
+    return;
+  }
+  render();
+}
+function toggleTask(id) { Tasks.toggle(id); render(); }
+function dropTask(id) { Tasks.drop(id); render(); }
+
+function taskBoard() {
+  const t = today();
+  const list = Tasks.all().slice().sort((a, b) => {
+    if (!!a.done !== !!b.done) return a.done ? 1 : -1;
+    if (!a.due && !b.due) return 0;
+    if (!a.due) return 1;
+    if (!b.due) return -1;
+    return a.due < b.due ? -1 : 1;
+  });
+  const courses = COURSES.filter(c => !c.outlineOnly && !c.archived);
+  const rows = list.map(task => {
+    const late = !task.done && task.due && task.due < t;
+    const c = task.cid ? findCourse(task.cid) : null;
+    const when = !task.due ? 'No date' : task.due === t ? 'Due today' : late ? ('Overdue · ' + task.due) : task.due;
+    return `<div class="task${task.done ? ' done' : ''}${late ? ' late' : ''}">
+      <button class="tick" type="button" aria-label="${task.done ? 'Mark not done' : 'Mark done'}" onclick="toggleTask('${esc(task.id)}')">${task.done ? '✓' : ''}</button>
+      <div style="flex:1;min-width:0">
+        <div class="task-title" style="font-weight:600">${esc(task.title)}</div>
+        <div class="when">${esc(when)}${c ? ' · ' + esc(c.short || c.name) : ''}</div>
+      </div>
+      <button class="chip" type="button" onclick="dropTask('${esc(task.id)}')">Remove</button>
+    </div>`;
+  }).join('');
+  return `<div class="card" style="margin-top:16px">
+    <span class="eyebrow">To-do</span>
+    <h3 style="margin-bottom:6px">Work with a date on it</h3>
+    <p style="color:var(--ink-soft);font-size:.9rem">Chapters, problem sets, the essay you keep moving. This list stays on this device.</p>
+    <form onsubmit="addTask(event)" class="row task-form" style="align-items:flex-end;margin-top:8px">
+      <label class="fld" style="flex:1;min-width:180px;margin:0"><span>What</span>
+        <input type="text" id="taskTitle" maxlength="140" placeholder="Chapter 7 problem set"></label>
+      <label class="fld" style="flex:0 0 160px;margin:0"><span>Due</span>
+        <input type="date" id="taskDue"></label>
+      <label class="fld" style="flex:0 1 180px;margin:0"><span>Course</span>
+        <select id="taskCourse"><option value="">None</option>${courses.map(c => `<option value="${esc(c.id)}">${esc(c.short || c.name)}</option>`).join('')}</select>
+      </label>
+      <button class="btn" type="submit">Add</button>
+    </form>
+    <div style="margin-top:12px">${rows || '<p style="color:var(--ink-faint);font-size:.9rem;margin:8px 0 0">Nothing on the list yet.</p>'}</div>
+  </div>`;
+}
+
+/* ---------------- desk lamp / focus timer ---------------- */
+const Focus = {
+  cfg() { return Object.assign({ work: 25, brk: 5, goal: 4 }, store.get('sb.focus.cfg', {}) || {}); },
+  saveCfg(patch) { store.set('sb.focus.cfg', Object.assign(this.cfg(), patch)); },
+  log() {
+    const list = store.get('sb.focus.log', []);
+    return Array.isArray(list) ? list : [];
+  },
+  todayItems() {
+    const t = today();
+    return this.log().filter(x => x && String(x.at || '').slice(0, 10) === t);
+  },
+  todayMinutes() { return this.todayItems().reduce((n, x) => n + (x.mins || 0), 0); },
+  todayFull() { return this.todayItems().filter(x => x.full).length; },
+  totalMinutes() { return this.log().reduce((n, x) => n + (x.mins || 0), 0); }
+};
+let FOCUS_TIMER = null;
+
+function focusSession() {
+  const s = store.get('sb.focus.session', null);
+  return s && typeof s === 'object' ? s : null;
+}
+function focusLeft(s) {
+  if (!s) return 0;
+  if (s.running) return Math.max(0, s.ends - Date.now());
+  return Math.max(0, s.left || 0);
+}
+function focusClock(ms) {
+  const sec = Math.max(0, Math.ceil(ms / 1000));
+  return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+}
+function focusPaintClock() {
+  const el = document.getElementById('focustime');
+  const ring = document.getElementById('focusring');
+  const s = focusSession();
+  if (!el || !s || !s.total) return;
+  const left = focusLeft(s);
+  el.textContent = focusClock(left);
+  if (ring) ring.style.setProperty('--p', String(Math.max(0, Math.min(100, (1 - left / s.total) * 100))));
+}
+function focusArm() {
+  if (FOCUS_TIMER) clearInterval(FOCUS_TIMER);
+  FOCUS_TIMER = setInterval(() => {
+    const s = focusSession();
+    if (!s || !s.running) return;
+    if (Date.now() >= s.ends) focusFinish(true);
+    else focusPaintClock();
+  }, 500);
+}
+function focusLog(mins, full) {
+  const log = Focus.log();
+  log.push({ at: new Date().toISOString(), mins: mins, full: !!full });
+  store.set('sb.focus.log', log.slice(-180));
+  if (mins >= 1) bumpStreak();
+}
+function focusFinish(natural) {
+  const s = focusSession();
+  if (!s) return;
+  const left = focusLeft(s);
+  const spent = Math.max(0, Math.round((s.total - left) / 60000));
+  store.set('sb.focus.session', null);
+  if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
+  if (s.kind === 'work' && (natural || spent >= 1)) focusLog(natural ? Math.max(1, Math.round(s.total / 60000)) : spent, !!natural);
+  if ((location.hash || '') === '#/focus') render();
+  else if (natural && s.kind === 'work' && typeof announce === 'function') announce('Focus sitting finished. Take a short break when you are ready.');
+}
+function focusCatchUp() {
+  const s = focusSession();
+  if (!s || !s.running) return;
+  if (Date.now() >= s.ends) focusFinish(true);
+  else focusArm();
+}
+function focusStart(kind) {
+  const cfg = Focus.cfg();
+  const mins = kind === 'break' ? (cfg.brk || 5) : (cfg.work || 25);
+  const total = Math.max(1, mins) * 60000;
+  store.set('sb.focus.session', { kind: kind === 'break' ? 'break' : 'work', total: total, ends: Date.now() + total, running: true, left: total });
+  focusArm();
+  render();
+}
+function focusPause() {
+  const s = focusSession();
+  if (!s || !s.running) return;
+  s.left = focusLeft(s);
+  s.running = false;
+  store.set('sb.focus.session', s);
+  if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
+  render();
+}
+function focusResumeRun() {
+  const s = focusSession();
+  if (!s || s.running) return;
+  const left = s.left || s.total;
+  s.running = true;
+  s.left = left;
+  s.ends = Date.now() + left;
+  store.set('sb.focus.session', s);
+  focusArm();
+  render();
+}
+function focusStop() { focusFinish(false); }
+function focusSetLen(mins) {
+  const n = mins === 15 || mins === 50 ? mins : 25;
+  if (focusSession()) return;
+  Focus.saveCfg({ work: n, brk: n === 50 ? 10 : 5 });
+  render();
+}
+
+function vFocus() {
+  focusCatchUp();
+  const cfg = Focus.cfg();
+  const s = focusSession();
+  const full = Focus.todayFull();
+  const goal = cfg.goal || 4;
+  const dots = Array.from({ length: goal }, (_, i) => `<i class="${i < full ? 'on' : ''}"></i>`).join('');
+  let body;
+  if (s) {
+    const left = focusLeft(s);
+    const p = s.total ? Math.max(0, Math.min(100, (1 - left / s.total) * 100)) : 0;
+    body = `
+      <div class="lamp ${s.running ? 'running' : ''}" id="focusring" style="--p:${p.toFixed(1)}" role="timer" aria-label="${s.kind === 'break' ? 'Break' : 'Focus'} timer">
+        <div class="lamp-face">
+          <b id="focustime" aria-live="off">${focusClock(left)}</b>
+          <span>${s.kind === 'break' ? 'break' : 'focus'}${s.running ? '' : ' · paused'}</span>
+        </div>
+      </div>
+      <div class="row" style="justify-content:center">
+        ${s.running
+          ? '<button class="btn ghost" type="button" onclick="focusPause()">Pause</button>'
+          : '<button class="btn mark" type="button" onclick="focusResumeRun()">Resume</button>'}
+        <button class="btn ghost" type="button" onclick="focusStop()">End</button>
+      </div>
+      <p class="center" style="color:var(--ink-faint);font-size:.82rem;margin-top:12px">Leaving this page does not stop the clock. It keeps time on this device, not on the screen.</p>`;
+  } else {
+    body = `
+      <div class="lamp" id="focusring" style="--p:0" role="timer" aria-label="Focus timer ready">
+        <div class="lamp-face"><b id="focustime">${cfg.work}:00</b><span>ready</span></div>
+      </div>
+      <div class="row" style="justify-content:center;margin-bottom:14px">
+        ${[15, 25, 50].map(n => `<button class="chip ${cfg.work === n ? 'on' : ''}" type="button" onclick="focusSetLen(${n})">${n} min</button>`).join('')}
+      </div>
+      <div class="row" style="justify-content:center">
+        <button class="btn mark" type="button" onclick="focusStart('work')">Start sitting</button>
+        <button class="btn ghost" type="button" onclick="focusStart('break')">Just a break</button>
+      </div>`;
+  }
+  return topbar() + `
+    <div class="page-head fade">
+      <span class="eyebrow">Desk lamp</span>
+      <h1>Sit with <span class="hl">one thing</span>.</h1>
+      <p>Twenty-five minutes on a single deck, chapter, or problem set. A finished sitting keeps your streak, even on a day you never flip a card.</p>
+    </div>
+    <div class="card" style="max-width:560px">
+      ${body}
+      <hr class="divide">
+      <div class="sittings" aria-label="${full} of ${goal} sittings finished today">${dots}</div>
+      <div class="row" style="justify-content:center;gap:28px">
+        <div class="stat"><b>${full}</b><span>sittings today</span></div>
+        <div class="stat"><b>${Focus.todayMinutes()}</b><span>minutes today</span></div>
+        <div class="stat"><b>${Focus.totalMinutes()}</b><span>minutes saved</span></div>
+      </div>
+    </div>`;
+}
+
+/* ---------------- progress, plan, dashboard, phone bar ---------------- */
+vStats = function () {
+  const tally = store.get('sb.tally', { cards: 0, questions: 0 });
+  const prog = S.progress;
+  const unitsStarted = Object.keys(prog).length;
+  const avg = unitsStarted ? Math.round(Object.values(prog).reduce((a, b) => a + (b.best || 0), 0) / unitsStarted) : 0;
+  const open = Tasks.all().filter(x => !x.done);
+  const overdue = open.filter(x => x.due && x.due < today()).length;
+  return topbar() + `
+    <div class="page-head fade">
+      <span class="eyebrow">On this device</span>
+      <h1>Your <span class="hl">progress</span>.</h1>
+      <p>Streaks, scores, and sittings stay in this browser. There is no account behind these numbers, and nothing here is sent anywhere.</p>
+    </div>
+    <div class="grid g2" style="align-items:start;margin-bottom:14px">
+      <div class="card">
+        <span class="eyebrow">Just you</span>
+        <div class="row" style="gap:22px;margin-top:8px">
+          <div class="stat"><b>${streakCount()}</b><span>day streak</span></div>
+          <div class="stat"><b>${tally.cards || 0}</b><span>cards studied</span></div>
+          <div class="stat"><b>${tally.questions || 0}</b><span>questions</span></div>
+          <div class="stat"><b>${avg}%</b><span>avg mastery</span></div>
+          <div class="stat"><b>${Focus.totalMinutes()}</b><span>focus minutes</span></div>
+        </div>
+        <hr class="divide" style="margin:18px 0">
+        <p style="font-size:.86rem;color:var(--ink-soft);margin:0">${unitsStarted ? ('You have a score on ' + unitsStarted + ' unit' + (unitsStarted > 1 ? 's' : '') + '.') : 'Take a quiz and mastery starts showing up here.'}${overdue ? (' <b>' + overdue + ' task' + (overdue > 1 ? 's' : '') + ' overdue.</b>') : ''}</p>
+        <div class="row" style="margin-top:12px">
+          <a class="btn sm" href="#/focus">Open the lamp</a>
+          <a class="btn ghost sm" href="#/plan">Plan</a>
+          <a class="btn ghost sm" href="#/review">Due cards</a>
+        </div>
+      </div>
+      ${typeof activityChart === 'function' ? activityChart() : ''}
+    </div>
+    <div class="grid g2" style="align-items:start">
+      ${typeof masteryPanel === 'function' ? masteryPanel() : ''}
+      <div class="card">
+        <span class="eyebrow">Spaced repetition</span>
+        ${typeof leitnerBoxes === 'function' ? leitnerBoxes() : ''}
+        <p style="color:var(--ink-soft);font-size:.86rem;margin:12px 0 0">${open.length ? (open.length + ' open task' + (open.length > 1 ? 's' : '') + ' on the plan.') : 'No open tasks. Due dates live on the plan.'}</p>
+      </div>
+    </div>`;
+};
+
+function dashboardExtras() {
+  const s = focusSession();
+  const tasks = Tasks.all().filter(x => !x.done);
+  const overdue = tasks.filter(x => x.due && x.due < today());
+  const bits = [];
+  if (s) {
+    bits.push(`<a class="card" href="#/focus" style="display:block;text-decoration:none;color:inherit;border-left:3px solid var(--highlight);margin-bottom:14px">
+      <span class="eyebrow">Lamp is ${s.running ? 'on' : 'paused'}</span>
+      <h3 style="margin-bottom:2px">${s.kind === 'break' ? 'Break' : 'Focus'} · ${esc(focusClock(focusLeft(s)))} left</h3>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin:0">The clock keeps going while you move around the app.</p>
+    </a>`);
+  }
+  if (tasks.length) {
+    const next = tasks.slice().sort((a, b) => (a.due || '9999').localeCompare(b.due || '9999'))[0];
+    bits.push(`<a class="card" href="#/plan" style="display:block;text-decoration:none;color:inherit;margin-bottom:14px">
+      <span class="eyebrow">${overdue.length ? 'Overdue' : 'On your list'}</span>
+      <h3 style="margin-bottom:2px">${esc(next.title)}</h3>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin:0">${tasks.length} open${overdue.length ? (' · ' + overdue.length + ' overdue') : ''}</p>
+    </a>`);
+  }
+  return bits.join('');
+}
+const _vDashLevel = vDashboard;
+vDashboard = function () {
+  const html = _vDashLevel();
+  const extra = dashboardExtras();
+  if (!extra) return html;
+  const at = html.indexOf('<div class="grid g2"');
+  return at === -1 ? extra + html : html.slice(0, at) + extra + html.slice(at);
+};
+const _vPlanLevel = vPlan;
+vPlan = function () { return _vPlanLevel() + taskBoard(); };
+
+ICONS.lamp = ico('<path d="M9 20.5h6"/><path d="M12 16.5v4"/><path d="M8.2 16.5h7.6a4.6 4.6 0 0 0 1.1-8.6 4.2 4.2 0 0 0-7.9 1.2 3.7 3.7 0 0 0-.8 7.4Z"/>');
+NAV.splice(4, 0, { h: '#/focus', t: 'Focus', i: ICONS.lamp, m: 'Focus' });
+const statsItem = NAV.find(n => n.h === '#/stats');
+if (statsItem) { statsItem.t = 'Progress'; statsItem.m = 'Stats'; }
+
+const PHONE_TABS = [
+  { h: '#/', t: 'Home' },
+  { h: '#/courses', t: 'Courses' },
+  { h: '#/focus', t: 'Focus' },
+  { h: '#/review', t: 'Due' },
+  { h: '#/plan', t: 'Plan' }
+];
+const _paintNavLevel = paintNav;
+paintNav = function () {
+  _paintNavLevel();
+  const bar = document.getElementById('tabbar');
+  if (!bar) return;
+  const h = location.hash || '#/';
+  bar.innerHTML = PHONE_TABS.map(n => {
+    const item = NAV.find(x => x.h === n.h);
+    const on = h === n.h || (n.h !== '#/' && h.startsWith(n.h));
+    return `<a href="${n.h}" class="${on ? 'on' : ''}">${item ? item.i : ''}<span>${n.t}</span></a>`;
+  }).join('');
+};
+
+/* question schedules saved before a prompt was stored cannot be reviewed */
+(function retireOrphanQuestions() {
+  try {
+    const m = Leitner.all();
+    let dirty = false;
+    Object.keys(m).forEach(k => {
+      if (String(k).startsWith('q:') && !(m[k] && m[k].meta && m[k].meta.q)) { delete m[k]; dirty = true; }
+    });
+    if (dirty) Leitner.save(m);
+  } catch (e) {}
+})();
+focusCatchUp();
 </script>
 <script>
 /* ============================================================

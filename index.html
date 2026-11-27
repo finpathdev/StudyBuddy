@@ -16611,12 +16611,13 @@ function vCourse(cid) {
     ${c.note ? `<div class="note" style="margin-top:14px;max-width:62ch">${esc(c.note)}</div>` : ''}
   </div>
   ${masterReviewCard(c)}
-  <div class="grid g2">
-    ${c.units.map(u => {
+  ${courseStudyGroups(c).map(group => `
+    ${group.heading ? `<h2 style="margin:22px 0 12px">${esc(group.heading)}</h2>` : ''}
+    <div class="grid g2">${group.units.map(u => {
       const m = mastery(c.id, u.id);
       return `<div class="card" style="border-left:3px solid ${c.color}">
         <div class="spread" style="align-items:flex-start">
-          <h3 style="max-width:80%">${esc(u.title)}</h3>
+          <h3 style="max-width:80%">${esc(group.heading ? u.title.replace(/^Unit \d+ · /, '') : u.title)}</h3>
           <span class="tag">${m === null ? 'new' : m + '%'}</span>
         </div>
         <div class="meter ${m !== null && m >= 80 ? 'good' : ''}" style="margin:12px 0 14px"><i style="width:${m || 0}%"></i></div>
@@ -16627,8 +16628,7 @@ function vCourse(cid) {
           ${(u.cards || []).length ? `<a class="chip" href="#/print/cards/${c.id}/${u.id}">Print</a>` : ''}
         </div>
       </div>`;
-    }).join('')}
-  </div>
+    }).join('')}</div>`).join('')}
   ${outlineSection(c)}
   ${c.mine ? `<hr class="divide"><button class="btn ghost sm" onclick="deleteDeck('${c.id.slice(3)}')">Delete this deck</button>` : ''}`;
 }
@@ -16637,7 +16637,7 @@ function vCourse(cid) {
 function vGuide(cid, uid) {
   const c = findCourse(cid), u = findUnit(c, uid);
   if (!u) return notFound();
-  store.set('sb.last', { c: cid, u: uid });
+  store.set('sb.last', { c: cid, u: uid, mode: 'guide' });
   if (!(u.guide || []).length) return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a><div class="empty"><div class="big">▤</div>No written guide for this deck yet — try the flashcards.</div>`;
   const terms = (u.cards || []).slice(0, 6);
   const bullets = u.guide.reduce((n, sec) =>
@@ -16722,7 +16722,7 @@ let DECK = null;
 function vCards(cid, uid) {
   const c = findCourse(cid), u = findUnit(c, uid);
   if (!u || !(u.cards || []).length) return notFound();
-  store.set('sb.last', { c: cid, u: uid });
+  store.set('sb.last', { c: cid, u: uid, mode: 'cards' });
   DECK = { cid, uid, i: 0, flipped: false, order: shuffle(u.cards.map((_, i) => i)), cards: u.cards, missed: [] };
   setTimeout(paintCard, 0);
   return topbar() + `
@@ -16795,7 +16795,7 @@ function markCard(known) {
 function redoMissed() { DECK.order = shuffle(DECK.missed); DECK.missed = []; DECK.i = 0; paintCard(); }
 function restartDeck() {
   if (!DECK) return;
-  if (DECK.review) { startReview(); return; }
+  if (DECK.review) { startReview(); if (typeof afterRender === 'function') afterRender(); return; }
   DECK.order = shuffle(DECK.cards.map((_, i) => i));
   DECK.missed = []; DECK.i = 0; DECK.flipped = false;
   paintCard();
@@ -16807,7 +16807,7 @@ function prepQuestions(list) {
   return shuffle(list).map(q => {
     const pairs = q.c.map((t, i) => ({ t, correct: i === q.a }));
     const mixed = shuffle(pairs);
-    return { q: q.q, c: mixed.map(p => p.t), a: mixed.findIndex(p => p.correct), why: q.why, tag: q._cn ? q._cn + ' · ' + q._un : '' };
+    return { q: q.q, c: mixed.map(p => p.t), a: mixed.findIndex(p => p.correct), why: q.why, _c: q._c, _u: q._u, _cn: q._cn, _un: q._un, tag: q._cn ? q._cn + ' · ' + q._un : '' };
   });
 }
 function vQuiz(cid, uid) {
@@ -16867,7 +16867,7 @@ function answer(i) {
 function next() { QZ.i++; QZ.answered = false; paintQuiz(); }
 function paintQuizResult() {
   const pct = Math.round(QZ.right / QZ.qs.length * 100);
-  if (QZ.cid) recordScore(QZ.cid, QZ.uid, pct); else bumpStreak();
+  if (QZ.cid && !QZ.quick) recordScore(QZ.cid, QZ.uid, pct); else bumpStreak();
   if (QZ.timer) { clearInterval(QZ.timer); QZ.timer = null; }
   const msg = pct >= 90 ? 'You have this cold.' : pct >= 75 ? 'Solid. Clean up the misses and you are there.' :
     pct >= 50 ? 'Halfway. Reread the guide, then run the deck again.' : 'Start with the study guide and flashcards — the quiz will feel different after.';
@@ -17306,7 +17306,10 @@ function render() {
     html = mode === 'guide' ? vGuide(cid, uid) : mode === 'quiz' ? vQuiz(cid, uid) : vCards(cid, uid);
   }
   else if (parts[0] === 'mistakes') html = vMistakes();
-  else if (parts[0] === 'review') html = vReview();
+  else if (parts[0] === 'review') {
+    if (ROUTE_Q.get('start') === '1' && Leitner.dueCards().length) { startReview(); return; }
+    html = vReview();
+  }
   else if (parts[0] === 'focus') html = vFocus();
   else if (parts[0] === 'assign') html = vAssign();
   else if (parts[0] === 'import') html = vImport();
@@ -17333,7 +17336,7 @@ function render() {
 
 document.addEventListener('keydown', e => {
   if (!DECK) return;
-  if (!location.hash.includes('/cards') && !location.hash.includes('/review')) return;
+  if (!document.getElementById('fc')) return;
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
   /* the card element handles its own Enter and Space so screen reader users get
      standard button behaviour; without this guard it would fire twice and cancel out */
@@ -17903,7 +17906,7 @@ const Leitner = {
       if (!k.startsWith('q:') || !rec.meta || !rec.meta.q) return;
       if (rec.due && rec.due > t) return;
       out.push({
-        k, card: [rec.meta.q, rec.meta.back || ''], cid: rec.meta.cid || null, uid: rec.meta.uid || null,
+        k, card: [rec.meta.q, [rec.meta.back, rec.meta.why].filter(Boolean).join(' — ')], cid: rec.meta.cid || null, uid: rec.meta.uid || null,
         cn: rec.meta.cn || 'Quiz', un: rec.meta.un || 'Question', box: rec.box
       });
     });
@@ -17927,14 +17930,21 @@ markCard = function (known) {
 /* quizzes feed it too */
 const _answerL = answer;
 answer = function (i) {
-  if (QZ && !QZ.answered) {
+  const pending = QZ && !QZ.answered;
+  if (pending) {
     const q = QZ.qs[QZ.i];
     if (q) Leitner.grade('q:' + qid(q.q), i === q.a, {
-      kind: 'q', q: q.q, back: (q.c && q.c[q.a]) || '',
+      kind: 'q', q: q.q, back: (q.c && q.c[q.a]) || '', why: q.why || '',
       cid: q._c || null, uid: q._u || null, cn: q._cn || '', un: q._un || ''
     });
   }
-  return _answerL(i);
+  const result = _answerL(i);
+  if (pending && !QZ.test && QZ.marks[QZ.i] === 0) {
+    const feedback = $('#feedback');
+    if (feedback && feedback.querySelector('button')) feedback.querySelector('button').insertAdjacentHTML('beforebegin',
+      '<p class="note">This question is ready to review today. <a href="#/review?start=1">Review due cards</a></p>');
+  }
+  return result;
 };
 
 /* ---- due review session ---- */
@@ -17971,7 +17981,7 @@ function leitnerBoxes() {
   </div>`;
 }
 function startReview() {
-  const due = shuffle(Leitner.dueCards());
+  const due = shuffle(Leitner.dueCards()).sort((a, b) => Number(b.k.startsWith('q:')) - Number(a.k.startsWith('q:')));
   DECK = {
     cid: null, uid: null, review: true, i: 0, flipped: false,
     order: due.map((_, i) => i), cards: due.map(d => d.card), keys: due.map(d => d.k),
@@ -21177,9 +21187,9 @@ const _vQuiz = vQuiz;
 vQuiz = function (cid, uid) {
   const c = findCourse(cid), u = findUnit(c, uid);
   if (!u || !(u.quiz || []).length) return notFound();
-  store.set('sb.last', { c: cid, u: uid });
+  store.set('sb.last', { c: cid, u: uid, mode: 'quiz' });
   const stamped = u.quiz.map(q => Object.assign({}, q, { _c: cid, _u: uid, _cn: c.short, _un: u.title }));
-  QZ = { cid, uid, title: u.title, sub: c.name, qs: prepQuestions(stamped), i: 0, right: 0, marks: [], answered: false, timed: false, test: false };
+  QZ = { cid, uid, title: u.title, sub: c.name, qs: ROUTE_Q.get('quick') === '1' ? prepQuestions(stamped).slice(0, 5) : prepQuestions(stamped), quick: ROUTE_Q.get('quick') === '1', i: 0, right: 0, marks: [], answered: false, timed: false, test: false };
   setTimeout(paintQuiz, 0);
   return topbar() + `<a class="crumb" href="#/course/${cid}">← ${esc(c.name)}</a><div id="qwrap"></div>`;
 };
@@ -29012,48 +29022,135 @@ function isFreshDesk() {
   if (typeof Focus !== 'undefined' && Focus.totalMinutes()) return false;
   return true;
 }
+function startQuickQuiz(event) {
+  event.preventDefault();
+  const course = findCourse($('#quick-course').value);
+  const unit = course && courseStudyGroups(course).flatMap(group => group.units).find(u => (u.quiz || []).length);
+  if (unit) location.hash = '#/study/' + course.id + '/' + unit.id + '/quiz?quick=1';
+}
+
 function welcomeDesk() {
+  const choices = COURSES.concat(customCourses()).filter(c =>
+    !c.archived && c.units.some(u => (u.quiz || []).length));
   return topbar() + `
-    <div class="page-head fade">
-      <h1>Study something <span class="hl">today</span>.</h1>
-      <p>Study guides, flashcards, practice tests, and a focus timer.</p>
-    </div>
+    <div class="page-head fade"><h1>Study something <span class="hl">today</span>.</h1></div>
     <div class="card welcome fade">
       <div class="welcome-owl">${mascot('sleepy')}</div>
       <div>
-        <h2 style="margin-bottom:6px">Choose where to start</h2>
-        <p style="color:var(--ink-soft);max-width:46ch">Pick a course, turn your notes into flashcards, or start a focus session.</p>
-        <div class="row">
-          <a class="btn mark" href="#/courses">Browse courses</a>
-          <a class="btn ghost" href="#/tutor">Use my notes</a>
-          <a class="btn ghost" href="#/focus">Start a focus session</a>
-        </div>
+        <h2>Start with a short quiz</h2>
+        <p>Pick a course for up to five questions. Anything you miss goes into review.</p>
+        <form onsubmit="startQuickQuiz(event)">
+          <label class="fld"><span>Course</span>
+            <select id="quick-course" required>
+              <option value="">Choose a course</option>
+              ${choices.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}
+            </select>
+          </label>
+          <button class="btn mark" type="submit">Start short quiz</button>
+        </form>
       </div>
-    </div>
-    <div class="grid g3">
-      <a class="card" href="#/courses" style="text-decoration:none;color:inherit">
-        <span class="eyebrow">Library</span>
-        <h3 style="margin-bottom:4px">Browse the course library</h3>
-        <p style="color:var(--ink-soft);font-size:.9rem;margin:0">AP, SAT, and ACT, with guides and quizzes already written.</p>
-      </a>
-      <a class="card" href="#/focus" style="text-decoration:none;color:inherit">
-        <span class="eyebrow">Desk lamp</span>
-        <h3 style="margin-bottom:4px">Start a focus session</h3>
-        <p style="color:var(--ink-soft);font-size:.9rem;margin:0">A finished sitting starts your streak, even before a quiz.</p>
-      </a>
-      <a class="card" href="#/tests" style="text-decoration:none;color:inherit">
-        <span class="eyebrow">Practice</span>
-        <h3 style="margin-bottom:4px">Timed tests</h3>
-        <p style="color:var(--ink-soft);font-size:.9rem;margin:0">Full papers when you want the real clock.</p>
-      </a>
     </div>`;
 }
 const _vDashPolish = vDashboard;
 vDashboard = function () {
-  if (isFreshDesk()) return welcomeDesk();
+  const due = Leitner.dueCards().length;
+  if (isFreshDesk() && !due) return welcomeDesk();
   let html = _vDashPolish();
+  const last = store.get('sb.last', null);
+  const course = last && findCourse(last.c);
+  const unit = course && findUnit(course, last.u);
+  const mode = last && ['guide', 'cards', 'quiz'].includes(last.mode) ? last.mode : unit && (unit.quiz || []).length ? 'quiz' : 'cards';
+  const action = due
+    ? `<a class="btn mark" href="#/review?start=1">Review due cards · ${due}</a>`
+    : unit ? `<a class="btn mark" href="#/study/${course.id}/${unit.id}/${mode}">Continue studying</a>` : '';
+  if (action) {
+    const end = html.indexOf('</div>', html.indexOf('<div class="page-head fade">'));
+    if (end >= 0) html = html.slice(0, end) + `<div style="margin-top:12px">${action}</div>` + html.slice(end);
+  }
   const state = streakCount() > 0 ? 'happy' : ((typeof Leitner !== 'undefined' && Leitner.counts().due) ? 'welcome' : 'sleepy');
   return html.replace('<div class="page-head fade">', `<div class="owl-chip">${mascot(state)}</div><div class="page-head fade">`);
+};
+
+const AP_FRAMEWORKS = {
+  'ap-bio': 'ap-biology', 'ap-chem': 'ap-chemistry',
+  'ap-psych': 'ap-psychology', 'ap-phys1': 'ap-physics-1',
+  'ap-csa': 'ap-computer-science-a'
+};
+const AP_UNIT_GROUPS = {
+  'ap-psych': [
+    ['Biological Bases of Behavior', ['u2']],
+    ['Cognition', ['u3', 'u5', 'u10']],
+    ['Development and Learning', ['u7', 'u4']],
+    ['Social Psychology and Personality', ['u6', 'u8']],
+    ['Mental and Physical Health', ['u9']],
+    ['Research methods across units', ['u1']]
+  ],
+  'ap-csa': [
+    ['Using Objects and Methods', ['u1', 'u2']],
+    ['Selection and Iteration', ['u3', 'u4']],
+    ['Class Creation', ['u5']],
+    ['Data Collections', ['u6', 'u7', 'u8', 'u10']],
+    ['Additional Java practice', ['u9']]
+  ]
+};
+
+function courseStudyGroups(course) {
+  const groups = AP_UNIT_GROUPS[course.id];
+  if (!groups) return [{ units: course.units }];
+  return groups.map(([title, ids], i) => ({
+    heading: i === groups.length - 1 ? title : 'AP Unit ' + (i + 1) + ' · ' + title,
+    units: ids.map(id => findUnit(course, id)).filter(Boolean)
+  }));
+}
+
+const chemistry = findCourse('ap-chem');
+for (const [id, title] of [
+  ['u3', 'Properties of Substances and Mixtures'],
+  ['u6', 'Thermochemistry'],
+  ['u9', 'Thermodynamics and Electrochemistry']
+]) {
+  const unit = findUnit(chemistry, id);
+  if (unit) unit.title = 'Unit ' + id.slice(1) + ' · ' + title;
+}
+
+const AP_PRACTICE = [
+  ['ap-bio', 'u1', {
+    q: 'Two liquids receive the same heat per gram. Water warms less than the other liquid. Which molecular explanation fits the observation?',
+    c: ['Part of the added energy disrupts hydrogen bonding between water molecules.', 'The added heat splits water into hydrogen and oxygen gases.', 'Water molecules lose their polarity as they warm.', 'Water cannot absorb energy while it is liquid.'],
+    a: 0, why: 'Some energy goes into disrupting hydrogen bonds, so water needs more energy per gram for the same temperature change.'
+  }],
+  ['ap-chem', 'u1', {
+    q: 'A sample contains 80% atoms with mass 24 u and 20% with mass 26 u. What average atomic mass should a student report?',
+    c: ['24.0 u', '24.4 u', '25.0 u', '25.6 u'],
+    a: 1, why: 'Multiply each isotope mass by its fractional abundance: 0.80 × 24 + 0.20 × 26 = 24.4 u.'
+  }],
+  ['ap-psych', 'u1', {
+    q: 'Students are randomly assigned to study after either eight or five hours of sleep. Everyone then takes the same memory test. What is the dependent variable?',
+    c: ['Hours of sleep', 'Random assignment', 'Memory test score', 'Time allowed to study'],
+    a: 2, why: 'Memory score is the measured outcome. Hours of sleep is the variable the researchers manipulate.'
+  }],
+  ['ap-phys1', 'u8', {
+    q: 'An object floats with 60% of its volume under water. What is its average density relative to the water?',
+    c: ['0.40 times', '0.60 times', '1.00 times', '1.67 times'],
+    a: 1, why: 'Floating means the buoyant force equals the object’s weight. The submerged volume fraction equals the ratio of object density to fluid density.'
+  }]
+];
+AP_PRACTICE.forEach(([cid, uid, question]) => {
+  const unit = findUnit(findCourse(cid), uid);
+  if (unit) unit.quiz = (unit.quiz || []).concat(question);
+});
+
+const renderCourseWithFramework = vCourse;
+vCourse = function (cid) {
+  const html = renderCourseWithFramework(cid);
+  const course = findCourse(cid);
+  if (!course || course.exam !== 'AP') return html;
+  const slug = AP_FRAMEWORKS[cid];
+  const url = 'https://apcentral.collegeboard.org/courses' + (slug ? '/' + slug : '');
+  return html.replace('<p>' + esc(course.blurb) + '</p>',
+    '<p>' + esc(course.blurb) + '</p><p><a href="' + url +
+    '" target="_blank" rel="noopener">College Board course and exam description' +
+    (slug ? '' : ' directory') + ' ↗</a></p>');
 };
 
 const _vReviewPolish = vReview;

@@ -18020,11 +18020,13 @@ function restoreBackup(file, mode) {
   reader.onload = () => {
     try {
       const j = JSON.parse(reader.result);
-      if (!j || j.app !== 'StudyBuddy' || !j.data) throw new Error('That is not a StudyBuddy backup file.');
+      if (!j || j.app !== 'StudyBuddy' || !j.data || typeof j.data !== 'object' || Array.isArray(j.data)) throw new Error('That is not a StudyBuddy backup file.');
+      const entries = Object.entries(j.data).filter(([key, value]) => value != null &&
+        (BACKUP_KEYS.includes(key) || BACKUP_PREFIXES.some(prefix => key.startsWith(prefix))));
       if (mode === 'replace') {
-        Object.keys(j.data).forEach(k => { if (k.indexOf('sb.') === 0) store.set(k, j.data[k]); });
+        entries.forEach(([key, value]) => store.set(key, value));
       } else {
-        /* merge: keep the better result for every unit, union everything else */
+        /* Keep the better per-unit result, then merge the remaining saved data. */
         const p = store.get('sb.progress', {}), np = j.data['sb.progress'] || {};
         Object.entries(np).forEach(([k, v]) => {
           p[k] = (!p[k] || v.best > p[k].best) ? v : p[k];
@@ -18043,7 +18045,9 @@ function restoreBackup(file, mode) {
         store.set('sb.leitner', lt);
         const cust = store.get('sb.custom', []), nc = j.data['sb.custom'] || [];
         const ids = new Set(cust.map(d => d.id));
-        nc.forEach(d => { if (!ids.has(d.id)) cust.push(d); });
+        nc.forEach(d => {
+          if (d && d.id && !ids.has(d.id)) { cust.push(d); ids.add(d.id); }
+        });
         store.set('sb.custom', cust);
         const t = store.get('sb.tally', { cards: 0, questions: 0 }), nt = j.data['sb.tally'] || {};
         store.set('sb.tally', { cards: Math.max(t.cards || 0, nt.cards || 0), questions: Math.max(t.questions || 0, nt.questions || 0) });
@@ -18054,12 +18058,25 @@ function restoreBackup(file, mode) {
         const fl = store.get('sb.focus.log', []), nfl = Array.isArray(j.data['sb.focus.log']) ? j.data['sb.focus.log'] : [];
         const seenAt = new Set(fl.map(d => d && d.at));
         nfl.forEach(d => { if (d && d.at && !seenAt.has(d.at)) fl.push(d); });
-        if (fl.length) store.set('sb.focus.log', fl.slice(-180));
+        if (fl.length) store.set('sb.focus.log', fl.sort((a, b) => String(a.at).localeCompare(String(b.at))).slice(-180));
         if (j.data['sb.focus.cfg'] && typeof j.data['sb.focus.cfg'] === 'object') {
           store.set('sb.focus.cfg', Object.assign({}, j.data['sb.focus.cfg'], store.get('sb.focus.cfg', {})));
         }
+        entries.forEach(([key, incoming]) => {
+          const current = store.get(key, null);
+          if (current === null) {
+            store.set(key, incoming);
+          } else if (key === 'sb.streak' &&
+                     (incoming.last > current.last || (incoming.last === current.last && incoming.n > current.n))) {
+            store.set(key, incoming);
+          } else if (key.startsWith('sb.exam.') && Number.isFinite(incoming) && incoming > current) {
+            store.set(key, incoming);
+          } else if (key.startsWith('sb.match.') && Number.isFinite(incoming) && incoming >= 0 && incoming < current) {
+            store.set(key, incoming);
+          }
+        });
       }
-      msg.innerHTML = `<p style="color:var(--green);font-size:.85rem;margin:10px 0 0">Restored from ${esc((j.exported || '').slice(0, 10))}. Reloading…</p>`;
+      msg.innerHTML = `<p style="color:var(--green);font-size:.85rem;margin:10px 0 0">Restored from ${esc(String(j.exported || '').slice(0, 10))}. Reloading…</p>`;
       setTimeout(() => location.reload(), 900);
     } catch (e) {
       msg.innerHTML = `<p style="color:var(--margin);font-size:.85rem;margin:10px 0 0">${esc(e.message)}</p>`;

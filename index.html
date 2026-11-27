@@ -21444,23 +21444,27 @@ const KIND_LABEL = { unit: 'Unit', section: 'Guide section', note: 'Guide note',
 
 function vSearch(q) {
   const query = q || '';
-  const hits = runSearch(query);
-  const byKind = {};
-  hits.forEach(h => { (byKind[h.kind] = byKind[h.kind] || []).push(h); });
-  const order = ['unit', 'card', 'section', 'frq', 'question', 'note'].filter(k => byKind[k]);
   return topbar() + `
   <div class="page-head fade">
     <span class="eyebrow">Search</span>
     <h1>Find anything</h1>
     <p>Across ${COURSES.reduce((n, c) => n + c.units.length, 0)} units, every flashcard, quiz question, and study guide.</p>
   </div>
-  <div class="card" style="margin-bottom:18px">
+  <div class="card">
     <div class="row" style="flex-wrap:nowrap;gap:8px">
       <input type="search" id="sq" aria-label="Search study materials" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
-        style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()" onkeydown="if(event.key==='Enter')searchGo()">
+        style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()">
     </div>
-    ${query.length >= 2 ? `<p style="font-size:.85rem;color:var(--ink-faint);margin:10px 0 0">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
   </div>
+  <div id="search-results" style="margin-top:18px">${searchResults(query)}</div>`;
+}
+
+function searchResults(query) {
+  const hits = runSearch(query);
+  const byKind = {};
+  hits.forEach(h => { (byKind[h.kind] = byKind[h.kind] || []).push(h); });
+  const order = ['unit', 'card', 'section', 'frq', 'question', 'note'].filter(k => byKind[k]);
+  return `${query.length >= 2 ? `<p role="status" style="font-size:.85rem;color:var(--ink-soft)">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
   ${query.length < 2 ? `<div class="note" style="max-width:60ch">Type at least two characters. Searching a term finds the flashcard that defines it, the guide section that explains it, and every question that tests it.</div>` :
     !hits.length ? `<div class="note" style="max-width:60ch">No match for <b>${esc(query)}</b>. Try a shorter term, or check the spelling.</div>` :
     order.map(k => `<span class="eyebrow" style="margin-top:18px">${KIND_LABEL[k]} · ${byKind[k].length}</span>
@@ -21473,16 +21477,15 @@ function vSearch(q) {
       ${byKind[k].length > 12 ? `<p style="font-size:.8rem;color:var(--ink-faint);margin:4px 0 0">…and ${byKind[k].length - 12} more</p>` : ''}
     </div>`).join('')}`;
 }
-
 function searchGo() {
-  const v = $('#sq') ? $('#sq').value : '';
-  history.replaceState(null, '', location.pathname + location.search + '#/search?q=' + encodeURIComponent(v));
-  const box = document.getElementById('view');
-  const pos = $('#sq') ? $('#sq').selectionStart : 0;
-  box.innerHTML = vSearch(v);
-  if (typeof sweepMath === 'function') sweepMath(box);
-  const inp = $('#sq');
-  if (inp) { inp.focus(); try { inp.setSelectionRange(pos, pos); } catch (e) {} }
+  const input = $('#sq');
+  const results = $('#search-results');
+  if (!input || !results) return;
+  const query = input.value;
+  const hash = query ? '#/search?q=' + encodeURIComponent(query) : '#/search';
+  history.replaceState(null, '', location.pathname + location.search + hash);
+  results.innerHTML = searchResults(query);
+  if (typeof sweepMath === 'function') sweepMath(results);
 }
 
 /* ============================================================

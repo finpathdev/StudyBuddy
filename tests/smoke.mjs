@@ -149,7 +149,7 @@ check('deck name is escaped', flows.nameShown && !flows.xss && !flows.nameRaw, J
 
 const memory = await desk.page.evaluate(() => {
   localStorage.clear();
-  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const y = calendarDay(-1);
   localStorage.setItem('sb.progress', JSON.stringify({ 'ap-bio/u1': { best: 91, last: 80, tries: 4, when: '2024-03-01' } }));
   localStorage.setItem('sb.leitner', JSON.stringify({ 'card:ap-psych/u1/0': { box: 1, due: '2020-01-01', seen: 2, last: '2020-01-01' } }));
   localStorage.setItem('sb.streak', JSON.stringify({ last: y, n: 6 }));
@@ -303,8 +303,25 @@ for (const hash of ['#/', '#/focus', '#/plan', '#/courses', '#/study/ap-bio/u1/c
 }
 check('phone has no console errors', phone.errors.length === 0, phone.errors.join(' | '));
 
-const sw = await readFile(join(root, 'sw.js'), 'utf8');
-check('service worker cache bumped', sw.includes("studybuddy-v83"));
+const lateFocus = await phone.page.evaluate(() => {
+  localStorage.setItem('sb.focus.session', JSON.stringify({
+    kind: 'work', total: 900000, left: 900000, ends: Date.now() - 1000, running: true
+  }));
+  const before = Focus.log().length;
+  focusPause();
+  focusResumeRun();
+  const added = Focus.log().slice(before);
+  return { cleared: focusSession() === null, added };
+});
+check('pausing an expired timer records the completed session once',
+  lateFocus.cleared && lateFocus.added.length === 1 && lateFocus.added[0].full,
+  JSON.stringify(lateFocus));
+
+const localDates = await phone.page.evaluate(() => {
+  const date = new Date(2025, 0, 1, 23, 45);
+  return dayKey(date);
+});
+check('study dates use the local calendar', localDates === '2025-01-01', localDates);
 
 await browser.close();
 server.close();

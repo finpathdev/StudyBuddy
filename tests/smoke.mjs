@@ -276,20 +276,17 @@ const phone = await open(390, 844);
 await phone.page.goto(base, { waitUntil: 'domcontentloaded' });
 await wait(300);
 const phoneInstall = await phone.page.evaluate(() => {
-  const bar = document.getElementById('installphone');
-  const tabs = document.getElementById('tabbar');
-  if (!bar || !tabs) return { missing: true };
-  const b = bar.getBoundingClientRect();
-  const t = tabs.getBoundingClientRect();
-  const view = document.getElementById('view').getBoundingClientRect();
+  const railInstall = document.querySelector('#rail a[href="#/install"]');
+  const tabs = document.getElementById('tabbar').getBoundingClientRect();
+  const app = document.querySelector('.app').getBoundingClientRect();
   return {
-    above: b.bottom <= t.top + 1,
-    gap: Math.round(t.top - b.bottom),
-    coversTabs: b.bottom > t.top + 1,
-    inSidebar: !!bar.closest('#rail')
+    reachable: !!railInstall,
+    noBanner: !document.getElementById('installphone'),
+    fits: Math.abs(tabs.top - app.bottom) <= 2
   };
 });
-check('phone install bar sits above the tab bar', phoneInstall.above && !phoneInstall.coversTabs && phoneInstall.gap >= 0 && phoneInstall.gap < 24, JSON.stringify(phoneInstall));
+check('phone install lives in the menu and content meets the tab bar',
+  phoneInstall.reachable && phoneInstall.noBanner && phoneInstall.fits, JSON.stringify(phoneInstall));
 for (const hash of ['#/', '#/focus', '#/plan', '#/courses', '#/study/ap-bio/u1/cards']) {
   await phone.page.evaluate(h => { location.hash = h; }, hash);
   await wait(100);

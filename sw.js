@@ -1,5 +1,5 @@
 /* StudyBuddy offline app shell. Bump CACHE when the shell changes. */
-const CACHE = 'studybuddy-v90';
+const CACHE = 'studybuddy-v91';
 const SHELL = './index.html';
 const OPTIONAL_ASSETS = ['./manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 const scope = new URL(self.registration.scope);

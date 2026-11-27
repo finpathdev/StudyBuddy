@@ -1064,6 +1064,7 @@ input[type=date]{width:auto}
 @media screen and (max-width:640px) and (pointer:coarse) {
   .deck-keyboard { display: none; }
 }
+.review-explanation { font-size: .9em; color: var(--ink-soft); margin: .7em 0 0; }
 </style>
 </head>
 <body>
@@ -16750,6 +16751,9 @@ function paintCard() {
     return;
   }
   const idx = DECK.order[DECK.i], card = DECK.cards[idx];
+  const question = DECK.keys?.[idx]?.startsWith('q:');
+  const format = question ? qtext : esc;
+  const explanation = question && DECK.explanations?.[idx];
   w.innerHTML = `
     <div class="deck-meta">
       <span>Card ${DECK.i + 1} of ${DECK.order.length}${DECK.labels ? ' · ' + esc(DECK.labels[DECK.order[DECK.i]] || '') : ''}</span>
@@ -16759,8 +16763,8 @@ function paintCard() {
          aria-label="Flashcard ${DECK.i + 1} of ${DECK.order.length}. Term: ${esc(card[0])}. Press Enter or Space to reveal the definition."
          onclick="flipCard()" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();flipCard();}">
       <div class="fcard-inner">
-        <div class="fface" aria-hidden="${DECK.flipped}"><span class="ftag">Term</span><div class="ftext">${esc(card[0])}</div></div>
-        <div class="fface fback" aria-hidden="${!DECK.flipped}"><span class="ftag">Definition</span><div class="ftext">${esc(card[1])}</div></div>
+        <div class="fface" aria-hidden="${DECK.flipped}"><span class="ftag">${question ? 'Question' : 'Term'}</span><div class="ftext">${format(card[0])}</div></div>
+        <div class="fface fback" aria-hidden="${!DECK.flipped}"><span class="ftag">${question ? 'Answer' : 'Definition'}</span><div class="ftext">${format(card[1])}${explanation ? `<p class="review-explanation">${format(explanation)}</p>` : ''}</div></div>
       </div>
     </div>
     <p class="sr-only" id="fclive" aria-live="polite" role="status"></p>
@@ -17861,7 +17865,6 @@ const Leitner = {
   save(m) { store.set('sb.leitner', m); },
   plus(days) { return calendarDay(days); },
   get(k) { return this.all()[k] || null; },
-  reviewable(k, v) { return !String(k).startsWith('q:') || !!(v && v.meta && v.meta.q); },
   grade(k, correct, meta) {
     const m = this.all();
     const cur = m[k] || { box: 1, seen: 0 };
@@ -17891,35 +17894,56 @@ const Leitner = {
   counts() {
     const c = { 1: 0, 2: 0, 3: 0, due: 0, total: 0 };
     const t = today();
-    Object.entries(this.all()).forEach(([k, v]) => {
-      if (!this.reviewable(k, v)) return;
+    for (const card of this.scheduledCards()) {
       c.total++;
-      const box = v.box === 1 || v.box === 2 || v.box === 3 ? v.box : 1;
-      c[box] = (c[box] || 0) + 1;
-      if (!v.due || v.due <= t) c.due++;
-    });
+      c[card.box]++;
+      if (!card.due || card.due <= t) c.due++;
+    }
     return c;
   },
-  /* every card in the app that is scheduled and due now */
-  dueCards() {
-    const m = this.all(), t = today(), out = [];
-    COURSES.concat(customCourses()).forEach(c => c.units.forEach(u => {
-      (u.cards || []).forEach((card, i) => {
-        const k = 'card:' + c.id + '/' + u.id + '/' + i;
-        const rec = m[k];
-        if (rec && (!rec.due || rec.due <= t)) out.push({ k, card, cid: c.id, uid: u.id, cn: c.short, un: u.title, box: rec.box });
-      });
-    }));
-    /* quiz questions scheduled with a stored prompt, so a miss can come back */
-    Object.entries(m).forEach(([k, rec]) => {
-      if (!k.startsWith('q:') || !rec.meta || !rec.meta.q) return;
-      if (rec.due && rec.due > t) return;
+  scheduledCards() {
+    const schedule = this.all();
+    const out = [];
+    const courses = COURSES.concat(customCourses());
+    for (const course of courses) {
+      for (const unit of course.units) {
+        (unit.cards || []).forEach((card, i) => {
+          const key = 'card:' + course.id + '/' + unit.id + '/' + i;
+          const record = schedule[key];
+          if (record) out.push({ k: key, card, cn: course.short, un: unit.title,
+            due: record.due, box: this.GAP[record.box] !== undefined ? Number(record.box) : 1 });
+        });
+      }
+    }
+    let sourceQuestions;
+    for (const [key, record] of Object.entries(schedule)) {
+      if (!key.startsWith('q:') || !record) continue;
+      const saved = record.meta || {};
+      let source;
+      if (!saved.q || !saved.back || !saved.why) {
+        if (!sourceQuestions) {
+          sourceQuestions = new Map(allQuestions().map(q => [qid(q.q), q]));
+          for (const [id, q] of Object.entries(Missed.all())) {
+            if (q?.q) sourceQuestions.set(id, q);
+          }
+        }
+        source = sourceQuestions.get(key.slice(2));
+      }
+      const question = saved.q || source?.q;
+      const answer = saved.back || source?.c?.[source.a];
+      if (!question || !answer) continue;
       out.push({
-        k, card: [rec.meta.q, [rec.meta.back, rec.meta.why].filter(Boolean).join(' — ')], cid: rec.meta.cid || null, uid: rec.meta.uid || null,
-        cn: rec.meta.cn || 'Quiz', un: rec.meta.un || 'Question', box: rec.box
+        k: key, card: [question, answer], explanation: saved.why || source?.why || '',
+        cn: saved.cn || source?._cn || source?.cn || 'Quiz',
+        un: saved.un || source?._un || source?.un || 'Question',
+        due: record.due, box: this.GAP[record.box] !== undefined ? Number(record.box) : 1
       });
-    });
+    }
     return out;
+  },
+  dueCards() {
+    const t = today();
+    return this.scheduledCards().filter(card => !card.due || card.due <= t);
   }
 };
 
@@ -17994,7 +18018,7 @@ function startReview() {
   DECK = {
     cid: null, uid: null, review: true, i: 0, flipped: false,
     order: due.map((_, i) => i), cards: due.map(d => d.card), keys: due.map(d => d.k),
-    labels: due.map(d => d.cn + ' · ' + d.un), missed: []
+    labels: due.map(d => d.cn + ' · ' + d.un), explanations: due.map(d => d.explanation), missed: []
   };
   view().innerHTML = topbar() + `<a class="crumb" href="#/review">← Spaced repetition</a>
     <div class="page-head fade"><span class="eyebrow">Due today</span><h1>Review session</h1></div>

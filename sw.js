@@ -1,50 +1,49 @@
-/* StudyBuddy service worker — makes the app work with no connection.
-   Bump CACHE when you change index.html so students get the new version. */
-const CACHE = 'studybuddy-v83';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
+/* StudyBuddy offline app shell. Bump CACHE when the shell changes. */
+const CACHE = 'studybuddy-v84';
+const SHELL = './index.html';
+const OPTIONAL_ASSETS = ['./manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
+const scope = new URL(self.registration.scope);
+const shellURL = new URL(SHELL, scope).href;
 
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE)
-      .then(c => Promise.allSettled(ASSETS.map(a => c.add(a))))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.add(new Request(shellURL, { cache: 'reload' }));
+    await Promise.allSettled(OPTIONAL_ASSETS.map(path => cache.add(new URL(path, scope).href)));
+    await self.skipWaiting();
+  })());
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key.startsWith('studybuddy-') && key !== CACHE).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
-  /* Fonts, the Supabase API and the Anthropic API must always go to the
-     network. Only same-origin app files are served from the cache. */
-  if (url.origin !== self.location.origin) return;
-  e.respondWith(
-    caches.match(e.request).then(hit => {
-      if (hit) {
-        /* refresh in the background so the next load is current */
-        fetch(e.request).then(res => {
-          if (res && res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
-        }).catch(() => {});
-        return hit;
-      }
-      return fetch(e.request).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
-        }
-        return res;
-      }).catch(() => caches.match('./index.html'));
-    })
-  );
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+  if (url.origin !== scope.origin || !url.pathname.startsWith(scope.pathname)) return;
+
+  if (request.mode === 'navigate' &&
+      (url.pathname === scope.pathname || url.pathname === new URL(shellURL).pathname)) {
+    event.respondWith(fetch(request).catch(async () => {
+      const cache = await caches.open(CACHE);
+      return (await cache.match(shellURL)) || Response.error();
+    }));
+    return;
+  }
+
+  if (!OPTIONAL_ASSETS.some(path => new URL(path, scope).href === url.href)) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    return (await cache.match(request)) || fetch(request);
+  })());
 });
 
-self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
+self.addEventListener('message', event => {
+  if (event.data === 'skipWaiting') event.waitUntil(self.skipWaiting());
 });

@@ -1014,6 +1014,53 @@ input[type=date]{width:auto}
   .guide-sec { scroll-margin-top: 72px; }
   .guide-sec li { font-size: 1.05rem; }
 }
+
+/* Text fields shared by search, study tools, planner, and settings. */
+@media screen {
+  :root {
+    --field-surface: #f7f8f3;
+    --field-border: #899b91;
+    --field-placeholder: #586c66;
+  }
+  [data-theme="night"] {
+    --field-surface: #131f21;
+    --field-border: #71877d;
+    --field-placeholder: #a5b9af;
+  }
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea) {
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid var(--field-border);
+    border-radius: 12px;
+    background-color: var(--field-surface);
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+  }
+  :is(input, textarea)::placeholder {
+    color: var(--field-placeholder);
+    opacity: 1;
+  }
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea):focus {
+    border-color: var(--accent);
+    background-color: var(--paper);
+    box-shadow: 0 0 0 3px var(--accent-wash);
+  }
+  :is(input[type="text"], textarea)[readonly] {
+    background-color: var(--canvas-2);
+    border-style: dashed;
+  }
+  label.fld > span { margin-bottom: 7px; }
+  label.fld small { margin-top: 7px; line-height: 1.45; }
+  #mat, #frtext { padding: 16px; line-height: 1.65; }
+  #mat { min-height: 12rem; }
+}
+@media screen and (max-width: 860px) {
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea) {
+    font-size: max(16px, 1rem);
+  }
+}
 </style>
 </head>
 <body>
@@ -16985,7 +17032,7 @@ function vTutor() {
     <div>
       <div class="card">
         <label class="fld"><span>Your material</span>
-          <textarea id="mat" placeholder="Paste your notes here.&#10;&#10;Definition lists work best:&#10;Mitochondria — organelle that produces ATP&#10;Osmosis: movement of water across a membrane&#10;&#10;Plain paragraphs work too.">${esc(TUTOR.material)}</textarea>
+          <textarea id="mat" aria-label="Study notes" placeholder="Paste your notes here.&#10;&#10;Definition lists work best:&#10;Mitochondria — organelle that produces ATP&#10;Osmosis: movement of water across a membrane&#10;&#10;Plain paragraphs work too.">${esc(TUTOR.material)}</textarea>
           <small>Nothing is uploaded unless you turn on Claude mode in Settings.</small>
         </label>
         <div class="row">
@@ -17006,7 +17053,7 @@ function vTutor() {
         : `<div class="msg sys">Paste your material, then press "Quiz me out loud". The tutor asks one question at a time and tells you what you missed.</div>`}
       </div>
       <div class="row" style="margin-top:12px;flex-wrap:nowrap">
-        <input type="text" id="chatin" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendChat()">
+        <input type="text" id="chatin" aria-label="Your answer" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendChat()">
         <button class="btn" onclick="sendChat()">Send</button>
       </div>
     </div>
@@ -17440,7 +17487,7 @@ function askPanelHTML() {
     </div>
     <div class="ask-body" id="askbody"></div>
     <div class="ask-foot">
-      <input type="text" id="askin" placeholder="What does this mean?" onkeydown="if(event.key==='Enter')sendAsk()">
+      <input type="text" id="askin" aria-label="Ask StudyBuddy a question" placeholder="What does this mean?" onkeydown="if(event.key==='Enter')sendAsk()">
       <button class="btn sm" onclick="sendAsk()">Ask</button>
     </div>
   </div>`;
@@ -20434,7 +20481,7 @@ function vFRQ(id) {
         <button class="btn ghost sm" id="frtimer" onclick="frStart('${f.id}')">Start the clock</button>
       </span>
     </div>
-    <textarea id="frtext" rows="16" placeholder="Write your response here. It saves as you type, so you can close the tab and come back."
+    <textarea id="frtext" aria-label="Free response draft" rows="16" placeholder="Write your response here. It saves as you type, so you can close the tab and come back."
       style="width:100%;font-family:'Newsreader',Georgia,serif;font-size:1rem;line-height:1.7"
       oninput="frSave('${f.id}')">${esc(rec.text || '')}</textarea>
     <div class="spread" style="margin-top:10px">
@@ -21409,7 +21456,7 @@ function vSearch(q) {
   </div>
   <div class="card" style="margin-bottom:18px">
     <div class="row" style="flex-wrap:nowrap;gap:8px">
-      <input type="search" id="sq" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
+      <input type="search" id="sq" aria-label="Search study materials" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
         style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()" onkeydown="if(event.key==='Enter')searchGo()">
     </div>
     ${query.length >= 2 ? `<p style="font-size:.85rem;color:var(--ink-faint);margin:10px 0 0">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
@@ -21474,7 +21521,7 @@ function openReport(kind, cid, uid, i, btn) {
       <option value="typo">Typo or formatting problem</option>
       <option value="other">Something else</option>
     </select>
-    <textarea id="rptNote" rows="2" placeholder="What is wrong? Optional but useful." style="width:100%;font-size:.9rem"></textarea>
+    <textarea id="rptNote" aria-label="Describe the issue" rows="2" placeholder="What is wrong? Optional but useful." style="width:100%;font-size:.9rem"></textarea>
     <div class="row" style="margin-top:10px">
       <button class="btn mark sm" onclick="submitReport('${kind}','${cid}','${uid}',${i},this)">Send</button>
       <button class="btn ghost sm" onclick="this.closest('.card').remove()">Cancel</button>

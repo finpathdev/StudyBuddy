@@ -16760,7 +16760,7 @@ function paintCard() {
       <span>${DECK.missed.length} to review</span>
     </div>
     <div class="fcard" id="fc" tabindex="0" role="button" aria-expanded="false"
-         aria-label="Flashcard ${DECK.i + 1} of ${DECK.order.length}. Term: ${esc(card[0])}. Press Enter or Space to reveal the definition."
+         aria-label="Flashcard ${DECK.i + 1} of ${DECK.order.length}. ${question ? 'Question' : 'Term'}: ${esc(String(card[0]).replace(/<\/?(?:i|em|b|strong)>/g, '').replace(/<br\s*\/?>/g, ' '))}. Press Enter or Space to reveal the ${question ? 'answer' : 'definition'}."
          onclick="flipCard()" onkeydown="if(event.key===' '||event.key==='Enter'){event.preventDefault();flipCard();}">
       <div class="fcard-inner">
         <div class="fface" aria-hidden="${DECK.flipped}"><span class="ftag">${question ? 'Question' : 'Term'}</span><div class="ftext">${format(card[0])}</div></div>

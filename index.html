@@ -873,7 +873,194 @@ input[type=date]{width:auto}
 [data-theme="night"] .btn.mark{box-shadow:0 0 22px -6px rgba(255,229,106,.85)}
 [data-theme="night"] .tile{box-shadow:0 0 0 1px rgba(255,229,106,.05), var(--shadow)}
 [data-theme="night"] .hl::after{background:var(--highlight);opacity:1}
-.fcard.flipped .fcard-inner{filter:drop-shadow(0 16px 18px rgba(22,35,43,.18))}
+/* Shared screen styling for the study desk. Print layouts use their own rules. */
+@media screen {
+  :root {
+    --canvas: #f4f2eb;
+    --canvas-2: #eae8df;
+    --paper: #fffefa;
+    --ink: #202c2c;
+    --ink-soft: #4e625e;
+    --ink-faint: #586c66;
+    --rule: #aacbc5;
+    --margin: #a64836;
+    --highlight: #f3d668;
+    --green: #246e54;
+    --accent: #245b53;
+    --on-accent: #fffefa;
+    --accent-wash: #e1eee8;
+    --line: #202c2c26;
+    --shadow: 0 1px 2px #202c2c0a, 0 10px 25px -18px #202c2c45;
+    --radius: 18px;
+    --glow-1: #acd3c973;
+    --glow-2: #ebc2a14d;
+    --glow-3: #f5dfa14d;
+    --grain: .018;
+    --rail-bg: #fffefaeb;
+  }
+  [data-theme="night"] {
+    --canvas: #111a1c;
+    --canvas-2: #1e2a2c;
+    --paper: #192527;
+    --ink: #f2f6ef;
+    --ink-soft: #bfcec7;
+    --ink-faint: #a5b9af;
+    --rule: #46665f;
+    --margin: #ffa08a;
+    --highlight: #f6da77;
+    --green: #80d6af;
+    --accent: #a7ded0;
+    --on-accent: #142923;
+    --accent-wash: #263e39;
+    --line: #e2f4e333;
+    --shadow: 0 1px 2px #0004, 0 12px 30px -20px #000a;
+    --glow-1: #36635b55;
+    --glow-2: #6d495133;
+    --glow-3: #70633126;
+    --grain: .025;
+    --rail-bg: #172123f5;
+  }
+  .aurora { display: none; }
+  :focus-visible { outline-color: var(--accent); }
+  h1 { font-size: clamp(2rem, 4.2vw, 3.3rem); letter-spacing: -.045em; text-wrap: balance; }
+  h2, h3 { letter-spacing: -.025em; }
+  .main { width: 100%; margin-inline: auto; }
+  .page-head { margin-bottom: clamp(20px, 3vw, 32px); padding-left: 18px; }
+  .page-head::before { width: 3px; background: var(--accent); }
+  .page-head p { line-height: 1.6; }
+  .eyebrow, .nav-label { color: var(--accent); letter-spacing: .12em; }
+  .brand-mark { padding: 5px; border-radius: 11px; background: var(--accent-wash); color: var(--accent); }
+  .nav { gap: 2px; }
+  .nav a { padding-block: 7px; }
+  .nav a, .tabbar a { border-radius: 11px; }
+  .nav a:hover, .nav a.on, .tabbar a.on {
+    color: var(--accent); background: var(--accent-wash);
+  }
+  .nav a.on { border-color: color-mix(in srgb, var(--accent) 25%, transparent); box-shadow: none; }
+  .nav a.on .ic { color: inherit; }
+  .grid { gap: clamp(12px, 1.6vw, 20px); }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); }
+  .card { padding: clamp(16px, 2.2vw, 24px); }
+  .card, .tile, .guide-page { border-color: var(--line); }
+  [data-theme="night"] :is(.card, .tile) { box-shadow: var(--shadow); }
+  a.card { transition: border-color .15s, box-shadow .15s; }
+  a.card:hover, .tile:hover { border-color: color-mix(in srgb, var(--accent) 53%, var(--line)); }
+  .tile { padding: 20px 16px 16px 21px; }
+  .tile::before { left: 0; width: 4px; }
+  .tile-ico { color: color-mix(in srgb, var(--tcolor, var(--accent)) 55%, var(--ink)); }
+  .tile .foot, .deck-meta { flex-wrap: wrap; }
+  .btn {
+    border-radius: 11px; min-height: 42px; border-color: var(--accent);
+    background: var(--accent); color: var(--on-accent); box-shadow: none;
+  }
+  .btn.mark { border-color: transparent; box-shadow: none; }
+  [data-theme="night"] .btn.mark { box-shadow: none; }
+  [data-theme="night"] :is(.btn.red, .timer.low, .opt.wrong .k, .due-pill) { color: #251510; }
+  [data-theme="night"] :is(.opt.right .k, .task.done .tick) { color: #132a22; }
+  .chip:hover, .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.on:hover { color: var(--paper); }
+  :is(input, select, textarea):focus-visible { outline-offset: 2px; }
+  .welcome {
+    min-height: 230px; padding: clamp(22px, 4vw, 48px); gap: clamp(20px, 4vw, 44px);
+    background:
+      radial-gradient(ellipse at 10% 12%, color-mix(in srgb, var(--highlight) 38%, transparent), transparent 55%),
+      linear-gradient(125deg, var(--accent-wash), var(--paper) 78%);
+  }
+  .welcome-owl {
+    width: 126px; flex: 0 0 126px; padding: 15px;
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    border: 1px solid var(--line); border-radius: 30px;
+    box-shadow: var(--shadow);
+  }
+  .welcome + .grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); }
+  .welcome h2 { font-size: clamp(1.65rem, 3.5vw, 2.55rem); }
+  .guide-page { overflow-wrap: anywhere; }
+  .guide-sec li { font-size: 1.12rem; }
+  .fcard-inner, .fface { border-radius: var(--radius); }
+  .fface { background-image: repeating-linear-gradient(transparent 0 31px, color-mix(in srgb, var(--rule) 48%, transparent) 31px 32px); }
+  .fface .ftext { overflow-wrap: anywhere; }
+  .opt, .mtile { border-radius: 13px; overflow-wrap: anywhere; }
+  .opt .k { border-radius: 8px; }
+  .why { border-radius: 0 12px 12px 0; padding: 10px 14px; background: var(--accent-wash); }
+  .lamp {
+    width: min(260px, 100%); height: auto; aspect-ratio: 1;
+    background: conic-gradient(var(--accent) calc(var(--p, 0)*1%), var(--canvas-2) 0);
+  }
+  .task-title { overflow-wrap: anywhere; }
+  .task button.tick { align-self: center; }
+  .note { border-style: solid; background: var(--accent-wash); }
+  .ask-panel { border-radius: var(--radius); }
+}
+@media screen and (max-width: 860px) {
+  .mobile-top { background: var(--canvas); }
+  .tabbar { gap: 4px; }
+  .rail { height: 100dvh; }
+  html.install-open .app { height: calc(100dvh - 136px - env(safe-area-inset-bottom)); }
+  .btn, .chip { min-height: 44px; }
+  .task button.tick { flex-basis: 40px; width: 40px; height: 44px; }
+  .task-form label.fld { flex: 1 1 140px !important; min-width: 0 !important; }
+  .task-form > label:first-child { flex-basis: 100% !important; }
+}
+@media screen and (max-width: 640px) {
+  .welcome { display: block; min-height: 0; }
+  .welcome-owl { float: right; width: 70px; margin: 0 0 10px 12px; padding: 8px; border-radius: 19px; }
+  .welcome .row { clear: both; gap: 7px; }
+  .welcome .btn { padding-inline: 12px; }
+  .deck-meta { gap: 6px; }
+  .fface { padding-left: 35px; padding-right: 18px; }
+  .fface::before { left: 20px; }
+  .fface .ftag { left: 35px; }
+  .guide-sec { scroll-margin-top: 72px; }
+  .guide-sec li { font-size: 1.05rem; }
+}
+
+/* Text fields shared by search, study tools, planner, and settings. */
+@media screen {
+  :root {
+    --field-surface: #f7f8f3;
+    --field-border: #899b91;
+    --field-placeholder: #586c66;
+  }
+  [data-theme="night"] {
+    --field-surface: #131f21;
+    --field-border: #71877d;
+    --field-placeholder: #a5b9af;
+  }
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea) {
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid var(--field-border);
+    border-radius: 12px;
+    background-color: var(--field-surface);
+    transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+  }
+  :is(input, textarea)::placeholder {
+    color: var(--field-placeholder);
+    opacity: 1;
+  }
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea):focus {
+    border-color: var(--accent);
+    background-color: var(--paper);
+    box-shadow: 0 0 0 3px var(--accent-wash);
+  }
+  :is(input[type="text"], textarea)[readonly] {
+    background-color: var(--canvas-2);
+    border-style: dashed;
+  }
+  label.fld > span { margin-bottom: 7px; }
+  label.fld small { margin-top: 7px; line-height: 1.45; }
+  #mat, #frtext { padding: 16px; line-height: 1.65; }
+  #mat { min-height: 12rem; }
+}
+@media screen and (max-width: 860px) {
+  :is(input[type="text"], input[type="email"], input[type="password"],
+      input[type="number"], input[type="search"], input[type="date"], select, textarea) {
+    font-size: max(16px, 1rem);
+  }
+}
 </style>
 </head>
 <body>
@@ -16198,7 +16385,16 @@ const S = {
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const today = () => new Date().toISOString().slice(0, 10);
+const dayKey = date => [
+  date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'),
+  String(date.getDate()).padStart(2, '0')
+].join('-');
+function calendarDay(offset = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offset);
+  return dayKey(date);
+}
+const today = () => calendarDay();
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const findCourse = id => COURSES.concat(customCourses()).find(c => c.id === id);
 const findUnit = (c, uid) => c && c.units.find(u => u.id === uid);
@@ -16226,7 +16422,7 @@ function bumpStreak() {
   const st = store.get('sb.streak', { last: '', n: 0 });
   const t = today();
   if (st.last === t) return;
-  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const y = calendarDay(-1);
   st.n = st.last === y ? st.n + 1 : 1;
   st.last = t;
   store.set('sb.streak', st);
@@ -16234,7 +16430,7 @@ function bumpStreak() {
 function streakCount() {
   const st = store.get('sb.streak', { last: '', n: 0 });
   if (!st.last) return 0;
-  const t = today(), y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const t = today(), y = calendarDay(-1);
   return (st.last === t || st.last === y) ? st.n : 0;
 }
 function allQuestions(filter) {
@@ -16836,7 +17032,7 @@ function vTutor() {
     <div>
       <div class="card">
         <label class="fld"><span>Your material</span>
-          <textarea id="mat" placeholder="Paste your notes here.&#10;&#10;Definition lists work best:&#10;Mitochondria — organelle that produces ATP&#10;Osmosis: movement of water across a membrane&#10;&#10;Plain paragraphs work too.">${esc(TUTOR.material)}</textarea>
+          <textarea id="mat" aria-label="Study notes" placeholder="Paste your notes here.&#10;&#10;Definition lists work best:&#10;Mitochondria — organelle that produces ATP&#10;Osmosis: movement of water across a membrane&#10;&#10;Plain paragraphs work too.">${esc(TUTOR.material)}</textarea>
           <small>Nothing is uploaded unless you turn on Claude mode in Settings.</small>
         </label>
         <div class="row">
@@ -16857,7 +17053,7 @@ function vTutor() {
         : `<div class="msg sys">Paste your material, then press "Quiz me out loud". The tutor asks one question at a time and tells you what you missed.</div>`}
       </div>
       <div class="row" style="margin-top:12px;flex-wrap:nowrap">
-        <input type="text" id="chatin" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendChat()">
+        <input type="text" id="chatin" aria-label="Your answer" placeholder="Type your answer…" onkeydown="if(event.key==='Enter')sendChat()">
         <button class="btn" onclick="sendChat()">Send</button>
       </div>
     </div>
@@ -17088,6 +17284,11 @@ function notFound() {
 /* ============================================================
    ROUTER
    ============================================================ */
+function resetPageScroll() {
+  const app = document.querySelector('.app');
+  if (app) app.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
 function render() {
   if (typeof syncCustomUnits === 'function') syncCustomUnits();
   const raw = (location.hash || '#/').replace(/^#\/?/, '');
@@ -17095,7 +17296,7 @@ function render() {
   ROUTE_Q = new URLSearchParams(query || '');
   const parts = path.split('/').filter(Boolean);
   paintNav();
-  window.scrollTo(0, 0);
+  resetPageScroll();
   let html;
   if (!parts.length) html = vDashboard();
   else if (parts[0] === 'courses') html = vCourses();
@@ -17286,7 +17487,7 @@ function askPanelHTML() {
     </div>
     <div class="ask-body" id="askbody"></div>
     <div class="ask-foot">
-      <input type="text" id="askin" placeholder="What does this mean?" onkeydown="if(event.key==='Enter')sendAsk()">
+      <input type="text" id="askin" aria-label="Ask StudyBuddy a question" placeholder="What does this mean?" onkeydown="if(event.key==='Enter')sendAsk()">
       <button class="btn sm" onclick="sendAsk()">Ask</button>
     </div>
   </div>`;
@@ -17646,7 +17847,7 @@ const Leitner = {
   GAP: { 1: 0, 2: 3, 3: 7 },
   all() { return store.get('sb.leitner', {}); },
   save(m) { store.set('sb.leitner', m); },
-  plus(days) { return new Date(Date.now() + days * 864e5).toISOString().slice(0, 10); },
+  plus(days) { return calendarDay(days); },
   get(k) { return this.all()[k] || null; },
   reviewable(k, v) { return !String(k).startsWith('q:') || !!(v && v.meta && v.meta.q); },
   grade(k, correct, meta) {
@@ -19040,14 +19241,14 @@ const Activity = {
     d[kind] = (d[kind] || 0) + (n || 1);
     a[t] = d;
     /* keep 90 days so the store stays small */
-    const cut = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+    const cut = calendarDay(-90);
     Object.keys(a).forEach(k => { if (k < cut) delete a[k]; });
     store.set('sb.activity', a);
   },
   lastDays(n) {
     const a = this.all(), out = [];
     for (let i = n - 1; i >= 0; i--) {
-      const d = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+      const d = calendarDay(-i);
       const rec = a[d] || {};
       out.push({ date: d, cards: rec.cards || 0, questions: rec.questions || 0,
                  total: (rec.cards || 0) + (rec.questions || 0) });
@@ -20280,7 +20481,7 @@ function vFRQ(id) {
         <button class="btn ghost sm" id="frtimer" onclick="frStart('${f.id}')">Start the clock</button>
       </span>
     </div>
-    <textarea id="frtext" rows="16" placeholder="Write your response here. It saves as you type, so you can close the tab and come back."
+    <textarea id="frtext" aria-label="Free response draft" rows="16" placeholder="Write your response here. It saves as you type, so you can close the tab and come back."
       style="width:100%;font-family:'Newsreader',Georgia,serif;font-size:1rem;line-height:1.7"
       oninput="frSave('${f.id}')">${esc(rec.text || '')}</textarea>
     <div class="spread" style="margin-top:10px">
@@ -21243,23 +21444,27 @@ const KIND_LABEL = { unit: 'Unit', section: 'Guide section', note: 'Guide note',
 
 function vSearch(q) {
   const query = q || '';
-  const hits = runSearch(query);
-  const byKind = {};
-  hits.forEach(h => { (byKind[h.kind] = byKind[h.kind] || []).push(h); });
-  const order = ['unit', 'card', 'section', 'frq', 'question', 'note'].filter(k => byKind[k]);
   return topbar() + `
   <div class="page-head fade">
     <span class="eyebrow">Search</span>
     <h1>Find anything</h1>
     <p>Across ${COURSES.reduce((n, c) => n + c.units.length, 0)} units, every flashcard, quiz question, and study guide.</p>
   </div>
-  <div class="card" style="margin-bottom:18px">
+  <div class="card">
     <div class="row" style="flex-wrap:nowrap;gap:8px">
-      <input type="search" id="sq" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
-        style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()" onkeydown="if(event.key==='Enter')searchGo()">
+      <input type="search" id="sq" aria-label="Search study materials" value="${esc(query)}" placeholder="photosynthesis, Le Ch\u00e2telier, judicial review\u2026"
+        style="flex:1;min-width:0;font-size:1rem" oninput="searchGo()">
     </div>
-    ${query.length >= 2 ? `<p style="font-size:.85rem;color:var(--ink-faint);margin:10px 0 0">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
   </div>
+  <div id="search-results" style="margin-top:18px">${searchResults(query)}</div>`;
+}
+
+function searchResults(query) {
+  const hits = runSearch(query);
+  const byKind = {};
+  hits.forEach(h => { (byKind[h.kind] = byKind[h.kind] || []).push(h); });
+  const order = ['unit', 'card', 'section', 'frq', 'question', 'note'].filter(k => byKind[k]);
+  return `${query.length >= 2 ? `<p role="status" style="font-size:.85rem;color:var(--ink-soft)">${hits.length ? hits.length + ' result' + (hits.length > 1 ? 's' : '') : 'Nothing found'}${hits.length === 60 ? ' (showing the first 60)' : ''}</p>` : ''}
   ${query.length < 2 ? `<div class="note" style="max-width:60ch">Type at least two characters. Searching a term finds the flashcard that defines it, the guide section that explains it, and every question that tests it.</div>` :
     !hits.length ? `<div class="note" style="max-width:60ch">No match for <b>${esc(query)}</b>. Try a shorter term, or check the spelling.</div>` :
     order.map(k => `<span class="eyebrow" style="margin-top:18px">${KIND_LABEL[k]} · ${byKind[k].length}</span>
@@ -21272,16 +21477,15 @@ function vSearch(q) {
       ${byKind[k].length > 12 ? `<p style="font-size:.8rem;color:var(--ink-faint);margin:4px 0 0">…and ${byKind[k].length - 12} more</p>` : ''}
     </div>`).join('')}`;
 }
-
 function searchGo() {
-  const v = $('#sq') ? $('#sq').value : '';
-  history.replaceState(null, '', location.pathname + location.search + '#/search?q=' + encodeURIComponent(v));
-  const box = document.getElementById('view');
-  const pos = $('#sq') ? $('#sq').selectionStart : 0;
-  box.innerHTML = vSearch(v);
-  if (typeof sweepMath === 'function') sweepMath(box);
-  const inp = $('#sq');
-  if (inp) { inp.focus(); try { inp.setSelectionRange(pos, pos); } catch (e) {} }
+  const input = $('#sq');
+  const results = $('#search-results');
+  if (!input || !results) return;
+  const query = input.value;
+  const hash = query ? '#/search?q=' + encodeURIComponent(query) : '#/search';
+  history.replaceState(null, '', location.pathname + location.search + hash);
+  results.innerHTML = searchResults(query);
+  if (typeof sweepMath === 'function') sweepMath(results);
 }
 
 /* ============================================================
@@ -21320,7 +21524,7 @@ function openReport(kind, cid, uid, i, btn) {
       <option value="typo">Typo or formatting problem</option>
       <option value="other">Something else</option>
     </select>
-    <textarea id="rptNote" rows="2" placeholder="What is wrong? Optional but useful." style="width:100%;font-size:.9rem"></textarea>
+    <textarea id="rptNote" aria-label="Describe the issue" rows="2" placeholder="What is wrong? Optional but useful." style="width:100%;font-size:.9rem"></textarea>
     <div class="row" style="margin-top:10px">
       <button class="btn mark sm" onclick="submitReport('${kind}','${cid}','${uid}',${i},this)">Send</button>
       <button class="btn ghost sm" onclick="this.closest('.card').remove()">Cancel</button>
@@ -21876,7 +22080,7 @@ function buildMatch(cid, uid) {
       else { buildMatch(cid, uid); paintMatch(); }
       if (typeof paintNav === 'function') paintNav();
       if (typeof afterRender === 'function') afterRender();
-      window.scrollTo(0, 0);
+      resetPageScroll();
       return;
     }
     return _renderModes();
@@ -28432,7 +28636,7 @@ const Focus = {
   },
   todayItems() {
     const t = today();
-    return this.log().filter(x => x && String(x.at || '').slice(0, 10) === t);
+    return this.log().filter(x => x && dayKey(new Date(x.at)) === t);
   },
   todayMinutes() { return this.todayItems().reduce((n, x) => n + (x.mins || 0), 0); },
   todayFull() { return this.todayItems().filter(x => x.full).length; },
@@ -28477,7 +28681,7 @@ function focusLog(mins, full) {
   store.set('sb.focus.log', log.slice(-180));
   if (mins >= 1) bumpStreak();
 }
-function focusFinish(natural) {
+function focusFinish(natural, refresh = true) {
   const s = focusSession();
   if (!s) return;
   const left = focusLeft(s);
@@ -28485,13 +28689,13 @@ function focusFinish(natural) {
   store.set('sb.focus.session', null);
   if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
   if (s.kind === 'work' && (natural || spent >= 1)) focusLog(natural ? Math.max(1, Math.round(s.total / 60000)) : spent, !!natural);
-  if ((location.hash || '') === '#/focus') render();
-  else if (natural && s.kind === 'work' && typeof announce === 'function') announce('Focus sitting finished. Take a short break when you are ready.');
+  if ((location.hash || '') === '#/focus' && refresh) render();
+  else if (refresh && natural && s.kind === 'work' && typeof announce === 'function') announce('Focus sitting finished. Take a short break when you are ready.');
 }
-function focusCatchUp() {
+function focusCatchUp(refresh = true) {
   const s = focusSession();
   if (!s || !s.running) return;
-  if (Date.now() >= s.ends) focusFinish(true);
+  if (Date.now() >= s.ends) focusFinish(true, refresh);
   else focusArm();
 }
 function focusStart(kind) {
@@ -28506,6 +28710,7 @@ function focusPause() {
   const s = focusSession();
   if (!s || !s.running) return;
   s.left = focusLeft(s);
+  if (s.left === 0) return focusFinish(true);
   s.running = false;
   store.set('sb.focus.session', s);
   if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
@@ -28514,7 +28719,8 @@ function focusPause() {
 function focusResumeRun() {
   const s = focusSession();
   if (!s || s.running) return;
-  const left = s.left || s.total;
+  const left = focusLeft(s);
+  if (left === 0) return focusFinish(true);
   s.running = true;
   s.left = left;
   s.ends = Date.now() + left;
@@ -28531,7 +28737,7 @@ function focusSetLen(mins) {
 }
 
 function vFocus() {
-  focusCatchUp();
+  focusCatchUp(false);
   const cfg = Focus.cfg();
   const s = focusSession();
   const full = Focus.todayFull();
@@ -28792,31 +28998,30 @@ function isFreshDesk() {
 function welcomeDesk() {
   return topbar() + `
     <div class="page-head fade">
-      <span class="eyebrow">The desk is clear</span>
       <h1>Study something <span class="hl">today</span>.</h1>
-      <p>Guides, flashcards, and a timer. No account, and nothing leaves this browser.</p>
+      <p>Study guides, flashcards, practice tests, and a focus timer.</p>
     </div>
     <div class="card welcome fade">
       <div class="welcome-owl">${mascot('sleepy')}</div>
       <div>
-        <h2 style="margin-bottom:6px">Nothing on the desk yet.</h2>
-        <p style="color:var(--ink-soft);max-width:46ch">I'm awake when you are. Open a course, paste tonight's notes, or just sit with one thing for twenty-five minutes.</p>
+        <h2 style="margin-bottom:6px">Choose where to start</h2>
+        <p style="color:var(--ink-soft);max-width:46ch">Pick a course, turn your notes into flashcards, or start a focus session.</p>
         <div class="row">
           <a class="btn mark" href="#/courses">Browse courses</a>
           <a class="btn ghost" href="#/tutor">Use my notes</a>
-          <a class="btn ghost" href="#/focus">Light the lamp</a>
+          <a class="btn ghost" href="#/focus">Start a focus session</a>
         </div>
       </div>
     </div>
     <div class="grid g3">
       <a class="card" href="#/courses" style="text-decoration:none;color:inherit">
         <span class="eyebrow">Library</span>
-        <h3 style="margin-bottom:4px">Courses are ready</h3>
+        <h3 style="margin-bottom:4px">Browse the course library</h3>
         <p style="color:var(--ink-soft);font-size:.9rem;margin:0">AP, SAT, and ACT, with guides and quizzes already written.</p>
       </a>
       <a class="card" href="#/focus" style="text-decoration:none;color:inherit">
         <span class="eyebrow">Desk lamp</span>
-        <h3 style="margin-bottom:4px">Sit with one thing</h3>
+        <h3 style="margin-bottom:4px">Start a focus session</h3>
         <p style="color:var(--ink-soft);font-size:.9rem;margin:0">A finished sitting starts your streak, even before a quiz.</p>
       </a>
       <a class="card" href="#/tests" style="text-decoration:none;color:inherit">
@@ -28865,10 +29070,10 @@ bumpStreak = function () {
 
 if (typeof focusFinish === 'function') {
   const _focusFinishPolish = focusFinish;
-  focusFinish = function (natural) {
+  focusFinish = function (natural, refresh) {
     const s = typeof focusSession === 'function' ? focusSession() : null;
     const celebrate = !!(natural && s && s.kind === 'work');
-    const out = _focusFinishPolish(natural);
+    const out = _focusFinishPolish(natural, refresh);
     if (celebrate) sparkle(document.querySelector('.lamp'));
     return out;
   };

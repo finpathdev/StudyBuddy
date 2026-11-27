@@ -16198,7 +16198,16 @@ const S = {
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const today = () => new Date().toISOString().slice(0, 10);
+const dayKey = date => [
+  date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'),
+  String(date.getDate()).padStart(2, '0')
+].join('-');
+function calendarDay(offset = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + offset);
+  return dayKey(date);
+}
+const today = () => calendarDay();
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
 const findCourse = id => COURSES.concat(customCourses()).find(c => c.id === id);
 const findUnit = (c, uid) => c && c.units.find(u => u.id === uid);
@@ -16226,7 +16235,7 @@ function bumpStreak() {
   const st = store.get('sb.streak', { last: '', n: 0 });
   const t = today();
   if (st.last === t) return;
-  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const y = calendarDay(-1);
   st.n = st.last === y ? st.n + 1 : 1;
   st.last = t;
   store.set('sb.streak', st);
@@ -16234,7 +16243,7 @@ function bumpStreak() {
 function streakCount() {
   const st = store.get('sb.streak', { last: '', n: 0 });
   if (!st.last) return 0;
-  const t = today(), y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+  const t = today(), y = calendarDay(-1);
   return (st.last === t || st.last === y) ? st.n : 0;
 }
 function allQuestions(filter) {
@@ -17646,7 +17655,7 @@ const Leitner = {
   GAP: { 1: 0, 2: 3, 3: 7 },
   all() { return store.get('sb.leitner', {}); },
   save(m) { store.set('sb.leitner', m); },
-  plus(days) { return new Date(Date.now() + days * 864e5).toISOString().slice(0, 10); },
+  plus(days) { return calendarDay(days); },
   get(k) { return this.all()[k] || null; },
   reviewable(k, v) { return !String(k).startsWith('q:') || !!(v && v.meta && v.meta.q); },
   grade(k, correct, meta) {
@@ -19040,14 +19049,14 @@ const Activity = {
     d[kind] = (d[kind] || 0) + (n || 1);
     a[t] = d;
     /* keep 90 days so the store stays small */
-    const cut = new Date(Date.now() - 90 * 864e5).toISOString().slice(0, 10);
+    const cut = calendarDay(-90);
     Object.keys(a).forEach(k => { if (k < cut) delete a[k]; });
     store.set('sb.activity', a);
   },
   lastDays(n) {
     const a = this.all(), out = [];
     for (let i = n - 1; i >= 0; i--) {
-      const d = new Date(Date.now() - i * 864e5).toISOString().slice(0, 10);
+      const d = calendarDay(-i);
       const rec = a[d] || {};
       out.push({ date: d, cards: rec.cards || 0, questions: rec.questions || 0,
                  total: (rec.cards || 0) + (rec.questions || 0) });
@@ -28432,7 +28441,7 @@ const Focus = {
   },
   todayItems() {
     const t = today();
-    return this.log().filter(x => x && String(x.at || '').slice(0, 10) === t);
+    return this.log().filter(x => x && dayKey(new Date(x.at)) === t);
   },
   todayMinutes() { return this.todayItems().reduce((n, x) => n + (x.mins || 0), 0); },
   todayFull() { return this.todayItems().filter(x => x.full).length; },
@@ -28477,7 +28486,7 @@ function focusLog(mins, full) {
   store.set('sb.focus.log', log.slice(-180));
   if (mins >= 1) bumpStreak();
 }
-function focusFinish(natural) {
+function focusFinish(natural, refresh = true) {
   const s = focusSession();
   if (!s) return;
   const left = focusLeft(s);
@@ -28485,13 +28494,13 @@ function focusFinish(natural) {
   store.set('sb.focus.session', null);
   if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
   if (s.kind === 'work' && (natural || spent >= 1)) focusLog(natural ? Math.max(1, Math.round(s.total / 60000)) : spent, !!natural);
-  if ((location.hash || '') === '#/focus') render();
-  else if (natural && s.kind === 'work' && typeof announce === 'function') announce('Focus sitting finished. Take a short break when you are ready.');
+  if ((location.hash || '') === '#/focus' && refresh) render();
+  else if (refresh && natural && s.kind === 'work' && typeof announce === 'function') announce('Focus sitting finished. Take a short break when you are ready.');
 }
-function focusCatchUp() {
+function focusCatchUp(refresh = true) {
   const s = focusSession();
   if (!s || !s.running) return;
-  if (Date.now() >= s.ends) focusFinish(true);
+  if (Date.now() >= s.ends) focusFinish(true, refresh);
   else focusArm();
 }
 function focusStart(kind) {
@@ -28506,6 +28515,7 @@ function focusPause() {
   const s = focusSession();
   if (!s || !s.running) return;
   s.left = focusLeft(s);
+  if (s.left === 0) return focusFinish(true);
   s.running = false;
   store.set('sb.focus.session', s);
   if (FOCUS_TIMER) { clearInterval(FOCUS_TIMER); FOCUS_TIMER = null; }
@@ -28514,7 +28524,8 @@ function focusPause() {
 function focusResumeRun() {
   const s = focusSession();
   if (!s || s.running) return;
-  const left = s.left || s.total;
+  const left = focusLeft(s);
+  if (left === 0) return focusFinish(true);
   s.running = true;
   s.left = left;
   s.ends = Date.now() + left;
@@ -28531,7 +28542,7 @@ function focusSetLen(mins) {
 }
 
 function vFocus() {
-  focusCatchUp();
+  focusCatchUp(false);
   const cfg = Focus.cfg();
   const s = focusSession();
   const full = Focus.todayFull();
@@ -28865,10 +28876,10 @@ bumpStreak = function () {
 
 if (typeof focusFinish === 'function') {
   const _focusFinishPolish = focusFinish;
-  focusFinish = function (natural) {
+  focusFinish = function (natural, refresh) {
     const s = typeof focusSession === 'function' ? focusSession() : null;
     const celebrate = !!(natural && s && s.kind === 'work');
-    const out = _focusFinishPolish(natural);
+    const out = _focusFinishPolish(natural, refresh);
     if (celebrate) sparkle(document.querySelector('.lamp'));
     return out;
   };
